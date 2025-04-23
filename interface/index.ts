@@ -349,17 +349,19 @@ export interface City {
 }
 
 
-export interface Citas {
-  idCita: string;
-  idPaciente: string;
-  idPsicologo: string;
-  paciente: string;
-  codigo: string;
-  fecha_inicio: string;
-  estado: string;
-  age: string;
-  motivo: string;
-  duracion: string;
+export interface Cita {
+  idCita: number;
+  idPaciente: number;
+  idPsicologo: number;
+  idTipoCita: number;
+  idCanal: number;
+  idEtiqueta: number;
+  motivo_Consulta: string;
+  estado_Cita: string;
+  colores: string;
+  duracion: number;
+  fecha_cita: string;
+  hora_cita: string;
 }
 
 export interface DatePacienteProps {
