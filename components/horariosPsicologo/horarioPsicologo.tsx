@@ -180,7 +180,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
       {horasCompletas.map((hora, idx) =>
         hora ? (
           <BotonHorario
-            key={hora} // Aquí concatenamos la fecha, hora e índice para crear una clave única
+            key={`${fechaStr}-${idx}-${hora}`}
             hora={hora}
             ocupada={citasConvertidas.some(
               (cita) => cita.fecha === fechaStr && cita.hora.startsWith(hora)
