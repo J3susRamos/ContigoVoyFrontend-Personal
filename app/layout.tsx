@@ -1,4 +1,3 @@
-// layout.tsx
 "use client";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
@@ -9,9 +8,6 @@ import { ToastContainer } from "react-toastify";
 import Footer from "@/components/footer";
 
 export const lexend = Lexend({ subsets: ["latin"] });
-
-// Next.js metadata debe estar en un archivo server component, no en un client component
-// No puedes usar "use client" y exportar metadata en el mismo archivo
 
 export default function RootLayout({
   children,
