@@ -3,7 +3,6 @@ import { Icons } from "@/icons";
 import { useEffect, useState, useCallback } from "react";
 import React from "react";
 import { Citas } from "@/interface";
-import Link from "next/link";
 import showToast from "@/components/ToastStyle";
 import { parseCookies } from "nookies";
 
@@ -83,6 +82,11 @@ export const TableCitas: React.FC<TableProps> = ({
     [selectedKeys, setSelectedKeys]
   );
 
+  const redirectToAtencion = (idCita: number) => {
+    localStorage.setItem("idCita", String(idCita));
+    window.location.href = "/user/historial/AtencionPaciente";
+  };
+
   const renderCell = useCallback(
     (user: Citas, columnKey: keyof Citas | "actions") => {
       if (columnKey === "actions") {
@@ -122,16 +126,13 @@ export const TableCitas: React.FC<TableProps> = ({
               </div>
               <span className="text-xs text-[#B158FF] mt-2">Eliminar</span>
             </button>
-
+            <button
+              onClick={() => {
+                redirectToAtencion(Number(user.idCita));
+              }}
+              className="flex flex-col items-center pt-1"
+            >
             <div className="flex flex-col items-center pt-1">
-              <Link
-                href={{
-                  pathname: "/user/historial/AtencionPaciente",
-                  query: { idCita: user.idCita },
-                }}
-                className="relative group"
-                passHref
-              >
                 <span
                   className="text-lg text-[#3df356] cursor-pointer active:opacity-50"
                   dangerouslySetInnerHTML={{ __html: Icons.hand }}
@@ -141,8 +142,8 @@ export const TableCitas: React.FC<TableProps> = ({
                   Agregar Atencion
                 </div>
                 <span className="text-xs text-[#3df356] mt-2">Atencion</span>
-              </Link>
             </div>
+            </button>
           </div>
         );
       }
