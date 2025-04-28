@@ -39,16 +39,11 @@ const PageHome = () => {
         
         <div className="mx-auto md:mx-0 m-4 md:m-5">
         <CerrarSesion />
-      
         </div>
       </div>
-
-        
           <DashboardComponents />
-       
     </section>
   );
 };
 
 export default PageHome;
-

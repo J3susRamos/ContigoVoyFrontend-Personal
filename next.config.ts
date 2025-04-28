@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     images: {
       unoptimized: true,
     },
-    trailingSlash: true,  // Añade esto
-    basePath: '',         // Asegúrate que esto esté vacío si estás en la raíz*/
+    trailingSlash: true,
+    basePath: '',
   };
 export default nextConfig;

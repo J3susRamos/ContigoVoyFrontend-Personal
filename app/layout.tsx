@@ -7,7 +7,7 @@ import { Lexend } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import Footer from "@/components/footer";
 
-export const lexend = Lexend({ subsets: ["latin"] });
+const lexend = Lexend({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
