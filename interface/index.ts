@@ -347,6 +347,23 @@ export interface City {
   name: string;
 }
 
+
+
+export interface Cita {
+  idCita: number;
+  idPaciente: number;
+  idPsicologo: number;
+  idTipoCita: number;
+  idCanal: number;
+  idEtiqueta: number;
+  motivo_Consulta: string;
+  estado_Cita: string;
+  colores: string;
+  duracion: number;
+  fecha_cita: string;
+  hora_cita: string;
+}
+
 export interface Citas {
   idCita: string;
   idPaciente: string;
@@ -358,6 +375,7 @@ export interface Citas {
   age: string;
   motivo: string;
   duracion: string;
+
 }
 
 export interface DatePacienteProps {
