@@ -1,20 +1,35 @@
 "use client";
-import Link from "next/link";
-import React, { useState } from "react";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { DatosPacienteProps } from "@/interface";
 
-const NavbarPaciente : React.FC<DatosPacienteProps> = ({ idPaciente }) => {
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+
+const NavbarPaciente = () => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const [idPaciente, setIdPaciente] = useState<number | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const idLocal = localStorage.getItem("idPaciente");
+    const parsed = idLocal ? parseInt(idLocal) : null;
+
+    if (!parsed || isNaN(parsed)) {
+      router.push("/user/pacientes");
+    } else {
+      setIdPaciente(parsed);
+    }
+  }, []);
 
   const navItems = [
-    { name: "Datos Personales", link: `/user/pacientes/DetallePaciente/`},
-    { name: "Historial Clinico", link:`/user/pacientes/HistorialClinico/` },
-    { name: "Citas", link: `/user/pacientes/Citas/` },
+    { name: "Datos Personales", path: "/user/pacientes/DetallePaciente" },
+    { name: "Historial Clinico", path: "/user/pacientes/HistorialClinico" },
+    { name: "Citas", path: "/user/pacientes/Citas" },
   ];
-  
+
+  if (!idPaciente) return null;
+
   return (
     <div>
       <div className="flex w-full mt-4 pl-8 h-72">
@@ -30,27 +45,26 @@ const NavbarPaciente : React.FC<DatosPacienteProps> = ({ idPaciente }) => {
         <div className="bg-[#6364F4] w-full h-[8vh] flex flex-row items-center px-4 mt-10 ">
           <div className="flex flex-row gap-4">
             <div className="w-full max-w-xl flex flex-row gap-4 justify-between">
-              {navItems.map((item, idx) => (
-                <Link
-                  key={idx}
-                  href={{
-                    pathname: item.link,
-                    query: {
-                      idPaciente: idPaciente,
-                    },
-                  }}
-                  onMouseEnter={() => setHovered(idx)}
-                  onMouseLeave={() => setHovered(null)}
-                  className={cn(
-                    "text-[#fff] rounded-full hover:bg-[#fff] hover:text-[#6364F4] px-4 py-2",
-                    pathname === item.link || hovered === idx
-                      ? "bg-[#fff] text-[#6364F4]"
-                      : ""
-                  )}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navItems.map((item, idx) => {
+                const isActive = pathname === item.path;
+
+                return (
+                  <Link
+                    key={idx}
+                    href={item.path}
+                    onMouseEnter={() => setHovered(idx)}
+                    onMouseLeave={() => setHovered(null)}
+                    className={cn(
+                      "text-[#fff] rounded-full hover:bg-[#fff] hover:text-[#6364F4] px-4 py-2",
+                      isActive || hovered === idx
+                        ? "bg-[#fff] text-[#6364F4]"
+                        : ""
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>

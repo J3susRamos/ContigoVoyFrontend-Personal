@@ -153,6 +153,7 @@ export default function App() {
           antecedentesMedicos: "",
           medicamentosPrescritos: "",
         });
+        
       } else {
         showToast("error", data.message || "Error al crear el paciente");
       }
@@ -498,23 +499,6 @@ export default function App() {
         </div>
       </div>
       <div className="flex justify-center w-full p-4 ">
-        <Link
-          href="/user/pacientes/RegistroFamiliar"
-          className={cn(
-            "text-[#fff] bg-[#634AE2] pt-1 rounded-full w-auto h-8 mr-16 px-6 flex"
-          )}
-        >
-          <span
-            className="text-[#634AE2] transition-colors"
-            dangerouslySetInnerHTML={{
-              __html: Icons.registrarPaciente.replace(
-                /<svg /,
-                '<svg fill="#634AE2"'
-              ),
-            }}
-          />
-          Registro familiar
-        </Link>
         <button
           onClick={HandlePostPaciente}
           className="text-[#634AE2] bg-[#fff] rounded-full border-2 border-[#634AE2] w-28 h-8 mr-12"

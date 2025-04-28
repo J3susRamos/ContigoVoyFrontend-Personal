@@ -1,54 +1,57 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { parseCookies } from "nookies";
+import { useRouter } from "next/navigation";
 import CerrarSesion from "@/components/CerrarSesion";
 import { Icons } from "@/icons";
-import NavbarPaciente from "@/components/User/Pacientes/NavbarPaciente";
 import DatosPaciente from "@/components/User/Pacientes/DatosPaciente";
-import { useSearchParams } from "next/navigation";
-import { parseCookies } from "nookies";
-import { Paciente } from "@/interface";
 import Link from "next/link";
+import HistorialClinico from "@/components/User/Pacientes/HistorialClinico";
+import CitasPaciente from "@/components/User/Pacientes/CitasPaciente";
+import { Paciente } from "@/interface";
 
 const PageHome = () => {
-  const searchParams = useSearchParams();
-  const idPaciente = searchParams.get("idPaciente");
+  const router = useRouter();
+  const [view, setView] = useState("datos");
+  const [idPaciente, setIdPaciente] = useState<number | null>(null);
   const [paciente, setPaciente] = useState<Paciente | null>(null);
 
-  const idPacienteNum = Number(idPaciente);
-
-  const handleGetPaciente = async (id: number) => {
+  const fetchPaciente = async (id: number) => {
     try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/${id}`;
-      const response = await fetch(url, {
-        method: "GET",
+      const token = parseCookies().session;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes/${id}`, {
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setPaciente(data.result);
-      }
-    } catch (error) {
-      console.error("Error al obtener paciente:", error);
+      const data = await res.json();
+      if (res.ok) setPaciente(data.result);
+    } catch (err) {
+      console.error("Error al obtener paciente:", err);
     }
   };
 
   useEffect(() => {
-    if (idPaciente && !isNaN(idPacienteNum)) {
-      handleGetPaciente(idPacienteNum);
+    const id = localStorage.getItem("idPaciente");
+    if (!id) {
+      router.push("/user/pacientes");
+    } else {
+      const idParsed = parseInt(id);
+      setIdPaciente(idParsed);
+      fetchPaciente(idParsed);
     }
-  }, [idPaciente, idPacienteNum]);
+  }, []);
+
+  const navItems = [
+    { name: "Datos Personales", key: "datos" },
+    { name: "Historial Clínico", key: "historial" },
+    { name: "Citas", key: "citas" },
+  ];
 
   return (
     <div className="pb-4 bg-[#eaeded]">
+      {/* Cabecera */}
       <div className="flex flex-1 bg-[#eaeded] w-full z-30 mt-4">
         <div>
           <nav className="bg-[#eaeded] rounded-2xl mt-3 h-[12vh] flex items-center w-[calc(95vw-270px)] p-4">
@@ -79,17 +82,41 @@ const PageHome = () => {
         </div>
       </div>
 
-      <div>
-        <div style={{ position: "relative", zIndex: 2 }}>
-          <NavbarPaciente idPaciente={idPacienteNum} />
-        </div>
-
+      {/* Navbar estilo personalizado */}
+      <div className="flex w-full mt-4 pl-8 h-72">
         <div
-          className="flex justify-center"
-          style={{ position: "relative", zIndex: 100, marginTop: "-180px" }}
-        >
-          <DatosPaciente idPaciente={idPacienteNum} />
+          className="flex items-center pr-[200px] pl-8 rounded-3xl"
+          style={{
+            backgroundImage: `url(/Paciente.webp)`,
+            backgroundPosition: "right top",
+            backgroundSize: "auto",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        <div className="bg-[#6364F4] w-full h-[8vh] flex flex-row items-center px-4 mt-10">
+          <div className="flex flex-row gap-4 w-full max-w-xl justify-between">
+            {navItems.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => setView(item.key)}
+                className={`rounded-full px-4 py-2 font-bold text-base transition-all duration-200 ${
+                  view === item.key
+                    ? "bg-white text-[#6364F4]"
+                    : "text-white hover:bg-white hover:text-[#6364F4]"
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Contenido dinámico */}
+      <div className="flex justify-center z-10 relative">
+        {view === "datos" && idPaciente && <DatosPaciente idPaciente={idPaciente} />}
+        {view === "historial" && <HistorialClinico idPaciente={idPaciente} />}
+        {view === "citas" && <CitasPaciente idPaciente={idPaciente} />}
       </div>
     </div>
   );

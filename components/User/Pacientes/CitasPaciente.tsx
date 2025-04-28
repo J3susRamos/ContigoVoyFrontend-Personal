@@ -56,7 +56,7 @@ const CitasPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
   }
 
   return (
-    <div>
+    <div style={{ position: "relative", zIndex: 100, marginTop: "-160px" }}>
       <div className="flex gap-4 rounded-t-3xl bg-background p-6 mt-2">
         <div className="bg-[#634AE2] text-white p-4 rounded-2xl w-48">
           <div className="text-2xl font-bold text-center">{citas.pendientes}</div>

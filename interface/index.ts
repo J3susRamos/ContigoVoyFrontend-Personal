@@ -1,5 +1,4 @@
 import { DateValue } from "@heroui/react";
-import { Interface } from "readline";
 
 export interface CardServicesProps {
   title: string;
@@ -284,7 +283,7 @@ export interface Paciente {
   codigo: string,
   nombre: string,
   apellido:string,
-  correo: string,
+  email: string,
   celular: string,
   fecha_nacimiento: Date,
   imagen: string,
@@ -330,7 +329,7 @@ export interface FormPaciente {
 }
 
 export interface DatosPacienteProps {
-  idPaciente: number;
+  idPaciente: number | null;
 }
 
 export interface Country {
@@ -349,6 +348,7 @@ export interface City {
 }
 
 
+
 export interface Cita {
   idCita: number;
   idPaciente: number;
@@ -364,7 +364,25 @@ export interface Cita {
   hora_cita: string;
 }
 
+export interface Citas {
+  idCita: string;
+  idPaciente: string;
+  idPsicologo: string;
+  paciente: string;
+  codigo: string;
+  fecha_inicio: string;
+  estado: string;
+  age: string;
+  motivo: string;
+  duracion: string;
+
+}
+
 export interface DatePacienteProps {
+  idPaciente: number;
+}
+
+export interface HistorialPacienteProps {
   idPaciente: number;
   ultimaAtencion : UltimaAtencion | null;
 }
@@ -417,6 +435,7 @@ export interface CustomizedLabelProps {
 }
 
 export interface UltimaAtencion {
+  idPaciente: number;
   nombre: string;
   apellido: string;
   DNI: string;

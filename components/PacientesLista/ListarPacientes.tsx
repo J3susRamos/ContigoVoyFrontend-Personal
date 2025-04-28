@@ -9,11 +9,10 @@ import { Paciente } from "@/interface";
 import showToast from "../ToastStyle";
 
 export default function ListarPacientes() {
-  const [paciente, setPaciente] = useState<Paciente[]>([]);
-  const [filteredPacientes, setFilteredPacientes] = useState<Paciente[]>([]);
-  const [filterValue, setFilterValue] = useState("");
+  const [paciente, setPaciente] = useState<Paciente[]>([]); 
+  const [filteredPacientes, setFilteredPacientes] = useState<Paciente[]>([]); 
+  const [filterValue, setFilterValue] = useState(""); 
 
-  // Funcion para la busqueda
   const onSearchChange = (value: string) => {
     setFilterValue(value);
     if (value === "") {
@@ -28,13 +27,11 @@ export default function ListarPacientes() {
     }
   };
 
-  // Función para limpiar el buscador
   const onClear = () => {
     setFilterValue("");
     setFilteredPacientes(paciente);
   };
 
-  //funcion para traer a los pacientes a todos, y con el filtro
   const handleGetPacientes = async () => {
     try {
       const cookies = parseCookies();
@@ -73,7 +70,6 @@ export default function ListarPacientes() {
     }
   };
 
-  //Funcion para eliminar Paciente
   const HandleDeletePaciente = async (idPaciente: number) => {
     try {
       const cookies = parseCookies();
@@ -88,19 +84,18 @@ export default function ListarPacientes() {
         },
       });
       const data = await response.json();
-
       if (response.ok) {
-        showToast("succes", "Paciente eliminado correctamente");
+        showToast("success", "Paciente eliminado correctamente");
         handleGetPacientes();
       } else {
         showToast(
           "error",
-          data.status_message || "Error de conexion. Intenta nuevamente 3"
+          data.status_message || "Error de conexión. Intenta nuevamente."
         );
       }
     } catch (error) {
       console.error(error);
-      showToast("error", "Error de conexion. Intenta nuevamente 2");
+      showToast("error", "Error de conexión. Intenta nuevamente.");
     }
   };
 
@@ -108,11 +103,16 @@ export default function ListarPacientes() {
     handleGetPacientes();
   }, []);
 
+  const redirectToPaciente = (idPaciente: number) => {
+    localStorage.setItem("idPaciente", String(idPaciente));
+    window.location.href = "/user/pacientes/DetallePaciente";
+  };
+
   return (
     <>
-    {/* Navbar*/}
+      {/* Navbar */}
       <div className="flex justify-between w-full mt-10 mb-6">
-        <h1 className=" flex items-center font-bold text-[32px]  leading-[40px]  ml-11   text-[#634AE2]  ">
+        <h1 className="flex items-center font-bold text-[32px] leading-[40px] ml-11 text-[#634AE2]">
           Pacientes
         </h1>
         <CerrarSesion />
@@ -152,17 +152,15 @@ export default function ListarPacientes() {
           </div>
         </div>
         <div className="flex flex-row items-center gap-x-1 mr-5">
-          <Link href="/user/pacientes/DatosPaciente" passHref legacyBehavior>
+          <Link href="/user/pacientes/DatosPaciente">
             <Button
-              as="a"
               className="hover:bg-gray-200 border border-white text-[#634AE2] bg-white p-[2px] rounded-full"
             >
               <Plus />
             </Button>
           </Link>
-          <Link href="/user/pacientes/DatosPaciente" passHref legacyBehavior>
+          <Link href="/user/pacientes/DatosPaciente">
             <Button
-              as="a"
               radius="full"
               className="border border-white text-white bg-transparent hover:bg-white hover:bg-opacity-20 h-8 mx-auto"
             >
@@ -171,13 +169,13 @@ export default function ListarPacientes() {
           </Link>
         </div>
       </div>
-    
-    {/* Encabezado tabla */}
+
+      {/* Encabezado tabla */}
       <table className="max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8">
         <thead className="rounded-full">
-          <tr className="bg-[#6364F4] text-white h-11 ">
+          <tr className="bg-[#6364F4] text-white h-11">
             <th className="rounded-tl-full text-2xl font-normal">○</th>
-            <th className=" font-normal">Paciente</th>
+            <th className="font-normal">Paciente</th>
             <th className="font-normal">Código</th>
             <th className="font-normal">DNI</th>
             <th className="font-normal">Correo</th>
@@ -185,23 +183,23 @@ export default function ListarPacientes() {
             <th className="rounded-tr-full font-normal">Más</th>
           </tr>
         </thead>
-      {/* Tablas */}  
+        {/* Tablas */}
         <tbody className="text-center bg-white text-[#634AE2] font-normal text-[16px] leading-[20px]">
           {filteredPacientes.map((paciente) => (
             <tr
               key={paciente.idPaciente}
-              className="border-b hover:bg-gray-100  "
+              className="border-b hover:bg-gray-100"
             >
               <td className="px-4 py-2 text-2xl rounded-l-[34px]">○</td>
               <td className="px-2 py-2">{paciente.nombre}</td>
               <td className="px-2 py-2">{paciente.codigo}</td>
               <td className="px-2 py-2">{paciente.DNI}</td>
-              <td className="px-2 py-2">{paciente.correo}</td>
+              <td className="px-2 py-2">{paciente.email}</td>
               <td className="py-2">{paciente.celular}</td>
               <td className="py-2 rounded-r-[34px]">
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="flex flex-row items-center justify-center gap-x-4">
-                    <Link
+                  <Link
                       href="/user/pacientes/RegistroFamiliar"
                       className={cn("flex flex-col items-center")}
                     >
@@ -226,12 +224,12 @@ export default function ListarPacientes() {
                         Registro Familiar
                       </h1>
                     </Link>
+                    <button className="text-2xl"
+                      onClick={() => redirectToPaciente(paciente.idPaciente)}
+                    >
                     <Link
                       href={{
-                        pathname: "/user/pacientes/DetallePaciente",
-                        query: {
-                          idPaciente: paciente.idPaciente,
-                        },
+                        pathname: "/user/pacientes/DetallePaciente"
                       }}
                       className={cn("flex flex-col items-center")}
                     >
@@ -246,6 +244,7 @@ export default function ListarPacientes() {
                       </svg>
                       <h1 className="font-light text-sm text-cente">Editar</h1>
                     </Link>
+                    </button>
                     <div className="flex flex-col items-center">
                       <button
                         onClick={() => {
