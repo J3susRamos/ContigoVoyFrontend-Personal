@@ -181,7 +181,7 @@ export const TableCitas: React.FC<TableProps> = ({
           return cellValue;
       }
     },
-    []
+    [HandleDeleteCitas]
   );
 
   if (!isClient) {

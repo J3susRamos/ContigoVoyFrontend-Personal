@@ -1,11 +1,12 @@
 "use client";
 import "./globals.css";
-import { ThemeProvider } from "../components/theme-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "../components/Navbar";
 import { usePathname } from "next/navigation";
 import { Lexend } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import Footer from "@/components/footer";
+import React from "react";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
@@ -42,7 +43,6 @@ export default function RootLayout({
           {getBaseRoute() !== "/user" && getBaseRoute() !== "/admin" && (
             <Footer />
           )}
-          
         </ThemeProvider >
         <ToastContainer />
       </body>

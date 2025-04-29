@@ -43,7 +43,7 @@ export default function App() {
       );
     }
     return filteredData;
-  }, [atencion, filterValue]);
+  }, [atencion, filterValue, hasSearchFilter]);
 
   const sortedItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {

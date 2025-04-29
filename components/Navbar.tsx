@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-
 import { DesktopNav } from "./DesktopNav";
 import Image from "next/image";
 

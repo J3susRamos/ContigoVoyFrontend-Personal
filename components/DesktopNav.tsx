@@ -9,7 +9,6 @@ import { DataUser } from "./DataUser";
 import { Panel } from "./PanelUser";
 import { MobileNav } from "./MobileNav";
 
-
 interface NavItem {
   name: string;
   link: string;
