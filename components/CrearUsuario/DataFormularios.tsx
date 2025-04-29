@@ -14,8 +14,7 @@ import {
 } from "@heroui/react";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import React from "react";
-
-
+import CerrarSesion from "../CerrarSesion";
 
 export const PersonalForm = ({
   onNext,
@@ -45,8 +44,8 @@ export const PersonalForm = ({
     }));
   };
 
-  return (
-    <div className="text-[#634AE2] h-auto p-10 items-center bg-white rounded-3xl ">
+  return (    
+    <div className="text-[#634AE2] h-auto p-10 items-center bg-background rounded-3xl ">
       <h1 className="font-semibold text-center mb-5 text-4xl">
         Ingrese sus datos
       </h1>
@@ -58,9 +57,9 @@ export const PersonalForm = ({
               labelPlacement="outside"
               radius="full"
               classNames={{
-                label: "!text-[#634AE2]",
-                inputWrapper: "border-2 border-[#634AE2]",
-                input: "placeholder:!text-[#634AE2] w-full",
+                label: "!text-[#BABAFF]",
+                inputWrapper: "border-2 border-[#BABAFF]",
+                input: "placeholder:!text-[#BABAFF] w-full",
               }}
               placeholder="ingrese su nombre"
               type="text"
@@ -72,7 +71,7 @@ export const PersonalForm = ({
               }
             />
             <div className="flex items-center gap-2 !mt-4 !pt-0">
-              <span className="text-[#634AE2] text-sm">
+              <span className="text-[#BABAFF] text-sm">
                 Fecha de nacimiento
               </span>
               <span className="text-danger">*</span>
@@ -87,7 +86,7 @@ export const PersonalForm = ({
               showMonthAndYearPickers
               radius="full"
               classNames={{
-                label: "!text-[#634AE2]",
+                label: "!text-[#BABAFF]",
                 base: "!mt-0.5",
               }}
               onChange={handleDateChange}
@@ -101,9 +100,9 @@ export const PersonalForm = ({
               variant="faded"
               selectedKeys={[formData.genero]}
               classNames={{
-                label: "!text-[#634AE2]",
-                trigger: "border-2 border-[#634AE2]",
-                value: "!text-[#634AE2]",
+                label: "!text-[#BABAFF]",
+                trigger: "border-2 border-[#BABAFF]",
+                value: "!text-[#BABAFF]",
               }}
               placeholder="Seleccione su género"
               onChange={(e) =>
@@ -111,21 +110,21 @@ export const PersonalForm = ({
               }
             >
               <SelectItem
-                className="text-[#634AE2]"
+                className="text-[#BABAFF]"
                 key="femenino"
                 textValue="femenino"
               >
                 Femenino
               </SelectItem>
               <SelectItem
-                className="text-[#634AE2]"
+                className="text-[#BABAFF]"
                 key="masculino"
                 textValue="masculino"
               >
                 Masculino
               </SelectItem>
               <SelectItem
-                className="text-[#634AE2]"
+                className="text-[#BABAFF]"
                 key="otros"
                 textValue="otros"
               >
@@ -139,9 +138,9 @@ export const PersonalForm = ({
               radius="full"
               value={formData.email}
               classNames={{
-                label: "!text-[#634AE2]",
-                inputWrapper: "border-2 border-[#634AE2]", // Solo controla el borde
-                input: "placeholder:!text-[#634AE2]", // Aquí es donde controlas el color del placeholder
+                label: "!text-[#BABAFF]",
+                inputWrapper: "border-2 border-[#BABAFF]", // Solo controla el borde
+                input: "placeholder:!text-[#BABAFF]", // Aquí es donde controlas el color del placeholder
               }}
               placeholder="ingrese su email"
               type="email"
@@ -159,11 +158,11 @@ export const PersonalForm = ({
               variant="faded"
               value={formData.apellido}
               classNames={{
-                label: "!text-[#634AE2]",
-                inputWrapper: "border-2 border-[#634AE2]",
-                input: "placeholder:!text-[#634AE2]",
+                label: "!text-[#BABAFF]",
+                inputWrapper: "border-2 border-[#BABAFF]",
+                input: "placeholder:!text-[#BABAFF]",
               }}
-              className="w-full   text-[#634AE2]"
+              className="w-full   text-[#BABAFF]"
               isRequired
               placeholder="ingrese su apellido"
               type="text"
@@ -173,7 +172,7 @@ export const PersonalForm = ({
             />
 
             <div className="flex items-center gap-2 !mt-4 !pt-0">
-              <span className="text-[#634AE2] text-sm">Pais</span>
+              <span className="text-[#BABAFF] text-sm">Pais</span>
               <span className="text-danger">*</span>
             </div>
             <Autocomplete
@@ -183,9 +182,9 @@ export const PersonalForm = ({
                 setFormData({ ...formData, pais: key as string })
               }
               classNames={{
-                popoverContent: "border-2 border-[#634AE2]",
+                popoverContent: "border-2 border-[#BABAFF]",
                 base: "!mt-0.5",
-                listbox: "placeholder:!text-[#634AE2]",
+                listbox: "placeholder:!text-[#BABAFF]",
               }}
               placeholder="Ingrese su país"
               isRequired
@@ -209,9 +208,9 @@ export const PersonalForm = ({
               value={formData.password}
               placeholder="ingrese su contraseña"
               classNames={{
-                label: "!text-[#634AE2]",
-                inputWrapper: "border-2 border-[#634AE2]",
-                input: "placeholder:!text-[#634AE2]",
+                label: "!text-[#BABAFF]",
+                inputWrapper: "border-2 border-[#BABAFF]",
+                input: "placeholder:!text-[#BABAFF]",
               }}
               endContent={
                 <button
@@ -246,9 +245,9 @@ export const PersonalForm = ({
               }
               placeholder="ingrese su título"
               classNames={{
-                label: "!text-[#634AE2]",
-                inputWrapper: "border-2 border-[#634AE2]",
-                input: "placeholder:!text-[#634AE2]",
+                label: "!text-[#BABAFF]",
+                inputWrapper: "border-2 border-[#BABAFF]",
+                input: "placeholder:!text-[#BABAFF]",
               }}
             />
             
