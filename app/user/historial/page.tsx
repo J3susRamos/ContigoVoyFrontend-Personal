@@ -3,7 +3,7 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Navbar } from "@/components/User/Historial/SearchNavbar";
 import { TableComponent } from "@/components/User/Historial/TableComponent";
 import CerrarSesion from "@/components/CerrarSesion";
-import { Citas, ListaAtencion } from "@/interface";
+import { ListaAtencion } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 
@@ -43,7 +43,7 @@ export default function App() {
       );
     }
     return filteredData;
-  }, [atencion, filterValue]);
+  }, [atencion, filterValue, hasSearchFilter]);
 
   const sortedItems = useMemo(() => {
     return [...filteredItems].sort((a, b) => {

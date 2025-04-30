@@ -1,12 +1,10 @@
 import { Icons } from "@/icons";
 import React, { useEffect, useState } from "react";
 import {
-  AtencionFormData,
   DatePacienteProps,
   UltimaAtencion,
 } from "@/interface";
 import { parseCookies } from "nookies";
-import Link from "next/link";
 import showToast from "@/components/ToastStyle";
 import { HistorialPaciente } from "./HistorialPaciente";
 

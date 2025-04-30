@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { DesktopNavUser } from "./DesktopNavUser";
 import { Icons } from "@/icons";
-
 import { MobileNavbar } from "./MobileNavbarUser";
 import { UsuarioLocalStorage } from "@/interface";
 
@@ -100,8 +99,6 @@ const NavbarUser = () => {
       if (user.rol === "PSICOLOGO") {
         items = items.filter(item => item.name !== "Registro de personal" && item.name !== "Psicologos" && item.name !== "Marketing");
       }
-
-
       setNavItems(items);
     }
   }, []);
@@ -115,7 +112,7 @@ const NavbarUser = () => {
 
       {/* Navbar */}
       <div className="hidden lg:flex w-72 h-screen fixed">
-        <div className="bg-background w-full h-full rounded-tr-3xl pt-7 flex flex-col">
+        <div className="bg-card w-full h-full rounded-tr-3xl pt-7 flex flex-col">
           <Link href="/">
             <h1 className="font-normal text-3xl flex justify-center items-center">
               <Image src={"/LOGO.webp"} priority={true} width={200} height={150} alt="logo" />

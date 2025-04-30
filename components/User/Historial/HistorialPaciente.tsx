@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Icons } from "@/icons";
-import { DatePacienteProps, ListaAtencion } from "@/interface";
+import { HistorialPacienteProps, ListaAtencion } from "@/interface";
 import { parseCookies } from "nookies";
 import { DetallesPaciente } from "./DetallesPaciente";
 
@@ -13,7 +13,7 @@ const headerColumns = [
   { uid: 6, name: "Editar" },
 ];
 
-export const HistorialPaciente: React.FC<DatePacienteProps> = ({
+export const HistorialPaciente: React.FC<HistorialPacienteProps> = ({
   idPaciente, ultimaAtencion
 }) => {
   const [showCart, setShowCart] = useState(false);

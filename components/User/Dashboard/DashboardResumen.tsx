@@ -42,7 +42,7 @@ export default function DashboardResumen() {
   return (
     <>
       <div className="space-y-6 md:max-w-xl w-full">
-        <div className="bg-[#fff] rounded-3xl pt-8">
+        <div className="bg-card rounded-3xl pt-8">
           <div className="flex rounded-r-full py-6 text-[#fff] bg-[#6364F4] justify-center font-normal text-2xl w-3/4 ">
             Resumen
           </div>
@@ -56,12 +56,12 @@ export default function DashboardResumen() {
           </div>
         </div>
 
-        <div className="bg-[#fff] justify-items-center p-6 rounded-3xl text-[#634AE2]">
+        <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
           <div className="font-normal text-xl">Total Paciente</div>
           <div className="font-bold text-6xl">{datos.total_pacientes}</div>
         </div>
 
-        <div className="bg-[#fff] justify-items-center p-6 rounded-3xl text-[#634AE2]">
+        <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
           <div className="font-normal text-xl">Nuevos Pacientes</div>
           <div className="font-bold text-6xl">{datos.nuevos_pacientes}</div>
         </div>

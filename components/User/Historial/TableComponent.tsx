@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Citas, ListaAtencion } from "@/interface";
+import { ListaAtencion } from "@/interface";
 import { DatePaciente } from "./DatePaciente";
 
 interface TableProps {

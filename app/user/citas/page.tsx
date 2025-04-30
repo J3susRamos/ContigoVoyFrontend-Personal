@@ -170,9 +170,8 @@ export default function App() {
             <div className="text-lg font-medium text-red-500">{error}</div>
           </div>
         ) : (
-          /* Tabla */
           <TableCitas
-            users={sortedItems}  // Envía los datos ordenados y filtrados
+            users={sortedItems} 
             headerColumns={headerColumns}
             selectedKeys={selectedKeys}
             setSelectedKeys={setSelectedKeys}
