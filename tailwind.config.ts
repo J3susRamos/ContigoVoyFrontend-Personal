@@ -61,6 +61,6 @@ export default {
   		}
   	}
   },
-  darkMode: ["class", "class"],
+  darkMode: ["class"],
   plugins: [heroui(), require("tailwindcss-animate")],
 } satisfies Config;
