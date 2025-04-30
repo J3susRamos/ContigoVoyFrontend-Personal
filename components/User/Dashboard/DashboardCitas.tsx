@@ -42,7 +42,7 @@ const columns = [
 
 export default function DashboardCitas() {
   return (
-    <div className="bg-[#fff] w-full pt-8 rounded-2xl">
+    <div className="bg-card w-full pt-8 rounded-2xl">
       <div className="flex rounded-r-full py-5 text-[#fff] bg-[#6364F4] justify-center font-normal text-2xl w-4/6">
         Citas del día
         <button

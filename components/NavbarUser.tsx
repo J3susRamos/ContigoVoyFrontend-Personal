@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { DesktopNavUser } from "./DesktopNavUser";
 import { Icons } from "@/icons";
-
 import { MobileNavbar } from "./MobileNavbarUser";
 
 const navItems = [
