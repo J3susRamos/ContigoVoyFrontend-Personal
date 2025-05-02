@@ -16,12 +16,14 @@ interface NavbarProps {
   visibleColumns: Set<string>;
   setVisibleColumns: (columns: Set<string>) => void;
   columns: { name: string; uid: string; sortable?: boolean }[];
+  onAddNew: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   filterValue,
   onSearchChange,
   onClear,
+  onAddNew,
 }) => {
   return (
     <div className="flex w-full mt-8 z-40">
@@ -45,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <DropdownTrigger className="text-primary-foreground dark:text-primary-foreground font-light text-xl">
               <Button variant="bordered" className="border-none">
-                Filtrar{" "}
+                Filtrar
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Ordenar por">
@@ -105,7 +107,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Grupo de icono de agregar y botón */}
           <div className="ml-auto flex items-center gap-4 mr-12">
-            {/* Icono de agregar */}
             <span
               className="text-primary dark:text-primary transition-colors"
               dangerouslySetInnerHTML={{
@@ -117,9 +118,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 borderColor: "hsl(var(--primary))",
               }}
             />
-
+                
             {/* Botón de agregar nueva cita */}
-            <button className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4">
+
+            <button
+              className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
+              onClick={onAddNew}
+            >
               Agregar nueva cita
             </button>
           </div>
