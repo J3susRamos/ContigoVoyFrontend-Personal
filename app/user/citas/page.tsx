@@ -131,17 +131,15 @@ export default function App() {
   }, []);
 
   return (
-    <div className="bg-background dark:bg-background">
+    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
       {/* Header */}
-      <header className="mt-4 z-30">
-        <div className="bg-secondary dark:bg-secondary rounded-2xl p-4 w-[calc(95vw-270px)]">
-          <div className="flex items-start justify-between w-full">
-            <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-              Lista de Citas
-            </h1>
-            <div className="flex gap-x-5 mt-2">
-              <CerrarSesion />
-            </div>
+      <header className="mt-4 z-30 px-4">
+        <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
+          <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-foreground">
+            Lista de Citas
+          </h1>
+          <div className="flex gap-x-5 mt-2">
+            <CerrarSesion />
           </div>
         </div>
       </header>
