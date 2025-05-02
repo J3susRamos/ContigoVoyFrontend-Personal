@@ -1,4 +1,3 @@
-
 import { Icons } from "@/icons";
 import {
   Input,
@@ -9,7 +8,6 @@ import {
   DropdownItem,
 } from "@heroui/react";
 
-
 interface NavbarProps {
   filterValue: string;
   onSearchChange: (value?: string) => void;
@@ -17,12 +15,14 @@ interface NavbarProps {
   visibleColumns: Set<string>;
   setVisibleColumns: (columns: Set<string>) => void;
   columns: { name: string; uid: string; sortable?: boolean }[];
+  onAddNew: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   filterValue,
   onSearchChange,
   onClear,
+  onAddNew,
 }) => {
   return (
     <div className="flex w-full mt-8 z-40">
@@ -39,109 +39,40 @@ export const Navbar: React.FC<NavbarProps> = ({
               height: "1.2em",
             }}
           />
-          <Dropdown
-            classNames={{
-              base: "bg-none",
-            }}
-          >
+          <Dropdown classNames={{ base: "bg-none" }}>
             <DropdownTrigger className="text-[#fff] font-light text-xl">
               <Button variant="bordered" className="border-none">
-                Filtrar{" "}
+                Filtrar
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Ordenar por">
-              <DropdownItem
-                key="genero"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-[#634AE2] data-[hover=true]:bg-[#9494F3] data-[hover=true]:text-white",
-                  title: "ml-3 text-[16px]",
-                }}
-              >
-                Genero
-                <span
-                  className="inline-flex items-center ml-[127px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(
-                      /<svg /,
-                      '<svg fill="#634AE2"'
-                    ),
+              {[
+                { key: "genero", label: "Genero", ml: "127px" },
+                { key: "edad", label: "Edad", ml: "139px" },
+                { key: "FechaCreacion", label: "Fecha de creacion", ml: "37px" },
+                { key: "FechaUltimaCita", label: "Fecha de Ultima Cita", ml: "18px" },
+              ].map(({ key, label, ml }) => (
+                <DropdownItem
+                  key={key}
+                  classNames={{
+                    base: "rounded-2x1 text-base font-normal h-6 text-[#634AE2] data-[hover=true]:bg-[#9494F3] data-[hover=true]:text-white",
+                    title: "ml-3 text-[16px]",
                   }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
-              <DropdownItem
-                key="edad"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-[#634AE2] data-[hover=true]:bg-[#9494F3] data-[hover=true]:text-white",
-                  title: "ml-3 text-[16px]",
-                }}
-              >
-                Edad{" "}
-                <span
-                  className="inline-flex items-center ml-[139px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(
-                      /<svg /,
-                      '<svg fill="#634AE2" '
-                    ),
-                  }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
-              <DropdownItem
-                key="FechaCreacion"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-[#634AE2] data-[hover=true]:bg-[#9494F3] data-[hover=true]:text-white",
-                  title: "ml-3 text-[16px]",
-                }}
-              >
-                Fecha de creacion{" "}
-                <span
-                  className="inline-flex items-center ml-[37px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(
-                      /<svg /,
-                      '<svg fill="#634AE2" '
-                    ),
-                  }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
-              <DropdownItem
-                key="FechaUltimaCita"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-[#634AE2] data-[hover=true]:bg-[#9494F3] data-[hover=true]:text-white",
-                  title: " ml-3 text-[16px]",
-                }}
-              >
-                Fecha de Ultima Cita{" "}
-                <span
-                  className="inline-flex items-center ml-[18px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(
-                      /<svg /,
-                      '<svg fill="#634AE2" '
-                    ),
-                  }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
+                >
+                  {label}
+                  <span
+                    className={`inline-flex items-center ml-[${ml}]`}
+                    dangerouslySetInnerHTML={{
+                      __html: Icons.arrow.replace(/<svg /, '<svg fill="#634AE2"'),
+                    }}
+                    style={{
+                      width: "1.5em",
+                      height: "1.5em",
+                      transform: "rotate(-90deg)",
+                    }}
+                  />
+                </DropdownItem>
+              ))}
             </DropdownMenu>
           </Dropdown>
 
@@ -176,7 +107,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Grupo de icono de agregar y botón */}
           <div className="ml-auto flex items-center gap-4 mr-12">
-            {/* Icono de agregar */}
             <span
               className="text-[#634AE2] transition-colors"
               dangerouslySetInnerHTML={{
@@ -188,9 +118,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 borderColor: "#634AE2",
               }}
             />
-
-            {/* Botón de agregar nueva cita */}
-            <button className="text-[#fff] font-light text-xl border-1 rounded-full px-4">
+            <button
+              className="text-[#fff] font-light text-xl border-1 rounded-full px-4"
+              onClick={onAddNew}
+            >
               Agregar nueva cita
             </button>
           </div>

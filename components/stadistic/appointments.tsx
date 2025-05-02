@@ -32,7 +32,6 @@ const data = [
   { name: "06", uv: 2390, pv: 3800 },
 ];
 
-
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -60,11 +59,27 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
+
 export default function Appointments() {
+  const handleAddNewCita = () => {
+    console.log("Agregar nueva cita");
+    // Aquí puedes abrir un modal, navegar a otra página, etc.
+  };
+
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
+      {/* Botón para agregar nueva cita */}
+      <div className="col-span-2 flex justify-end w-full">
+        <button
+          onClick={handleAddNewCita}
+          className="bg-[#6364F4] hover:bg-[#4e4ff0] text-white font-semibold py-2 px-4 rounded-xl mb-4"
+        >
+          + Nueva cita
+        </button>
+      </div>
+
       {/* Primer cuadro con LineChart */}
-      <div className="w-[547px] h-[459px] bg-white rounded-2xl flex flex-col  ">
+      <div className="w-[547px] h-[459px] bg-white rounded-2xl flex flex-col">
         <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
           <p className="text-white font-medium text-center mr-10 text-xl">
             Citas totales <br /> del período:
@@ -91,20 +106,14 @@ export default function Appointments() {
                       fontSize={12}
                       fontWeight="500"
                     >
-                      <tspan x={x} dy="0">
-                        feb,
-                      </tspan>{" "}
-                      <tspan x={x} dy="15">
-                        {payload.value}
-                      </tspan>
+                      <tspan x={x} dy="0">feb,</tspan>
+                      <tspan x={x} dy="15">{payload.value}</tspan>
                     </text>
                   );
                 }}
               />
               <YAxis
-
-                tickFormatter={(value: number) => `${value / 1250}`} // Convertir a string
-
+                tickFormatter={(value: number) => `${value / 1250}`}
                 tick={{ fill: "#634AE2" }}
                 axisLine={{ stroke: "#634AE2" }}
                 tickLine={{ stroke: "#634AE2" }}
@@ -120,11 +129,11 @@ export default function Appointments() {
         </div>
       </div>
 
+      {/* Segundo cuadro con PieChart */}
       <div className="h-[459px] w-[353px] bg-white rounded-2xl">
         <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
           <p className="text-white font-medium text-start mr-10 text-xl">
-            Estado de <br />
-            cita:
+            Estado de <br /> cita:
           </p>
         </div>
 
