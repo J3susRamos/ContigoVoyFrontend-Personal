@@ -126,5 +126,4 @@ const NavbarUser = () => {
     </div>
   );
 };
-
 export default NavbarUser;
