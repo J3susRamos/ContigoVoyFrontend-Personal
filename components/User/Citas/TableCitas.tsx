@@ -95,7 +95,7 @@ export const TableCitas: React.FC<TableProps> = ({
             <div className="flex flex-col items-center">
               <div className="relative group">
                 <span
-                  className="text-lg text-[#634AE2] cursor-pointer active:opacity-50"
+                  className="text-lg text-primary dark:text-primary-foreground cursor-pointer active:opacity-50"
                   dangerouslySetInnerHTML={{ __html: Icons.edit }}
                   style={{ width: "1.2em", height: "1.2em" }}
                 />
@@ -168,8 +168,8 @@ export const TableCitas: React.FC<TableProps> = ({
             <span
               className={`px-3 py-1 rounded-full text-xs ${
                 cellValue === "Confirmado"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
+                  ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
+                  : "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100"
               }`}
             >
               {cellValue}
@@ -190,8 +190,8 @@ export const TableCitas: React.FC<TableProps> = ({
 
   return (
     <div className="overflow-x-auto max-h-[585px] p-5 w-full mx-auto">
-      <table className="w-full text-[#634AE2] border-separate border-spacing-y-2">
-        <thead className="sticky top-0 bg-[#6364F4] text-[#fff]">
+      <table className="w-full text-primary dark:text-primary-foreground border-separate border-spacing-y-2">
+        <thead className="sticky top-0 bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground">
           <tr>
             <th className="p-4 text-center rounded-tl-full">
               <input
@@ -220,7 +220,7 @@ export const TableCitas: React.FC<TableProps> = ({
           {users.map((item) => (
             <tr
               key={item.codigo}
-              className="border-y-4 bg-white hover:bg-gray-100"
+              className="border-y-4 bg-card dark:bg-card hover:bg-muted dark:hover:bg-muted"
             >
               <td className="p-4 text-center rounded-l-3xl">
                 <input

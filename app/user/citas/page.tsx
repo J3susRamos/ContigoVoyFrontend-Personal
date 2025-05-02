@@ -131,24 +131,19 @@ export default function App() {
   }, []);
 
   return (
-    <div>
+    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
       {/* Header */}
-      <div className="flex flex-1 bg-[#eaeded] w-full z-30 mt-4">
-        <div>
-          <nav className="bg-[#eaeded] rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
-            <div className="bg-[#eaeded] flex items-start justify-between w-full">
-              <div>
-                <div className="pl-12 text-4xl font-bold text-[#634AE2]">
-                  <h1>Lista de Citas</h1>
-                </div>
-              </div>
-              <div className="flex gap-x-5 mt-2">
-                <CerrarSesion />
-              </div>
-            </div>
-          </nav>
+      <header className="mt-4 z-30 px-4">
+        <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
+          <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-foreground">
+            Lista de Citas
+          </h1>
+          <div className="flex gap-x-5 mt-2">
+            <CerrarSesion />
+          </div>
         </div>
-      </div>
+      </header>
+      
       <div>
         {/* Navbar */}
         <Navbar
@@ -162,12 +157,14 @@ export default function App() {
 
         {/* Contenido */}
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex justify-center items-center h-64 text-foreground dark:text-foreground">
             <div className="text-lg font-medium">Cargando citas...</div>
           </div>
         ) : error ? (
           <div className="flex justify-center items-center h-64">
-            <div className="text-lg font-medium text-red-500">{error}</div>
+            <div className="text-lg font-medium text-destructive dark:text-destructive">
+              {error}
+            </div>
           </div>
         ) : (
           <TableCitas
