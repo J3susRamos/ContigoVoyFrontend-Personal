@@ -188,7 +188,7 @@ export default function ListarPacientes() {
           {filteredPacientes.map((paciente) => (
             <tr
               key={paciente.idPaciente}
-              className="border-b hover:bg-gray-100"
+              className="bg-background border-b hover:bg-gray-100"
             >
               <td className="px-4 py-2 text-2xl rounded-l-[34px]">○</td>
               <td className="px-2 py-2">{paciente.nombre}</td>
