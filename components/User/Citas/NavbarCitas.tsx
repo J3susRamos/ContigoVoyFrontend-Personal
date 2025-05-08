@@ -49,7 +49,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Ordenar por">
-              {/* DropdownItems with updated colors */}
               <DropdownItem
                 key="genero"
                 classNames={{
@@ -70,7 +69,70 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }}
                 />
               </DropdownItem>
-              {/* Similar updates for other DropdownItems */}
+              
+              <DropdownItem
+                key="edad"
+                classNames={{
+                  base: "rounded-2x1 text-base font-normal h-6 text-primary dark:text-primary-foreground data-[hover=true]:bg-primary data-[hover=true]:text-primary-foreground",
+                  title: "ml-3 text-[16px]",
+                }}
+              >
+                Edad
+                <span
+                  className="inline-flex items-center ml-[139px]"
+                  dangerouslySetInnerHTML={{
+                    __html: Icons.arrow.replace(/<svg /, '<svg fill="currentColor"'),
+                  }}
+                  style={{
+                    width: "1.5em",
+                    height: "1.5em",
+                    transform: "rotate(-90deg)",
+                  }}
+                />
+              </DropdownItem>
+              
+              <DropdownItem
+                key="FechaCreacion"
+                classNames={{
+                  base: "rounded-2x1 text-base font-normal h-6 text-primary dark:text-primary-foreground data-[hover=true]:bg-primary data-[hover=true]:text-primary-foreground",
+                  title: "ml-3 text-[16px]",
+                }}
+              >
+                Fecha de creacion
+                <span
+                  className="inline-flex items-center ml-[37px]"
+                  dangerouslySetInnerHTML={{
+                    __html: Icons.arrow.replace(/<svg /, '<svg fill="currentColor"'),
+                  }}
+                  style={{
+                    width: "1.5em",
+                    height: "1.5em",
+                    transform: "rotate(-90deg)",
+                  }}
+                />
+              </DropdownItem>
+              
+              <DropdownItem
+                key="FechaUltimaCita"
+                classNames={{
+                  base: "rounded-2x1 text-base font-normal h-6 text-primary dark:text-primary-foreground data-[hover=true]:bg-primary data-[hover=true]:text-primary-foreground",
+                  title: "ml-3 text-[16px]",
+                }}
+              >
+                Fecha de Ultima Cita
+                <span
+                  className="inline-flex items-center ml-[18px]"
+                  dangerouslySetInnerHTML={{
+                    __html: Icons.arrow.replace(/<svg /, '<svg fill="currentColor"'),
+                  }}
+                  style={{
+                    width: "1.5em",
+                    height: "1.5em",
+                    transform: "rotate(-90deg)",
+                  }}
+                />
+              </DropdownItem>
+
             </DropdownMenu>
           </Dropdown>
 
