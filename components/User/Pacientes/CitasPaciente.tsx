@@ -11,7 +11,7 @@ const CitasPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
     confirmadas: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   const HandleGetCitas = async (idPaciente: number) => {
     try {

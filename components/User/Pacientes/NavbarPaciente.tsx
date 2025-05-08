@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -20,7 +19,7 @@ const NavbarPaciente = () => {
     } else {
       setIdPaciente(parsed);
     }
-  }, []);
+  }, [router]);
 
   const navItems = [
     { name: "Datos Personales", path: "/user/pacientes/DetallePaciente" },

@@ -104,15 +104,15 @@ const NavbarUser = () => {
   }, []);
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row bg-background dark:bg-background">
       {/* Navbar Mobile*/}
-      <div className="lg:hidden">
+      <div className="lg:hidden bg-background dark:bg-background">
         <MobileNavbar navItems={navItems} />
       </div>
 
       {/* Navbar */}
-      <div className="hidden lg:flex w-72 h-screen fixed">
-        <div className="bg-card w-full h-full rounded-tr-3xl pt-7 flex flex-col">
+      <div className="hidden lg:flex w-72 h-screen fixed bg-background dark:bg-background">
+        <div className="bg-card dark:bg-card w-full h-full rounded-tr-3xl pt-7 flex flex-col">
           <Link href="/">
             <h1 className="font-normal text-3xl flex justify-center items-center">
               <Image src={"/LOGO.webp"} priority={true} width={200} height={150} alt="logo" />
