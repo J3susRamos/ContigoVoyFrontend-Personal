@@ -108,6 +108,7 @@ export default function ListarPacientes() {
     window.location.href = "/user/pacientes/DetallePaciente";
   };
 
+  
   return (
     <>
       {/* Navbar */}
@@ -188,9 +189,10 @@ export default function ListarPacientes() {
           {filteredPacientes.map((paciente) => (
             <tr
               key={paciente.idPaciente}
-              className="bg-background border-b hover:bg-gray-100"
+              className="bg-background border-b hover:bg-gray-100 cursor-pointer"
+              onClick={() => redirectToPaciente(paciente.idPaciente)}
             >
-              <td className="px-4 py-2 text-2xl rounded-l-[34px]">○</td>
+              <td className="px-4 py-2 text-2xl rounded-l-[34px]">o</td>
               <td className="px-2 py-2">{paciente.nombre}</td>
               <td className="px-2 py-2">{paciente.codigo}</td>
               <td className="px-2 py-2">{paciente.DNI}</td>
