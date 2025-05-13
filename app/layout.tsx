@@ -23,6 +23,10 @@ export default function RootLayout({
   
   return (
     <html lang="en" suppressHydrationWarning>
+    <head>
+      <meta charSet="utf-8"/>
+      <meta name="google-site-verification" content="E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY" />
+    </head>
       <body className={`${lexend.className} antialiased`}>
         <ThemeProvider
           attribute="class"

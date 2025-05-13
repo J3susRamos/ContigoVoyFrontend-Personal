@@ -145,27 +145,22 @@ export default function App() {
 
   useEffect(() => {
     handleGetCitas();
-  },  [handleGetCitas]);
+  }, []);
 
   return (
-    <div className="p-4">
+    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
       {/* Header */}
-      <div className="flex flex-1 bg-[#eaeded] w-full z-30 mt-4">
-        <div>
-          <nav className="bg-[#eaeded] rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
-            <div className="bg-[#eaeded] flex items-start justify-between w-full">
-              <div>
-                <div className="pl-12 text-4xl font-bold text-[#634AE2]">
-                  <h1>Historial de pacientes</h1>
-                </div>
-              </div>
-              <div className="flex gap-x-5 mt-2">
-                <CerrarSesion />
-              </div>
-            </div>
-          </nav>
+      <header className="mt-4 z-30 px-4">
+        <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
+          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
+            Historial de pacientes
+          </h1>
+          <div className="flex gap-x-5 mt-2">
+            <CerrarSesion />
+          </div>
         </div>
-      </div>
+      </header>
+
       <div>
         <Navbar
           filterValue={filterValue}

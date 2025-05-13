@@ -147,13 +147,14 @@ export default function App() {
       <div>
         {/* Navbar */}
         <Navbar
-          filterValue={filterValue}
-          onSearchChange={onSearchChange}
-          onClear={onClear}
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          columns={columns}
-        />
+            filterValue={filterValue}
+            onSearchChange={onSearchChange}
+            onClear={onClear}
+            visibleColumns={visibleColumns}
+            setVisibleColumns={setVisibleColumns}
+            columns={columns} onAddNew={function (): void {
+          throw new Error("Function not implemented.");
+        }}        />
 
         {/* Contenido */}
         {isLoading ? (
