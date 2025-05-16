@@ -18,17 +18,17 @@ export default function ShowStadistic() {
   ];
 
   return (
-    <div>
+    <div className="bg-background dark:bg-background">
       {/* Barra de botones */}
-      <div className="w-full h-16 bg-[#6364F4] flex items-center justify-start">
+      <div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
         <div className="ml-10 flex justify-between items-center w-full max-w-[600px]">
           {buttons.map((btn, index) => (
             <Button
               key={index}
               className={`${
                 view === btn.name.toLowerCase()
-                  ? "bg-white text-[#634AE2]"
-                  : "bg-[#634AE2] text-white"
+                  ? "bg-background dark:bg-background text-primary dark:text-primary"
+                  : "bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground"
               } text-[16px] leading-[20px] font-bold rounded-full px-9 py-2`}
               onClick={btn.action}
             >
@@ -38,7 +38,7 @@ export default function ShowStadistic() {
         </div>
       </div>
 
-      <div>
+      <div className="bg-background dark:bg-background">
         {view === "clientes" && <Clientes />}
         {view === "citas" && <Citas />}
         {view === "ventas" && <Ventas />}
@@ -48,27 +48,26 @@ export default function ShowStadistic() {
   );
 }
 
-
 function Clientes() {
-  return <div className="text-xl font-bold text-[#634AE2]">
+  return <div className="text-xl font-bold text-primary dark:text-primary-foreground">
     <Clients />
   </div>;
 }
 
 function Citas() {
-  return <div className="text-xl font-bold text-[#634AE2]">
+  return <div className="text-xl font-bold text-primary dark:text-primary-foreground">
     <Appointments />
   </div>;
 }
 
 function Ventas() {
-  return <div className="text-xl font-bold text-[#634AE2]">
-    <Sales  />
+  return <div className="text-xl font-bold text-primary dark:text-primary-foreground">
+    <Sales />
   </div>;
 }
 
 function Rendimiento() {
-  return <div className="text-xl font-bold text-[#634AE2]">
+  return <div className="text-xl font-bold text-primary dark:text-primary-foreground">
     <Performance />
   </div>;
 }

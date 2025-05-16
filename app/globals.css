@@ -231,3 +231,79 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Estilos para el modo oscuro del calendario */
+.dark .calendar-component {
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+.dark .rbc-toolbar button {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-toolbar button:active,
+.dark .rbc-toolbar button.rbc-active {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.dark .rbc-toolbar button:hover {
+  background-color: hsl(var(--muted));
+}
+
+.dark .rbc-month-view,
+.dark .rbc-agenda-view,
+.dark .rbc-time-view {
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-header,
+.dark .rbc-today {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+.dark .rbc-off-range-bg {
+  background-color: hsl(var(--muted));
+}
+
+.dark .rbc-off-range {
+  color: hsl(var(--muted-foreground));
+}
+
+.dark .rbc-event {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.dark .rbc-day-bg + .rbc-day-bg,
+.dark .rbc-month-row + .rbc-month-row,
+.dark .rbc-header + .rbc-header,
+.dark .rbc-time-header-content,
+.dark .rbc-time-content,
+.dark .rbc-day-slot .rbc-time-slot,
+.dark .rbc-timeslot-group {
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-time-content > * + * > *,
+.dark .rbc-header + .rbc-header {
+  border-left-color: hsl(var(--border));
+}
+
+.dark .rbc-current-time-indicator {
+  background-color: hsl(var(--primary));
+}
+
+.dark .rbc-label,
+.dark .rbc-toolbar-label {
+  color: hsl(var(--foreground));
+}
+
+.dark .rbc-agenda-empty {
+  color: hsl(var(--muted-foreground));
+  border-color: hsl(var(--border));
+}
