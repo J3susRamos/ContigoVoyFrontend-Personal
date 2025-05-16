@@ -6,14 +6,17 @@ export interface CardServicesProps {
   imageUrl: string;
   color: string;
 }
+
 export interface QuestionInterface {
   Question: string;
   Answer?: React.ReactNode;
 }
+
 export interface PanelProps {
   estado: boolean;
   setEstado: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 export interface UserInterface {
   name: string | null;
   email: string | null;
@@ -21,9 +24,11 @@ export interface UserInterface {
   photo: string | null;
   iniciales: string | null;
 }
+
 export interface UpdateUserProps {
-  task: any;
+  task: never;
 }
+
 export interface FAQ {
   Question: string;
   Answer: string;
@@ -74,9 +79,7 @@ export interface NavItem {
 }
 
 //interface for the component Creacion de usuario
-
 export interface Genero {
-
   label: number;
   genero: string;
 }
@@ -179,7 +182,7 @@ export interface PsicologoApiResponse {
   status_code: number;
   status_message: string;
   description: string;
-  errorBag: any[];
+  errorBag: never[];
   result: PsicologoPreviewData[];
 }
 
@@ -187,7 +190,7 @@ export interface PsicologoApiResponseAlone {
   status_code: number;
   status_message: string;
   description: string;
-  errorBag: any[];
+  errorBag: never[];
   result: PsicologoPreviewData;
 }
 
@@ -218,7 +221,7 @@ export interface CategoriaApi {
   status_code: number;
   status_message: string;
   description: string;
-  errorBag: any[];
+  errorBag: never[];
   result: Categoria[];
 }
 
@@ -233,7 +236,7 @@ export interface AuthorsApi {
   status_code: number;
   status_message: string;
   description: string;
-  errorBag: any[];
+  errorBag: never[];
   result: Authors[];
 }
 
@@ -264,7 +267,7 @@ export interface CitasPendientesApiResponse {
   status_code: number;
   status_message: string;
   description: string;
-  errorBag: any[];
+  errorBag: never[];
   result: CitasPendientes[]; 
 }
 
@@ -301,7 +304,7 @@ export interface Paciente2 {
   apellido:string,
   email: string,
   celular: string,
-  fecha_nacimiento: String,
+  fecha_nacimiento: string,
   imagen: string,
   genero: string,
   ocupacion: string,
@@ -346,8 +349,6 @@ export interface City {
   id: number;
   name: string;
 }
-
-
 
 export interface Cita {
   idCita: number;

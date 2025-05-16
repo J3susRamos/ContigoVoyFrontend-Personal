@@ -67,6 +67,23 @@ const renderCustomizedLabel = ({
   );
 };
 
+// Custom tooltip component for dark mode compatibility
+const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number }> }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip bg-card dark:bg-card p-2 border border-border rounded shadow">
+        <p className="label text-card-foreground dark:text-card-foreground mb-1 font-medium">
+          {payload[0].name}
+        </p>
+        <p className="value text-card-foreground dark:text-card-foreground">
+          <span className="font-medium">Total:</span> {payload[0].value}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function Clients() {
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
@@ -96,14 +113,7 @@ export default function Clients() {
                   />
                 ))}
               </Pie>
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  color: 'hsl(var(--card-foreground))', 
-                  border: '1px solid hsl(var(--border))' 
-                }}
-                labelStyle={{ color: 'hsl(var(--card-foreground))' }}
-              />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -165,12 +175,7 @@ export default function Clients() {
                   axisLine={{ stroke: "hsl(var(--primary))" }}
                 />
                 <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'hsl(var(--card))', 
-                    color: 'hsl(var(--card-foreground))', 
-                    border: '1px solid hsl(var(--border))' 
-                  }}
-                  labelStyle={{ color: 'hsl(var(--card-foreground))' }}
+                  content={<CustomTooltip />}
                 />
                 <Bar
                   dataKey="Total"
@@ -183,6 +188,7 @@ export default function Clients() {
             </ResponsiveContainer>
           </div>
         </div>
+
        
         <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
           <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
@@ -207,12 +213,7 @@ export default function Clients() {
                   axisLine={{ stroke: "hsl(var(--primary))" }}
                 />
                 <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'hsl(var(--card))', 
-                    color: 'hsl(var(--card-foreground))', 
-                    border: '1px solid hsl(var(--border))' 
-                  }}
-                  labelStyle={{ color: 'hsl(var(--card-foreground))' }}
+                  content={<CustomTooltip />}
                 />
                 <Bar
                   dataKey="Total"

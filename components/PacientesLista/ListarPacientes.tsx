@@ -86,7 +86,7 @@ export default function ListarPacientes() {
       const data = await response.json();
       if (response.ok) {
         showToast("success", "Paciente eliminado correctamente");
-        handleGetPacientes();
+        await handleGetPacientes();
       } else {
         showToast(
           "error",
@@ -100,7 +100,9 @@ export default function ListarPacientes() {
   };
 
   useEffect(() => {
-    handleGetPacientes();
+    handleGetPacientes().catch(error => {
+      console.error("Error fetching pacientes:", error);
+    });
   }, []);
 
   const redirectToPaciente = (idPaciente: number) => {
@@ -176,7 +178,7 @@ export default function ListarPacientes() {
         </div>
       </div>
 
-      {/* Encabezado tabla */}
+      {/* Encabezado de tabla */}
       <table className="max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8">
         <thead className="rounded-full">
           <tr className="bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11">
@@ -260,7 +262,10 @@ export default function ListarPacientes() {
                           if (
                             confirm("¿Estás seguro de eliminar este paciente?")
                           ) {
-                            HandleDeletePaciente(paciente.idPaciente);
+                            // Handle the promise returned by HandleDeletePaciente
+                            HandleDeletePaciente(paciente.idPaciente).catch(error => {
+                              console.error("Error deleting patient:", error);
+                            });
                           }
                         }}
                       >

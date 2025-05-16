@@ -6,13 +6,13 @@ import { DatePaciente } from "./DatePaciente";
 interface TableProps {
   atencion: ListaAtencion[];
   headerColumns: { name: string; uid: string; sortable?: boolean }[];
-  renderCell: (atencion: ListaAtencion, columnKey: React.Key) => React.ReactNode;
+  renderCellAction: (atencion: ListaAtencion, columnKey: keyof ListaAtencion | string) => React.ReactNode;
 }
 
 export const TableComponent: React.FC<TableProps> = ({
   atencion,
   headerColumns,
-  renderCell,
+  renderCellAction,
 }) => {
   const [isClient, setIsClient] = useState(false);
   const [showCart, setShowCart] = useState(false);
@@ -61,7 +61,7 @@ export const TableComponent: React.FC<TableProps> = ({
                       index === headerColumns.length - 1 ? "rounded-r-3xl" : ""
                     }`}
                   >
-                    {renderCell(atencion, column.uid)}
+                    {renderCellAction(atencion, column.uid)}
                   </td>
                 ))}
                 <td className="text-center bg-[#eaeded]">
@@ -104,7 +104,7 @@ export const TableComponent: React.FC<TableProps> = ({
             className="relative bg-white p-6 rounded-3xl z-10"
             onClick={(e) => e.stopPropagation()}
           >
-            <DatePaciente 
+            <DatePaciente
               idPaciente={Number(selectedPacienteId)}
             />
           </div>

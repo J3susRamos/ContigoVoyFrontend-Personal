@@ -29,18 +29,7 @@ export const Panel = React.forwardRef<HTMLDivElement, PanelProps>(
       }
     }, [estado]);
 
-    /*const handleSignOut = async () => {
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        console.log("Error al cerrar sesión:", error.message);
-      } else {
-        console.log("Sesión cerrada con éxito");
-        setEstado(false); // Simplified this line
-        router.push("/"); // Redirigir al inicio
-      }
-    };
-*/setEstado(false);
+    setEstado(false);
     return (
       <div
         className={`fixed w-64 bg-primary right-0 font-semibold transform transition-transform duration-300 ${

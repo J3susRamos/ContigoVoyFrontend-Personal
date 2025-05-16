@@ -4,6 +4,7 @@ import { ThemeToggle } from "./Themetoggle";
 import { useAuth } from "@/components/auth/loginsec";
 import { useEffect, useState } from "react";
 import { UsuarioLocalStorage } from "@/interface";
+import Image from "next/image";
 
 export default function CerrarSesion() {
   const { logout } = useAuth();
@@ -23,9 +24,11 @@ export default function CerrarSesion() {
       <ThemeToggle />
 
       {user?.imagen ? (
-        <img
+        <Image
           src={user.imagen}
-          className="rounded-full w-10 h-10"
+          width={40}
+          height={40}
+          className="rounded-full w-10 h-10 object-cover"
           alt="avatar"
         />
       ) : (

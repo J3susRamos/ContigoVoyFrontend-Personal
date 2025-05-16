@@ -144,7 +144,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    handleGetCitas();
+    handleGetCitas().catch(error => {
+      console.error("Error fetching citas:", error);
+    });
   }, []);
 
   return (
@@ -175,7 +177,7 @@ export default function App() {
         <TableComponent
           atencion={sortedItems}
           headerColumns={headerColumns}
-          renderCell={renderCell}
+          renderCellAction={renderCell}
         />
       </div>
     </div>
