@@ -120,7 +120,7 @@ export default function Login() {
                 variant="bordered"
                 classNames={{
                   inputWrapper: "border-1 !border-[#634AE2] ",
-                  input: "w-full dark:text-[#634AE2]", // Added dark:text-[#634AE2] for dark mode
+                  input: "w-full dark:text-[#634AE2]",
                 }}
                 value={credentials.email}
                 onChange={handleChange}
@@ -135,7 +135,7 @@ export default function Login() {
                 autoComplete="current-password"
                 classNames={{
                   inputWrapper: "border-1 !border-[#634AE2] ",
-                  input: "w-full dark:text-[#634AE2]", // Added dark:text-[#634AE2] for dark mode
+                  input: "w-full dark:text-[#634AE2]",
                 }}
                 radius="full"
                 value={credentials.password}
