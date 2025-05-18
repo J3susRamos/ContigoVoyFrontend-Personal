@@ -43,7 +43,9 @@ const CitasPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
 
   useEffect(() => {
     if (idPaciente) {
-      HandleGetCitas(idPaciente);
+      HandleGetCitas(idPaciente).catch(error => {
+        console.error("Error fetching patient appointments:", error);
+      });
     }
   }, [idPaciente]);
 
