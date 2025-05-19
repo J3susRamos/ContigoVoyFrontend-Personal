@@ -4,6 +4,7 @@ import { ScrollShadow } from "@heroui/react";
 import BlogPreview from "./blogpreview";
 import { Authors, BlogPreviewData, Categoria } from "@/interface";
 import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 
 export default function BlogPageComponent({
   Datos,
@@ -17,13 +18,13 @@ export default function BlogPageComponent({
   const [filteredData, setFilteredData] = useState<BlogPreviewData[]>(Datos);
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
   const [activeAuthor, setActiveAuthor] = useState<number | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPreviewData | null>(null);
 
-  
   const handleCategoryFilter = (categoryId: number) => {
     if (activeCategory === categoryId) {
       setActiveCategory(null);
       setFilteredData(
-        activeAuthor 
+        activeAuthor
           ? Datos.filter(blog => blog.psicologo?.includes(Authors.find(a => a.id === activeAuthor)?.name || ''))
           : Datos
       );
@@ -32,7 +33,7 @@ export default function BlogPageComponent({
       const categoryName = Categories.find(cat => cat.idCategoria === categoryId)?.nombre;
       const filtered = Datos.filter(blog => blog.categoria === categoryName);
       setFilteredData(
-        activeAuthor 
+        activeAuthor
           ? filtered.filter(blog => blog.psicologo?.includes(Authors.find(a => a.id === activeAuthor)?.name || ''))
           : filtered
       );
@@ -43,23 +44,26 @@ export default function BlogPageComponent({
     if (activeAuthor === authorId) {
       setActiveAuthor(null);
       setFilteredData(
-        activeCategory 
+        activeCategory
           ? Datos.filter(blog => blog.categoria === Categories.find(cat => cat.idCategoria === activeCategory)?.nombre)
           : Datos
       );
     } else {
       setActiveAuthor(authorId);
       const author = Authors.find(a => a.id === authorId);
-      
-      const filtered = Datos.filter(blog => 
+      const filtered = Datos.filter(blog =>
         blog.psicologo?.includes(author?.name || '')
       );
       setFilteredData(
-        activeCategory 
+        activeCategory
           ? filtered.filter(blog => blog.categoria === Categories.find(cat => cat.idCategoria === activeCategory)?.nombre)
           : filtered
       );
     }
+  };
+
+  const handleSelectBlog = (blog: BlogPreviewData) => {
+    setSelectedBlog(blog);
   };
 
   return (
@@ -70,32 +74,79 @@ export default function BlogPageComponent({
         </h1>
         <div className="flex justify-center pb-20">
           <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="col-span-2">
-              <ScrollShadow className="h-[870px]" hideScrollBar>
-                {filteredData.length > 0 ? (
-                  filteredData.map((item) => (
-                    <BlogPreview key={item.idBlog} Data={item} />
-                  ))
-                ) : (
-                  <div className="flex justify-center items-center h-full">
-                    <p className="text-lg">No se encontraron blogs que coincidan con los filtros seleccionados.</p>
+            {selectedBlog ? (
+              <div className="col-span-1 md:col-span-3">
+                <div className="w-full mb-12">
+                  <button
+                    className="flex items-center gap-2 mb-6"
+                    onClick={() => setSelectedBlog(null)}
+                  >
+                    <ArrowLeft color="#634AE2" />
+                    <span className="text-[#634AE2]">Volver</span>
+                  </button>
+                  <div className="bg-background bg-[#EAEAFF] rounded-lg p-4 md:p-8">
+                    <h2 className="font-semibold md:text-[64px] text-2xl md:leading-[80px] mt-4 break-words">
+                      {selectedBlog.tema}
+                    </h2>
+                    <div className="mt-6 flex flex-col md:flex-row items-start md:items-center gap-4">
+                      <img
+                        src={selectedBlog.psicologoImagenId}
+                        alt={selectedBlog.psicologo || "Avatar"}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="text-sm font-normal md:text-base">
+                          {selectedBlog.psicologo} {selectedBlog.psicologApellido}
+                        </p>
+                        <p className="text-[#634AE2] text-[14px] leading-[20px] font-extralight">
+                          Publicado el {new Date(selectedBlog.fecha).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <img
+                      className="pt-9 rounded-none mx-auto w-full max-w-4xl"
+                      src={selectedBlog.imagen}
+                      alt="blogfondo"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div className="max-w-4xl w-full mx-auto px-2 md:px-4">
+                      <p
+                        className="md:text-2xl text-sm my-8 text-[#634AE2]"
+                        dangerouslySetInnerHTML={{ __html: selectedBlog.contenido }}
+                      />
+                    </div>
                   </div>
-                )}
-              </ScrollShadow>
-            </div>
-
-            <div className="col-span-1">
-              <div className="my-2 md:my-4 md:border-l-[0.5px] border-[#634AE2]">
-                <BlogAside 
-                  Categories={Categories} 
-                  Authors={Authors}
-                  onCategoryClick={handleCategoryFilter}
-                  onAuthorClick={handleAuthorFilter}
-                  activeCategory={activeCategory}
-                  activeAuthor={activeAuthor}
-                />
+                </div>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="col-span-2">
+                  <ScrollShadow className="h-[870px]" hideScrollBar>
+                    {filteredData.length > 0 ? (
+                      filteredData.map((item) => (
+                        <BlogPreview key={item.idBlog} Data={item} onSelect={handleSelectBlog} />
+                      ))
+                    ) : (
+                      <div className="flex justify-center items-center h-full">
+                        <p className="text-lg">No se encontraron blogs que coincidan con los filtros seleccionados.</p>
+                      </div>
+                    )}
+                  </ScrollShadow>
+                </div>
+                <div className="col-span-1">
+                  <div className="my-2 md:my-4 md:border-l-[0.5px] border-[#634AE2]">
+                    <BlogAside
+                      Categories={Categories}
+                      Authors={Authors}
+                      onCategoryClick={handleCategoryFilter}
+                      onAuthorClick={handleAuthorFilter}
+                      activeCategory={activeCategory}
+                      activeAuthor={activeAuthor}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

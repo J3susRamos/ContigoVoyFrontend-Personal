@@ -3,7 +3,13 @@ import { BlogPreviewData } from "@/interface";
 import { Image, User } from "@heroui/react";
 import Link from "next/link";
 
-export default function BlogPreview({ Data }: { Data: BlogPreviewData }) {
+export default function BlogPreview({ 
+  Data,
+  onSelect
+}: { 
+  Data: BlogPreviewData 
+  onSelect?: (blog: BlogPreviewData) => void
+}) {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -18,8 +24,10 @@ export default function BlogPreview({ Data }: { Data: BlogPreviewData }) {
               </span>
             }
           />
-          <p className="text-xl md:text-2xl pt-2 md:pt-3 pb-1 md:pb-2 font-semibold">
-            <Link href={`/blog/revista?id=${Data.idBlog}`}>{Data.tema}</Link>
+          <p className="text-xl md:text-2xl pt-2 md:pt-3 pb-1 md:pb-2 font-semibold cursor-pointer"
+            onClick={() => onSelect && onSelect(Data)}
+          >
+            {Data.tema}
           </p>
           <p className="text-base md:text-xl leading-relaxed md:leading-7 line-clamp-3 md:h-20">
             {Data.contenido.replace(/<[^>]+>/g, "").slice(0, 100)}...

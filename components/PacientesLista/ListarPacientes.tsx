@@ -108,6 +108,7 @@ export default function ListarPacientes() {
     window.location.href = "/user/pacientes/DetallePaciente";
   };
 
+  
   return (
     <div className="bg-background dark:bg-background min-h-screen flex flex-col">
       {/* Navbar */}
@@ -192,14 +193,14 @@ export default function ListarPacientes() {
           {filteredPacientes.map((paciente) => (
             <tr
               key={paciente.idPaciente}
-              className="border-b hover:bg-muted dark:hover:bg-muted"
+              className="border-b hover:bg-muted dark:hover:bg-muted cursor-pointer"             
             >
-              <td className="px-4 py-2 text-2xl rounded-l-[34px]">○</td>
-              <td className="px-2 py-2">{paciente.nombre}</td>
-              <td className="px-2 py-2">{paciente.codigo}</td>
-              <td className="px-2 py-2">{paciente.DNI}</td>
-              <td className="px-2 py-2">{paciente.email}</td>
-              <td className="py-2">{paciente.celular}</td>
+              <td className="px-4 py-2 text-2xl rounded-l-[34px]" onClick={() => redirectToPaciente(paciente.idPaciente)}>o</td>
+              <td className="px-2 py-2" onClick={() => redirectToPaciente(paciente.idPaciente)}>{paciente.nombre}</td>
+              <td className="px-2 py-2" onClick={() => redirectToPaciente(paciente.idPaciente)}>{paciente.codigo}</td>
+              <td className="px-2 py-2" onClick={() => redirectToPaciente(paciente.idPaciente)}>{paciente.DNI}</td>
+              <td className="px-2 py-2" onClick={() => redirectToPaciente(paciente.idPaciente)}>{paciente.email}</td>
+              <td className="py-2" onClick={() => redirectToPaciente(paciente.idPaciente)}>{paciente.celular}</td>
               <td className="py-2 rounded-r-[34px]">
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="flex flex-row items-center justify-center gap-x-4">
