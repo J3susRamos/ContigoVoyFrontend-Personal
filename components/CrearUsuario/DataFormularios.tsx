@@ -14,7 +14,6 @@ import {
 } from "@heroui/react";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import React from "react";
-import CerrarSesion from "../CerrarSesion";
 
 export const PersonalForm = ({
   onNext,

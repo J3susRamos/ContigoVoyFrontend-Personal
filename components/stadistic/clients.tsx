@@ -19,6 +19,7 @@ const genero = [
   { name: "Femenino", Total: 40 },
 ];
 
+// Colors for light mode
 const COLORS = ["#7777FF", "#66A3FF", "#B3B3FF"];
 
 const edad = [
@@ -37,8 +38,6 @@ const lugar = [
   { name: "Barranco", Total: 12 },
   { name: "San Borja", Total: 6 },
 ];
-
-
 
 const renderCustomizedLabel = ({
   cx,
@@ -68,12 +67,29 @@ const renderCustomizedLabel = ({
   );
 };
 
+// Custom tooltip component for dark mode compatibility
+const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number }> }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip bg-card dark:bg-card p-2 border border-border rounded shadow">
+        <p className="label text-card-foreground dark:text-card-foreground mb-1 font-medium">
+          {payload[0].name}
+        </p>
+        <p className="value text-card-foreground dark:text-card-foreground">
+          <span className="font-medium">Total:</span> {payload[0].value}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function Clients() {
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
-      <div className="w-[401px] h-[600px] bg-white rounded-2xl flex flex-col">
-        <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-          <p className="text-white font-medium text-center mr-10 text-xl">Género:</p>
+      <div className="w-[401px] h-[600px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
+        <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Género:</p>
         </div>
 
         <div className="w-full h-[350px] flex items-center justify-center">
@@ -97,7 +113,7 @@ export default function Clients() {
                   />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -109,7 +125,7 @@ export default function Clients() {
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: COLORS[index] }}
               ></div>
-              <span className="text-[#634AE2] font-normal text-base">{entry.name}</span>
+              <span className="text-primary dark:text-primary-foreground font-normal text-base">{entry.name}</span>
             </div>
           ))}
         </div>
@@ -117,9 +133,9 @@ export default function Clients() {
 
       {/* Segunda columna  */}
       <div className="flex flex-col w-[502px] h-[600px] gap-5">
-        <div className="w-full h-[300px] bg-white rounded-2xl flex flex-col">
-          <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-            <p className="text-white font-medium text-center mr-10 text-xl">Edad:</p>
+        <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Edad:</p>
           </div>
 
           <div className="flex-1 flex items-center justify-center ">
@@ -130,14 +146,14 @@ export default function Clients() {
               >
                 <XAxis
                   dataKey="name"
-                  tickLine={{ stroke: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
                   tick={({ x, y, payload }) => {
                     return (
                       <text
                         x={x}
                         y={y + 15}
-                        fill="#634AE2"
+                        fill="hsl(var(--primary))"
                         textAnchor="middle"
                         fontSize={12}
                         fontWeight="500"
@@ -154,14 +170,16 @@ export default function Clients() {
                 />
 
                 <YAxis
-                  tick={{ fontSize: 12, fill: "#634AE2" }}
-                  tickLine={{ stroke: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
+                  tick={{ fontSize: 12, fill: "hsl(var(--primary))" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
                 />
-                <Tooltip />
+                <Tooltip 
+                  content={<CustomTooltip />}
+                />
                 <Bar
                   dataKey="Total"
-                  fill="#9494F3"
+                  fill="hsl(var(--primary))"
                   barSize={35}
                   radius={[5, 5, 0, 0]}
                   opacity={0.6}
@@ -172,9 +190,9 @@ export default function Clients() {
         </div>
 
        
-        <div className="w-full h-[300px] bg-white rounded-2xl flex flex-col">
-          <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-            <p className="text-white font-medium text-center mr-10 text-xl">Lugar:</p>
+        <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Lugar:</p>
           </div>
 
           <div className="flex-1 flex items-center justify-center">
@@ -185,19 +203,21 @@ export default function Clients() {
               >
                 <XAxis
                   dataKey="name"
-                  tickLine={{ stroke: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
-                  tick={{ fontSize: 12, fill: "#634AE2", fontWeight: "500" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
+                  tick={{ fontSize: 12, fill: "hsl(var(--primary))", fontWeight: "500" }}
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: "#634AE2" }}
-                  tickLine={{ stroke: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
+                  tick={{ fontSize: 12, fill: "hsl(var(--primary))" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
                 />
-                <Tooltip />
+                <Tooltip 
+                  content={<CustomTooltip />}
+                />
                 <Bar
                   dataKey="Total"
-                  fill="#9494F3"
+                  fill="hsl(var(--primary))"
                   barSize={35}
                   radius={[5, 5, 0, 0]}
                   opacity={0.6}

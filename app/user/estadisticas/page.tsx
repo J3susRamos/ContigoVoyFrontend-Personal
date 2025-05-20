@@ -4,9 +4,9 @@ import Showstadistic from "@/components/stadistic/showstadistic";
 
 export default function stadistic() {
   return (
-    <div>
-      <div className="flex justify-between  w-full mt-10 mb-6">
-        <h1 className=" flex items-center font-bold text-[32px]  leading-[40px]  ml-11   text-[#634AE2]  ">
+    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+      <div className="flex justify-between w-full mt-10 mb-6">
+        <h1 className="flex items-center font-bold text-[32px] leading-[40px] ml-11 text-primary dark:text-primary-foreground">
           Estadísticas
         </h1>
         <CerrarSesion />
@@ -15,4 +15,3 @@ export default function stadistic() {
     </div>
   );
 }
-

@@ -10,7 +10,7 @@ interface TableProps {
   users: Citas[];
   headerColumns: { name: string; uid: string; sortable?: boolean }[];
   selectedKeys: Set<React.Key>;
-  setSelectedKeys: (keys: Set<React.Key>) => void;
+  setSelectedKeysAction: (keys: Set<React.Key>) => void;
   onCitaDeleted?: (idCita: number) => void;
 }
 
@@ -18,7 +18,7 @@ export const TableCitas: React.FC<TableProps> = ({
   users,
   headerColumns,
   selectedKeys,
-  setSelectedKeys,
+  setSelectedKeysAction,
   onCitaDeleted,
 }) => {
   const [isClient, setIsClient] = useState(false);
@@ -62,12 +62,12 @@ export const TableCitas: React.FC<TableProps> = ({
 
   const handleSelectAll = useCallback(() => {
     if (selectedKeys.size === users.length) {
-      setSelectedKeys(new Set());
+      setSelectedKeysAction(new Set());
     } else {
       const allKeys = new Set(users.map((user) => user.codigo));
-      setSelectedKeys(allKeys);
+      setSelectedKeysAction(allKeys);
     }
-  }, [selectedKeys, users, setSelectedKeys]);
+  }, [selectedKeys, users, setSelectedKeysAction]);
 
   const handleSelectItem = useCallback(
     (id: string) => {
@@ -77,9 +77,9 @@ export const TableCitas: React.FC<TableProps> = ({
       } else {
         newSelectedKeys.add(id);
       }
-      setSelectedKeys(newSelectedKeys);
+      setSelectedKeysAction(newSelectedKeys);
     },
-    [selectedKeys, setSelectedKeys]
+    [selectedKeys, setSelectedKeysAction]
   );
 
   const redirectToAtencion = (idCita: number) => {

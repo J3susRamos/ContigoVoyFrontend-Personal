@@ -4,7 +4,7 @@ import { Button, Input } from "@heroui/react";
 import { parseCookies } from "nookies";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Paciente } from "@/interface";
 import showToast from "../ToastStyle";
 
@@ -86,7 +86,7 @@ export default function ListarPacientes() {
       const data = await response.json();
       if (response.ok) {
         showToast("success", "Paciente eliminado correctamente");
-        handleGetPacientes();
+        await handleGetPacientes();
       } else {
         showToast(
           "error",
@@ -100,7 +100,9 @@ export default function ListarPacientes() {
   };
 
   useEffect(() => {
-    handleGetPacientes();
+    handleGetPacientes().catch(error => {
+      console.error("Error fetching pacientes:", error);
+    });
   }, []);
 
   const redirectToPaciente = (idPaciente: number) => {
@@ -112,12 +114,14 @@ export default function ListarPacientes() {
   return (
     <div className="bg-background dark:bg-background min-h-screen flex flex-col">
       {/* Navbar */}
-      <header className="bg-background dark:bg-background w-full mt-10 mb-6">
-        <div className="flex justify-between w-full px-6">
-          <h1 className="flex items-center font-bold text-[32px] leading-[40px] ml-5 text-foreground dark:text-foreground">
+      <header className="mt-4 z-30 px-4">
+        <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
+          <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-foreground">
             Pacientes
           </h1>
-          <CerrarSesion />
+          <div className="flex gap-x-5 mt-2">
+            <CerrarSesion />
+          </div>
         </div>
       </header>
 
@@ -175,7 +179,7 @@ export default function ListarPacientes() {
         </div>
       </div>
 
-      {/* Encabezado tabla */}
+      {/* Encabezado de tabla */}
       <table className="max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8">
         <thead className="rounded-full">
           <tr className="bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11">
@@ -230,7 +234,7 @@ export default function ListarPacientes() {
                         Registro Familiar
                       </h1>
                     </Link>
-                    <button 
+                    <button
                       className="text-2xl"
                       onClick={() => redirectToPaciente(paciente.idPaciente)}
                     >
@@ -259,7 +263,10 @@ export default function ListarPacientes() {
                           if (
                             confirm("¿Estás seguro de eliminar este paciente?")
                           ) {
-                            HandleDeletePaciente(paciente.idPaciente);
+                            // Handle the promise returned by HandleDeletePaciente
+                            HandleDeletePaciente(paciente.idPaciente).catch(error => {
+                              console.error("Error deleting patient:", error);
+                            });
                           }
                         }}
                       >

@@ -1,6 +1,5 @@
 import { Button, Input } from "@heroui/react";
 import React, { useState } from "react";
-
 import { useAuth } from "@/components/auth/loginsec";
 
 export const EyeSlashFilledIcon = (props: React.SVGProps<SVGSVGElement>) => {
@@ -110,7 +109,7 @@ export default function Login() {
         bg-white min-h-72  h-auto md:w-80 w-72 py-10 px-6 rounded-3xl mr-20 "
           >
             <div className="flex flex-col gap-y-5 ">
-              <label className="text-[16px] leading-[20px]  text-title ">
+              <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
                 Usuario
               </label>
               <Input
@@ -121,13 +120,13 @@ export default function Login() {
                 variant="bordered"
                 classNames={{
                   inputWrapper: "border-1 !border-[#634AE2] ",
-                  input: " w-full",
+                  input: "w-full dark:text-[#634AE2]",
                 }}
                 value={credentials.email}
                 onChange={handleChange}
                 isRequired
               />
-              <label className="text-[16px] leading-[20px] text-title">
+              <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
                 Contraseña
               </label>
               <Input
@@ -136,7 +135,7 @@ export default function Login() {
                 autoComplete="current-password"
                 classNames={{
                   inputWrapper: "border-1 !border-[#634AE2] ",
-                  input: " w-full",
+                  input: "w-full dark:text-[#634AE2]",
                 }}
                 radius="full"
                 value={credentials.password}

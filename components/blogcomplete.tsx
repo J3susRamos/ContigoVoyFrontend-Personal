@@ -3,6 +3,7 @@ import { BlogPreviewData } from "@/interface";
 import { Button, Divider, Form } from "@heroui/react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function BlogComplete() {
   const [blogs, setBlogs] = useState<BlogPreviewData[]>([]);

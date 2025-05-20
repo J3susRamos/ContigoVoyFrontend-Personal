@@ -10,8 +10,9 @@ import {
 } from "@heroui/react";
 import { Plus } from "lucide-react";
 import { parseCookies } from "nookies";
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast, Zoom } from "react-toastify";
+import Image from "next/image";
 
 export const DataView = ({
   formData,
@@ -147,9 +148,11 @@ export const DataView = ({
 
             <div className="relative border-2 border-[#634AE2] rounded-lg h-36 w-full flex justify-center items-center cursor-pointer overflow-hidden">
               {base64Image ? (
-                <img
+                <Image
                   src={formData.imagen}
                   alt="Imagen seleccionada"
+                  width={300}
+                  height={150}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -159,8 +162,16 @@ export const DataView = ({
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => {
-                  handleImageUpload(e);
+                onChange={async (e) => {
+                  try {
+                    await handleImageUpload(e);
+                  } catch (error) {
+                    console.error("Error processing image:", error);
+                    toast.error("Error processing image. Please try again.", {
+                      position: "top-center",
+                      autoClose: 1300,
+                    });
+                  }
                 }}
                 className="absolute inset-0 w-42 h-full opacity-0 cursor-pointer"
               />

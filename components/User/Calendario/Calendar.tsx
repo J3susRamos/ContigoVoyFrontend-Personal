@@ -12,8 +12,8 @@ export default function Calendario() {
       start: dayjs('2025-04-04').toDate(),
       end: dayjs('2025-04-04').toDate()
     },
-    
-  ]
+  ];
+  
   return (
     <div className="mx-auto mt-3"
       style={{
@@ -36,11 +36,8 @@ export default function Calendario() {
           event: 'Evento',
           noEventsInRange: 'No hay eventos en este rango',
           showMore: total => `+ Ver más (${total})`
-
         }}
-        className="bg-white text-[#634AE2]  "
-        
-        
+        className="calendar-component bg-background dark:bg-background text-primary dark:text-primary-foreground"
         localizer={localizer}
         events={events}
       />

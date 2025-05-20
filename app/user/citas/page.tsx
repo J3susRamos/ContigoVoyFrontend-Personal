@@ -16,6 +16,15 @@ const INITIAL_VISIBLE_COLUMNS = [
   "duracion",
 ];
 
+const columns = [
+  { name: "Paciente", uid: "paciente", sortable: true },
+  { name: "Código", uid: "codigo", sortable: true },
+  { name: "Motivo", uid: "motivo", sortable: true },
+  { name: "Estado", uid: "estado", sortable: true },
+  { name: "Fecha de Inicio", uid: "fecha_inicio", sortable: true },
+  { name: "Duración", uid: "duracion", sortable: true },
+];
+
 export default function App() {
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<React.Key>>(new Set());
@@ -43,7 +52,10 @@ export default function App() {
       });
 
       if (!response.ok) {
-        throw new Error(response.statusText);
+        console.error(`Error: ${response.status} ${response.statusText}`);
+        setError("Error al obtener las citas");
+        showToast("error", "Error al obtener las citas");
+        return;
       }
 
       const data = await response.json();
@@ -54,7 +66,7 @@ export default function App() {
           codigo: cita.codigo,
           paciente: cita.paciente,
           fecha_inicio: cita.fecha_inicio,
-          motivo:  cita.motivo,
+          motivo: cita.motivo,
           estado: cita.estado,
           duracion: cita.duracion,
           idCita: cita.idCita
@@ -62,28 +74,24 @@ export default function App() {
         setCitas(formattedCitas);
         showToast("success", "Citas obtenidas correctamente");
       } else {
-        throw new Error("Formato de respuesta inválido");
+        // Same here, handle directly instead of throwing
+        console.error("Formato de respuesta inválido:", data);
+        setError("Error al obtener las citas");
+        showToast("error", "Formato de respuesta inválido");
       }
     } catch (error) {
       console.error(error);
       setError("Error al obtener las citas");
-      showToast("error", "Error al obtener las citas");
+      showToast("error", "Error de conexión. Intenta nuevamente.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const columns = [
-    { name: "Paciente", uid: "paciente", sortable: true },
-    { name: "Código", uid: "codigo", sortable: true },
-    { name: "Motivo", uid: "motivo", sortable: true },
-    { name: "Estado", uid: "estado", sortable: true },
-    { name: "Fecha de Inicio", uid: "fecha_inicio", sortable: true },
-    { name: "Duración", uid: "duracion", sortable: true },
-  ];
-
   useEffect(() => {
-    handleGetCitas();
+    handleGetCitas().catch(error => {
+      console.error("Error fetching citas:", error);
+    });
   }, []);
 
   const [sortDescriptor] = useState({
@@ -97,7 +105,7 @@ export default function App() {
     let filteredCitas = [...citas];
     if (hasSearchFilter) {
       filteredCitas = filteredCitas.filter((cita) =>
-        cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
+          cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     return filteredCitas;
@@ -114,9 +122,9 @@ export default function App() {
 
   const headerColumns = useMemo(() => {
     return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
+        Array.from(visibleColumns).includes(column.uid)
     );
-  }, [visibleColumns, columns]);
+  }, [visibleColumns]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -143,17 +151,18 @@ export default function App() {
           </div>
         </div>
       </header>
-      
+
       <div>
         {/* Navbar */}
         <Navbar
-          filterValue={filterValue}
-          onSearchChange={onSearchChange}
-          onClear={onClear}
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          columns={columns}
-        />
+            filterValue={filterValue}
+            onSearchChange={onSearchChange}
+            onClear={onClear}
+            visibleColumns={visibleColumns}
+            setVisibleColumns={setVisibleColumns}
+            columns={columns} onAddNew={function (): void {
+          throw new Error("Function not implemented.");
+        }}        />
 
         {/* Contenido */}
         {isLoading ? (
@@ -168,10 +177,10 @@ export default function App() {
           </div>
         ) : (
           <TableCitas
-            users={sortedItems} 
+            users={sortedItems}
             headerColumns={headerColumns}
             selectedKeys={selectedKeys}
-            setSelectedKeys={setSelectedKeys}
+            setSelectedKeysAction={setSelectedKeys}
             onCitaDeleted={(idCita) => {
               setCitas(prevCitas => prevCitas.filter(cita => Number(cita.idCita) !== Number(idCita)));
             }}

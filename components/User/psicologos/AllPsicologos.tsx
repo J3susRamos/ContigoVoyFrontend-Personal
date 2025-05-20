@@ -27,9 +27,9 @@ import {
   useDisclosure,
 } from "@heroui/react";
 import { Plus } from "lucide-react";
-
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 
 export default function AllPsicologos({
   Data,
@@ -188,9 +188,11 @@ export default function AllPsicologos({
               <Form validationBehavior="native" className="space-y-6">
                 <label className="relative w-40 h-40 cursor-pointer">
                   {formData?.imagen ? (
-                    <img
+                    <Image
                       src={formData.imagen}
                       alt="Imagen seleccionada"
+                      width={160}
+                      height={160}
                       className="w-40 h-40 object-cover rounded-md"
                     />
                   ) : (
