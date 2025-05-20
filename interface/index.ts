@@ -1,4 +1,5 @@
 import { DateValue } from "@heroui/react";
+import React from "react";
 
 export interface CardServicesProps {
   title: string;
@@ -167,15 +168,13 @@ export interface PsicologoPreviewData {
   genero: string,
   experiencia: number,
   correo: string,
-  contraseña: string,
+  contrasena: string,
   fecha_nacimiento: string,
   especialidades: string[],
   imagen: string,
-
   horario: {
     [key: string]: [string, string][];
   };
-
 }
 
 export interface PsicologoApiResponse {
@@ -247,7 +246,6 @@ export interface NavItems {
 }
 
 // Interface for horarios psicologos
-
 export interface Horarios {
   [dia: string]: [string, string][];
 }
@@ -376,7 +374,12 @@ export interface Citas {
   age: string;
   motivo: string;
   duracion: string;
+}
 
+export interface CitasConteo {
+  pendientes: number;
+  canceladas: number;
+  confirmadas: number;
 }
 
 export interface DatePacienteProps {

@@ -2,13 +2,14 @@ import { BlogPreviewData } from "@/interface";
 import { Button, Divider, Form } from "@heroui/react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const comentarios = [
   {
     id: 1,
     usuario: "Natalia Merino",
     comentario:
-      "Muy buen y detallado artículo acerca de cómo mejorar nuesta autoestima. Un tema sumamente importante sin importar la edad de la persona. ¡Pondré todos estos tips en práctica!",
+      "Muy buen y detallado articulo acerca de cómo mejorar nuesta autoestima. Un tema sumamente importante sin importar la edad de la persona. ¡Pondré todos estos tips en práctica!",
   },
   {
     id: 2,
@@ -18,7 +19,7 @@ const comentarios = [
   },
 ];
 
-const artículo = [
+const articulo = [
   {
     id: 1,
     imagen: "/CarruselInferiormain/Azul.webp",
@@ -35,7 +36,6 @@ const artículo = [
     fecha: "Publicado el 17/07/2024",
   },
 ];
-
 
 export default function BlogComplete({ data }: { data: BlogPreviewData }) {
   return (
@@ -63,9 +63,11 @@ export default function BlogComplete({ data }: { data: BlogPreviewData }) {
             {data?.tema}
           </p>
           <div className="mt-6 flex items-center gap-4">
-            <img
-              src={data?.psicologoImagenId }
+            <Image
+              src={data?.psicologoImagenId || '/placeholder-avatar.jpg'}
               alt={data?.psicologo || "Avatar"}
+              width={48}
+              height={48}
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>
@@ -82,12 +84,14 @@ export default function BlogComplete({ data }: { data: BlogPreviewData }) {
       </div>
 
       <div className="w-full">
-        <img
-          className="pt-9 rounded-none mx-auto max-w-7xl "
-          src={data?.imagen}
+        <Image
+          className="pt-9 rounded-none mx-auto max-w-7xl"
+          src={data?.imagen || '/placeholder-image.jpg'}
           alt="blogfondo"
-          width="100%"
-          height="auto"
+          width={1400}
+          height={600}
+          priority
+          style={{ width: '100%', height: 'auto' }}
         />
       </div>
 
@@ -132,10 +136,12 @@ export default function BlogComplete({ data }: { data: BlogPreviewData }) {
             Artículos relacionados
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-16 mt-8">
-            {artículo.map((item, index) => (
+            {articulo.map((item, index) => (
               <div key={index} className="flex flex-col w-full md:w-[470px]">
-                <img
+                <Image
                   src={item.imagen}
+                  width={470}
+                  height={300}
                   className="rounded-xl w-full h-auto"
                   alt={item.titulo}
                 />

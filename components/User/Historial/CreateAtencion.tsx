@@ -119,12 +119,16 @@ const CreateAtencion = () => {
     const id = localStorage.getItem("idCita");
     if (!id) {
       router.push("/user/citas");
-    } else {
-      const idParsed = parseInt(id);
-      handleGetCita(idParsed);
-      handleGetEnfermedades();
+      return;
     }
-  }, []);
+    
+    const idParsed = parseInt(id);
+    handleGetCita(idParsed)
+      .then(() => handleGetEnfermedades())
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }, [router]);
 
   const filteredEnfermedadesByDSM5 = DSM5SearchTerm
     ? enfermedades.filter((enfermedad) =>

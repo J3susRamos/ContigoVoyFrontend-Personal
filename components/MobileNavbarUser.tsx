@@ -5,7 +5,6 @@ import { fetchUser } from "@/utils/recuperarDataUser";
 import Link from "next/link";
 import Image from "next/image";
 
-
 export function MobileNavbar({ navItems }: {navItems: NavItems[]}) {
   const [estado, setEstado] = useState<boolean>(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -17,10 +16,27 @@ export function MobileNavbar({ navItems }: {navItems: NavItems[]}) {
     photo: null,
     iniciales: null,
   });
+  // First effect to fetch user data (runs only once)
   useEffect(() => {
-    fetchUser(setUser);
-    console.log(user);
+    const loadUser = async () => {
+      try {
+        await fetchUser(setUser);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    // Call the async function and handle the returned promise
+    loadUser().catch(error => {
+      console.error("Failed to load user:", error);
+    });
   }, []);
+
+  // The second effect to log user data (runs when the user changes)
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       panelRef.current &&
@@ -38,7 +54,7 @@ export function MobileNavbar({ navItems }: {navItems: NavItems[]}) {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <div>
