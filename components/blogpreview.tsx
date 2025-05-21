@@ -1,7 +1,6 @@
 "use client";
 import { BlogPreviewData } from "@/interface";
 import { Image, User } from "@heroui/react";
-import Link from "next/link";
 
 export default function BlogPreview({ 
   Data,

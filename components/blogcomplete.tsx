@@ -4,12 +4,23 @@ import { Button, Divider } from "@heroui/react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-export default function BlogComplete() {
+interface BlogCompleteProps {
+  data?: BlogPreviewData;
+}
+
+export default function BlogComplete({ data }: BlogCompleteProps) {
   const [blogs, setBlogs] = useState<BlogPreviewData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data from the API
+    if (data) {
+      // If data is provided via props, use it
+      setBlogs([data]);
+      setLoading(false);
+      return;
+    }
+
+    // Otherwise fetch data from the API
     const fetchBlogs = async () => {
       try {
         const response = await fetch("http://127.0.0.1:8000/api/blogs/");
@@ -24,8 +35,11 @@ export default function BlogComplete() {
       }
     };
 
-    fetchBlogs();
-  }, []);
+    // Call the async function and handle the returned promise
+    fetchBlogs().catch(error => {
+      console.error("Error in fetchBlogs:", error);
+    });
+  }, [data]);
 
   if (loading) {
     return <p>Cargando blogs...</p>;
@@ -58,10 +72,12 @@ export default function BlogComplete() {
                 {blog.tema}
               </p>
               <div className="mt-6 flex items-center gap-4">
-                <img
-                  src={blog.psicologoImagenId}
-                  alt={blog.psicologo || "Avatar"}
-                  className="w-12 h-12 rounded-full object-cover"
+                <Image
+                    src={blog.imagen}
+                    alt="Imagen seleccionada"
+                    width={300}
+                    height={150}
+                    className="w-full h-full object-cover"
                 />
                 <div>
                   <p className="text-sm font-normal md:text-base">
@@ -76,12 +92,16 @@ export default function BlogComplete() {
             </div>
 
             <div className="w-full">
-              <img
+              <Image
                 className="pt-9 rounded-none mx-auto max-w-7xl"
                 src={blog.imagen}
                 alt="blogfondo"
-                width="100%"
-                height="auto"
+                width={1200}
+                height={600}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                }}
               />
             </div>
 
