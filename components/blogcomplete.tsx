@@ -3,6 +3,7 @@ import { BlogPreviewData } from "@/interface";
 import { Button, Divider } from "@heroui/react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface BlogCompleteProps {
   data?: BlogPreviewData;
