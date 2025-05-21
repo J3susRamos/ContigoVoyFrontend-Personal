@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { Icons } from "@/icons";
 import CerrarSesion from "@/components/CerrarSesion";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import { City, Country, FormPaciente, Paciente2, State } from "@/interface";
