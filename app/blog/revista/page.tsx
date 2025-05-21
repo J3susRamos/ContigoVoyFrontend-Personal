@@ -29,7 +29,10 @@ function RevistaContent() {
       }
     };
 
-    fetchData();
+    // Call the async function and handle the returned promise
+    fetchData().catch(error => {
+      console.error("Error in fetchData:", error);
+    });
   }, [blogId]);
 
   if (loading) return <div><LoadingPages/></div>;
