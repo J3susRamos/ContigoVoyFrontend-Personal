@@ -106,7 +106,7 @@ export default function Clients() {
                 label={renderCustomizedLabel}
                 labelLine={false}
               >
-                {genero.map((entry, index) => (
+                {genero.map((_entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
