@@ -95,6 +95,8 @@ export default function Sales() {
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[950px] mx-auto">
       <div className="flex flex-col w-[547px] h-[660px] gap-5">
+
+        {/* Primer cuadro con LineChart */}
         <div className="w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
           <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">
@@ -150,11 +152,32 @@ export default function Sales() {
           </div>
         </div>
 
-        <div className="w-full h-[234px] bg-card dark:bg-card rounded-2xl flex items-center justify-center">
-          <p className="text-card-foreground dark:text-card-foreground text-lg font-bold">Buenas 2</p>
+        {/* Segundo cuadro con encabezados */}
+        <div className="w-full h-[234px] bg-card dark:bg-card rounded-2xl flex flex-col">
+          <div className="w-full h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-between px-6">
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Cliente
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Ingresos
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Pagos Pendientes
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Cancelaciones
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Ausencias
+            </div>
+          </div>
+          <div className="flex-1 p-4">
+            {/* Contenido de la tabla */}
+          </div>
         </div>
       </div>
 
+      {/* Tercer cuadro con PieChart */}
       <div className="w-[353px] h-[660px] bg-card dark:bg-card rounded-2xl">
         <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
           <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
