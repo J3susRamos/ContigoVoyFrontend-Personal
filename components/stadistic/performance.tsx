@@ -66,12 +66,43 @@ const renderCustomizedLabel = ({
 
 const COLORS = ["#B158FF", "#7D7DFF", "#58A6FF"];
 
+// Custom tooltip component for dark mode compatibility
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    name?: string;
+    value?: number;
+    dataKey?: string;
+    payload?: {
+      name?: string;
+      [key: string]: unknown;
+    };
+  }>;
+  label?: string;
+}
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip bg-card dark:bg-card p-2 border border-border rounded shadow">
+        <p className="label text-card-foreground dark:text-card-foreground mb-1 font-medium">
+          {payload[0].name || label}
+        </p>
+        <p className="value text-card-foreground dark:text-card-foreground">
+          <span className="font-medium">Total:</span> {payload[0].value}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function Performance() {
   return (
-    <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 gap-5 xl:w-[950px]  w-[350px] xl:h-[406px] h-full mx-auto bg-white rounded-2xl ">
+    <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 gap-5 xl:w-[950px] w-[350px] xl:h-[406px] h-full mx-auto bg-card dark:bg-card rounded-2xl">
       <div className="flex flex-col">
-        <div className="rounded-r-full w-[301px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-          <p className="text-white font-medium text-start mr-10 text-xl">
+        <div className="rounded-r-full w-[301px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
             Rendimiento del <br /> equipo:
           </p>
         </div>
@@ -80,18 +111,18 @@ export default function Performance() {
             <ResponsiveContainer width="100%" height="70%">
               <LineChart
                 data={data}
-                margin={{ top: 30, right: 30, left: 20, bottom: 12}}
+                margin={{ top: 30, right: 30, left: 20, bottom: 12 }}
               >
                 <XAxis
                   dataKey="name"
-                  tickLine={{ stroke: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
                   tick={({ x, y, payload }) => {
                     return (
                       <text
                         x={x}
                         y={y + 15}
-                        fill="#634AE2"
+                        fill="hsl(var(--primary))"
                         textAnchor="middle"
                         fontSize={12}
                         fontWeight="500"
@@ -108,22 +139,22 @@ export default function Performance() {
                 />
                 <YAxis
                   tickFormatter={(value: number) => (value / 1250).toString()}
-                  tick={{ fill: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
-                  tickLine={{ stroke: "#634AE2" }}
+                  tick={{ fill: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
                 />
-
+                <Tooltip content={<CustomTooltip />} />
                 <Line
                   type="monotone"
                   dataKey="uv"
-                  stroke="#634AE2"
-                  activeDot={{ r: 8, fill: "#634AE2" }}
+                  stroke="hsl(var(--primary))"
+                  activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
                 />
                 <Line
                   type="monotone"
                   dataKey="pv"
                   stroke="#58A6FF"
-                  activeDot={{ r: 8, fill: "#634AE2" }}
+                  activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -153,7 +184,7 @@ export default function Performance() {
                   />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -166,7 +197,7 @@ export default function Performance() {
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: COLORS[index] }}
               ></div>
-              <span className="text-[#634AE2] font-normal text-base">
+              <span className="text-primary dark:text-primary-foreground font-normal text-base">
                 {entry.name}
               </span>
             </div>
