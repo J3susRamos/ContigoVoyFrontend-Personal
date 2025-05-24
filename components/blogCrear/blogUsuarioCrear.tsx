@@ -64,9 +64,10 @@ export default function BlogUsuarioCrear() {
   );
 
   useEffect(() => {
-    const fetchCategoria = async () => {
-      const data = await CategoriaGet();
-      setCategoria(data);
+    const fetchCategoria = () => {
+      CategoriaGet()
+        .then(data => setCategoria(data))
+        .catch(error => console.error("Failed to fetch categories:", error));
     };
     fetchCategoria();
   }, []);
@@ -271,7 +272,7 @@ export default function BlogUsuarioCrear() {
               <Tiptap setContenido={setContenido} contenido={contenido} />
               <div className="flex pt-4 justify-center md:justify-end">
                 <Button
-                  onClick={handleSubmit}
+                  onPress={handleSubmit}
                   radius="full"
                   className="text-white bg-[#634AE2] w-full max-w-32 font-normal text-sm"
                 >

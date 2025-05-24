@@ -100,9 +100,10 @@ export default function BlogComplete({ data }: BlogCompleteProps) {
                 width={1200}
                 height={600}
                 style={{
-                  width: '100%',
+                  maxWidth: '100%',
                   height: 'auto',
                 }}
+                priority
               />
             </div>
 

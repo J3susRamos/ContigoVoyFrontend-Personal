@@ -110,7 +110,6 @@ export default function ListarPacientes() {
     window.location.href = "/user/pacientes/DetallePaciente";
   };
 
-  
   return (
     <div className="bg-background dark:bg-background min-h-screen flex flex-col">
       {/* Navbar */}
