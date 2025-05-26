@@ -177,7 +177,7 @@ export default function Performance() {
                 label={renderCustomizedLabel}
                 labelLine={false}
               >
-                {genero.map((entry, index) => (
+                {genero.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
