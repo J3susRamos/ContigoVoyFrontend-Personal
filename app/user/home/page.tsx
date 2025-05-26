@@ -24,7 +24,7 @@ const PageHome = () => {
     <section className="bg-background min-h-screen">
       <div className="flex flex-col md:flex-row justify-between">
         <div className="m-5">
-        <h1 className="text-2xl md:text-4xl  font-bold text-primary dark:text-primary-foreground">
+        <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
           Buenos días, {user.nombre} {user.apellido}
         </h1>
         <p className="text-base md:text-xl font-normal text-primary dark:text-primary-foreground">

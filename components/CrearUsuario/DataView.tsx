@@ -121,7 +121,6 @@ export const DataView = ({
     setFormData({ ...formData, imagen: base64 });
   };
 
-
   const [especialidad, setEspecialidad] = useState<number[]>([]);
   const [isInvalid, setIsInvalid] = useState(false);
 
