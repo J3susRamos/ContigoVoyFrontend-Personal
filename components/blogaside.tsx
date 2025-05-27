@@ -34,7 +34,7 @@ export default function BlogAside({
             }`}
             key={item.idCategoria}
             style={{ maxWidth: "27vh" }}
-            onClick={() => onCategoryClick(item.idCategoria)}
+            onPress={() => onCategoryClick(item.idCategoria)}
           >
             {item.nombre}
           </Button>
@@ -52,7 +52,7 @@ export default function BlogAside({
                 : "bg-[#EAEAFF] text-[#634AE2]"
             } pl-0.5 text-base hover:bg-[#C7B9FF] transition-all mb-2`}
             key={item.id}
-            onClick={() => onAuthorClick(item.id)}
+            onPress={() => onAuthorClick(item.id)}
           >
             <Avatar className="" src={item.photo} />
             {item.name} {item.lastname}

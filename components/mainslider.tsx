@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { AnimatePresence, motion } from "framer-motion";

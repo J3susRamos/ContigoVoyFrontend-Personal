@@ -1,7 +1,6 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PanelProps, UserInterface } from "@/interface";
-
 import { fetchUser } from "@/utils/recuperarDataUser";
 import React, { useEffect, useState } from "react";
 
@@ -15,7 +14,9 @@ export const DataUser = React.forwardRef<HTMLDivElement, PanelProps>(
       iniciales: null,
     });
     useEffect(() => {
-      fetchUser(setUser);
+      fetchUser(setUser).catch(error => {
+        console.error("Error fetching user:", error);
+      });
     }, []);
     return (
       <div ref={ref}>

@@ -15,7 +15,6 @@ export default function BlogComplete({ data }: BlogCompleteProps) {
 
   useEffect(() => {
     if (data) {
-      // If data is provided via props, use it
       setBlogs([data]);
       setLoading(false);
       return;
