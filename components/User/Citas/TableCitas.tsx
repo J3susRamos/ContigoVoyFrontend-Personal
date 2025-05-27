@@ -28,7 +28,7 @@ export const TableCitas: React.FC<TableProps> = ({
   }, []);
 
   //Funcion para eliminar Citas
-  const HandleDeleteCitas = async (idCita: number) => {
+  const HandleDeleteCitas = useCallback(async (idCita: number) => {
     try {
       const cookies = parseCookies();
       const token = cookies["session"];
@@ -58,7 +58,7 @@ export const TableCitas: React.FC<TableProps> = ({
       console.error(error);
       showToast("error", "Error de conexión. Intenta nuevamente");
     }
-  };
+  }, [onCitaDeleted]);
 
   const handleSelectAll = useCallback(() => {
     if (selectedKeys.size === users.length) {
@@ -86,6 +86,13 @@ export const TableCitas: React.FC<TableProps> = ({
     localStorage.setItem("idCita", String(idCita));
     window.location.href = "/user/historial/AtencionPaciente";
   };
+  const handleDeleteCita = useCallback((idCita: number) => {
+      if (confirm("¿Estás seguro de eliminar esta cita?")) {
+          HandleDeleteCitas(idCita).catch(error => {
+              console.error("Error deleting appointment:", error);
+          });
+      }
+  }, [HandleDeleteCitas]);
 
   const renderCell = useCallback(
     (user: Citas, columnKey: keyof Citas | "actions") => {
@@ -107,11 +114,7 @@ export const TableCitas: React.FC<TableProps> = ({
             </div>
 
             <button
-              onClick={() => {
-                if (confirm("¿Estás seguro de eliminar esta cita?")) {
-                  HandleDeleteCitas(Number(user.idCita));
-                }
-              }}
+              onClick={() => handleDeleteCita(Number(user.idCita))}
               className="flex flex-col items-center pt-1"
             >
               <div className="relative group">
@@ -181,7 +184,7 @@ export const TableCitas: React.FC<TableProps> = ({
           return cellValue;
       }
     },
-    [HandleDeleteCitas]
+    [handleDeleteCita]
   );
 
   if (!isClient) {

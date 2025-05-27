@@ -79,7 +79,6 @@ export interface NavItem {
   isButton?: boolean;
 }
 
-//interface for the component Creacion de usuario
 export interface Genero {
   label: number;
   genero: string;
@@ -103,7 +102,6 @@ export interface FormData {
   };
 }
 
-//interface for the component EspecialidadGet BlogUsuarioCrear
 export interface Especialidad {
   idEspecialidad: number;
   nombre: string;
@@ -153,11 +151,9 @@ export interface ApiResponseBLogAlone {
 }
 
 export interface ApiResponse {
-
   result: BlogPreviewData[];
 }
 
-//Psicologos Preview Data
 export interface PsicologoPreviewData {
   idPsicologo: number,
   titulo:string,

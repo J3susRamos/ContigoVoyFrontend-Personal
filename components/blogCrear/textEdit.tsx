@@ -23,8 +23,6 @@ import {
 import React, { useCallback } from "react";
 import Highlight from "@tiptap/extension-highlight";
 
-
-
 const MenuBar = () => {
   const { editor } = useCurrentEditor();
   const setLink = useCallback(() => {
@@ -63,11 +61,11 @@ const MenuBar = () => {
   }
   const buttonClass =
     "px-3 py-1.5 rounded text-sm font-medium transition-colors";
-  const activeClass = "bg-[#634AE2] text-white";
-  const inactiveClass = "bg-gray-100 hover:bg-gray-200 text-gray-700";
+  const activeClass = "bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground";
+  const inactiveClass = "bg-muted dark:bg-muted text-muted-foreground dark:text-muted-foreground hover:bg-muted/80 dark:hover:bg-muted/80";
 
   return (
-    <div className="pb-4 border-b border-gray-200">
+    <div className="pb-4 border-b border-border dark:border-border">
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() =>
@@ -305,20 +303,12 @@ export const Tiptap = ({
 }) => {
 
   const handleUpdate = ({ editor }: { editor: TiptapEditor }) => {
-    // Puedes obtener el contenido como HTML
     const htmlContent = editor.getHTML();
-
-    // O como JSON si lo prefieres
-    // const jsonContent = editor.getJSON();
-    
-    // Si necesitas hacer algo con el contenido, como enviarlo a un servidor
     setContenido(htmlContent);
   };
-
-
-
+  
   return (
-    <div className=" max-[500px] w-full  p-4 mx-auto bg-white rounded-lg shadow-lg">
+    <div className="w-full p-4 mx-auto bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-lg shadow-md">
       <EditorProvider
         slotBefore={<MenuBar />}
         extensions={extensions}
@@ -326,12 +316,13 @@ export const Tiptap = ({
         content={contenido}
         autofocus={true}
       >
-        <div className="prose prose-sm sm:prose lg:prose-lg mx-auto p-6">
+        <div className="prose prose-sm sm:prose lg:prose-lg mx-auto p-6 dark:prose-invert">
           <style>{`
             .ProseMirror {
               height: 384px; /* equivalent to h-96 */
               overflow-y: auto;
               outline: none;
+              color: hsl(var(--foreground));
             }
             .ProseMirror > * + * {
               margin-top: 0.75em;
@@ -340,7 +331,6 @@ export const Tiptap = ({
             .ProseMirror ol {
               padding: 0 1rem;
             }
-
 
             .ProseMirror h1 {
               font-size: 2em;
@@ -352,18 +342,18 @@ export const Tiptap = ({
               font-size: 1.25em;
             }
             .ProseMirror mark {
-              background-color: #fef3c7;
+              background-color: hsl(var(--warning) / 0.2);
               border-radius: 0.2rem;
               padding: 0.1rem 0.3rem;
             }
             .ProseMirror blockquote {
-              border-left: 3px solid #e5e7eb;
+              border-left: 3px solid hsl(var(--border));
               padding-left: 1rem;
               margin-left: 0;
               margin-right: 0;
             }
             .ProseMirror code {
-              background-color: #f3f4f6;
+              background-color: hsl(var(--muted));
               border-radius: 0.2rem;
               padding: 0.2rem 0.4rem;
               font-size: 0.875em;
@@ -375,94 +365,49 @@ export const Tiptap = ({
             }
             
             .ProseMirror::-webkit-scrollbar-track {
-              background: #F3F3F3;
+              background: hsl(var(--muted));
               border-radius: 30px;
             }
             
             .ProseMirror::-webkit-scrollbar-thumb {
-              background: #BABAFF;
+              background: hsl(var(--primary) / 0.5);
               border-radius: 4px;
             }
             
             .ProseMirror::-webkit-scrollbar-thumb:hover {
-              background: #817eed;
+              background: hsl(var(--primary) / 0.8);
             }
 
-               .ProseMirror a {
-              color: #6366F1;
+            .ProseMirror a {
+              color: hsl(var(--primary));
               cursor: pointer;
               text-decoration: underline;
               transition: color 0.2s ease;
             }
 
             .ProseMirror a:hover {
-              color: #4F46E5;
+              color: hsl(var(--primary) / 0.8);
             }
 
+            /* Dark mode specific styles */
+            @media (prefers-color-scheme: dark) {
+              .ProseMirror {
+                color: hsl(var(--foreground));
+              }
+              
+              .ProseMirror mark {
+                background-color: hsl(var(--warning) / 0.3);
+                color: hsl(var(--foreground));
+              }
+              
+              .ProseMirror code {
+                background-color: hsl(var(--muted));
+                color: hsl(var(--foreground));
+              }
+            }
           `}</style>
         </div>
       </EditorProvider>
-     {/*
-      <div className="mt-8 border-t pt-4">
-        <h3 className="text-lg font-semibold mb-4">Contenido actual:</h3>
-        <div
-          className="prose prose-sm sm:prose lg:prose-lg mx-auto"
-          dangerouslySetInnerHTML={{ __html: editorContent }}
-        />
-        <style>{`
-            
-            .prose h1 {
-              font-size: 2em;
-              font-weight: bold;
-              margin-top: 0.75em;
-            }
-            .prose h2 {
-              font-size: 1.5em;
-              font-weight: bold;
-              margin-top: 0.75em;
-            }
-            .prose h3 {
-              font-size: 1.25em;
-              font-weight: bold;
-              margin-top: 0.75em;
-            }
-            .prose p {
-              margin-top: 0.75em;
-            }
-            .prose mark {
-              background-color: #fef3c7;
-              border-radius: 0.2rem;
-              padding: 0.1rem 0.3rem;
-            }
-            .prose [style*="text-align: center"] {
-              text-align: center;
-            }
-            .prose [style*="text-align: right"] {
-              text-align: right;
-            }
-            .prose [style*="text-align: left"] {
-              text-align: left;
-            }
-            .prose a {
-              color: #6366F1;
-              text-decoration: underline;
-              transition: color 0.2s ease;
-            }
-            .prose a:hover {
-              color: #4F46E5;
-            }
-          `}</style>
-      </div>
-      <div className="w-full flex justify-end">
-        <Button
-          radius="full"
-          className="w-24 bg-[#634AE2] text-white"
-          onClick={handleEnviar}
-        >
-          Enviar
-        </Button>
-      </div> 
-      */}
     </div>
   );
 };

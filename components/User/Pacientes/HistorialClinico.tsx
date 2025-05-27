@@ -1,10 +1,11 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Paciente, UltimaAtencion } from "@/interface";
 import showToast from "@/components/ToastStyle";
 import { parseCookies } from "nookies";
 import DetallesPaciente from "../Historial/DetallesPaciente";
+import { getPaciente } from "@/components/User/Pacientes/getPacienteData";
+import { getUltimaAtencion } from "@/components/User/Pacientes/getUltimaAtencionData";
 
 const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
   const [showCart, setShowCart] = useState(false);
@@ -14,8 +15,14 @@ const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
 
   useEffect(() => {
     if (idPaciente) {
-      HandleGetPaciente(idPaciente);
-      HandleGetUltimaAtencion(idPaciente);
+      // Properly handle both Promises
+      HandleGetPaciente(idPaciente).catch(error => {
+        console.error("Error fetching patient data:", error);
+      });
+      
+      HandleGetUltimaAtencion(idPaciente).catch(error => {
+        console.error("Error fetching last attention data:", error);
+      });
     }
   }, [idPaciente]);
   
@@ -24,51 +31,15 @@ const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
   }, [ultimaAtencion]);
 
   const HandleGetPaciente = async (idPaciente: number) => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/${idPaciente}`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setPaciente(data.result);
-        showToast("success", "Paciente obtenido correctamente");
-      } else {
-        showToast("error", data.message || "Error al obtener el paciente");
-      }
-    } catch {
-      showToast("error", "Error de conexión. Intenta nuevamente.");
+    const result = await getPaciente(idPaciente);
+    if (result.success) {
+      setPaciente(result.data);
     }
   };
-
   const HandleGetUltimaAtencion = async (idPaciente: number) => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/atenciones/ultima/paciente/${idPaciente}`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setUltimaAtencion(data.result);
-      } else {
-        showToast("error", data.message || "No se pudo obtener la última atención");
-      }
-    } catch {
-      showToast("error", "Error al conectar con la API de atenciones.");
+    const result = await getUltimaAtencion(idPaciente);
+    if (result.success) {
+      setUltimaAtencion(result.data);
     }
   };
 

@@ -19,8 +19,6 @@ const genero = [
   { name: "Ausencias", Total: 10 },
 ];
 
-
-
 const renderCustomizedLabel = ({
   cx,
   cy,
@@ -61,16 +59,48 @@ const data = [
   { name: "06", uv: 2390, pv: 3800 },
 ];
 
+// Define a proper type for the tooltip props
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    name?: string;
+    value?: number;
+    dataKey?: string;
+    payload?: {
+      name?: string;
+      [key: string]: unknown;
+    };
+  }>;
+  label?: string;
+}
+
+// Custom tooltip component for dark mode compatibility
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip bg-card dark:bg-card p-2 border border-border rounded shadow">
+        <p className="label text-card-foreground dark:text-card-foreground mb-1 font-medium">
+          {payload[0].name || label}
+        </p>
+        <p className="value text-card-foreground dark:text-card-foreground">
+          <span className="font-medium">Total:</span> {payload[0].value}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function Sales() {
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[950px] mx-auto">
       <div className="flex flex-col w-[547px] h-[660px] gap-5">
-        <div className="w-[547px] h-[459px] bg-white rounded-2xl flex flex-col  ">
 
-
-          <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-            <p className="text-white font-medium text-center mr-10 text-xl">
-              Citas totales <br /> del período:
+        {/* Primer cuadro con LineChart */}
+        <div className="w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">
+              Ingresos del período <br /> seleccionado:
             </p>
           </div>
 
@@ -82,14 +112,14 @@ export default function Sales() {
               >
                 <XAxis
                   dataKey="name"
-                  tickLine={{ stroke: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
                   tick={({ x, y, payload }) => {
                     return (
                       <text
                         x={x}
                         y={y + 15}
-                        fill="#634AE2"
+                        fill="hsl(var(--primary))"
                         textAnchor="middle"
                         fontSize={12}
                         fontWeight="500"
@@ -106,31 +136,51 @@ export default function Sales() {
                 />
                 <YAxis
                   tickFormatter={(value: number) => (value / 1250).toString()}
-                  tick={{ fill: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
-                  tickLine={{ stroke: "#634AE2" }}
+                  tick={{ fill: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
                 />
-
+                <Tooltip content={<CustomTooltip />} />
                 <Line
                   type="monotone"
                   dataKey="uv"
-                  stroke="#634AE2"
-                  activeDot={{ r: 8, fill: "#634AE2" }}
+                  stroke="hsl(var(--primary))"
+                  activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-
-        <div className="w-full h-[234px] bg-white rounded-2xl flex items-center justify-center ">
-          <p className="text-black text-lg font-bold">Buenas 2</p>
+        {/* Segundo cuadro con encabezados */}
+        <div className="w-full h-[234px] bg-card dark:bg-card rounded-2xl flex flex-col">
+          <div className="w-full h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-between px-6">
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Cliente
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Ingresos
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Pagos Pendientes
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Cancelaciones
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
+              Ausencias
+            </div>
+          </div>
+          <div className="flex-1 p-4">
+            {/* Contenido de la tabla */}
+          </div>
         </div>
       </div>
 
-      <div className="w-[353px] h-[660px] bg-white rounded-2xl ">
-        <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-          <p className="text-white font-medium text-start mr-10 text-xl">
+      {/* Tercer cuadro con PieChart */}
+      <div className="w-[353px] h-[660px] bg-card dark:bg-card rounded-2xl">
+        <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
             Estado de <br />
             cita:
           </p>
@@ -150,14 +200,14 @@ export default function Sales() {
                 label={renderCustomizedLabel}
                 labelLine={false}
               >
-                {genero.map((entry, index) => (
+                {genero.map((_entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
                   />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -170,7 +220,7 @@ export default function Sales() {
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: COLORS[index] }}
               ></div>
-              <span className="text-[#634AE2] font-normal text-base">
+              <span className="text-primary dark:text-primary-foreground font-normal text-base">
                 {entry.name}
               </span>
             </div>

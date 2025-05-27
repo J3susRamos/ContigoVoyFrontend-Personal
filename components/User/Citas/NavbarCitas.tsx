@@ -182,7 +182,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             />
                 
             {/* Botón de agregar nueva cita */}
-
             <button
               className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
               onClick={onAddNew}
