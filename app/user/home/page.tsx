@@ -21,7 +21,7 @@ const PageHome = () => {
   }
 
   return (
-    <section className="bg-background min-h-screen">
+    <section className="bg-[#f8f8ff] dark:bg-background min-h-screen">
       <div className="flex flex-col md:flex-row justify-between">
         <div className="m-5">
         <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">

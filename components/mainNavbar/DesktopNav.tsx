@@ -1,22 +1,16 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "../Themetoggle";
-import { DataUser } from "../DataUser";
-import { Panel } from "../PanelUser";
 import { MobileNav } from "./MobileNav";
 
 interface NavItem {
   name: string;
   link: string;
   isButton?: boolean;
-}
-
-interface NavbarProps {
-  navItems: NavItem[];
 }
 
 interface DesktopNavProps {
@@ -27,50 +21,6 @@ interface ServiceLink {
   name: string;
   link: string;
 }
-
-export const NavbarGeneral: React.FC<NavbarProps> = ({ navItems }) => {
-  const [estado, setEstado] = useState<boolean>(false);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const userRef = useRef<HTMLDivElement>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      panelRef.current &&
-      !panelRef.current.contains(event.target as Node) &&
-      userRef.current &&
-      !userRef.current.contains(event.target as Node)
-    ) {
-      setEstado(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
-
-  return (
-    <div>
-      <nav className="bg-background h-[10vh] flex items-center fixed w-full  top-0">
-        <div className="w-full p-6 flex items-center justify-between">
-          <Link href="/">
-            <h1 className="font-bold text-3xl">
-              Contigo<span className="text-primary">Voy</span>{" "}
-            </h1>
-          </Link>
-          <div className="flex items-center gap-x-5">
-            <DesktopNav navItems={navItems} />
-            <DataUser ref={userRef} estado={estado} setEstado={setEstado} />
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-      <Panel ref={panelRef} estado={estado} setEstado={setEstado} />
-    </div>
-  );
-};
 
 export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
   const [hovered, setHovered] = useState<number | null>(null);
