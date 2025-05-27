@@ -17,7 +17,7 @@ export default function ShowStadistic() {
   ];
 
   return (
-    <div className="bg-background dark:bg-background">
+    <div className="bg-[#f8f8ff] dark:bg-background">
       {/* Barra de botones */}
       <div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
         <div className="ml-10 flex justify-between items-center w-full max-w-[600px]">
@@ -26,9 +26,9 @@ export default function ShowStadistic() {
               key={index}
               className={`${
                 view === btn.name.toLowerCase()
-                  ? "bg-background dark:bg-background text-primary dark:text-primary"
-                  : "bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground"
-              } text-[16px] leading-[20px] font-bold rounded-full px-9 py-2`}
+                  ? "bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80"
+                  : "bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground hover:bg-primary/80 hover:text-white dark:hover:bg-primary/80 dark:hover:text-white"
+              } text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors`}
               onClick={btn.action}
             >
               {btn.name}
@@ -37,7 +37,7 @@ export default function ShowStadistic() {
         </div>
       </div>
 
-      <div className="bg-background dark:bg-background">
+      <div className="bg-[#f8f8ff] dark:bg-background">
         {view === "clientes" && <Clientes />}
         {view === "citas" && <Citas />}
         {view === "ventas" && <Ventas />}
