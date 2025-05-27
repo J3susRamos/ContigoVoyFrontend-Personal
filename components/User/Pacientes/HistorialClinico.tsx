@@ -5,6 +5,7 @@ import showToast from "@/components/ToastStyle";
 import { parseCookies } from "nookies";
 import DetallesPaciente from "../Historial/DetallesPaciente";
 import { getPaciente } from "@/components/User/Pacientes/getPacienteData";
+import { getUltimaAtencion } from "@/components/User/Pacientes/getUltimaAtencionData";
 
 const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
   const [showCart, setShowCart] = useState(false);
@@ -35,28 +36,10 @@ const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
       setPaciente(result.data);
     }
   };
-
   const HandleGetUltimaAtencion = async (idPaciente: number) => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/atenciones/ultima/paciente/${idPaciente}`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setUltimaAtencion(data.result);
-      } else {
-        showToast("error", data.message || "No se pudo obtener la última atención");
-      }
-    } catch {
-      showToast("error", "Error al conectar con la API de atenciones.");
+    const result = await getUltimaAtencion(idPaciente);
+    if (result.success) {
+      setUltimaAtencion(result.data);
     }
   };
 

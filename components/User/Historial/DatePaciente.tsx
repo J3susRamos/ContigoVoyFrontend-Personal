@@ -4,41 +4,24 @@ import {
   DatePacienteProps,
   UltimaAtencion,
 } from "@/interface";
-import { parseCookies } from "nookies";
-import showToast from "@/components/ToastStyle";
 import { HistorialPaciente } from "./HistorialPaciente";
+import { getUltimaAtencion } from "@/components/User/Pacientes/getUltimaAtencionData";
 
 export const DatePaciente: React.FC<DatePacienteProps> =  ({ idPaciente }) => {
   const [showCart, setShowCart] = useState(false);
   const [ultimaAtencion, setUltimaAtencion] = useState<UltimaAtencion | null>(null);
-
-const HandleGetUltimaAtencion = async (idPaciente: number) => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/atenciones/ultima/paciente/${idPaciente}`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setUltimaAtencion(data.result);
-      } else {
-        showToast("error", data.message || "No se pudo obtener la última atención");
-      }
-    } catch {
-      showToast("error", "Error al conectar con la API de atenciones.");
+  const HandleGetUltimaAtencion = async (idPaciente: number) => {
+    const result = await getUltimaAtencion(idPaciente);
+    if (result.success) {
+      setUltimaAtencion(result.data);
     }
   };
 
-    useEffect(() => {
-        HandleGetUltimaAtencion(idPaciente);
-    }, [idPaciente]);
+  useEffect(() => {
+    HandleGetUltimaAtencion(idPaciente).catch(error => {
+      console.error("Error fetching última atención:", error);
+    });
+  }, [idPaciente]);
 
   return (
     <div className="max-w-[480px]">
