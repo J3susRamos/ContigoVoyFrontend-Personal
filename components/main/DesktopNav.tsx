@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "./Themetoggle";
-import { DataUser } from "./DataUser";
-import { Panel } from "./PanelUser";
+import { ThemeToggle } from "../Themetoggle";
+import { DataUser } from "../DataUser";
+import { Panel } from "../PanelUser";
 import { MobileNav } from "./MobileNav";
 
 interface NavItem {

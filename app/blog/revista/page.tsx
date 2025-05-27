@@ -36,8 +36,6 @@ function RevistaContent() {
 
   if (loading) return <div><LoadingPages/></div>;
   if (!blogData) return <div>No se encontró el blog</div>;
-
-  //return <BlogComplete data={blogData} />;
 }
 
 export default function Revista() {
