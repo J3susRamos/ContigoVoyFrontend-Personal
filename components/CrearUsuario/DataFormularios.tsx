@@ -24,17 +24,13 @@ export const PersonalForm = ({
 }) => {
   const [isVisible, setIsVisible] = React.useState(false);
   const [formData, setFormData] = React.useState<FormData>(initialFormData);
-
   const toggleVisibility = () => setIsVisible(!isVisible);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onNext(formData);
   };
-
   const handleDateChange = (date: DateValue | null) => {
     if (!date) return;
-
     setFormData((prev) => ({
       ...prev,
       fecha_nacimiento: `${String(date.day).padStart(2, "0")}/${String(

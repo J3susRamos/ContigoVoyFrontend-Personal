@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Paciente, UltimaAtencion } from "@/interface";
 import showToast from "@/components/ToastStyle";
@@ -14,8 +13,14 @@ const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
 
   useEffect(() => {
     if (idPaciente) {
-      HandleGetPaciente(idPaciente);
-      HandleGetUltimaAtencion(idPaciente);
+      // Properly handle both Promises
+      HandleGetPaciente(idPaciente).catch(error => {
+        console.error("Error fetching patient data:", error);
+      });
+      
+      HandleGetUltimaAtencion(idPaciente).catch(error => {
+        console.error("Error fetching last attention data:", error);
+      });
     }
   }, [idPaciente]);
   

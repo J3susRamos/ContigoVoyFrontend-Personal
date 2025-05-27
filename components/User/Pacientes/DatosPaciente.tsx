@@ -37,7 +37,9 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
 
   useEffect(() => {
     if (idPaciente) {
-      HandleGetPaciente(idPaciente);
+      HandleGetPaciente(idPaciente).catch(error => {
+        console.error("Error fetching patient data:", error);
+      });
     }
   }, [idPaciente]);
 
