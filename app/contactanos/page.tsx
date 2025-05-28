@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import FormContacto from "@/components/FormContacto";
+import FormContacto from "@/components/contactUs/FormContacto";
 
 export const metadata: Metadata = {
   title: "Contactanos - ContigoVoy",
