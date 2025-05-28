@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ThemeToggle } from "./Themetoggle";
+import { ThemeToggle } from "../Themetoggle";
 import { Icons } from "@/icons";
 import Link from "next/link";
 import { NavItem } from "@/interface";

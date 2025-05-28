@@ -1,9 +1,7 @@
 "use client";
-
-import RedesSociales from "@/components/RedesSociales";
+import RedesSociales from "@/components/footer/RedesSociales";
 import { Image } from "@heroui/react";
 import { motion } from "framer-motion";
-
 import Link from "next/link";
 
 export default function Footer() {

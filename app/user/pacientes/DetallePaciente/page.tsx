@@ -82,7 +82,7 @@ const PageHome = () => {
         </div>
       </div>
 
-      {/* Navbar estilo personalizado */}
+      {/* mainNavbar estilo personalizado */}
       <div className="flex w-full mt-4 pl-8 h-72">
         <div
           className="flex items-center pr-[200px] pl-8 rounded-3xl"

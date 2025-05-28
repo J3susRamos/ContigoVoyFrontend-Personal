@@ -1,11 +1,10 @@
 "use client";
-
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade"; // Asegúrate de importar el plugin Fade
+import Fade from "embla-carousel-fade";
 
 export default function ChooseUs() {
   const features = [
@@ -89,7 +88,7 @@ export default function ChooseUs() {
         delay: 2000,
       }),
       Fade({
-        active: true, // Activa el efecto de desvanecimiento
+        active: true,
       }),
     ]
   );
@@ -195,7 +194,7 @@ export default function ChooseUs() {
               className="w-[345px] h-[405px] -ml-5 bg-cover bg-center bg-no-repeat"
               style={{
                 backgroundImage: `url(/psicologaFinale.webp)`,
-                backgroundSize: "cover", // Fija el tamaño de la imagen
+                backgroundSize: "cover",
               }}
             />
           </div>

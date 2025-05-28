@@ -5,6 +5,7 @@ import BlogPreview from "./blogpreview";
 import { Authors, BlogPreviewData, Categoria } from "@/interface";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 
 export default function BlogPageComponent({
   Datos,
@@ -89,10 +90,12 @@ export default function BlogPageComponent({
                       {selectedBlog.tema}
                     </h2>
                     <div className="mt-6 flex flex-col md:flex-row items-start md:items-center gap-4">
-                      <img
+                      <Image
                         src={selectedBlog.psicologoImagenId}
                         alt={selectedBlog.psicologo || "Avatar"}
-                        className="w-12 h-12 rounded-full object-cover"
+                        width={48}  // 12 * 4 = 48 px (w-12 in Tailwind)
+                        height={48} // 12 * 4 = 48 px (h-12 in Tailwind)
+                        className="rounded-full object-cover"
                       />
                       <div>
                         <p className="text-sm font-normal md:text-base">
@@ -103,11 +106,17 @@ export default function BlogPageComponent({
                         </p>
                       </div>
                     </div>
-                    <img
+                    <Image
                       className="pt-9 rounded-none mx-auto w-full max-w-4xl"
                       src={selectedBlog.imagen}
                       alt="blogfondo"
-                      style={{ objectFit: "cover" }}
+                      width={1200}
+                      height={600}
+                      style={{
+                        maxWidth: '100%',
+                        height: 'auto',
+                        objectFit: "cover"
+                      }}
                     />
                     <div className="max-w-4xl w-full mx-auto px-2 md:px-4">
                       <p

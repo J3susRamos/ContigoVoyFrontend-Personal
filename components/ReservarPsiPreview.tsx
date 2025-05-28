@@ -10,8 +10,9 @@ import {
 import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
 import { PrePaciente, PsicologoPreviewData } from "@/interface";
-import { useState } from "react";
+import React, { useState } from "react";
 import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
+import Image from "next/image";
 
 export default function ReservarPsiPreview({
   psicologo,
@@ -110,12 +111,16 @@ export default function ReservarPsiPreview({
 
       const result: { message?: string } = await response.json();
 
-      if (!response.ok)
-        throw new Error(result.message || "Error al enviar el formulario");
+      if (!response.ok) {
+        setError(result.message || "Error al enviar el formulario");
+        setLoading(false);
+        return;
+      }
 
+      // Continuar con el flujo
       setFormData({ nombre: "", celular: "", correo: "", fecha_cita: "", hora_cita: "", idPsicologo: psicologo.idPsicologo});
       setIsConfirmOpen(false); 
-      setIsSuccessOpen(true);  
+      setIsSuccessOpen(true);
 
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -380,10 +385,12 @@ export default function ReservarPsiPreview({
       >
         <ModalContent>
           <ModalBody className="text-center">
-            <img
+            <Image
               src="/send-mail.svg"
               alt="Icono de correo enviado"
-              className="w-32 h-32 mx-auto mb-4"
+              width={128}
+              height={128}
+              className="mx-auto mb-4"
             />
             <h2 className="text-2xl font-semibold mb-4">¡LISTO! Tu cita ha sido reservada</h2>
             <p className="mb-6">En unos minutos te enviaremos un correo de confirmación.</p>

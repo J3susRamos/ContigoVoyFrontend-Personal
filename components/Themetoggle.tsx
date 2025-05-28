@@ -8,14 +8,13 @@ export function ThemeToggle() {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    setMounted(true); // Marca el componente como montado
+    setMounted(true);
   }, []);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  // Si el componente no está montado, no renderices nada
   if (!mounted) {
     return null;
   }

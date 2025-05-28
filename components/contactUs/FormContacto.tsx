@@ -59,8 +59,11 @@ export default function FormContacto() {
 
       const result: { message?: string } = await response.json();
 
-      if (!response.ok)
-        throw new Error(result.message || "Error al enviar el formulario");
+      if (!response.ok) {
+        setError(result.message || "Error al enviar el formulario");
+        setLoading(false);
+        return;
+      }
 
       setAction("¡Mensaje enviado! Nuestro equipo se pondrá en contacto contigo lo antes posible.");
       setFormData({

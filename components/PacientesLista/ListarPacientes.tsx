@@ -112,7 +112,7 @@ export default function ListarPacientes() {
 
   return (
     <div className="bg-background dark:bg-background min-h-screen flex flex-col">
-      {/* Navbar */}
+      {/* mainNavbar */}
       <header className="mt-4 z-30 px-4">
         <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
           <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-foreground">

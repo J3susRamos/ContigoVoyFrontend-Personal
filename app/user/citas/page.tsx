@@ -153,7 +153,7 @@ export default function App() {
       </header>
 
       <div>
-        {/* Navbar */}
+        {/* mainNavbar */}
         <Navbar
             filterValue={filterValue}
             onSearchChange={onSearchChange}

@@ -1,11 +1,11 @@
 "use client";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "../components/Navbar";
+import Navbar from "@/components/mainNavbar/Navbar";
 import { usePathname } from "next/navigation";
 import { Lexend } from "next/font/google";
 import { ToastContainer } from "react-toastify";
-import Footer from "@/components/footer";
+import Footer from "@/components/footer/footer";
 import React from "react";
 
 const lexend = Lexend({ subsets: ["latin"] });
