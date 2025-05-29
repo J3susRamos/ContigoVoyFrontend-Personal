@@ -8,32 +8,22 @@ type Cita = {
   descripcion: string;
 };
 
-const cita: Cita[] = [
-  { id: 1, hora: "01:00", descripcion: "No hay cita programada" },
-  { id: 2, hora: "02:00", descripcion: "No hay cita programada" },
-  { id: 3, hora: "03:00", descripcion: "No hay cita programada" },
-  { id: 4, hora: "04:00", descripcion: "No hay cita programada" },
-  { id: 5, hora: "05:00", descripcion: "No hay cita programada" },
-  { id: 6, hora: "06:00", descripcion: "No hay cita programada" },
-  { id: 7, hora: "07:00", descripcion: "No hay cita programada" },
-  { id: 8, hora: "08:00", descripcion: "No hay cita programada" },
-  { id: 9, hora: "09:00", descripcion: "No hay cita programada" },
-  { id: 10, hora: "10:00", descripcion: "No hay cita programada" },
-  { id: 11, hora: "11:00", descripcion: "No hay cita programada" },
-  { id: 12, hora: "12:00", descripcion: "No hay cita programada" },
-  { id: 13, hora: "13:00", descripcion: "No hay cita programada" },
-  { id: 14, hora: "14:00", descripcion: "No hay cita programada" },
-  { id: 15, hora: "15:00", descripcion: "No hay cita programada" },
-  { id: 16, hora: "16:00", descripcion: "No hay cita programada" },
-  { id: 17, hora: "17:00", descripcion: "No hay cita programada" },
-  { id: 18, hora: "18:00", descripcion: "No hay cita programada" },
-  { id: 19, hora: "19:00", descripcion: "No hay cita programada" },
-  { id: 20, hora: "20:00", descripcion: "No hay cita programada" },
-  { id: 21, hora: "21:00", descripcion: "No hay cita programada" },
-  { id: 22, hora: "22:00", descripcion: "No hay cita programada" },
-  { id: 23, hora: "23:00", descripcion: "No hay cita programada" },
-  { id: 24, hora: "24:00", descripcion: "No hay cita programada" },
-];
+const DEFAULT_APPOINTMENT_DESCRIPTION = "No hay cita programada";
+
+const generateDefaultAppointments = (startHour: number = 1, endHour: number = 24): Cita[] => {
+    return Array.from({length: endHour - startHour + 1}, (_, index) => {
+        const hour = startHour + index;
+        const displayHour = hour === 24 ? 0 : hour;
+
+        return {
+            id: hour,
+            hora: `${displayHour.toString().padStart(2, '0')}:00`,
+            descripcion: DEFAULT_APPOINTMENT_DESCRIPTION
+        };
+    });
+};
+
+const cita: Cita[] = generateDefaultAppointments();
 
 const columns = [
   { key: "hora", label: "Hora" },
@@ -96,25 +86,6 @@ export default function DashboardCitas() {
           </tbody>
         </table>
       </div>
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px; /* Ancho del scrollbar */
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f1f1; /* Color del track */
-          border-radius: 10px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #BABAFF; /* Color del thumb */
-          border-radius: 10px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #BABAFF; /* Color del thumb al hacer hover */
-        }
-      `}</style>
     </div>
   );
 }

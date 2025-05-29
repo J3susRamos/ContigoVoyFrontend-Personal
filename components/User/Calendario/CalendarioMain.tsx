@@ -31,10 +31,11 @@ export default function CalendarioMain() {
   const cambiarVista = (vista: string) => {
     setVistaActual(vista);
   };
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
       <div className="flex justify-between w-full mt-10 mb-6">
         <div className="flex flex-col md:flex-row justify-evenly space-x-5">
           <h1 className="flex items-center font-bold text-[32px] leading-[40px] ml-11 text-primary dark:text-primary-foreground">
@@ -79,7 +80,7 @@ export default function CalendarioMain() {
         </div>
       </div>
 
-      <div className="bg-background dark:bg-background">
+      <div className="bg-[#f8f8ff] dark:bg-background">
         {vistaActual === "calendario" ? <Calendario /> : <Week />}
       </div>
 

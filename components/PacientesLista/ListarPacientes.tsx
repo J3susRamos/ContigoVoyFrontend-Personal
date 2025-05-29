@@ -111,11 +111,11 @@ export default function ListarPacientes() {
   };
 
   return (
-    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
       {/* mainNavbar */}
       <header className="mt-4 z-30 px-4">
         <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
-          <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-foreground">
+          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
             Pacientes
           </h1>
           <div className="flex gap-x-5 mt-2">
@@ -126,6 +126,8 @@ export default function ListarPacientes() {
 
       <div className="w-full h-16 bg-primary dark:bg-primary items-center justify-between flex gap-x-10">
         <div className="flex flex-row items-center gap-x-10">
+
+          {/* Filtrado */}
           <div className="flex flex-row items-center gap-x-1">
             <SlidersHorizontalIcon className="text-primary-foreground dark:text-primary-foreground ml-10" />
             <h1 className="text-primary-foreground dark:text-primary-foreground text-lg font-extralight ml-2">Filtrar</h1>
@@ -159,6 +161,8 @@ export default function ListarPacientes() {
             />
           </div>
         </div>
+
+        {/* Boton de agregar nuevo paciente */}
         <div className="flex flex-row items-center gap-x-1 mr-5">
           <Link href="/user/pacientes/DatosPaciente">
             <Button
@@ -191,6 +195,7 @@ export default function ListarPacientes() {
             <th className="rounded-tr-full font-normal">Más</th>
           </tr>
         </thead>
+
         {/* Tablas */}
         <tbody className="text-center bg-card dark:bg-card text-primary dark:text-primary-foreground font-normal text-[16px] leading-[20px]">
           {filteredPacientes.map((paciente) => (
@@ -262,7 +267,6 @@ export default function ListarPacientes() {
                           if (
                             confirm("¿Estás seguro de eliminar este paciente?")
                           ) {
-                            // Handle the promise returned by HandleDeletePaciente
                             HandleDeletePaciente(paciente.idPaciente).catch(error => {
                               console.error("Error deleting patient:", error);
                             });
