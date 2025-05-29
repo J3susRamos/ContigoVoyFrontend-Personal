@@ -126,6 +126,8 @@ export default function ListarPacientes() {
 
       <div className="w-full h-16 bg-primary dark:bg-primary items-center justify-between flex gap-x-10">
         <div className="flex flex-row items-center gap-x-10">
+
+          {/* Filtrado */}
           <div className="flex flex-row items-center gap-x-1">
             <SlidersHorizontalIcon className="text-primary-foreground dark:text-primary-foreground ml-10" />
             <h1 className="text-primary-foreground dark:text-primary-foreground text-lg font-extralight ml-2">Filtrar</h1>
@@ -159,6 +161,8 @@ export default function ListarPacientes() {
             />
           </div>
         </div>
+
+
         <div className="flex flex-row items-center gap-x-1 mr-5">
           <Link href="/user/pacientes/DatosPaciente">
             <Button
@@ -191,6 +195,7 @@ export default function ListarPacientes() {
             <th className="rounded-tr-full font-normal">Más</th>
           </tr>
         </thead>
+
         {/* Tablas */}
         <tbody className="text-center bg-card dark:bg-card text-primary dark:text-primary-foreground font-normal text-[16px] leading-[20px]">
           {filteredPacientes.map((paciente) => (
