@@ -1,5 +1,6 @@
 import { CustomizedLabelProps } from "@/interface";
 import React, { useEffect, useState } from "react";
+import { parseCookies } from "nookies";
 import {
   PieChart,
   Pie,
@@ -13,9 +14,12 @@ import {
 } from "recharts";
 
 const fetchPorcentajeGenero = async () => {
+    const cookies = parseCookies();
+    const token = cookies.session;
+    if (!token) throw new Error("No autenticated");
   const response = await fetch("http://127.0.0.1:8000/api/estadisticas/porcentaje-genero", {
     headers: {
-      Authorization: "Bearer 44|bWbkKZ2zFNSxhO1q8v0F9eesBUGKsBRy14deNhpe2a66dbdd",
+      Authorization: `Bearer ${token}`
     },
   });
   const data = await response.json();
@@ -31,8 +35,8 @@ export default function Clients() {
   useEffect(() => {
     fetchPorcentajeGenero().then((result) => {
       const data = [
-        { name: "Masculino", Total: result.Masculino.porcentaje },
-        { name: "Femenino", Total: result.Femenino.porcentaje },
+        { name: "Masculino", Total: result?.Masculino?.cantidad ?? 0 },
+        { name: "Femenino", Total: result?.Femenino?.cantidad ?? 0},
       ];
       setGenero(data);
     });
@@ -40,14 +44,38 @@ export default function Clients() {
 
   const COLORS = ["#7777FF", "#66A3FF", "#B3B3FF"];
 
-  const edad = [
-    { name: "0 - 12", Total: 10 },
-    { name: "13 - 17", Total: 5 },
-    { name: "18 - 24", Total: 17 },
-    { name: "25 - 34", Total: 12 },
-    { name: "35 - 44", Total: 6 },
-    { name: "45 - 54", Total: 7 },
-  ];
+  const [edad, setEdad] = useState([
+    { name: "0 - 12", Total: 0 },
+    { name: "13 - 17", Total: 0 },
+    { name: "18 - 24", Total: 0 },
+    { name: "25 - 34", Total: 0 },
+    { name: "35 - 44", Total: 0 },
+    { name: "45 - 54", Total: 0 },
+  ]);
+
+  const fetchEstadisticasEdad = async () => {
+    const cookies = parseCookies();
+    const token = cookies.session;
+    if (!token) throw new Error("No autenticated");
+    const response = await fetch("http://127.0.0.1:8000/api/pacientes/estadisticas/edad", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+    return data.result;
+  };
+
+  useEffect(() => {
+    fetchEstadisticasEdad().then((result) => {
+      setEdad([
+        { name: "0 - 12", Total: result["0-12"] ?? 0 },
+        { name: "13 - 17", Total: result["13-17"] ?? 0 },
+        { name: "18 - 24", Total: result["18-24"] ?? 0 },
+        { name: "25 - 34", Total: result["25-34"] ?? 0 },
+        { name: "35 - 44", Total: result["35-44"] ?? 0 },
+        { name: "45 - 54", Total: result["45-54"] ?? 0 },
+      ]);
+    });
+  }, []);
 
   const lugar = [
     { name: "Surco", Total: 10 },
