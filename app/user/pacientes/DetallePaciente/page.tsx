@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/navigation";
@@ -33,15 +32,25 @@ const PageHome = () => {
   };
 
   useEffect(() => {
-    const id = localStorage.getItem("idPaciente");
-    if (!id) {
-      router.push("/user/pacientes");
-    } else {
-      const idParsed = parseInt(id);
-      setIdPaciente(idParsed);
-      fetchPaciente(idParsed);
-    }
-  }, []);
+    const loadPaciente = async () => {
+      const id = localStorage.getItem("idPaciente");
+      if (!id) {
+        router.push("/user/pacientes");
+      } else {
+        const idParsed = parseInt(id);
+        setIdPaciente(idParsed);
+        try {
+          await fetchPaciente(idParsed);
+        } catch (error) {
+          console.error("Error fetching paciente:", error);
+        }
+      }
+    };
+
+    loadPaciente().catch(error => {
+      console.error("Error in loadPaciente:", error);
+    });
+  }, [router]);
 
   const navItems = [
     { name: "Datos Personales", key: "datos" },
