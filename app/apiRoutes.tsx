@@ -7,7 +7,8 @@ import {
   PsicologoApiResponseAlone,
   PsicologoPreviewData,
 } from "@/interface";
-import { parseCookies } from "nookies";
+import {parseCookies} from "nookies";
+
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
@@ -15,8 +16,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
-  const result: ApiResponse = await res.json();
-  return result;
+  return await res.json();
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
@@ -26,9 +26,7 @@ export async function GetCagetories(): Promise<CategoriaApi> {
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
-  const result: CategoriaApi = await res.json();
-
-  return result;
+  return await res.json();
 }
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
@@ -38,9 +36,7 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
-  const result: AuthorsApi = await res.json();
-
-  return result;
+  return await res.json();
 }
 
 export async function GetPsicologos(): Promise<PsicologoApiResponse> {
@@ -52,9 +48,7 @@ export async function GetPsicologos(): Promise<PsicologoApiResponse> {
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
-  const result: PsicologoApiResponse = await res.json();
-
-  return result;
+  return await res.json();
 }
 
 export async function DeletePsycologo(id: number | null): Promise<void> {
@@ -92,8 +86,7 @@ export async function GetPsicologosById(
   if (!res.ok) {
     throw new Error("Error al obtener el psicologo");
   }
-  const result: PsicologoApiResponseAlone = await res.json();
-  return result;
+  return await res.json();
 }
 
 export async function UpdatePsicologo(
@@ -137,7 +130,5 @@ export async function GetCitasPendientes(
   if (!res.ok) {
     throw new Error("Error al obtener el psicologo");
   }
-  const result: CitasPendientesApiResponse = await res.json();
-  return result;
+  return await res.json();
 }
-

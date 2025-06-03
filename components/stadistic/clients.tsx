@@ -1,4 +1,3 @@
-import { CustomizedLabelProps } from "@/interface";
 import React from "react";
 import {
   PieChart,
@@ -11,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
 
 // Datos para el gráfico de pastel
 const genero = [
@@ -39,50 +39,67 @@ const lugar = [
   { name: "San Borja", Total: 6 },
 ];
 
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: CustomizedLabelProps) => {
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+// Reusable BarChart Component
+interface BarChartCardProps {
+  title: string;
+  data: Array<{ name: string; Total: number }>;
+  showAgeLabel?: boolean;
+}
 
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontSize={14}
-      fontWeight="bold"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+const BarChartCard: React.FC<BarChartCardProps> = ({ title, data, showAgeLabel = false }) => (
+  <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
+    <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+      <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">{title}:</p>
+    </div>
 
-// Custom tooltip component for dark mode compatibility
-const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number }> }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="custom-tooltip bg-card dark:bg-card p-2 border border-border rounded shadow">
-        <p className="label text-card-foreground dark:text-card-foreground mb-1 font-medium">
-          {payload[0].name}
-        </p>
-        <p className="value text-card-foreground dark:text-card-foreground">
-          <span className="font-medium">Total:</span> {payload[0].value}
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
+    <div className="flex-1 flex items-center justify-center">
+      <ResponsiveContainer width="90%" height="80%">
+        <BarChart
+          data={data}
+          margin={{ top: 15, right: 10, left: 5, bottom: 15 }}
+        >
+          <XAxis
+            dataKey="name"
+            tickLine={{ stroke: "hsl(var(--primary))" }}
+            axisLine={{ stroke: "hsl(var(--primary))" }}
+            tick={showAgeLabel ? ({ x, y, payload }) => {
+              return (
+                <text
+                  x={x}
+                  y={y + 15}
+                  fill="hsl(var(--primary))"
+                  textAnchor="middle"
+                  fontSize={12}
+                  fontWeight="500"
+                >
+                  <tspan x={x} dy="0">
+                    {payload.value}
+                  </tspan>
+                  <tspan x={x} dy="15">
+                    años
+                  </tspan>
+                </text>
+              );
+            } : { fontSize: 12, fill: "hsl(var(--primary))", fontWeight: "500" }}
+          />
+          <YAxis
+            tick={{ fontSize: 12, fill: "hsl(var(--primary))" }}
+            tickLine={{ stroke: "hsl(var(--primary))" }}
+            axisLine={{ stroke: "hsl(var(--primary))" }}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar
+            dataKey="Total"
+            fill="hsl(var(--primary))"
+            barSize={35}
+            radius={[5, 5, 0, 0]}
+            opacity={0.6}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+);
 
 export default function Clients() {
   return (
@@ -133,99 +150,8 @@ export default function Clients() {
 
       {/* Segunda columna  */}
       <div className="flex flex-col w-[502px] h-[600px] gap-5">
-        <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
-          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Edad:</p>
-          </div>
-
-          <div className="flex-1 flex items-center justify-center ">
-            <ResponsiveContainer width="90%" height="80%">
-              <BarChart
-                data={edad}
-                margin={{ top: 15, right: 10, left: 5, bottom: 15 }}
-              >
-                <XAxis
-                  dataKey="name"
-                  tickLine={{ stroke: "hsl(var(--primary))" }}
-                  axisLine={{ stroke: "hsl(var(--primary))" }}
-                  tick={({ x, y, payload }) => {
-                    return (
-                      <text
-                        x={x}
-                        y={y + 15}
-                        fill="hsl(var(--primary))"
-                        textAnchor="middle"
-                        fontSize={12}
-                        fontWeight="500"
-                      >
-                        <tspan x={x} dy="0">
-                          {payload.value}
-                        </tspan>
-                        <tspan x={x} dy="15">
-                          años
-                        </tspan>{" "}
-                      </text>
-                    );
-                  }}
-                />
-
-                <YAxis
-                  tick={{ fontSize: 12, fill: "hsl(var(--primary))" }}
-                  tickLine={{ stroke: "hsl(var(--primary))" }}
-                  axisLine={{ stroke: "hsl(var(--primary))" }}
-                />
-                <Tooltip 
-                  content={<CustomTooltip />}
-                />
-                <Bar
-                  dataKey="Total"
-                  fill="hsl(var(--primary))"
-                  barSize={35}
-                  radius={[5, 5, 0, 0]}
-                  opacity={0.6}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-       
-        <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
-          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Lugar:</p>
-          </div>
-
-          <div className="flex-1 flex items-center justify-center">
-            <ResponsiveContainer width="90%" height="80%" >
-              <BarChart
-                data={lugar}
-                margin={{ top: 15, right: 10, left: 5, bottom: 15 }}
-              >
-                <XAxis
-                  dataKey="name"
-                  tickLine={{ stroke: "hsl(var(--primary))" }}
-                  axisLine={{ stroke: "hsl(var(--primary))" }}
-                  tick={{ fontSize: 12, fill: "hsl(var(--primary))", fontWeight: "500" }}
-                />
-                <YAxis
-                  tick={{ fontSize: 12, fill: "hsl(var(--primary))" }}
-                  tickLine={{ stroke: "hsl(var(--primary))" }}
-                  axisLine={{ stroke: "hsl(var(--primary))" }}
-                />
-                <Tooltip 
-                  content={<CustomTooltip />}
-                />
-                <Bar
-                  dataKey="Total"
-                  fill="hsl(var(--primary))"
-                  barSize={35}
-                  radius={[5, 5, 0, 0]}
-                  opacity={0.6}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        <BarChartCard title="Edad" data={edad} showAgeLabel={true} />
+        <BarChartCard title="Lugar" data={lugar} showAgeLabel={false} />
       </div>
     </div>
   );

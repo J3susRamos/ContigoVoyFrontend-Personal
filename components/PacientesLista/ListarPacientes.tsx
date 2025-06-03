@@ -1,38 +1,45 @@
-import { Plus, SlidersHorizontalIcon } from "lucide-react";
 import CerrarSesion from "../CerrarSesion";
-import { Button, Input } from "@heroui/react";
 import { parseCookies } from "nookies";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Paciente } from "@/interface";
-import showToast from "../ToastStyle";
+import showToastFunction from "../ToastStyle";
+import { NavbarPacientes } from "@/components/User/Pacientes/NavbarPacientesComponent";
+import { useRouter } from "next/navigation";
 
 export default function ListarPacientes() {
   const [paciente, setPaciente] = useState<Paciente[]>([]); 
   const [filteredPacientes, setFilteredPacientes] = useState<Paciente[]>([]); 
   const [filterValue, setFilterValue] = useState(""); 
+  const toastShownRef = useRef(false);
+  const router = useRouter();
 
-  const onSearchChange = (value: string) => {
-    setFilterValue(value);
-    if (value === "") {
+  const onSearchChange = useCallback((value?: string) => {
+    const searchValue = value || "";
+    setFilterValue(searchValue);
+    if (searchValue === "") {
       setFilteredPacientes(paciente);
     } else {
       const filtered = paciente.filter((pac) =>
         `${pac.nombre} ${pac.DNI} ${pac.celular}`
           .toLowerCase()
-          .includes(value.toLowerCase())
+          .includes(searchValue.toLowerCase())
       );
       setFilteredPacientes(filtered);
     }
-  };
+  }, [paciente]);
 
-  const onClear = () => {
+  const onClear = useCallback(() => {
     setFilterValue("");
     setFilteredPacientes(paciente);
-  };
+  }, [paciente]);
 
-  const handleGetPacientes = async () => {
+  const handleAddNew = useCallback(() => {
+    router.push("/user/pacientes/DatosPaciente");
+  }, [router]);
+
+  const handleGetPacientes = async (showToast = true) => {
     try {
       const cookies = parseCookies();
       const token = cookies["session"];
@@ -50,21 +57,25 @@ export default function ListarPacientes() {
         if (Array.isArray(data.result)) {
           setPaciente(data.result);
           setFilteredPacientes(data.result);
-          showToast("success", "Pacientes obtenidos correctamente");
+          // Only show toast if it hasn't been shown before and showToast is true
+          if (showToast && !toastShownRef.current) {
+            showToastFunction("success", "Pacientes cargados correctamente");
+            toastShownRef.current = true;
+          }
         } else {
           console.error("La propiedad 'result' no es un array:", data);
-          showToast("error", "Formato de respuesta inválido");
+          showToastFunction("error", "Formato de respuesta inválido");
           setPaciente([]);
           setFilteredPacientes([]);
         }
       } else {
-        showToast("error", data.message || "Error al obtener los pacientes");
+        showToastFunction("error", data.message || "Error al obtener los pacientes");
         setPaciente([]);
         setFilteredPacientes([]);
       }
     } catch (error) {
       console.error(error);
-      showToast("error", "Error de conexión. Intenta nuevamente.");
+      showToastFunction("error", "Error de conexión. Intenta nuevamente.");
       setPaciente([]);
       setFilteredPacientes([]);
     }
@@ -85,17 +96,18 @@ export default function ListarPacientes() {
       });
       const data = await response.json();
       if (response.ok) {
-        showToast("success", "Paciente eliminado correctamente");
-        await handleGetPacientes();
+        showToastFunction("success", "Paciente eliminado correctamente");
+        // Don't show toast for refresh after delete
+        await handleGetPacientes(false);
       } else {
-        showToast(
+        showToastFunction(
           "error",
           data.status_message || "Error de conexión. Intenta nuevamente."
         );
       }
     } catch (error) {
       console.error(error);
-      showToast("error", "Error de conexión. Intenta nuevamente.");
+      showToastFunction("error", "Error de conexión. Intenta nuevamente.");
     }
   };
 
@@ -112,7 +124,7 @@ export default function ListarPacientes() {
 
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
-      {/* mainNavbar */}
+      {/* Header */}
       <header className="mt-4 z-30 px-4">
         <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
           <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
@@ -124,63 +136,13 @@ export default function ListarPacientes() {
         </div>
       </header>
 
-      <div className="w-full h-16 bg-primary dark:bg-primary items-center justify-between flex gap-x-10">
-        <div className="flex flex-row items-center gap-x-10">
-
-          {/* Filtrado */}
-          <div className="flex flex-row items-center gap-x-1">
-            <SlidersHorizontalIcon className="text-primary-foreground dark:text-primary-foreground ml-10" />
-            <h1 className="text-primary-foreground dark:text-primary-foreground text-lg font-extralight ml-2">Filtrar</h1>
-          </div>
-
-          <div className="flex flex-row items-center gap-x-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 -960 960 960"
-              width="24px"
-              fill="currentColor"
-              className="text-primary-foreground dark:text-primary-foreground"
-            >
-              <path d="M380-320q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q11 11 11 28t-11 28q-11 11-28 11t-28-11L532-372q-30 24-69 38t-83 14Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-            </svg>
-            <Input
-              type="text"
-              placeholder="Buscar paciente"
-              isClearable
-              size="sm"
-              radius="full"
-              variant="bordered"
-              className="rounded-full bg-accent dark:bg-accent ml-4 w-48"
-              classNames={{
-                input: "placeholder:text-accent-foreground dark:placeholder:text-accent-foreground",
-              }}
-              value={filterValue}
-              onClear={onClear}
-              onValueChange={onSearchChange}
-            />
-          </div>
-        </div>
-
-        {/* Boton de agregar nuevo paciente */}
-        <div className="flex flex-row items-center gap-x-1 mr-5">
-          <Link href="/user/pacientes/DatosPaciente">
-            <Button
-              className="hover:bg-muted dark:hover:bg-muted border border-primary-foreground dark:border-primary-foreground text-primary dark:text-primary-foreground bg-card dark:bg-card p-[2px] rounded-full"
-            >
-              <Plus />
-            </Button>
-          </Link>
-          <Link href="/user/pacientes/DatosPaciente">
-            <Button
-              radius="full"
-              className="border border-primary-foreground dark:border-primary-foreground text-primary-foreground dark:text-primary-foreground bg-transparent hover:bg-muted dark:hover:bg-muted hover:bg-opacity-20 dark:hover:bg-opacity-20 h-8 mx-auto"
-            >
-              Agregar nuevo paciente
-            </Button>
-          </Link>
-        </div>
-      </div>
+      {/* Navbar with filters */}
+      <NavbarPacientes
+        filterValue={filterValue}
+        onSearchChange={onSearchChange}
+        onClear={onClear}
+        onAddNew={handleAddNew}
+      />
 
       {/* Encabezado de tabla */}
       <table className="max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8">

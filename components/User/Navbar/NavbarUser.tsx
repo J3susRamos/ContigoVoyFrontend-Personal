@@ -113,7 +113,7 @@ const NavbarUser = () => {
       {/* mainNavbar */}
       <div className="hidden lg:flex w-72 h-screen fixed bg-[#f8f8ff] dark:bg-background">
         <div className="bg-card dark:bg-card w-full h-full rounded-tr-3xl pt-7 flex flex-col">
-          <Link href="/public">
+          <Link href="/">
             <h1 className="font-normal text-3xl flex justify-center items-center">
               <Image src={"/LOGO.webp"} priority={true} width={200} height={150} alt="logo" />
             </h1>
