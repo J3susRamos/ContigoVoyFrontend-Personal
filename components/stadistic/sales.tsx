@@ -1,4 +1,3 @@
-import { CustomizedLabelProps } from "@/interface";
 import React from "react";
 import {
   PieChart,
@@ -11,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
 
 const genero = [
   { name: "Citas completadas", Total: 40 },
@@ -18,34 +18,6 @@ const genero = [
   { name: "Citas canceladas", Total: 20 },
   { name: "Ausencias", Total: 10 },
 ];
-
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: CustomizedLabelProps) => {
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontSize={14}
-      fontWeight="bold"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
 
 const COLORS = ["#BABAFF", "#9494F3", "#58A6FF", "#B158FF"];
 
@@ -58,38 +30,6 @@ const data = [
   { name: "05", uv: 1890, pv: 4800 },
   { name: "06", uv: 2390, pv: 3800 },
 ];
-
-// Define a proper type for the tooltip props
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    name?: string;
-    value?: number;
-    dataKey?: string;
-    payload?: {
-      name?: string;
-      [key: string]: unknown;
-    };
-  }>;
-  label?: string;
-}
-
-// Custom tooltip component for dark mode compatibility
-const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="custom-tooltip bg-card dark:bg-card p-2 border border-border rounded shadow">
-        <p className="label text-card-foreground dark:text-card-foreground mb-1 font-medium">
-          {payload[0].name || label}
-        </p>
-        <p className="value text-card-foreground dark:text-card-foreground">
-          <span className="font-medium">Total:</span> {payload[0].value}
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
 
 export default function Sales() {
   return (
