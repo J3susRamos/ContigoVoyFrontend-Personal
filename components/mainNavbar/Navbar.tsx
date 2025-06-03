@@ -44,7 +44,7 @@ const Navbar = () => {
   return (
     <nav className="bg-background h-[10vh] flex items-center fixed w-full z-40 top-0">
       <div className="w-full p-6 flex items-center justify-between">
-        <Link href="/public" className="pl-10 z-0">
+        <Link href="/" className="pl-10 z-0">
           <Image
             src="/LOGO.webp"
             alt="Company Logo"
