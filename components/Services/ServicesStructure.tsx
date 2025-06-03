@@ -1,8 +1,8 @@
 "use client";
-
 import { ServicesStructureProps } from "@/interface";
 import SliderPrice from "./SliderPrice";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -111,9 +111,11 @@ export default function ServicesStructure({
                             >
                               <div className="w-full md:w-[360px] h-auto md:h-[236px] flex flex-col rounded-lg p-4">
                                 <div className="flex justify-center items-center">
-                                  <img
+                                  <Image
                                     src={card.icon}
                                     alt={card.text}
+                                    width={183}
+                                    height={88}
                                     className="w-[140px] md:w-[183.27px] h-[68px] md:h-[88px] object-contain"
                                   />
                                 </div>
@@ -152,9 +154,11 @@ export default function ServicesStructure({
                   >
                     <div className="w-full md:w-[360px] h-auto md:h-[236px] flex flex-col rounded-lg p-4">
                       <div className="flex justify-center items-center">
-                        <img
+                        <Image
                           src={card.icon}
                           alt={card.text}
+                          width={183}
+                          height={88}
                           className="w-[140px] md:w-[183.27px] h-[68px] md:h-[88px] object-contain"
                         />
                       </div>
@@ -175,9 +179,11 @@ export default function ServicesStructure({
                   >
                     <div className="w-full md:w-[360px] h-auto md:h-[236px] flex flex-col rounded-lg p-4">
                       <div className="flex justify-center items-center">
-                        <img
+                        <Image
                           src={card.icon}
                           alt={card.text}
+                          width={183}
+                          height={88}
                           className="w-[140px] md:w-[183.27px] h-[68px] md:h-[88px] object-contain"
                         />
                       </div>
@@ -218,9 +224,11 @@ export default function ServicesStructure({
                     >
                       <div className=" rounded-full  bg-[#9494F3] p-6">
                         <div className="w-32 h-32 flex items-center justify-center">
-                          <img
+                          <Image
                             src={icono.iconImage}
                             alt={icono.text}
+                            width={80}
+                            height={80}
                             className="w-20 h-20 object-contain"
                           />
                         </div>
@@ -240,9 +248,11 @@ export default function ServicesStructure({
                     >
                       <div className="rounded-full bg-[#9494F3] p-6">
                         <div className="w-32 h-32 flex items-center justify-center">
-                          <img
+                          <Image
                             src={icono.iconImage}
                             alt={icono.text}
+                            width={80}
+                            height={80}
                             className="w-20 h-20 object-contain"
                           />
                         </div>
@@ -287,9 +297,11 @@ export default function ServicesStructure({
                         >
                           <div className="rounded-full bg-[#9494F3] p-6">
                             <div className="w-32 h-32 flex items-center justify-center">
-                              <img
+                              <Image
                                 src={icono.iconImage}
                                 alt={icono.text}
+                                width={80}
+                                height={80}
                                 className="w-20 h-20 object-contain"
                               />
                             </div>

@@ -41,9 +41,7 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
 
 export async function GetPsicologos(): Promise<PsicologoApiResponse> {
   const res = await fetch(
-
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos`
-
   );
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
@@ -63,7 +61,6 @@ export async function DeletePsycologo(id: number | null): Promise<void> {
       },
     }
   );
-
   if (!res.ok) {
     throw new Error("Error al eliminar el psicologo");
   }
@@ -107,9 +104,7 @@ export async function UpdatePsicologo(
   );
 
   if (!res.ok) {
-   
     throw new Error("Error al actualizar el psicologo");
-    
   }
 }
 
