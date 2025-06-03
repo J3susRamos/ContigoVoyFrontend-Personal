@@ -57,7 +57,6 @@ const PageHome = () => {
     { name: "Historial Clínico", key: "historial" },
     { name: "Citas", key: "citas" },
   ];
-
   return (
     <div className="min-h-screen bg-background dark:bg-background flex flex-col">
       {/* Cabecera */}
