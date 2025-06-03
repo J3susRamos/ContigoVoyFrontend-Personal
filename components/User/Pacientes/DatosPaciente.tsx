@@ -28,7 +28,7 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
              style={{ position: "relative", zIndex: 100, marginTop: "-160px" }}>
           <div className="bg-card dark:bg-card text-card-foreground dark:text-card-foreground mt-4 rounded-3xl p-4 flex justify-around w-full h-full shadow-lg">
             <div className="text-primary dark:text-primary font-bold flex flex-col gap-y-6">
-              {/* Datos del paciente */}
+              {/* Datos del paciente existente*/}
               <div className="flex gap-6">
                 <div className="w-28">Nombre</div>
                 <div className="font-normal text-foreground dark:text-foreground">{paciente?.nombre}</div>
