@@ -7,6 +7,9 @@ import Tiptap from "./textEdit";
 import { BlogApi, Categoria, UsuarioLocalStorage } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "../ToastStyle";
+import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
+import { Plus } from "lucide-react";
+import Image from "next/image";
 
 export const CategoriaGet = async () => {
   try {
@@ -62,6 +65,7 @@ export default function BlogUsuarioCrear() {
   const [originalIdPsicologo, setOriginalIdPsicologo] = useState<number | null>(
     null
   );
+  const [base64Image, setBase64Image] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategoria = () => {
@@ -86,8 +90,28 @@ export default function BlogUsuarioCrear() {
     idCategoria: selectedKey ? parseInt(selectedKey) : null,
     tema: tema,
     contenido: contenido,
-    imagen: url,
+    imagen: base64Image || url,
     idPsicologo: originalIdPsicologo ?? user?.id ?? null,
+  };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      // Convertir la imagen a WebP
+      const webpImage = await convertImageToWebP(file);
+
+      // Convertir la imagen WebP a Base64
+      const base64 = await convertToBase64(webpImage);
+      setBase64Image(base64);
+      setUrl(""); // Clear URL input when uploading an image
+    } catch (error) {
+      console.error("Error processing image:", error);
+      showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
+    }
   };
 
   const postNewCategoria = async () => {
@@ -171,6 +195,7 @@ export default function BlogUsuarioCrear() {
     if (blog) {
       setTema(blog.tema);
       setUrl(blog.imagen);
+      setBase64Image(null); // Reset base64 image when editing
       setContenido(blog.contenido);
       setSelectedKey(blog.idCategoria.toString());
       setEditingBlogId(blog.id);
@@ -250,18 +275,64 @@ export default function BlogUsuarioCrear() {
             </div>
 
             <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
-              URL Imagen
+              Imagen
             </h1>
-            <Input
-              placeholder="Url de imagen"
-              classNames={{
-                input: "!text-[#634AE2]",
-              }}
-              radius="full"
-              height={43}
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
+            
+            {/* Image Upload Section */}
+            <div className="w-full flex flex-col gap-2">
+              {/* Upload Button */}
+              <div className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
+                {base64Image ? (
+                  <Image
+                    src={base64Image}
+                    alt="Imagen seleccionada"
+                    width={300}
+                    height={128}
+                    className="w-full h-full object-cover"
+                  />
+                ) : url ? (
+                  <Image
+                    src={url}
+                    alt="Imagen desde URL"
+                    width={300}
+                    height={128}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <Plus width={40} height={40} strokeWidth={2} className="text-[#634AE2]" />
+                    <span className="text-[#634AE2] text-sm mt-2">Subir imagen</span>
+                  </div>
+                )}
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+
+              {/* OR separator */}
+              <div className="flex items-center justify-center my-2">
+                <span className="text-[#634AE2] text-sm">Tambien puedes colocar el URL</span>
+              </div>
+
+              {/* URL Input */}
+              <Input
+                placeholder="Url de imagen"
+                classNames={{
+                  input: "!text-[#634AE2]",
+                }}
+                radius="full"
+                height={43}
+                value={url}
+                onChange={(e) => {
+                  setUrl(e.target.value);
+                  setBase64Image(null); // Clear uploaded image when typing URL
+                }}
+              />
+            </div>
           </div>
 
           <div className="w-full max-w-full md:max-w-[50%]">
