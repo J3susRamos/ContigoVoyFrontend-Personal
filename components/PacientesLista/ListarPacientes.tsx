@@ -36,7 +36,7 @@ export default function ListarPacientes() {
   }, [paciente]);
 
   const handleAddNew = useCallback(() => {
-    router.push("/user/pacientes/DatosPaciente");
+    router.push("/user/pacientes/DatosCrearPaciente");
   }, [router]);
 
   const handleGetPacientes = async (showToast = true) => {

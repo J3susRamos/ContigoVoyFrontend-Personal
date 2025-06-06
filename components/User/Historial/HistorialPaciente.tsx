@@ -35,13 +35,15 @@ export const HistorialPaciente: React.FC<HistorialPacienteProps> = ({
       });
   
       if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
+        console.error(`Error HTTP: ${response.status}`);
+        return;
       }
   
       const data = await response.json();
   
       if (!data.result) {
-        throw new Error("Formato de respuesta inválido");
+        console.error("Formato de respuesta inválido:", data);
+        return;
       }
   
       const atenciones = Array.isArray(data.result) ? data.result.flat() : [];
@@ -53,7 +55,9 @@ export const HistorialPaciente: React.FC<HistorialPacienteProps> = ({
   }, [idPaciente]); 
   
   useEffect(() => {
-    handleGetAtenciones();
+    handleGetAtenciones().catch(error => {
+      console.error("Error fetching atenciones:", error);
+    });
   }, [handleGetAtenciones]); 
 
   return (

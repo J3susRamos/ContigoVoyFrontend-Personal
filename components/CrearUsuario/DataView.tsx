@@ -135,7 +135,7 @@ export const DataView = ({
   };
 
   return (
-    <div className="text-[#634AE2] h-auto p-10 items-center bg-white rounded-3xl ">
+    <div className="text-primary dark:text-primary h-auto p-10 items-center bg-card dark:bg-card rounded-3xl">
       <div className="relative flex flex-col items-center mb-10">
         <h1 className="font-semibold text-4xl">¡Hola {formData.name}!</h1>
         <small>Ya casi acabamos</small>
@@ -145,7 +145,7 @@ export const DataView = ({
           <div className="col-span-2 row-span-2">
             <h3 className="font-bold text-base">Foto</h3>
 
-            <div className="relative border-2 border-[#634AE2] rounded-lg h-36 w-full flex justify-center items-center cursor-pointer overflow-hidden">
+            <div className="relative border-2 border-primary dark:border-primary rounded-lg h-36 w-full flex justify-center items-center cursor-pointer overflow-hidden">
               {base64Image ? (
                 <Image
                   src={formData.imagen}
@@ -155,7 +155,7 @@ export const DataView = ({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Plus width={40} height={40} strokeWidth={2} color="#634AE2" />
+                <Plus width={40} height={40} strokeWidth={2} className="text-primary dark:text-primary" />
               )}
 
               <input
@@ -183,11 +183,10 @@ export const DataView = ({
               minLength={100}
               maxLength={350}
               classNames={{
-                label: "!text-[#634AE2] font-bold  text-base",
-
+                label: "!text-primary dark:!text-primary font-bold text-base",
                 inputWrapper:
-                  "border-2 border-[#634AE2] bg-white w-full h-full",
-                innerWrapper: " min-h-[120px]",
+                  "border-2 border-primary dark:border-primary bg-background dark:bg-background w-full h-full",
+                innerWrapper: "min-h-[120px]",
               }}
               onChange={(e) => {
                 const value = e.target.value;
@@ -220,8 +219,8 @@ export const DataView = ({
                 })
               }
               classNames={{
-                label: "!text-[#634AE2] font-bold text-base",
-                inputWrapper: "border-2 border-[#634AE2] bg-white",
+                label: "!text-primary dark:!text-primary font-bold text-base",
+                inputWrapper: "border-2 border-primary dark:border-primary bg-background dark:bg-background",
               }}
               type="number"
             />
@@ -234,7 +233,7 @@ export const DataView = ({
               isInvalid={isInvalid}
               label="Especialidades"
               classNames={{
-                label: "!text-[#634AE2] font-bold text-base",
+                label: "!text-primary dark:!text-primary font-bold text-base",
               }}
               onValueChange={handleEspecialidadesChange}
             >
@@ -244,7 +243,7 @@ export const DataView = ({
                     defaultSelected
                     color="secondary"
                     classNames={{
-                      label: "text-[#634AE2]", // Reemplaza el color placeholder
+                      label: "text-primary dark:text-primary",
                     }}
                     value="cognitivo-conductual"
                   >
@@ -252,7 +251,7 @@ export const DataView = ({
                   </Checkbox>
                   <Checkbox
                     classNames={{
-                      label: "text-[#634AE2]", // Reemplaza el color placeholder
+                      label: "text-primary dark:text-primary",
                     }}
                     color="secondary"
                     value="neuropsicologia"
@@ -261,7 +260,7 @@ export const DataView = ({
                   </Checkbox>
                   <Checkbox
                     classNames={{
-                      label: "text-[#634AE2]", // Reemplaza el color placeholder
+                      label: "text-primary dark:text-primary",
                     }}
                     color="secondary"
                     value="psicoanalisis"
@@ -273,7 +272,7 @@ export const DataView = ({
                   <Checkbox
                     color="secondary"
                     classNames={{
-                      label: "text-[#634AE2]", // Reemplaza el color placeholder
+                      label: "text-primary dark:text-primary",
                     }}
                     value="psicopedagogia"
                   >
@@ -282,7 +281,7 @@ export const DataView = ({
                   <Checkbox
                     color="secondary"
                     classNames={{
-                      label: "text-[#634AE2]", // Reemplaza el color placeholder
+                      label: "text-primary dark:text-primary",
                     }}
                     value="gestalt"
                   >
@@ -291,7 +290,7 @@ export const DataView = ({
                   <Checkbox
                     color="secondary"
                     classNames={{
-                      label: "text-[#634AE2]", // Reemplaza el color placeholder
+                      label: "text-primary dark:text-primary",
                     }}
                     value="racional-emotivo"
                   >
@@ -305,7 +304,7 @@ export const DataView = ({
         <div className="flex w-full justify-center gap-10">
           <Button
             radius="full"
-            className="bg-white border-1 border-[#634AE2] text-[#634AE2]"
+            className="bg-background dark:bg-background border-1 border-primary dark:border-primary text-primary dark:text-primary"
             onPress={onBack}
           >
             Retroceder
@@ -313,7 +312,7 @@ export const DataView = ({
           <Button
             radius="full"
             type="submit"
-            className="min-w-32 bg-[#634AE2] text-white"
+            className="min-w-32 bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground"
           >
             Siguiente
           </Button>

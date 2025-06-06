@@ -163,30 +163,31 @@ export default function App() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-[#f8f8ff] dark:bg-background min-h-screen">
       {/* Header */}
-      <div className="flex flex-1 bg-[#eaeded] w-full z-30">
+      <div className="flex flex-1 bg-[#f8f8ff] dark:bg-background w-full z-30">
         <div>
-          <nav className="bg-[#eaeded] rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
-            <div className="bg-[#eaeded] flex items-end justify-end w-full">
+          <nav className="bg-[#f8f8ff] dark:bg-background rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
+            <div className="bg-[#f8f8ff] dark:bg-background flex items-end justify-end w-full">
               <div className="flex gap-x-5">
                 <CerrarSesion />
               </div>
             </div>
           </nav>
-          <div>
-            <div className="pl-12 text-4xl items-center justify-items-center font-bold text-[#634AE2]">
-              <h1>Datos del Paciente</h1>
-            </div>
-          </div>
         </div>
-        {/* body */}
       </div>
-      <div className="flex mt-4 text-[#634AE2] font-bold text-normal">
-        <div className="flex-1 ml-5 mr-5 bg-[#fff] rounded-2xl p-4">
+
+      <div>
+        <div className="pl-12 text-4xl items-center justify-items-center font-bold text-primary dark:text-primary">
+          <h1>Datos del Paciente</h1>
+        </div>
+      </div>
+      
+      <div className="flex mt-4 text-primary dark:text-primary font-bold text-normal">
+        <div className="flex-1 ml-5 mr-5 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="flex pt-6">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Nombre</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Nombre</div>
               <div className="relative">
                 <input
                   type="text"
@@ -194,12 +195,12 @@ export default function App() {
                   onChange={(e) =>
                     setFormData({ ...formData, nombre: e.target.value })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">DNI</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">DNI</div>
               <div className="relative">
                 <input
                   type="text"
@@ -208,14 +209,14 @@ export default function App() {
                   onChange={(e) =>
                     setFormData({ ...formData, DNI: e.target.value })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Apellido Paterno</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Paterno</div>
               <div className="relative">
                 <input
                   type="text"
@@ -226,12 +227,12 @@ export default function App() {
                       apellidoPaterno: e.target.value,
                     })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Apellido Materno</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Materno</div>
               <div className="relative">
                 <input
                   type="text"
@@ -242,44 +243,41 @@ export default function App() {
                       apellidoMaterno: e.target.value,
                     })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Fecha de nacimiento</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Fecha de nacimiento</div>
               <div className="relative">
                 <DatePicker
                   showMonthAndYearPickers
                   selectorButtonPlacement="start"
                   classNames={{
-                    inputWrapper: "bg-[#E7E7FF] rounded-full",
-                    segment: "!text-[#634AE2]",
+                    inputWrapper: "bg-input dark:bg-input rounded-full border border-border dark:border-border",
+                    segment: "!text-foreground dark:!text-foreground",
                   }}
                   calendarProps={{
                     classNames: {
-                      pickerMonthList: "bg-[#E7E7FF]",
-                      pickerYearList: "bg-[#E7E7FF]",
-                      pickerItem: "!text-[#634AE2]",
-                      base: "bg-background text-[#634AE2]",
-                      headerWrapper: "pt-4 bg-[#E7E7FF] text-[#634AE2]",
-                      prevButton:
-                        "border-1 border-default-200 rounded-small bg-[#E7E7FF] text-xl text-[#634AE2]",
-                      nextButton:
-                        "border-1 border-default-200 rounded-small bg-[#E7E7FF] text-xl text-[#634AE2]",
-                      gridHeader:
-                        "bg-background shadow-none border-b-1 border-default-100 bg-[#E7E7FF] text-[#634AE2]",
+                      pickerMonthList: "bg-popover dark:bg-popover",
+                      pickerYearList: "bg-popover dark:bg-popover",
+                      pickerItem: "!text-popover-foreground dark:!text-popover-foreground",
+                      base: "bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
+                      headerWrapper: "pt-4 bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
+                      prevButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                      nextButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                      gridHeader: "bg-popover dark:bg-popover shadow-none border-b-1 border-border dark:border-border text-popover-foreground dark:text-popover-foreground",
                       cellButton: [
-                        "data-[today=true]:bg-[#E7E7FF] data-[selected=true] text-[#634AE2]:bg-[#E7E7FF] rounded-full text-[#634AE2]",
-                        "data-[selected=true]:!bg-[#E7E7FF] data-[selected=true]:!text-[#634AE2] rounded-full",
-                        "data-[range-start=true]:before:rounded-l-small font-bold text-[#634AE2]",
-                        "data-[selection-start=true]:before:rounded-l-small font-bold text-[#634AE2]",
-                        "data-[range-end=true]:before:rounded-r-small font-bold text-[#634AE2]",
-                        "data-[selection-end=true]:before:rounded-r-small font-bold text-[#634AE2]",
-                        "data-[selected=true]:data-[selection-start=true]:data-[range-selection=true]:rounded-small font-bold text-[#634AE2]",
-                        "data-[selected=true]:data-[selection-end=true]:data-[range-selection=true]:rounded-small font-bold text-[#634AE2]",
+                        "data-[today=true]:bg-accent dark:data-[today=true]:bg-accent data-[selected=true] text-foreground dark:text-foreground:bg-accent dark:bg-accent rounded-full",
+                        "data-[selected=true]:!bg-primary dark:data-[selected=true]:!bg-primary data-[selected=true]:!text-primary-foreground dark:data-[selected=true]:!text-primary-foreground rounded-full",
+                        "data-[range-start=true]:before:rounded-l-small font-bold text-foreground dark:text-foreground",
+                        "data-[selection-start=true]:before:rounded-l-small font-bold text-foreground dark:text-foreground",
+                        "data-[range-end=true]:before:rounded-r-small font-bold text-foreground dark:text-foreground",
+                        "data-[selection-end=true]:before:rounded-r-small font-bold text-foreground dark:text-foreground",
+                        "data-[selected=true]:data-[selection-start=true]:data-[range-selection=true]:rounded-small font-bold text-foreground dark:text-foreground",
+                        "data-[selected=true]:data-[selection-end=true]:data-[range-selection=true]:rounded-small font-bold text-foreground dark:text-foreground",
                       ],
                     },
                   }}
@@ -289,7 +287,7 @@ export default function App() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Ocupacion</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Ocupacion</div>
               <div className="relative">
                 <input
                   type="text"
@@ -300,49 +298,49 @@ export default function App() {
                       ocupacion: e.target.value,
                     })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Estado civil</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Estado civil</div>
               <div className="relative w-60">
                 <select
                   value={formData.estadoCivil}
                   onChange={(e) =>
                     setFormData({ ...formData, estadoCivil: e.target.value })
                   }
-                  className="font-normal pl-12 pr-3 text-base h-9 mt-1 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none bg-[#F3F3F3]"
+                  className="font-normal pl-12 pr-3 text-base h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
                 >
-                  <option value="">Seleccionar</option>
-                  <option value="Soltero">Soltero</option>
-                  <option value="Casado">Casado</option>
-                  <option value="Divorciado">Divorciado</option>
-                  <option value="Otro">Otro</option>
+                  <option value="" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Seleccionar</option>
+                  <option value="Soltero" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Soltero</option>
+                  <option value="Casado" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Casado</option>
+                  <option value="Divorciado" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Divorciado</option>
+                  <option value="Otro" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Otro</option>
                 </select>
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Genero</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Genero</div>
               <div className="relative w-60">
                 <select
                   value={formData.genero}
                   onChange={(e) =>
                     setFormData({ ...formData, genero: e.target.value })
                   }
-                  className="text-base font-normal pl-12 pr-3 h-9 mt-1 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none bg-[#F3F3F3]"
+                  className="text-base font-normal pl-12 pr-3 h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
                 >
-                  <option value="">Seleccionar</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
-                  <option value="Otro">Otro</option>
+                  <option value="" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Seleccionar</option>
+                  <option value="Masculino" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Masculino</option>
+                  <option value="Femenino" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Femenino</option>
+                  <option value="Otro" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Otro</option>
                 </select>
               </div>
             </div>
           </div>
-          <div className="text-center pt-1 pb-1 py-1 mt-4">Celular</div>
+          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">Celular</div>
           <div className="flex justify-center">
             <input
               type="text"
@@ -352,13 +350,14 @@ export default function App() {
                 setFormData({ ...formData, celular: e.target.value })
               }
               placeholder="Ejemp. 999999999"
-              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
         </div>
+        
         {/*Segunda Columna*/}
-        <div className="flex-1 mr-5 ml-5 bg-[#fff] rounded-2xl p-6">
-          <div className="text-center pt-1 pb-1 py-1 mt-4">
+        <div className="flex-1 mr-5 ml-5 bg-card dark:bg-card rounded-2xl p-6 border dark:border-border shadow-lg dark:shadow-xl">
+          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
             Correo electrónico
           </div>
           <div className="flex justify-center">
@@ -368,21 +367,21 @@ export default function App() {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Pais</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Pais</div>
               <div className="relative">
                 <CountrySelect
-                  containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-[#F3F3F3] [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full"
-                  inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-[#634AE2] placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0"
+                  containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-input [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
+                  inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-muted-foreground placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-foreground dark:text-foreground"
                   onChange={handleCountryChange}
                   placeHolder="Seleccionar"
                 />
                 <span
-                  className="text-[#634AE2] transition-colors absolute right-3 top-1/2  pt-1 transform -translate-y-1/2"
+                  className="text-foreground dark:text-foreground transition-colors absolute right-3 top-1/2  pt-1 transform -translate-y-1/2"
                   dangerouslySetInnerHTML={{
                     __html: Icons.arrow.replace(
                       /<svg /,
@@ -397,17 +396,17 @@ export default function App() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Departamento</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Departamento</div>
               <div className="relative">
                 <StateSelect
                   countryid={country?.id ?? 0}
-                  containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-[#F3F3F3] [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full"
-                  inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-[#634AE2] placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0"
+                  containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-input [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
+                  inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-muted-foreground placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-foreground dark:text-foreground"
                   onChange={handleStateChange}
                   placeHolder="Seleccionar"
                 />
                 <span
-                  className="text-[#634AE2] transition-colors absolute right-3 top-1/2  pt-1 transform -translate-y-1/2"
+                  className="text-foreground dark:text-foreground transition-colors absolute right-3 top-1/2  pt-1 transform -translate-y-1/2"
                   dangerouslySetInnerHTML={{
                     __html: Icons.arrow.replace(
                       /<svg /,
@@ -424,18 +423,18 @@ export default function App() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Provincia</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Provincia</div>
               <div className="relative">
                 <CitySelect
                   countryid={country?.id ?? 0}
                   stateid={currentState?.id ?? 0}
                   onChange={handleCityChange}
-                  containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-[#F3F3F3] [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full"
-                  inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-[#634AE2] placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0"
+                  containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-input [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
+                  inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-muted-foreground placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-foreground dark:text-foreground"
                   placeHolder="Seleccionar"
                 />
                 <span
-                  className="text-[#634AE2] transition-colors absolute right-3 top-1/2 pt-1 transform -translate-y-1/2"
+                  className="text-foreground dark:text-foreground transition-colors absolute right-3 top-1/2 pt-1 transform -translate-y-1/2"
                   dangerouslySetInnerHTML={{
                     __html: Icons.arrow.replace(
                       /<svg /,
@@ -450,7 +449,7 @@ export default function App() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2">Direccion</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Direccion</div>
               <div className="relative">
                 <input
                   type="text"
@@ -458,12 +457,12 @@ export default function App() {
                   onChange={(e) =>
                     setFormData({ ...formData, direccion: e.target.value })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
           </div>
-          <div className="text-center pt-1 pb-1 py-1 mt-4">
+          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
             Antecedentes médicos
           </div>
           <div className="flex justify-center">
@@ -476,10 +475,10 @@ export default function App() {
                   antecedentesMedicos: e.target.value,
                 })
               }
-              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
-          <div className="text-center pt-1 pb-1 py-1 mt-4">
+          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
             Medicamentos prescritos
           </div>
           <div className="flex justify-center">
@@ -492,15 +491,16 @@ export default function App() {
                   medicamentosPrescritos: e.target.value,
                 })
               }
-              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
         </div>
       </div>
-      <div className="flex justify-center w-full p-4 ">
+      
+      <div className="flex justify-center w-full p-4">
         <button
           onClick={HandlePostPaciente}
-          className="text-[#634AE2] bg-[#fff] rounded-full border-2 border-[#634AE2] w-28 h-8 mr-12"
+          className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-28 h-8 mr-12 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200"
         >
           Registrar
         </button>

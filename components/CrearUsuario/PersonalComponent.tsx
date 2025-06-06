@@ -26,7 +26,6 @@ export const initialFormState: FormData = {
   },
 };
 
-
 export default function PersonalComponent() {
   const [currentView, setCurrentView] = React.useState<"form" | "data">("form");
   const [formData, setFormData] = React.useState<FormData>(initialFormState);
@@ -50,7 +49,7 @@ export default function PersonalComponent() {
 
   return (
     <>
-      {IsSend === false ? (
+      {!IsSend ? (
         currentView === "form" ? (
           <PersonalForm onNext={handleNext} initialFormData={formData} />
         ) : (
