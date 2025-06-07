@@ -79,8 +79,11 @@ export default function BlogUsuarioCrear() {
   useEffect(() => {
     const fetchUser = () => {
       const storedUser = localStorage.getItem("user");
+      console.log("Stored user from localStorage:", storedUser);
       if (storedUser) {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        console.log("Parsed user:", parsedUser);
+        setUser(parsedUser);
       }
     };
     fetchUser();
@@ -91,7 +94,7 @@ export default function BlogUsuarioCrear() {
     tema: tema,
     contenido: contenido,
     imagen: base64Image || url,
-    idPsicologo: originalIdPsicologo ?? user?.id ?? null,
+    idPsicologo: originalIdPsicologo ?? user?.idpsicologo ?? user?.id ?? null,
   };
 
   const handleImageUpload = async (
@@ -139,128 +142,124 @@ export default function BlogUsuarioCrear() {
     }
   };
 
-  const handleSubmit = async () => {
-    try {
-      // Validate required fields
-      if (!user?.id) {
-        showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
-        return;
-      }
-
-      let categoriaId = selectedKey;
-      if (selectedKey === null) {
-        categoriaId = await postNewCategoria();
-      }
-
-      // For updates, validate that the original psychologist ID is valid
-      let finalIdPsicologo = user.id; // Default to current user
-      
-      if (editingBlogId && originalIdPsicologo) {
-        // Verify if the original psychologist still exists
-        try {
-          const cookies = parseCookies();
-          const token = cookies["session"];
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${originalIdPsicologo}`,
-            {
-              method: "GET",
-              headers: {
-                "Authorization": `Bearer ${token}`,
-              },
-            }
-          );
-          
-          if (response.ok) {
-            finalIdPsicologo = originalIdPsicologo; // Use original if exists
-          }
-          // If not found, fallback to current user (already set above)
-        } catch (error) {
-          console.warn("Could not verify original psychologist, using current user ID");
-        }
-      }
-
-      const dataToSend = {
-        ...dataApi,
-        idCategoria: categoriaId,
-        idPsicologo: finalIdPsicologo,
-      };
-
-      // Add validation for required fields
-      if (!dataToSend.idPsicologo) {
-        showToast("error", "Error: ID de psicólogo no válido.");
-        return;
-      }
-
-      if (!dataToSend.tema || !dataToSend.contenido) {
-        showToast("error", "Por favor completa todos los campos requeridos.");
-        return;
-      }
-
-      const cookies = parseCookies();
-      const token = cookies["session"];
-
-      if (!token) {
-        showToast("error", "Sesión expirada. Por favor inicia sesión nuevamente.");
-        return;
-      }
-
-      const url = editingBlogId
-        ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${editingBlogId}`
-        : `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
-
-      const method = editingBlogId ? "PUT" : "POST";
-
-      console.log("Sending data:", dataToSend);
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(dataToSend),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        showToast(
-          "success",
-          editingBlogId
-            ? "Publicación actualizada correctamente"
-            : "Publicación creada correctamente"
-        );
-        await new Promise((resolve) => setTimeout(resolve, 2600));
-        window.location.reload();
-      } else {
-        console.error("Server error:", data);
-        showToast("error", data.status_message || "Error desconocido");
-      }
-    } catch (error) {
-      console.error("Client error:", error);
-      showToast("error", "Error de conexión. Intenta nuevamente.");
+const handleSubmit = async () => {
+  try {
+    // Validate required fields
+    if (!user?.id) {
+      showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
+      return;
     }
-  };
 
-  const handleEdit = async (id: number) => {
-    const blog = await BlogById(id);
-    if (blog) {
-      setTema(blog.tema);
-      setUrl(blog.imagen);
-      setBase64Image(null); // Reset base64 image when editing
-      setContenido(blog.contenido);
-      setSelectedKey(blog.idCategoria.toString());
-      setEditingBlogId(blog.id);
-      setOriginalIdPsicologo(blog.idPsicologo);
-      setView("crear");
+    // Debug logging
+    console.log("Current user:", user);
+    console.log("User ID:", user.id);
+    console.log("User idpsicologo:", user.idpsicologo);
+    console.log("Original ID Psicologo from blog:", originalIdPsicologo);
+    console.log("Editing blog ID:", editingBlogId);
+
+    let categoriaId = selectedKey;
+    if (selectedKey === null) {
+      categoriaId = await postNewCategoria();
     }
-  };
+
+    // Use idpsicologo instead of user id for blog operations
+    const finalIdPsicologo = user.idpsicologo || user.id;
+    
+    console.log("Final ID Psicologo to use:", finalIdPsicologo);
+
+    const dataToSend = {
+      idCategoria: categoriaId,
+      tema: tema,
+      contenido: contenido,
+      imagen: base64Image || url,
+      idPsicologo: finalIdPsicologo, // This should be 8, not 9
+    };
+
+    console.log("Final data to send:", dataToSend);
+
+    // Add validation for required fields
+    if (!dataToSend.idPsicologo) {
+      showToast("error", "Error: ID de psicólogo no válido.");
+      return;
+    }
+
+    if (!dataToSend.tema || !dataToSend.contenido) {
+      showToast("error", "Por favor completa todos los campos requeridos.");
+      return;
+    }
+
+    const cookies = parseCookies();
+    const token = cookies["session"];
+
+    if (!token) {
+      showToast("error", "Sesión expirada. Por favor inicia sesión nuevamente.");
+      return;
+    }
+
+    const url = editingBlogId
+      ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${editingBlogId}`
+      : `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
+
+    const method = editingBlogId ? "PUT" : "POST";
+
+    console.log("Sending data:", dataToSend);
+
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(dataToSend),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      showToast(
+        "success",
+        editingBlogId
+          ? "Publicación actualizada correctamente"
+          : "Publicación creada correctamente"
+      );
+      await new Promise((resolve) => setTimeout(resolve, 2600));
+      window.location.reload();
+    } else {
+      console.error("Server error:", data);
+      showToast("error", data.status_message || "Error desconocido");
+    }
+  } catch (error) {
+    console.error("Client error:", error);
+    showToast("error", "Error de conexión. Intenta nuevamente.");
+  }
+};
+
+const handleEdit = async (id: number) => {
+  const blog = await BlogById(id);
+  console.log("Blog data for editing:", blog);
+  if (blog) {
+    // Check if the blog has a valid idPsicologo
+    console.log("Blog idPsicologo:", blog.idPsicologo);
+    console.log("Current user can edit?", blog.idPsicologo === user?.id || !blog.idPsicologo);
+    
+    setTema(blog.tema);
+    setUrl(blog.imagen);
+    setBase64Image(null); // Reset base64 image when editing
+    setContenido(blog.contenido);
+    setSelectedKey(blog.idCategoria.toString());
+    setEditingBlogId(blog.id);
+    setOriginalIdPsicologo(blog.idPsicologo);
+    console.log("Set originalIdPsicologo to:", blog.idPsicologo);
+    setView("crear");
+  }
+};
 
   return (
     <div>
       <div className="w-full h-16 bg-[#6364F4] items-center justify-start flex">
         <div className="ml-10 flex justify-between items-center w-full max-w-[230px]">
+          {/* Boton Crear Blog */}
           <Button
             radius="full"
             className="bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold"
@@ -272,6 +271,8 @@ export default function BlogUsuarioCrear() {
           >
             Crear Blog
           </Button>
+
+          {/* Boton Ver Blogs */}
           <Button
             onPress={() => setView("blogs")}
             className="text-white text-[16px] leading-[20px] bg-[#634AE2] a"
