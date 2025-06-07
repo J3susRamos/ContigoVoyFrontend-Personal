@@ -141,6 +141,11 @@ const handleSubmit = async () => {
       showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
       return;
     }
+    // Validate image size
+    if (base64Image && base64Image.length > 1000000) { // 1MB limit
+      showToast("error", "La imagen es demasiado grande. Por favor selecciona una imagen más pequeña.");
+      return;
+    }
 
     // Debug logging
     console.log("Current user:", user);
