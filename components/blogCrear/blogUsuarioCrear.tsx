@@ -141,24 +141,76 @@ export default function BlogUsuarioCrear() {
 
   const handleSubmit = async () => {
     try {
+      // Validate required fields
+      if (!user?.id) {
+        showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
+        return;
+      }
+
       let categoriaId = selectedKey;
       if (selectedKey === null) {
         categoriaId = await postNewCategoria();
       }
 
+      // For updates, validate that the original psychologist ID is valid
+      let finalIdPsicologo = user.id; // Default to current user
+      
+      if (editingBlogId && originalIdPsicologo) {
+        // Verify if the original psychologist still exists
+        try {
+          const cookies = parseCookies();
+          const token = cookies["session"];
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${originalIdPsicologo}`,
+            {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${token}`,
+              },
+            }
+          );
+          
+          if (response.ok) {
+            finalIdPsicologo = originalIdPsicologo; // Use original if exists
+          }
+          // If not found, fallback to current user (already set above)
+        } catch (error) {
+          console.warn("Could not verify original psychologist, using current user ID");
+        }
+      }
+
       const dataToSend = {
         ...dataApi,
         idCategoria: categoriaId,
+        idPsicologo: finalIdPsicologo,
       };
+
+      // Add validation for required fields
+      if (!dataToSend.idPsicologo) {
+        showToast("error", "Error: ID de psicólogo no válido.");
+        return;
+      }
+
+      if (!dataToSend.tema || !dataToSend.contenido) {
+        showToast("error", "Por favor completa todos los campos requeridos.");
+        return;
+      }
 
       const cookies = parseCookies();
       const token = cookies["session"];
+
+      if (!token) {
+        showToast("error", "Sesión expirada. Por favor inicia sesión nuevamente.");
+        return;
+      }
 
       const url = editingBlogId
         ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${editingBlogId}`
         : `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
 
       const method = editingBlogId ? "PUT" : "POST";
+
+      console.log("Sending data:", dataToSend);
 
       const response = await fetch(url, {
         method,
@@ -182,10 +234,11 @@ export default function BlogUsuarioCrear() {
         await new Promise((resolve) => setTimeout(resolve, 2600));
         window.location.reload();
       } else {
+        console.error("Server error:", data);
         showToast("error", data.status_message || "Error desconocido");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Client error:", error);
       showToast("error", "Error de conexión. Intenta nuevamente.");
     }
   };
