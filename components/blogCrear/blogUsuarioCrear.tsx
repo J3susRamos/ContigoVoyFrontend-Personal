@@ -89,14 +89,6 @@ export default function BlogUsuarioCrear() {
     fetchUser();
   }, []);
 
-  const dataApi: BlogApi = {
-    idCategoria: selectedKey ? parseInt(selectedKey) : null,
-    tema: tema,
-    contenido: contenido,
-    imagen: base64Image || url,
-    idPsicologo: originalIdPsicologo ?? user?.idpsicologo ?? user?.id ?? null,
-  };
-
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -157,8 +149,10 @@ const handleSubmit = async () => {
     console.log("Original ID Psicologo from blog:", originalIdPsicologo);
     console.log("Editing blog ID:", editingBlogId);
 
-    let categoriaId = selectedKey;
-    if (selectedKey === null) {
+    let categoriaId: number | null;
+    if (selectedKey !== null) {
+      categoriaId = parseInt(selectedKey);
+    } else {
       categoriaId = await postNewCategoria();
     }
 
@@ -167,12 +161,13 @@ const handleSubmit = async () => {
     
     console.log("Final ID Psicologo to use:", finalIdPsicologo);
 
-    const dataToSend = {
+    // Create a dataApi object here, after all variables are declared
+    const dataToSend: BlogApi = {
       idCategoria: categoriaId,
       tema: tema,
       contenido: contenido,
       imagen: base64Image || url,
-      idPsicologo: finalIdPsicologo, // This should be 8, not 9
+      idPsicologo: finalIdPsicologo,
     };
 
     console.log("Final data to send:", dataToSend);
@@ -196,7 +191,7 @@ const handleSubmit = async () => {
       return;
     }
 
-    const url = editingBlogId
+    const apiUrl = editingBlogId
       ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${editingBlogId}`
       : `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
 
@@ -204,7 +199,7 @@ const handleSubmit = async () => {
 
     console.log("Sending data:", dataToSend);
 
-    const response = await fetch(url, {
+    const response = await fetch(apiUrl, {
       method,
       headers: {
         "Content-Type": "application/json",
