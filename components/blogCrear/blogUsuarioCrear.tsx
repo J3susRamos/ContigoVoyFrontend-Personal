@@ -285,6 +285,7 @@ const handleEdit = async (id: number) => {
       {view === "crear" ? (
         <div className="flex flex-col md:flex-row gap-10 mx-10 mt-14">
           <div className="flex flex-col items-center w-full max-w-[500px] gap-y-3 mx-auto">
+            {/* Titulo */}
             <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
               Titulo
             </h1>
@@ -300,6 +301,7 @@ const handleEdit = async (id: number) => {
               onChange={(e) => setTema(e.target.value)}
             />
 
+            {/* Categoria */}
             <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
               Categoria
             </h1>
@@ -328,13 +330,14 @@ const handleEdit = async (id: number) => {
               </Autocomplete>
             </div>
 
+            {/* Imagen */}
             <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
               Imagen
             </h1>
             
-            {/* Image Upload Section */}
+            {/* Seccion de subida de imagen */}
             <div className="w-full flex flex-col gap-2">
-              {/* Upload Button */}
+              {/* Boton de subir imagen */}
               <div className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
                 {base64Image ? (
                   <Image
