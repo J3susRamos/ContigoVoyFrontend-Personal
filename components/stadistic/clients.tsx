@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
+import pacientesValues from "@/utils/pacientesCRUD/pacientesValues";
 
 // Datos para el gráfico de pastel
 const genero = [
@@ -31,13 +32,13 @@ const edad = [
   { name: "45 - 54", Total: 7 },
 ];
 
-const lugar = [
-  { name: "Surco", Total: 10 },
-  { name: "Jesús María", Total: 5 },
-  { name: "Surquillo", Total: 17 },
-  { name: "Barranco", Total: 12 },
-  { name: "San Borja", Total: 6 },
-];
+// const lugar = [
+//   { name: "Surco", Total: 10 },
+//   { name: "Jesús María", Total: 5 },
+//   { name: "Surquillo", Total: 17 },
+//   { name: "Barranco", Total: 12 },
+//   { name: "San Borja", Total: 6 },
+// ];
 
 // Reusable BarChart Component
 interface BarChartCardProps {
@@ -101,7 +102,45 @@ const BarChartCard: React.FC<BarChartCardProps> = ({ title, data, showAgeLabel =
   </div>
 );
 
+interface ILugar {
+  name: string;
+  Total: number;
+}
+
+function Lugar(this: ILugar, name: string, Total: number) {
+  this.name = name;
+  this.Total = Total;
+}
+
 export default function Clients() {
+
+  const [lugares,setLugares] = useState<Array<ILugar>>([]);
+
+  useEffect(()=>{
+    const lugarWrapperFunction = async () => {
+      
+      const dataPacients = await pacientesValues("lugar");
+      if(dataPacients.state == 2){
+        
+        const data = dataPacients.result;
+
+        let formattedLugar : Array<ILugar> = [];
+
+        for(let lugar of Object.keys(data)){
+          const newLugar = new (Lugar as any)(lugar,data[lugar]);
+          formattedLugar.push(newLugar);
+        }
+
+        setLugares(formattedLugar);
+
+      }else{
+        setLugares([]);
+      }
+
+    }
+    lugarWrapperFunction();
+  },[]);
+
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
       <div className="w-[401px] h-[600px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
@@ -151,7 +190,7 @@ export default function Clients() {
       {/* Segunda columna  */}
       <div className="flex flex-col w-[502px] h-[600px] gap-5">
         <BarChartCard title="Edad" data={edad} showAgeLabel={true} />
-        <BarChartCard title="Lugar" data={lugar} showAgeLabel={false} />
+        <BarChartCard title="Lugar" data={lugares} showAgeLabel={false} />
       </div>
     </div>
   );
