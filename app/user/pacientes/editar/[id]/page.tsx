@@ -23,7 +23,7 @@ export default function EditarPaciente() {
   const idPaciente = params.id as string;
   const [country, setCountry] = useState<Country | null>(null);
   const [currentState, setCurrentState] = useState<City | null>(null);
-  const [currentCity, setCurrentCity] = useState<State | null>(null);
+  const [, setCurrentCity] = useState<State | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
   const [formData, setFormData] = useState<FormPaciente>({
