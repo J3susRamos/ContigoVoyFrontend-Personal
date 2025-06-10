@@ -19,8 +19,8 @@ export default function ShowStadistic() {
   return (
     <div className="bg-[#f8f8ff] dark:bg-background">
       {/* Barra de botones */}
-      <div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
-        <div className="ml-10 flex justify-between items-center w-full max-w-[600px]">
+      <div className="w-full py-4 bg-primary dark:bg-primary flex items-center justify-start">
+        <div className="flex flex-wrap gap-y-6 justify-center md:justify-between items-center w-full max-w-[600px]">
           {buttons.map((btn, index) => (
             <Button
               key={index}

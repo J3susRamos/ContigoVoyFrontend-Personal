@@ -20,7 +20,7 @@ export default function CerrarSesion() {
   }, []);
 
   return (
-    <div className="flex flex-row justify-end items-center gap-x-5 mr-8">
+    <div className="flex-row justify-end items-center gap-x-5 mr-8 hidden md:flex">
       <ThemeToggle />
 
       {user?.imagen ? (
