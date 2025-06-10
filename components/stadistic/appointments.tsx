@@ -49,7 +49,7 @@ let horas
 
 function StatisticCard(props : any){
   return (
-    <div className="bg-card dark:bg-card  text-primary-foreground dark:text-primary-foreground font-semibold py-2 px-4 rounded-xl">
+    <div className="bg-card dark:bg-card  text-primary-foreground dark:text-primary-foreground text-sm md:text-xl font-semibold py-2 px-4 rounded-xl">
       <p>{props.value} {props.msg}</p>
     </div>
   )
@@ -76,25 +76,25 @@ export default function Appointments() {
 
 
   return (
-    <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
+    <div className=" grid px-5 xl:grid-cols-2 lg:grid-cols-1 mlr-5 mt-8 place-items-center gap-6 max-w-[920px] mx-auto">
       
-      <div className="col-span-2 flex justify-between w-full">
+      <div className="col-span-2 flex  md:flex-row gap-3 flex-col-reverse md:justify-between w-full items-center">
         {/* Conjunto de cuadros de estadisticas */}
-        <div className="flex gap-[46px]">
+        <div className="flex justify-around md:justify-start  gap-[46px] w-full md:w-auto">
           <StatisticCard value = {citasReservadas} msg = {"citas reservadas"}/>
           <StatisticCard value = {tiempoTotalCitas} msg = {"min. ocupados"}/>
         </div>
         {/* Botón para agregar nueva cita */}
         <button
           onClick={handleAddNewCita}
-          className="bg-primary dark:bg-primary hover:bg-primary/90 dark:hover:bg-primary/90 text-primary-foreground dark:text-primary-foreground font-semibold py-2 px-4 rounded-xl"
+          className="text-sm md:text-xl bg-primary dark:bg-primary hover:bg-primary/90 dark:hover:bg-primary/90 text-primary-foreground dark:text-primary-foreground font-semibold py-2 px-4 rounded-xl"
         >
           + Nueva cita
         </button>
       </div>
-      <div className="flex">
+      <div className="col-span-2 flex flex-col gap-6 xl:flex-row justify-between items-center w-full">
         {/* Primer cuadro con LineChart */}
-        <div className="w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
+        <div className="w-full xl:w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
           <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">
               Citas totales <br /> del período:
@@ -146,7 +146,7 @@ export default function Appointments() {
         </div>
 
         {/* Segundo cuadro con PieChart */}
-        <div className="h-[459px] w-[353px] bg-card dark:bg-card rounded-2xl">
+        <div className="w-full h-[459px] xl:w-[353px] bg-card dark:bg-card rounded-2xl">
           <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
               Estado de <br /> cita:
@@ -180,7 +180,7 @@ export default function Appointments() {
           </div>
 
           {/* Leyenda del PieChart */}
-          <div className="grid justify-start gap-5 grid-cols-2 w-[300px] ml-10">
+          <div className="mx-auto  grid justify-start gap-5 grid-cols-2 w-[300px] xl:mr-0 xl:ml-10">
             {genero.map((entry, index) => (
               <div key={index} className="flex items-center gap-2">
                 <div
