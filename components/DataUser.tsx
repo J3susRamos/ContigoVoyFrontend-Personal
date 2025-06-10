@@ -22,7 +22,7 @@ export const DataUser = React.forwardRef<HTMLDivElement, PanelProps>(
       <div ref={ref}>
         <Avatar
           className="cursor-pointer"
-          onClick={() => setEstado(!estado)} // Alterna el estado al hacer clico
+          onClick={() => setEstado(!estado)} // Alterna el estado al hacer clic
         >
           <AvatarImage src={user.photo || "https://github.com/shadcn.png"} />
           <AvatarFallback>{user.iniciales}</AvatarFallback>
@@ -31,4 +31,5 @@ export const DataUser = React.forwardRef<HTMLDivElement, PanelProps>(
     );
   }
 );
+
 DataUser.displayName = 'DataUser';
