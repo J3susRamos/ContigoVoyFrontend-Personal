@@ -22,10 +22,10 @@ export default function EditarPaciente() {
   const router = useRouter();
   const idPaciente = params.id as string;
   const [country, setCountry] = useState<Country | null>(null);
-  const [currentState, setCurrentState] = useState<City | null>(null);
-  const [currentCity, setCurrentCity] = useState<State | null>(null);
+  const [currentState, setCurrentState] = useState<State | null>(null);
+  const [currentCity, setCurrentCity] = useState<City | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const [formData, setFormData] = useState<FormPaciente>({
     nombre: "",
     apellidoPaterno: "",
@@ -53,18 +53,23 @@ export default function EditarPaciente() {
         const result = await getPaciente(Number(idPaciente));
         if (result.success && result.data) {
           const paciente = result.data;
-          
           // Parse the full name into first and last names
           const nombres = paciente.nombre?.split(" ") || [""];
+
           const apellidos = paciente.apellido?.split(" ") || ["", ""];
-          
+
           // Parse address - assuming format: "direccion, pais, provincia, departamento"
-          const direccionParts = paciente.direccion?.split(", ") || ["", "", "", ""];
-          
+          const direccionParts = paciente.direccion?.split(", ") || [
+            "",
+            "",
+            "",
+            "",
+          ];
+
           setFormData({
             nombre: nombres[0] || "",
-            apellidoPaterno: apellidos[0] || "",
-            apellidoMaterno: apellidos[1] || "",
+            apellidoPaterno: apellidos[0] ?? "",
+            apellidoMaterno: apellidos.slice(1).join(" ") ?? "",
             DNI: paciente.DNI || "",
             email: paciente.email || "",
             celular: paciente.celular || "",
@@ -83,14 +88,16 @@ export default function EditarPaciente() {
         setIsLoading(false);
       }
     };
-    
+
     loadPacienteData();
   }, [idPaciente]);
 
   const handleDateChange = (value: CalendarDate | null) => {
     if (value) {
-      const formattedDate = `${value.day.toString().padStart(2, '0')}/${value.month.toString().padStart(2, '0')}/${value.year}`;
-      setFormData({ ...formData, fecha_nacimiento: formattedDate });
+      const isoDate = `${value.year}-${value.month
+        .toString()
+        .padStart(2, "0")}-${value.day.toString().padStart(2, "0")}`;
+      setFormData({ ...formData, fecha_nacimiento: isoDate });
     } else {
       setFormData({ ...formData, fecha_nacimiento: "" });
     }
@@ -98,13 +105,22 @@ export default function EditarPaciente() {
 
   const parseDateString = (dateString: string): CalendarDate | null => {
     if (!dateString) return null;
-    const [day, month, year] = dateString.split('/').map(Number);
-    if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
-    return new CalendarDate(year, month, day);
+  
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return null;
+  
+    return new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
   };
 
-  const handleCountryChange = (selected: Country | React.ChangeEvent<HTMLInputElement>) => {
-    if (typeof selected === "object" && "id" in selected && "name" in selected) {
+
+  const handleCountryChange = (
+    selected: Country | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (
+      typeof selected === "object" &&
+      "id" in selected &&
+      "name" in selected
+    ) {
       setCountry(selected);
       setFormData((prev) => ({ ...prev, pais: selected.name }));
     } else {
@@ -113,8 +129,14 @@ export default function EditarPaciente() {
     }
   };
 
-  const handleStateChange = (selected: State | React.ChangeEvent<HTMLInputElement>) => {
-    if (typeof selected === "object" && "id" in selected && "name" in selected) {
+  const handleStateChange = (
+    selected: State | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (
+      typeof selected === "object" &&
+      "id" in selected &&
+      "name" in selected
+    ) {
       setCurrentState(selected);
       setFormData((prev) => ({ ...prev, departamento: selected.name }));
     } else {
@@ -123,8 +145,14 @@ export default function EditarPaciente() {
     }
   };
 
-  const handleCityChange = (selected: City | React.ChangeEvent<HTMLInputElement>) => {
-    if (typeof selected === "object" && "id" in selected && "name" in selected) {
+  const handleCityChange = (
+    selected: City | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (
+      typeof selected === "object" &&
+      "id" in selected &&
+      "name" in selected
+    ) {
       setCurrentCity(selected);
       setFormData((prev) => ({ ...prev, provincia: selected.name }));
     } else {
@@ -134,6 +162,8 @@ export default function EditarPaciente() {
   };
 
   const HandleUpdatePaciente = async () => {
+    console.log(formData);
+    
     try {
       const pacienteData: Omit<Paciente2, "idPaciente"> = {
         DNI: formData.DNI,
@@ -146,7 +176,7 @@ export default function EditarPaciente() {
         genero: formData.genero,
         ocupacion: formData.ocupacion,
         estadoCivil: formData.estadoCivil,
-        direccion: `${formData.direccion}, ${formData.pais}, ${formData.provincia}, ${formData.departamento}`,
+        direccion: `${formData.direccion}, ${formData.provincia}, ${formData.departamento}, ${formData.pais}`,
       };
 
       const cookies = parseCookies();
@@ -179,7 +209,9 @@ export default function EditarPaciente() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg font-medium text-primary">Cargando datos del paciente...</div>
+        <div className="text-lg font-medium text-primary">
+          Cargando datos del paciente...
+        </div>
       </div>
     );
   }
@@ -204,12 +236,14 @@ export default function EditarPaciente() {
           <h1>Editar Datos del Paciente</h1>
         </div>
       </div>
-      
+
       <div className="flex mt-4 text-primary dark:text-primary font-bold text-normal">
         <div className="flex-1 ml-5 mr-5 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="flex pt-6">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Nombre</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Nombre
+              </div>
               <div className="relative">
                 <input
                   type="text"
@@ -222,7 +256,9 @@ export default function EditarPaciente() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">DNI</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                DNI
+              </div>
               <div className="relative">
                 <input
                   type="text"
@@ -238,7 +274,9 @@ export default function EditarPaciente() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Paterno</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Apellido Paterno
+              </div>
               <div className="relative">
                 <input
                   type="text"
@@ -254,7 +292,9 @@ export default function EditarPaciente() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Materno</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Apellido Materno
+              </div>
               <div className="relative">
                 <input
                   type="text"
@@ -272,25 +312,33 @@ export default function EditarPaciente() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Fecha de nacimiento</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Fecha de nacimiento
+              </div>
               <div className="relative">
                 <DatePicker
                   showMonthAndYearPickers
                   selectorButtonPlacement="start"
                   classNames={{
-                    inputWrapper: "bg-input dark:bg-input rounded-full border border-border dark:border-border",
+                    inputWrapper:
+                      "bg-input dark:bg-input rounded-full border border-border dark:border-border",
                     segment: "!text-foreground dark:!text-foreground",
                   }}
                   calendarProps={{
                     classNames: {
                       pickerMonthList: "bg-popover dark:bg-popover",
                       pickerYearList: "bg-popover dark:bg-popover",
-                      pickerItem: "!text-popover-foreground dark:!text-popover-foreground",
+                      pickerItem:
+                        "!text-popover-foreground dark:!text-popover-foreground",
                       base: "bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
-                      headerWrapper: "pt-4 bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
-                      prevButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
-                      nextButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
-                      gridHeader: "bg-popover dark:bg-popover shadow-none border-b-1 border-border dark:border-border text-popover-foreground dark:text-popover-foreground",
+                      headerWrapper:
+                        "pt-4 bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
+                      prevButton:
+                        "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                      nextButton:
+                        "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                      gridHeader:
+                        "bg-popover dark:bg-popover shadow-none border-b-1 border-border dark:border-border text-popover-foreground dark:text-popover-foreground",
                       cellButton: [
                         "data-[today=true]:bg-accent dark:data-[today=true]:bg-accent data-[selected=true] text-foreground dark:text-foreground:bg-accent dark:bg-accent rounded-full",
                         "data-[selected=true]:!bg-primary dark:data-[selected=true]:!bg-primary data-[selected=true]:!text-primary-foreground dark:data-[selected=true]:!text-primary-foreground rounded-full",
@@ -309,7 +357,9 @@ export default function EditarPaciente() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Ocupacion</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Ocupacion
+              </div>
               <div className="relative">
                 <input
                   type="text"
@@ -327,7 +377,9 @@ export default function EditarPaciente() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Estado civil</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Estado civil
+              </div>
               <div className="relative w-60">
                 <select
                   value={formData.estadoCivil}
@@ -336,16 +388,43 @@ export default function EditarPaciente() {
                   }
                   className="font-normal pl-12 pr-3 text-base h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
                 >
-                  <option value="" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Seleccionar</option>
-                  <option value="Soltero" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Soltero</option>
-                  <option value="Casado" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Casado</option>
-                  <option value="Divorciado" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Divorciado</option>
-                  <option value="Otro" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Otro</option>
+                  <option
+                    value=""
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Seleccionar
+                  </option>
+                  <option
+                    value="Soltero"
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Soltero
+                  </option>
+                  <option
+                    value="Casado"
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Casado
+                  </option>
+                  <option
+                    value="Divorciado"
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Divorciado
+                  </option>
+                  <option
+                    value="Otro"
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Otro
+                  </option>
                 </select>
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Genero</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Genero
+              </div>
               <div className="relative w-60">
                 <select
                   value={formData.genero}
@@ -354,15 +433,37 @@ export default function EditarPaciente() {
                   }
                   className="text-base font-normal pl-12 pr-3 h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
                 >
-                  <option value="" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Seleccionar</option>
-                  <option value="Masculino" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Masculino</option>
-                  <option value="Femenino" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Femenino</option>
-                  <option value="Otro" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Otro</option>
+                  <option
+                    value=""
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Seleccionar
+                  </option>
+                  <option
+                    value="Masculino"
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Masculino
+                  </option>
+                  <option
+                    value="Femenino"
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Femenino
+                  </option>
+                  <option
+                    value="Otro"
+                    className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground"
+                  >
+                    Otro
+                  </option>
                 </select>
               </div>
             </div>
           </div>
-          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">Celular</div>
+          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
+            Celular
+          </div>
           <div className="flex justify-center">
             <input
               type="text"
@@ -376,7 +477,7 @@ export default function EditarPaciente() {
             />
           </div>
         </div>
-        
+
         {/*Segunda Columna*/}
         <div className="flex-1 mr-5 ml-5 bg-card dark:bg-card rounded-2xl p-6 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
@@ -394,11 +495,14 @@ export default function EditarPaciente() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Pais</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Pais
+              </div>
               <div className="relative">
                 <CountrySelect
                   containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-input [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
                   inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-muted-foreground placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-foreground dark:text-foreground"
+                  
                   onChange={handleCountryChange}
                   placeHolder="Seleccionar"
                 />
@@ -418,7 +522,9 @@ export default function EditarPaciente() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Departamento</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Departamento
+              </div>
               <div className="relative">
                 <StateSelect
                   countryid={country?.id ?? 0}
@@ -445,7 +551,9 @@ export default function EditarPaciente() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Provincia</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Provincia
+              </div>
               <div className="relative">
                 <CitySelect
                   countryid={country?.id ?? 0}
@@ -471,7 +579,9 @@ export default function EditarPaciente() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Direccion</div>
+              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">
+                Direccion
+              </div>
               <div className="relative">
                 <input
                   type="text"
@@ -518,7 +628,7 @@ export default function EditarPaciente() {
           </div>
         </div>
       </div>
-      
+
       <div className="flex justify-center w-full p-4">
         <button
           onClick={HandleUpdatePaciente}
