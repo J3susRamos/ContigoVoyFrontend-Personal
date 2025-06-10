@@ -91,7 +91,7 @@ export function Listarblog({
 
   return (
 
-    <div className="max-h-[500px] overflow-y-auto overflow-scroll:scrollbar-none rounded-2xl">
+    <div className="max-h-[500px] max-w-[1000px] w-full overflow-y-auto overflow-scroll:scrollbar-none rounded-2xl">
       <table className="w-full border-separate border-spacing-y-4 rounded-t-lg rounded-2xl">
         <thead className="rounded-[36px]">
           <tr className="bg-opacity-0 text-white h-11 rounded-[36px]">
