@@ -1,5 +1,5 @@
 import { CustomizedLabelProps } from "@/interface";
-import React, { useEffect, useState }, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { parseCookies } from "nookies";
 import {
   PieChart,
@@ -159,35 +159,6 @@ export default function Clients() {
     }
     return null;
   };
-
-export default function Clients() {
-
-  const [lugares,setLugares] = useState<Array<ILugar>>([]);
-
-  useEffect(()=>{
-    const lugarWrapperFunction = async () => {
-      
-      const dataPacients = await pacientesValues("lugar");
-      if(dataPacients.state == 2){
-        
-        const data = dataPacients.result;
-
-        let formattedLugar : Array<ILugar> = [];
-
-        for(let lugar of Object.keys(data)){
-          const newLugar = new (Lugar as any)(lugar,data[lugar]);
-          formattedLugar.push(newLugar);
-        }
-
-        setLugares(formattedLugar);
-
-      }else{
-        setLugares([]);
-      }
-
-    }
-    lugarWrapperFunction();
-  },[]);
 
   return (
       <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
