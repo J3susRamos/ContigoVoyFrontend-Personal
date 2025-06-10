@@ -24,7 +24,9 @@ export default function BlogPage() {
         setLoading(false);
       }
     }
-    fetchData();
+    fetchData().catch(error => {
+      console.error("Error in fetchData:", error);
+    });
   }, []);
 
   return (

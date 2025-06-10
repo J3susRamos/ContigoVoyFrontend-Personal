@@ -28,7 +28,6 @@ function RevistaContent() {
       }
     };
 
-    // Call the async function and handle the returned promise
     fetchData().catch(error => {
       console.error("Error in fetchData:", error);
     });

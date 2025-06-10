@@ -1,5 +1,4 @@
 'use client';
-
 import { GetPsicologos } from "@/app/apiRoutes";
 import CerrarSesion from "@/components/CerrarSesion";
 import LoadingPages from "@/components/LoadingPages";
@@ -26,7 +25,9 @@ export default function Psicologos() {
       }
     };
 
-    fetchData();
+    fetchData().catch(error => {
+      console.error("Error in fetchData:", error);
+    });
   }, []);
 
   if (isLoading) {
