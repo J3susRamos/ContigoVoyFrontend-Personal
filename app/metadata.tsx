@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/LOGOfeo.webp' },
-      { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.ico' },
     ],
   },
 };
