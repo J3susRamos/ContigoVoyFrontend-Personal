@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -11,14 +11,10 @@ import {
   YAxis,
 } from "recharts";
 import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
-
-// Datos para el gráfico de pastel
-const genero = [
-  { name: "Citas completadas", Total: 40 },
-  { name: "Citas pendientes", Total: 30 },
-  { name: "Citas canceladas", Total: 20 },
-  { name: "Ausencias", Total: 10 },
-];
+import { GetPsicologoDashboard } from "@/app/apiRoutes";
+import { Icons } from "@/icons";
+import { DashboardResult } from "@/interface";
+import Prueba from "./Prueba";
 
 const COLORS = ["#BABAFF", "#9494F3", "#58A6FF", "#B158FF"];
 
@@ -33,6 +29,66 @@ const data = [
 ];
 
 export default function Appointments() {
+  const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
+    total_citas: 0,
+    citas_completadas: 0,
+    citas_pendientes: 0,
+    citas_canceladas: 0,
+    total_minutos_reservados: 0,
+    total_pacientes: 0,
+    nuevos_pacientes: 0,
+    citas_confirmadas: 0,
+  });
+  const [loading, setLoading] = useState<boolean>(true);
+  // Datos para el gráfico de pastel
+  const genero = [
+    { name: "Citas completadas", Total: 40 },
+    { name: "Citas pendientes", Total: 30 },
+    { name: "Citas canceladas", Total: 20 },
+    { name: "Ausencias", Total: 10 },
+  ];
+  const fetchDashboard = async () => {
+    try {
+      const response = await GetPsicologoDashboard();
+      return response.result;
+    } catch (error) {
+      console.error("Error al cargar el dashboard", error);
+    }
+  };
+  // const fetchPorcentajeGenero = async () => {
+  //   const cookies = parseCookies();
+  //   const token = cookies.session;
+  //   if (!token) throw new Error("No autenticated");
+  //   const response = await fetch("http://127.0.0.1:8000/api/estadisticas/porcentaje-genero", {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`
+  //     },
+  //   });
+  //   const data = await response.json();
+  //   return data.result;
+  // };
+  useEffect(() => {
+    const loadData = async () => {
+      const result = await fetchDashboard();
+      if (!result) return;
+
+      setCitasPsicologo({
+        total_citas: result?.total_citas ?? 0,
+        citas_completadas: result?.citas_completadas ?? 0,
+        citas_pendientes: result?.citas_pendientes ?? 0,
+        citas_canceladas: result?.citas_canceladas ?? 0,
+        total_minutos_reservados: result?.total_minutos_reservados ?? 0,
+        total_pacientes: result?.total_pacientes ?? 0,
+        nuevos_pacientes: result?.nuevos_pacientes ?? 0,
+        citas_confirmadas: result?.citas_confirmadas ?? 0,
+      });
+
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+  console.log(citasPsicologo);
+
   const handleAddNewCita = () => {
     console.log("Agregar nueva cita");
   };
@@ -40,7 +96,30 @@ export default function Appointments() {
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
       {/* Botón para agregar nueva cita */}
-      <div className="col-span-2 flex justify-end w-full">
+      {!loading && <Prueba data={citasPsicologo.total_citas} />}
+
+      <div className="col-span-2 flex items-center justify-between w-full mr-24  mb-4 font-normal">
+        <div className="flex items-center text-base gap-6">
+          <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-6">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: Icons.calendario,
+              }}
+            />
+            <span>{citasPsicologo["citas_confirmadas"]} citas reservadas</span>
+          </div>
+          <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-6">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: Icons.estadisticas,
+              }}
+            />
+            <span>
+              {citasPsicologo["total_minutos_reservados"]} min. ocupados
+            </span>
+          </div>
+        </div>
+
         <button
           onClick={handleAddNewCita}
           className="bg-primary dark:bg-primary hover:bg-primary/90 dark:hover:bg-primary/90 text-primary-foreground dark:text-primary-foreground font-semibold py-2 px-4 rounded-xl mb-4"
@@ -77,8 +156,12 @@ export default function Appointments() {
                       fontSize={12}
                       fontWeight="500"
                     >
-                      <tspan x={x} dy="0">feb,</tspan>
-                      <tspan x={x} dy="15">{payload.value}</tspan>
+                      <tspan x={x} dy="0">
+                        feb,
+                      </tspan>
+                      <tspan x={x} dy="15">
+                        {payload.value}
+                      </tspan>
                     </text>
                   );
                 }}
