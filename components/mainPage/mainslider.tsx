@@ -74,7 +74,7 @@ export default function MainSlider() {
           {sections.map((item, index) => (
             <div className="embla__slide" key={index}>
               <div
-                className="lg:h-[650px] h-[340px] pt-56 w-full md:pt-0 bg-cover flex items-center lg:bg-center bg-right vg-left lg:pl-[79px] pl-[30px] custom-bg-position"
+                className="lg:h-[650px] h-[340px] w-full md:pt-0 bg-cover flex items-center lg:bg-center bg-right vg-left lg:pl-[79px] pl-[30px] custom-bg-position"
                 style={{
                   backgroundImage: `linear-gradient(to right,rgba(120, 99, 227, 0.64), rgba(99, 74, 226, 0.48)),url(${item.background})`,
                 }}
@@ -91,7 +91,7 @@ export default function MainSlider() {
                         exit={{ opacity: 0 }}
                       >
                         <div
-                          className="lg:h-20  lg:mb-24 font-bold  text-white lg:text-[62px] text-[25px] lg:leading-[77.5px] mt-13 leading-7"
+                          className=" lg:h-20 lg:mb-24 font-bold text-white sm:text-[36px] lg:text-[62px] text-[25px] sm:leading-[42px] lg:leading-[77.5px] mt-13 leading-8"
                           dangerouslySetInnerHTML={{
                             __html: item.phrase,
                           }}
@@ -100,14 +100,14 @@ export default function MainSlider() {
                     )}
                   </AnimatePresence>
                   <div
-                    className="font-lexend text-white lg:font-normal  font-light lg:text-[20px] text-[13px] xl:leading-[px]  tracking-[2%] text-sm sm:text-base md:text-lg lg:pb-14 lg:text-xl my-2 mb-6"
+                    className="font-lexend text-white lg:font-normal min-[350px]:text-[13px] font-light lg:text-[20px] text-[10px] xl:leading-[px]  tracking-[2%]  sm:text-base lg:pb-14 lg:text-xl my-2 mb-6"
                     dangerouslySetInnerHTML={{
                       __html: item.smallPhrase,
                     }}
                   />
-                  <div className="relative hidden lg:block">
+                  <div className="relative block">
                   <Link href="/ReservarCita">
-                    <Button className="bg-[#634AE2]  max-w-[188px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700">
+                    <Button className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-[20px]">
                       Reservar Cita
                     </Button>
                   </Link>

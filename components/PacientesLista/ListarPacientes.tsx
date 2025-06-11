@@ -7,6 +7,8 @@ import { Paciente } from "@/interface";
 import showToastFunction from "../ToastStyle";
 import { NavbarPacientes } from "@/components/User/Pacientes/NavbarPacientesComponent";
 import { useRouter } from "next/navigation";
+import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
+import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 
 export default function ListarPacientes() {
   const [paciente, setPaciente] = useState<Paciente[]>([]); 
@@ -40,23 +42,18 @@ export default function ListarPacientes() {
   }, [router]);
 
   const handleGetPacientes = async (showToast = true) => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/pacientes`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        if (Array.isArray(data.result)) {
-          setPaciente(data.result);
-          setFilteredPacientes(data.result);
+    let pacientsData = await pacientesGet();
+    let status = pacientsData.state;
+    let data = pacientsData.result;
+    switch(status){
+      case 0:
+        showToastFunction("error", "Error de conexión. Intenta nuevamente.");
+      break;
+      case 1:
+        showToastFunction("error", data.message || "Error al obtener los pacientes");
+      break;
+      case 2:
+        if (Array.isArray(data)) {
           // Only show toast if it hasn't been shown before and showToast is true
           if (showToast && !toastShownRef.current) {
             showToastFunction("success", "Pacientes cargados correctamente");
@@ -65,49 +62,32 @@ export default function ListarPacientes() {
         } else {
           console.error("La propiedad 'result' no es un array:", data);
           showToastFunction("error", "Formato de respuesta inválido");
-          setPaciente([]);
-          setFilteredPacientes([]);
+          data = [];
         }
-      } else {
-        showToastFunction("error", data.message || "Error al obtener los pacientes");
-        setPaciente([]);
-        setFilteredPacientes([]);
-      }
-    } catch (error) {
-      console.error(error);
-      showToastFunction("error", "Error de conexión. Intenta nuevamente.");
-      setPaciente([]);
-      setFilteredPacientes([]);
+      break;
     }
+    setPaciente(data);
+    setFilteredPacientes(data);
   };
 
   const HandleDeletePaciente = async (idPaciente: number) => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/${idPaciente}`;
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        showToastFunction("success", "Paciente eliminado correctamente");
-        // Don't show toast for refresh after delete
-        await handleGetPacientes(false);
-      } else {
+
+    const pacienteData = await pacientesDelete(idPaciente);
+    const state = pacienteData.state;
+    switch(state){
+      case 0:
+        showToastFunction("error", "Error de conexión. Intenta nuevamente.");
+      break;
+      case 1:
         showToastFunction(
           "error",
-          data.status_message || "Error de conexión. Intenta nuevamente."
+          pacienteData.result.status_message || "Error de conexión. Intenta nuevamente."
         );
-      }
-    } catch (error) {
-      console.error(error);
-      showToastFunction("error", "Error de conexión. Intenta nuevamente.");
+      break;
+      case 2:
+        showToastFunction("success", "Paciente eliminado correctamente");
+        await handleGetPacientes(false);
+      break;
     }
   };
 

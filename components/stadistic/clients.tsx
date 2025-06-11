@@ -1,5 +1,6 @@
 import { CustomizedLabelProps } from "@/interface";
 import React, { useEffect, useState } from "react";
+import { parseCookies } from "nookies";
 import {
   PieChart,
   Pie,
@@ -13,9 +14,36 @@ import {
 } from "recharts";
 
 const fetchPorcentajeGenero = async () => {
+  const cookies = parseCookies();
+  const token = cookies.session;
+  if (!token) throw new Error("No autenticated");
   const response = await fetch("http://127.0.0.1:8000/api/estadisticas/porcentaje-genero", {
     headers: {
-      Authorization: "Bearer 44|bWbkKZ2zFNSxhO1q8v0F9eesBUGKsBRy14deNhpe2a66dbdd",
+      Authorization: `Bearer ${token}`
+    },
+  });
+  const data = await response.json();
+  return data.result;
+};
+
+const fetchEstadisticasEdad = async () => {
+  const cookies = parseCookies();
+  const token = cookies.session;
+  if (!token) throw new Error("No autenticated");
+  const response = await fetch("http://127.0.0.1:8000/api/pacientes/estadisticas/edad", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await response.json();
+  return data.result;
+};
+
+// --- NUEVO: función para lugares usando localStorage ---
+const fetchEstadisticasLugar = async () => {
+  const token = localStorage.getItem('auth_token');
+  if (!token) throw new Error("No autenticado");
+  const response = await fetch('http://127.0.0.1:8000/api/pacientes/estadisticas/lugar', {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
   });
   const data = await response.json();
@@ -27,35 +55,65 @@ export default function Clients() {
     { name: "Masculino", Total: 0 },
     { name: "Femenino", Total: 0 },
   ]);
+  const [edad, setEdad] = useState([
+    { name: "0 - 12", Total: 0 },
+    { name: "13 - 17", Total: 0 },
+    { name: "18 - 24", Total: 0 },
+    { name: "25 - 34", Total: 0 },
+    { name: "35 - 44", Total: 0 },
+    { name: "45 - 54", Total: 0 },
+  ]);
+  // --- NUEVO: estado para lugares ---
+  const [lugar, setLugar] = useState([
+    { name: "Surco", Total: 0 },
+    { name: "Jesús María", Total: 0 },
+    { name: "Surquillo", Total: 0 },
+    { name: "Barranco", Total: 0 },
+    { name: "San Borja", Total: 0 },
+  ]);
 
   useEffect(() => {
     fetchPorcentajeGenero().then((result) => {
       const data = [
-        { name: "Masculino", Total: result.Masculino.porcentaje },
-        { name: "Femenino", Total: result.Femenino.porcentaje },
+        { name: "Masculino", Total: result?.Masculino?.cantidad ?? 0 },
+        { name: "Femenino", Total: result?.Femenino?.cantidad ?? 0},
       ];
       setGenero(data);
     });
   }, []);
 
+  useEffect(() => {
+    fetchEstadisticasEdad().then((result) => {
+      setEdad([
+        { name: "0 - 12", Total: result["0-12"] ?? 0 },
+        { name: "13 - 17", Total: result["13-17"] ?? 0 },
+        { name: "18 - 24", Total: result["18-24"] ?? 0 },
+        { name: "25 - 34", Total: result["25-34"] ?? 0 },
+        { name: "35 - 44", Total: result["35-44"] ?? 0 },
+        { name: "45 - 54", Total: result["45-54"] ?? 0 },
+      ]);
+    });
+  }, []);
+
+  // --- NUEVO: useEffect para lugares ---
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      // Puedes mostrar un mensaje o redirigir si no hay token
+      return;
+    }
+    fetchEstadisticasLugar().then((result) => {
+      setLugar([
+        { name: "Surco", Total: result["Surco"] ?? 0 },
+        { name: "Jesús María", Total: result["Jesús María"] ?? 0 },
+        { name: "Surquillo", Total: result["Surquillo"] ?? 0 },
+        { name: "Barranco", Total: result["Barranco"] ?? 0 },
+        { name: "San Borja", Total: result["San Borja"] ?? 0 },
+      ]);
+    });
+  }, []);
+
   const COLORS = ["#7777FF", "#66A3FF", "#B3B3FF"];
-
-  const edad = [
-    { name: "0 - 12", Total: 10 },
-    { name: "13 - 17", Total: 5 },
-    { name: "18 - 24", Total: 17 },
-    { name: "25 - 34", Total: 12 },
-    { name: "35 - 44", Total: 6 },
-    { name: "45 - 54", Total: 7 },
-  ];
-
-  const lugar = [
-    { name: "Surco", Total: 10 },
-    { name: "Jesús María", Total: 5 },
-    { name: "Surquillo", Total: 17 },
-    { name: "Barranco", Total: 12 },
-    { name: "San Borja", Total: 6 },
-  ];
 
   const renderCustomizedLabel = ({
                                    cx,
@@ -103,13 +161,10 @@ export default function Clients() {
 
   return (
       <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
-        <div
-            className="w-[401px] h-[600px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
-          <div
-              className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+        <div className="w-[401px] h-[600px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Género:</p>
           </div>
-
           <div className="w-full h-[350px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -135,7 +190,6 @@ export default function Clients() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-
           <div className="grid justify-start gap-5 mt-4 ml-14">
             {genero.map((entry, index) => (
                 <div key={index} className="flex items-center gap-2">
@@ -148,15 +202,11 @@ export default function Clients() {
             ))}
           </div>
         </div>
-
         <div className="flex flex-col w-[502px] h-[600px] gap-5">
-          <div
-              className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
-            <div
-                className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+          <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
+            <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
               <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Edad:</p>
             </div>
-
             <div className="flex-1 flex items-center justify-center ">
               <ResponsiveContainer width="90%" height="80%">
                 <BarChart
@@ -188,7 +238,6 @@ export default function Clients() {
                         );
                       }}
                   />
-
                   <YAxis
                       tick={{ fontSize: 12, fill: "hsl(var(--primary))" }}
                       tickLine={{ stroke: "hsl(var(--primary))" }}
@@ -208,14 +257,10 @@ export default function Clients() {
               </ResponsiveContainer>
             </div>
           </div>
-
-          <div
-              className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
-            <div
-                className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+          <div className="w-full h-[300px] bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl flex flex-col">
+            <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
               <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">Lugar:</p>
             </div>
-
             <div className="flex-1 flex items-center justify-center">
               <ResponsiveContainer width="90%" height="80%">
                 <BarChart
