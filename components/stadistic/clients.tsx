@@ -36,7 +36,6 @@ const fetchEstadisticasEdad = async () => {
   const data = await response.json();
   return data.result;
 };
-import pacientesValues from "@/utils/pacientesCRUD/pacientesValues";
 
 // --- NUEVO: función para lugares usando localStorage ---
 const fetchEstadisticasLugar = async () => {
