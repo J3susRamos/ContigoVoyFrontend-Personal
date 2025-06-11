@@ -99,22 +99,23 @@ export function Listarblog({
   };
 
   return (
-    <div className="max-h-[500px] overflow-y-auto overflow-scroll:scrollbar-none">
-      <table className="w-full border-separate border-spacing-y-4 ">
-        <thead className="rounded-full">
-          <tr className="bg-[#6364F4] text-white h-11 ">
-            <th className="rounded-tl-full font-normal">ID</th>
-            <th className="font-normal">Tema</th>
-            <th className="font-normal">Categoria</th>
-            <th className="font-normal">Imagen</th>
-            <th className="rounded-tr-full font-normal">Acciones</th>
+
+    <div className="max-h-[500px] max-w-[1000px] w-full overflow-y-auto overflow-scroll:scrollbar-none rounded-2xl">
+      <table className="w-full border-separate border-spacing-y-4 rounded-t-lg rounded-2xl">
+        <thead className="rounded-[36px]">
+          <tr className="bg-opacity-0 text-white h-11 rounded-[36px]">
+            <th className="rounded-tl-[36px] font-normal bg-[#6364F4]">ID</th>
+            <th className="font-normal bg-[#6364F4]">Tema</th>
+            <th className="font-normal bg-[#6364F4]">Categoria</th>
+            <th className="font-normal bg-[#6364F4]">Imagen</th>
+            <th className="rounded-tr-[36px] font-normal bg-[#6364F4]">Acciones</th>
           </tr>
         </thead>
 
-        <tbody className="text-center   bg-white text-[#634AE2] font-normal text-[16px] leading-[20px]  ">
+        <tbody className="text-center   text-[#634AE2] font-normal text-[16px] leading-[20px]  ">
           {bloge.map((blog) => (
-            <tr key={blog.idBlog} className="border-b hover:bg-gray-100  ">
-              <td className="px-4 py-2 rounded-l-[34px]">{blog.idBlog}</td>
+            <tr key={blog.idBlog} style={{clipPath: 'xywh(0 0 100% 100% round 24px)'}} className="border-b bg-white hover:bg-gray-100 rounded-[36px] ">
+              <td className="px-4 py-2">{blog.idBlog}</td>
               <td className="px-4 py-2 ">{blog.tema}</td>
               <td className="px-4 py-2">{blog.categoria}</td>
               <td className="px-4 py-2 flex justify-center items-center">

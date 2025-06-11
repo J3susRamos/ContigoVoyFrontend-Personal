@@ -43,13 +43,6 @@ export default function TherapyServices() {
 
   return (
     <>
-      <div className="relative blog lg:hidden flex items-center justify-center mb-4">
-        <Link href="/ReservarCita" className="pt-9">
-          <Button className="bg-[#634AE2]  max-w-[188px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700">
-            Reservar Cita
-          </Button>
-        </Link>
-      </div>
       <div className="max-w-full px-0 mb-4 mx-auto lg:py-16 ">
         <motion.h2
           className="lg:text-4xl  text-2xl font-bold mt-[65px] text-center text-title lg:mb-16 mb-7"
