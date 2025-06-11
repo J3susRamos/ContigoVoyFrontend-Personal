@@ -121,7 +121,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-
           </div>
         </div>
       </div>

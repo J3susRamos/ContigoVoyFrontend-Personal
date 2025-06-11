@@ -18,8 +18,6 @@ const AnchorIcon = () => {
   );
 };
 
-
-
 export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
   
 

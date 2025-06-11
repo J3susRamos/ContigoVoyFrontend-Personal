@@ -1,13 +1,10 @@
-
-'use client';
+"use client";
 import {
   BlogsWebSite,
   GetBlogsPreviewApi,
   GetCagetories,
 } from "@/app/apiRoutes";
-import BlogPageComponent from "@/components/BlogPageComponent";
-
-
+import BlogPageComponent from "@/components/blog/BlogPageComponent";
 import LoadingPages from "@/components/LoadingPages";
 import {
   ApiResponse,
@@ -38,7 +35,9 @@ export default  function BlogPage() {
         setLoading(false);
       }
     }
-    fetchData();
+    fetchData().catch(error => {
+      console.error("Error in fetchData:", error);
+    });
   }, []);
 
   return (

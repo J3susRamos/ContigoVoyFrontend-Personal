@@ -2,10 +2,9 @@
 import showToast from "@/components/ToastStyle";
 import { UsuarioLocalStorage } from "@/interface";
 import { Button, Input, ScrollShadow } from "@heroui/react";
-
 import { X } from "lucide-react";
 import { parseCookies } from "nookies";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const daysOfWeek = [
   "Lunes",
@@ -136,7 +135,11 @@ export default function Week() {
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error del backend:", errorData);
-        throw new Error(errorData.message || "Error al actualizar horarios");
+        // Instead of throwing, handle the error directly
+        const errorMessage = errorData.message || "Error al actualizar horarios";
+        console.error("Error al guardar horarios:", errorMessage);
+        showToast("error", errorMessage);
+        return;
       }
 
       const data = await response.json();

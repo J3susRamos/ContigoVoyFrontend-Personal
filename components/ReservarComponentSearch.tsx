@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Divider } from "@heroui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icons } from "@/icons";
@@ -66,7 +66,7 @@ export default function ReservarComponentSearch({ onSearchChange }: ReservarComp
     <div className="w-full p-4 pb-5 md:pb-20 border-r border-[#9494F3] sm:w-[250px]">
       <Divider orientation="vertical" />
 
-      {/* Mobile: Search + Filters button */}
+      {/* Mobile: Search and Filters button */}
       <div className="flex flex-col gap-4 sm:hidden">
         <div className="relative">
           <input

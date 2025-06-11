@@ -13,13 +13,13 @@ interface NavbarProps {
   filterValue: string;
   onSearchChange: (value?: string) => void;
   onClear: () => void;
-  visibleColumns: Set<string>;
-  setVisibleColumns: (columns: Set<string>) => void;
-  columns: { name: string; uid: string; sortable?: boolean }[];
+  visibleColumns?: Set<string>;
+  setVisibleColumns?: (columns: Set<string>) => void;
+  columns?: { name: string; uid: string; sortable?: boolean }[];
   onAddNew: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
+export const NavbarPacientes: React.FC<NavbarProps> = ({
   filterValue,
   onSearchChange,
   onClear,
@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Filtrar
               </Button>
             </DropdownTrigger>
-            <DropdownMenu aria-label="Ordenar por">
+            <DropdownMenu aria-label="Filtrar por">
               <DropdownItem
                 key="genero"
                 classNames={{
@@ -58,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   title: "ml-3 text-[16px]",
                 }}
               >
-                Genero
+                Género
                 <span
                   className="inline-flex items-center ml-[127px]"
                   dangerouslySetInnerHTML={{
@@ -100,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   title: "ml-3 text-[16px]",
                 }}
               >
-                Fecha de creacion
+                Fecha de creación
                 <span
                   className="inline-flex items-center ml-[37px]"
                   dangerouslySetInnerHTML={{
@@ -121,7 +121,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   title: "ml-3 text-[16px]",
                 }}
               >
-                Fecha de Ultima Cita
+                Fecha de última cita
                 <span
                   className="inline-flex items-center ml-[18px]"
                   dangerouslySetInnerHTML={{
@@ -181,12 +181,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
             />
                 
-            {/* Botón de agregar nueva cita */}
+            {/* Botón de agregar nuevo paciente */}
             <button
               className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
               onClick={onAddNew}
             >
-              Agregar nueva cita
+              Agregar nuevo paciente
             </button>
           </div>
         </div>

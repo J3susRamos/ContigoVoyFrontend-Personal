@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
 
 // Datos para el LineChart
 const data = [
@@ -27,148 +28,152 @@ const genero = [
   { name: "Psicólogo 3", Total: 20 },
 ];
 
-interface CustomizedLabelProps {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  percent: number;
-}
-
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: CustomizedLabelProps) => {
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontSize={14}
-      fontWeight="bold"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
-
 const COLORS = ["#B158FF", "#7D7DFF", "#58A6FF"];
 
 export default function Performance() {
   return (
-    <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 gap-5 xl:w-[950px]  w-[350px] xl:h-[406px] h-full mx-auto bg-white rounded-2xl ">
-      <div className="flex flex-col">
-        <div className="rounded-r-full w-[301px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-          <p className="text-white font-medium text-start mr-10 text-xl">
-            Rendimiento del <br /> equipo:
-          </p>
+    <div className="flex flex-col">
+      <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 gap-5 xl:w-[950px] w-[350px] mx-auto bg-card dark:bg-card rounded-2xl">
+        {/*Rendimiento del equipo PieChart*/}
+        <div className="flex flex-col">
+          <div className="rounded-r-full w-[301px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
+              Rendimiento del <br /> equipo:
+            </p>
+          </div>
+          <div className="h-full flex items-center justify-center mt-4">
+            <div className="w-full h-[350px]">
+              <ResponsiveContainer width="100%" height="70%">
+                <LineChart
+                  data={data}
+                  margin={{ top: 30, right: 30, left: 20, bottom: 12 }}
+                >
+                  <XAxis
+                    dataKey="name"
+                    tickLine={{ stroke: "hsl(var(--primary))" }}
+                    axisLine={{ stroke: "hsl(var(--primary))" }}
+                    tick={({ x, y, payload }) => {
+                      return (
+                        <text
+                          x={x}
+                          y={y + 15}
+                          fill="hsl(var(--primary))"
+                          textAnchor="middle"
+                          fontSize={12}
+                          fontWeight="500"
+                        >
+                          <tspan x={x} dy="0">
+                            feb,
+                          </tspan>{" "}
+                          <tspan x={x} dy="15">
+                            {payload.value}
+                          </tspan>
+                        </text>
+                      );
+                    }}
+                  />
+                  <YAxis
+                    tickFormatter={(value: number) => (value / 1250).toString()}
+                    tick={{ fill: "hsl(var(--primary))" }}
+                    axisLine={{ stroke: "hsl(var(--primary))" }}
+                    tickLine={{ stroke: "hsl(var(--primary))" }}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Line
+                    type="monotone"
+                    dataKey="uv"
+                    stroke="hsl(var(--primary))"
+                    activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="pv"
+                    stroke="#58A6FF"
+                    activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
-        <div className="h-full flex items-center justify-center mt-4">
-          <div className="w-full h-[350px]">
-            <ResponsiveContainer width="100%" height="70%">
-              <LineChart
-                data={data}
-                margin={{ top: 30, right: 30, left: 20, bottom: 12}}
-              >
-                <XAxis
-                  dataKey="name"
-                  tickLine={{ stroke: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
-                  tick={({ x, y, payload }) => {
-                    return (
-                      <text
-                        x={x}
-                        y={y + 15}
-                        fill="#634AE2"
-                        textAnchor="middle"
-                        fontSize={12}
-                        fontWeight="500"
-                      >
-                        <tspan x={x} dy="0">
-                          feb,
-                        </tspan>{" "}
-                        <tspan x={x} dy="15">
-                          {payload.value}
-                        </tspan>
-                      </text>
-                    );
-                  }}
-                />
-                <YAxis
-                  tickFormatter={(value: number) => (value / 1250).toString()}
-                  tick={{ fill: "#634AE2" }}
-                  axisLine={{ stroke: "#634AE2" }}
-                  tickLine={{ stroke: "#634AE2" }}
-                />
 
-                <Line
-                  type="monotone"
-                  dataKey="uv"
-                  stroke="#634AE2"
-                  activeDot={{ r: 8, fill: "#634AE2" }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="pv"
-                  stroke="#58A6FF"
-                  activeDot={{ r: 8, fill: "#634AE2" }}
-                />
-              </LineChart>
+        {/* Rounded PieChart */}
+        <div className="flex flex-col items-center">
+          {/* Header for PieChart */}
+          <div className="rounded-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center text-xl">
+              Citas atendidas
+            </p>
+          </div>
+          
+          <div className="w-full h-[200px] flex items-center justify-center mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  dataKey="Total"
+                  data={genero}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={100}
+                  fill="#8884d8"
+                  label={renderCustomizedLabel}
+                  labelLine={false}
+                >
+                  {genero.map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
             </ResponsiveContainer>
+          </div>
+
+          {/* Leyenda del PieChart */}
+          <div className="grid grid-cols-2 gap-4 w-full max-w-[300px] mx-auto mt-4">
+            {genero.map((entry, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: COLORS[index] }}
+                ></div>
+                <span className="text-primary dark:text-primary-foreground font-normal text-base">
+                  {entry.name}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="mt-24">
-        <div className="w-full h-[200px] flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                dataKey="Total"
-                data={genero}
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={100}
-                fill="#8884d8"
-                label={renderCustomizedLabel}
-                labelLine={false}
-              >
-                {genero.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+      {/* Table for PieChart */}
+      <div className="m-5 xl:w-[950px] w-[350px] mx-auto bg-card dark:bg-card rounded-2xl mb-10">
+        <div className="w-full bg-primary dark:bg-primary h-[60px] rounded-t-2xl flex items-center">
+          <div className="w-1/2 text-primary-foreground dark:text-primary-foreground font-medium text-center text-xl">
+            Profesional
+          </div>
+          <div className="w-1/2 text-primary-foreground dark:text-primary-foreground font-medium text-center text-xl">
+            Citas atendidas
+          </div>
         </div>
-
-        {/* Leyenda del PieChart */}
-        <div className="grid grid-cols-2 gap-4 w-full max-w-[300px] mx-auto mt-6">
-          {genero.map((entry, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: COLORS[index] }}
-              ></div>
-              <span className="text-[#634AE2] font-normal text-base">
-                {entry.name}
-              </span>
+        
+        <div className="w-full">
+          {genero.map((item, index) => (
+            <div 
+              key={index} 
+              className={`flex items-center h-14 ${
+                index !== genero.length - 1 ? "border-b border-muted" : ""
+              }`}
+            >
+              <div className="w-1/2 text-primary dark:text-primary-foreground font-medium text-center">
+                {item.name}
+              </div>
+              <div className="w-1/2 text-primary dark:text-primary-foreground font-medium text-center">
+                {item.Total}
+              </div>
             </div>
           ))}
         </div>

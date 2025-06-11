@@ -150,7 +150,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
       {/* Header */}
       <header className="mt-4 z-30 px-4">
         <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">

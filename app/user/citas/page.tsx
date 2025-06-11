@@ -139,11 +139,11 @@ export default function App() {
   }, []);
 
   return (
-    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
       {/* Header */}
       <header className="mt-4 z-30 px-4">
         <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
-          <h1 className="text-2xl md:text-4xl font-bold text-foreground dark:text-foreground">
+          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
             Lista de Citas
           </h1>
           <div className="flex gap-x-5 mt-2">
@@ -153,7 +153,7 @@ export default function App() {
       </header>
 
       <div>
-        {/* Navbar */}
+        {/* mainNavbar */}
         <Navbar
             filterValue={filterValue}
             onSearchChange={onSearchChange}
@@ -166,7 +166,7 @@ export default function App() {
 
         {/* Contenido */}
         {isLoading ? (
-          <div className="flex justify-center items-center h-64 text-foreground dark:text-foreground">
+          <div className="flex justify-center items-center h-64 text-primary dark:text-primary-foreground">
             <div className="text-lg font-medium">Cargando citas...</div>
           </div>
         ) : error ? (

@@ -1,4 +1,3 @@
-import { CustomizedLabelProps } from "@/interface";
 import React from "react";
 import {
   PieChart,
@@ -11,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
 
 // Datos para el gráfico de pastel
 const genero = [
@@ -32,38 +32,9 @@ const data = [
   { name: "06", uv: 2390, pv: 3800 },
 ];
 
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: CustomizedLabelProps) => {
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor="middle"
-      dominantBaseline="central"
-      fontSize={14}
-      fontWeight="bold"
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
-
 export default function Appointments() {
   const handleAddNewCita = () => {
     console.log("Agregar nueva cita");
-    // Aquí puedes abrir un modal, navegar a otra página, etc.
   };
 
   return (
@@ -72,16 +43,16 @@ export default function Appointments() {
       <div className="col-span-2 flex justify-end w-full">
         <button
           onClick={handleAddNewCita}
-          className="bg-[#6364F4] hover:bg-[#4e4ff0] text-white font-semibold py-2 px-4 rounded-xl mb-4"
+          className="bg-primary dark:bg-primary hover:bg-primary/90 dark:hover:bg-primary/90 text-primary-foreground dark:text-primary-foreground font-semibold py-2 px-4 rounded-xl mb-4"
         >
           + Nueva cita
         </button>
       </div>
 
       {/* Primer cuadro con LineChart */}
-      <div className="w-[547px] h-[459px] bg-white rounded-2xl flex flex-col">
-        <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-          <p className="text-white font-medium text-center mr-10 text-xl">
+      <div className="w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
+        <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">
             Citas totales <br /> del período:
           </p>
         </div>
@@ -94,14 +65,14 @@ export default function Appointments() {
             >
               <XAxis
                 dataKey="name"
-                tickLine={{ stroke: "#634AE2" }}
-                axisLine={{ stroke: "#634AE2" }}
+                tickLine={{ stroke: "hsl(var(--primary))" }}
+                axisLine={{ stroke: "hsl(var(--primary))" }}
                 tick={({ x, y, payload }) => {
                   return (
                     <text
                       x={x}
                       y={y + 15}
-                      fill="#634AE2"
+                      fill="hsl(var(--primary))"
                       textAnchor="middle"
                       fontSize={12}
                       fontWeight="500"
@@ -114,15 +85,16 @@ export default function Appointments() {
               />
               <YAxis
                 tickFormatter={(value: number) => `${value / 1250}`}
-                tick={{ fill: "#634AE2" }}
-                axisLine={{ stroke: "#634AE2" }}
-                tickLine={{ stroke: "#634AE2" }}
+                tick={{ fill: "hsl(var(--primary))" }}
+                axisLine={{ stroke: "hsl(var(--primary))" }}
+                tickLine={{ stroke: "hsl(var(--primary))" }}
               />
+              <Tooltip content={<CustomTooltip />} />
               <Line
                 type="monotone"
                 dataKey="pv"
-                stroke="#634AE2"
-                activeDot={{ r: 8, fill: "#634AE2" }}
+                stroke="hsl(var(--primary))"
+                activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -130,9 +102,9 @@ export default function Appointments() {
       </div>
 
       {/* Segundo cuadro con PieChart */}
-      <div className="h-[459px] w-[353px] bg-white rounded-2xl">
-        <div className="rounded-r-full w-[247px] h-[60px] bg-[#6364F4] mt-6 flex items-center justify-center">
-          <p className="text-white font-medium text-start mr-10 text-xl">
+      <div className="h-[459px] w-[353px] bg-card dark:bg-card rounded-2xl">
+        <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
             Estado de <br /> cita:
           </p>
         </div>
@@ -151,14 +123,14 @@ export default function Appointments() {
                 label={renderCustomizedLabel}
                 labelLine={false}
               >
-                {genero.map((entry, index) => (
+                {genero.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
                   />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -171,7 +143,7 @@ export default function Appointments() {
                 className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: COLORS[index] }}
               ></div>
-              <span className="text-[#634AE2] font-normal text-base">
+              <span className="text-primary dark:text-primary-foreground font-normal text-base">
                 {entry.name}
               </span>
             </div>

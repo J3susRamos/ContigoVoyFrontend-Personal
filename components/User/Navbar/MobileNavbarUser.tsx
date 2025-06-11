@@ -14,9 +14,7 @@ export function MobileNavbar({ navItems }: { navItems: NavItems[] }) {
       !panelRef.current.contains(event.target as Node) &&
       userRef.current &&
       !userRef.current.contains(event.target as Node)
-    ) {
-      // Aquí puedes agregar cualquier lógica adicional si es necesario
-    }
+    ) {}
   };
 
   useEffect(() => {
@@ -32,7 +30,7 @@ export function MobileNavbar({ navItems }: { navItems: NavItems[] }) {
       <div className="mt-28 fixed left-0 top-0 w-[80px] h-full p-4 bg-background z-50 rounded-r-2xl flex flex-col items-center">
         {/* Logo reducido */}
         <div className="flex justify-center mb-4">
-          <Link href="/">
+          <Link href="/public">
             <Image src="/LOGO.webp" alt="logo" width={80} priority={true} height={60}  />
           </Link>
         </div>

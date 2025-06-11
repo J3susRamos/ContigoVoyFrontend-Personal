@@ -1,4 +1,4 @@
-import NavbarUser from "@/components/User/NavbarUser";
+import NavbarUser from "@/components/User/Navbar/NavbarUser";
 import React, { ReactNode } from "react";
 
 export default function HomeLayout({

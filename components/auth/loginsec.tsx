@@ -34,7 +34,9 @@ export const useAuth = () => {
       );
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message);
+        const errorMessage = data.message || "Error en el inicio de sesión";
+        setAuthState({ ...authState, loading: false, error: errorMessage });
+        return;
       }
 
       const token = data.result.token.split("|")[1];
@@ -82,6 +84,8 @@ export const useAuth = () => {
       headers: {
         "Content-Type": "application/json",
       },
+    }).catch(error => {
+      console.error("Error during logout:", error);
     });
 
     localStorage.removeItem("user");

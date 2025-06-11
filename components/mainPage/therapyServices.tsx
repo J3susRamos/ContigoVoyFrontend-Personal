@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";

@@ -34,8 +34,7 @@ export default function Calendario() {
           date: 'Fecha',
           time: 'Hora',
           event: 'Evento',
-          noEventsInRange: 'No hay eventos en este rango',
-          showMore: total => `+ Ver más (${total})`
+          noEventsInRange: 'No hay eventos en este rango'
         }}
         className="calendar-component bg-background dark:bg-background text-primary dark:text-primary-foreground"
         localizer={localizer}

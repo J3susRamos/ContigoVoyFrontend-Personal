@@ -4,7 +4,7 @@ import Link from "next/link";
 export const Suceesfully = ({
     setIsSend,
   }: {
-    setIsSend: () => void;  // Cambiado para aceptar una función en lugar de un React.Dispatch
+    setIsSend: () => void;  // Cambiado para aceptar una función en lugar de un React. Dispatch
   }) => {
     return (
       <div className="bg-[#634AE2] w-auto rounded-3xl p-20 ">
@@ -21,7 +21,7 @@ export const Suceesfully = ({
             Registrar otro
           </Button>
   
-          <Link href={"/user/dashboard/"}>
+          <Link href={"/user/home/"}>
             <Button className="bg-[#9494F3] text-white text-sm font-light rounded-full">
               Volver al Dashboard
             </Button>
