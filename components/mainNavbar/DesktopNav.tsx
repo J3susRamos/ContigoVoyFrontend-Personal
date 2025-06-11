@@ -38,7 +38,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
 
   return (
     <>
-      <div className="lg:hidden ">
+      <div className="min-[1450px]:hidden ">
         <MobileNav navItems={navItems}  />
       </div>
       <motion.div
@@ -49,7 +49,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
         )}
       >
         <div className="flex items-center gap-6">
-          <div className="hidden flex-1 flex-row items-center justify-center space-x-0 text-sm text-zinc-600 transition duration-200 hover:text-zinc-800 lg:flex gap-1">
+          <div className="hidden flex-1 flex-row items-center justify-center space-x-0 text-sm text-zinc-600 transition duration-200 hover:text-zinc-800 min-[1450px]:flex gap-1">
             {navItems.map((navItem: NavItem, idx: number) => (
               <div key={idx} className="relative">
                 {navItem.isButton ? (
@@ -138,11 +138,11 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
                 )}
               </div>
             ))}
+            <ThemeToggle />
           </div>
         </div>
-        <div className="-mr-4 ml-4">
-        <ThemeToggle />
-        </div>
+
+        
       </motion.div>
     </>
   );
