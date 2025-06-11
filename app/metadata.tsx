@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "ContigoVoy ofrece apoyo emocional y psicológico...",
   icons: {
     icon: [
-      { url: '/LOGOfeo.png' },
+      { url: '/LOGOfeo.webp' },
       { url: '/icon.png', type: 'image/png' },
     ],
   },
