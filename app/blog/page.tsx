@@ -5,7 +5,6 @@ import {
   GetCagetories,
 } from "@/app/apiRoutes";
 import BlogPageComponent from "@/components/blog/BlogPageComponent";
-import LoadingPages from "@/components/LoadingPages";
 import {
   ApiResponse,
   AuthorsApi,
@@ -17,8 +16,8 @@ export default  function BlogPage() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [categoria, setCategoria] = useState<CategoriaApi | null>(null);
   const [authors, setAuthors] = useState<AuthorsApi | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -31,8 +30,6 @@ export default  function BlogPage() {
       } catch (error) {
         setError("Error obteniendo blogs");
         console.error(error);
-      } finally {
-        setLoading(false);
       }
     }
     fetchData().catch(error => {
@@ -42,7 +39,6 @@ export default  function BlogPage() {
 
   return (
     <div>
-      {loading && <LoadingPages />}
       {error &&  <p className="flex items-center justify-center h-screen">{error}</p>}
       { data && categoria && authors &&
         <BlogPageComponent
