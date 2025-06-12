@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
   Tooltip,
   ResponsiveContainer,
   LineChart,
@@ -10,11 +7,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
+import {  CustomTooltip } from "./CustomTooltipComponent";
 import { GetPsicologoDashboard } from "@/app/apiRoutes";
 import { Icons } from "@/icons";
 import { DashboardResult } from "@/interface";
-import Prueba from "./Prueba";
+import PieChartGrafic from "./grafics/PieChartGrafic";
 
 const COLORS = ["#BABAFF", "#9494F3", "#58A6FF", "#B158FF"];
 
@@ -39,6 +36,7 @@ export default function Appointments() {
     nuevos_pacientes: 0,
     citas_confirmadas: 0,
   });
+  //Estado de carga para
   const [loading, setLoading] = useState<boolean>(true);
   // Datos para el gráfico de pastel
   const genero = [
@@ -55,18 +53,7 @@ export default function Appointments() {
       console.error("Error al cargar el dashboard", error);
     }
   };
-  // const fetchPorcentajeGenero = async () => {
-  //   const cookies = parseCookies();
-  //   const token = cookies.session;
-  //   if (!token) throw new Error("No autenticated");
-  //   const response = await fetch("http://127.0.0.1:8000/api/estadisticas/porcentaje-genero", {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`
-  //     },
-  //   });
-  //   const data = await response.json();
-  //   return data.result;
-  // };
+
   useEffect(() => {
     const loadData = async () => {
       const result = await fetchDashboard();
@@ -96,7 +83,6 @@ export default function Appointments() {
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
       {/* Botón para agregar nueva cita */}
-      {!loading && <Prueba data={citasPsicologo.total_citas} />}
 
       <div className="col-span-2 flex items-center justify-between w-full mr-24  mb-4 font-normal">
         <div className="flex items-center text-base gap-6">
@@ -193,29 +179,16 @@ export default function Appointments() {
         </div>
 
         <div className="w-full h-[240px] flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                dataKey="Total"
-                data={genero}
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={100}
-                fill="#8884d8"
-                label={renderCustomizedLabel}
-                labelLine={false}
-              >
-                {genero.map((_, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-            </PieChart>
-          </ResponsiveContainer>
+          {/* Esqueleto precarga del grafico pastel */}
+          {loading && (
+            
+            <div className="w-[200px] h-[200px] rounded-full bg-muted animate-pulse relative">
+              <div className="absolute top-0 left-0 w-full h-full border-[4px] border-primary/20 rounded-full animate-spin-slow"></div>
+              <div className="absolute top-[25%] left-[25%] w-[100px] h-[100px] bg-background rounded-full"></div>
+            </div>
+          )}
+          {/* Grafico con circular con PieChart */}
+          {!loading && <PieChartGrafic data={citasPsicologo} />}
         </div>
 
         {/* Leyenda del PieChart */}
