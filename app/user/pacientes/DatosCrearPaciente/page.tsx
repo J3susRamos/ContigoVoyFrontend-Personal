@@ -182,7 +182,6 @@ export default function App() {
           <h1>Datos del Paciente</h1>
         </div>
       </div>
-      
       <div className="flex mt-4 text-primary dark:text-primary font-bold text-normal">
         <div className="flex-1 ml-5 mr-5 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="flex pt-6">

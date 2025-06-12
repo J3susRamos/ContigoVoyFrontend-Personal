@@ -97,8 +97,21 @@ const NavbarUser = () => {
       let items = [...navItemsBase];
 
       if (user.rol === "PSICOLOGO") {
-        items = items.filter(item => item.name !== "Registro de personal" && item.name !== "Psicologos" && item.name !== "Marketing");
+        items = items.filter(item =>
+          item.name !== "Registro de personal" &&
+          item.name !== "Psicologos" &&
+          item.name !== "Marketing" 
+        );
       }
+      
+      if (user.rol === "ADMIN") {
+        items = items.filter(item =>
+          item.name !== "Pacientes" &&
+          item.name !== "Citas" &&
+          item.name !== "Historial"
+        );
+      }
+      
       setNavItems(items);
     }
   }, []);
