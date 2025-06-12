@@ -1,7 +1,7 @@
 import { parseCookies } from "nookies";
 
 // state 0: Error
-// state 1: Succesful 
+// state 1: Successful
 async function pacientesGet() {
     try{
         const cookies = parseCookies();
