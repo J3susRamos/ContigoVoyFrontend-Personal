@@ -40,10 +40,10 @@ export default function Appointments() {
   const [loading, setLoading] = useState<boolean>(true);
   // Datos para el gráfico de pastel
   const genero = [
-    { name: "Citas completadas", Total: 40 },
-    { name: "Citas pendientes", Total: 30 },
-    { name: "Citas canceladas", Total: 20 },
-    { name: "Ausencias", Total: 10 },
+    { name: "Citas completadas"},
+    { name: "Citas pendientes"},
+    { name: "Citas canceladas"},
+    { name: "Ausencias"},
   ];
   const fetchDashboard = async () => {
     try {

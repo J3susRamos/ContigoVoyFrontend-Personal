@@ -20,17 +20,12 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
       data.citas_pendientes > 0 ||
       data.citas_canceladas > 0
     ) {
- 
-      const timer = setTimeout(() => {
         setGenero([
           { name: "Citas completadas", Total: data.citas_completadas },
           { name: "Citas pendientes", Total: data.citas_pendientes },
           { name: "Citas canceladas", Total: data.citas_canceladas },
           { name: "Ausencias", Total: 0 },
         ]);
-      }, 380);
-
-      return () => clearTimeout(timer);
     }
   }, [data]);
 
@@ -53,10 +48,7 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
           animationDuration={1200}
         >
           {genero.map((_, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={COLORS[index % COLORS.length]}
-            />
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
         <Tooltip content={<CustomTooltip />} />
@@ -65,4 +57,16 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
   );
 }
 
-export default PieChartGrafic;
+// Solo renderiza si los valores realmente cambian
+function areEqual(
+  prevProps: { data: DashboardResult },
+  nextProps: { data: DashboardResult }
+) {
+  return (
+    prevProps.data.citas_completadas === nextProps.data.citas_completadas &&
+    prevProps.data.citas_pendientes === nextProps.data.citas_pendientes &&
+    prevProps.data.citas_canceladas === nextProps.data.citas_canceladas
+  );
+}
+
+export default React.memo(PieChartGrafic, areEqual);
