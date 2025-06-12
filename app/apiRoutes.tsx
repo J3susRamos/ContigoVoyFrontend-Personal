@@ -6,6 +6,7 @@ import {
   PsicologoApiResponse,
   PsicologoApiResponseAlone,
   PsicologoPreviewData,
+  DashboardApiResponse
 } from "@/interface";
 import {parseCookies} from "nookies";
 
@@ -125,5 +126,27 @@ export async function GetCitasPendientes(
   if (!res.ok) {
     throw new Error("Error al obtener el psicologo");
   }
+  return await res.json();
+}
+
+/*Informacion de citas totales, citas completadas, citas pendientes, citas canceladas, 
+total minutos reservados, total pacientes y nuevos pacientes */
+export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/dashboard/psicologo`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener los datos del dashboard");
+  }
+
   return await res.json();
 }
