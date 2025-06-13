@@ -40,7 +40,7 @@ export default function RootLayout({
           )}
           <div
             className={`${
-              getBaseRoute() !== "/user" ? "mt-[10vh] min-h-[90vh]" : ""
+              getBaseRoute() !== "/user" ? " min-h-[90vh]" : ""
             }`}
           >
             {children}

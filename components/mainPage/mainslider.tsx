@@ -80,31 +80,35 @@ export default function MainSlider() {
                 }}
               >
                 <div>
+                  <div
+                    style={{textShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}}
+                    className=" lg:h-20 lg:mb-24 font-bold text-white sm:text-[36px] lg:text-[62px] text-[25px] sm:leading-[42px] lg:leading-[77.5px] mt-13 leading-8"
+                    dangerouslySetInnerHTML={{
+                      __html: item.phrase,
+                    }}
+                  />
                   <AnimatePresence mode="wait">
                     {selectedIndex === index && (
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{
                           opacity: 1,
-                          transition: { duration: 3 },
+                          transition: { duration: 1 },
                         }}
                         exit={{ opacity: 0 }}
                       >
                         <div
-                          className=" lg:h-20 lg:mb-24 font-bold text-white sm:text-[36px] lg:text-[62px] text-[25px] sm:leading-[42px] lg:leading-[77.5px] mt-13 leading-8"
+                          style={{textShadow: '2px 2px 3px rgba(0,0,0,0.45)'}}
+                          className="font-lexend text-white lg:font-normal min-[350px]:text-[13px] font-light lg:text-[20px] text-[11px] xl:leading-[px]  tracking-[2%]  sm:text-base lg:pb-14 lg:text-xl my-2 mb-6"
                           dangerouslySetInnerHTML={{
-                            __html: item.phrase,
+                            __html: item.smallPhrase,
                           }}
                         />
+                        
                       </motion.div>
                     )}
                   </AnimatePresence>
-                  <div
-                    className="font-lexend text-white lg:font-normal min-[350px]:text-[13px] font-light lg:text-[20px] text-[10px] xl:leading-[px]  tracking-[2%]  sm:text-base lg:pb-14 lg:text-xl my-2 mb-6"
-                    dangerouslySetInnerHTML={{
-                      __html: item.smallPhrase,
-                    }}
-                  />
+                  
                   <div className="relative block">
                   <Link href="/ReservarCita">
                     <Button className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-[20px]">

@@ -14,6 +14,7 @@ const features = [
         alt="especialista"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Recibe terapia en casa",
@@ -29,6 +30,7 @@ const features = [
         alt="especialista"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Elige a tu psicólogo",
@@ -45,6 +47,7 @@ const features = [
         alt="especialista"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Inicia tu terapia en línea",
@@ -60,6 +63,7 @@ const features = [
         alt="especialista"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Agenda tu horario ideal",
@@ -125,18 +129,18 @@ export default function ChooseUs() {
   };
 
   return (
-    <div className="w-full max-w-full flex flex-col items-center justify-center pt-12 pb-20 my-4 bg-[#9494f3] relative overflow-hidden">
+    <div className="w-full max-w-full flex flex-col items-center justify-center pt-8 pb-14  mw:pt-12 mw:pb-16 my-4 bg-[#9494f3] relative overflow-hidden">
       <div className="relative w-full max-w-full">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center "
+          className="text-center pb-2 "
         >
-          <h2 className="lg:text-[32px] text-[20px] leading-[40px] font-bold text-white lg:mb-6 mb-1">
+          <h2 className="lg:text-[32px] text-[15px] mw:text-[20px] leading-[31px] font-bold text-white lg:mb-6 mw:mb-1">
             ¿Qué es la psicología online?
           </h2>
-          <p className="text-[13px] px-12 text-white max-w-3xl lg:mx-auto font-light lg:leading-[20px] mx-20 ">
+          <p className="text-[11px] mw:text-[13px] text-white max-w-3xl lg:mx-auto font-light mw:px-[63px] lg:leading-[20px] mx-10 ">
             Es una forma accesible y eficaz de cuidar tu salud mental.
           </p>
         </motion.div>
@@ -163,10 +167,10 @@ export default function ChooseUs() {
                         {feature.icon}
                       </div>
                     </div>
-                    <h3 className="text-[18px] pt-5 leading-[22.5px] font-bold text-white   tracking-normal pb-3">
+                    <h3 className="text-[11px] pt-5 leading-[22.5px] font-bold text-white   tracking-normal pb-3">
                       <span className="block">{feature.title}</span>
                     </h3>
-                    <p className="text-[16px] leading-[20px] text-white justify-center  tracking-normal font-light md:mx-0">
+                    <p className="text-[8px] leading-[20px] text-white justify-center  tracking-normal font-light md:mx-0">
                       {feature.description}
                     </p>
                   </motion.div>
@@ -200,24 +204,24 @@ export default function ChooseUs() {
               <div className="embla" ref={emblaRef}>
                 <div className="embla__container">
                   {features.map((feature, index) => (
-                    <div className="embla__slide px-[38px]" key={index}>
-                      <div className="pl-[14px] py-5">
-                        <div className="flex flex-col items-center justify-center w-[124px] h-[124px] rounded-full bg-[#634AE2] backdrop-blur-sm transition-all duration-300 cursor-pointer">
-                          <div className="bg-[#634AE2] flex justify-center rounded-full group-hover:bg-[#9494F3] transition-colors duration-300 w-[124px]">
+                    <div className="embla__slide pl-[24px] pr-[18px]" key={index}>
+                      <div className="pl-[20px] pt-5 pb-3 mw:pb-6">
+                        <div className="flex flex-col items-center justify-center w-[90px] h-[90px] mw:w-[124px] mw:h-[124px] rounded-full bg-[#634AE2] backdrop-blur-sm transition-all duration-300 cursor-pointer">
+                          <div className="bg-[#634AE2] flex justify-center rounded-full group-hover:bg-[#9494F3] transition-colors duration-300 w-[90px]">
                             {feature.icon}
                           </div>
                         </div>
                       </div>
-                      <h3 className="text-[13px] font-bold text-white tracking-normal pb-2">
+                      <h3 className="text-[11px] mw:text-[13px] font-bold text-white tracking-normal pb-2">
                         <span className="block">{feature.title}</span>
                       </h3>
-                      <p className="text-[13px] leading-[15px] text-white justify-center tracking-normal font-light">
+                      <p className="text-[11px] mw:text-[13px] leading-[13px] text-white justify-center tracking-normal font-light">
                         {feature.description}
                       </p>
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-center space-x-2 mt-[45px]">
+                <div className="flex justify-center space-x-2 mt-[24px] mw:mt-[45px]">
                   {features.map((_, index) => (
                     <button
                       key={index}
@@ -232,16 +236,13 @@ export default function ChooseUs() {
                 </div> 
               </div>
 
-        
-              
-
             {/* Columna derecha: Imagen */}
               <Image
                 src={"/mediaLunaInicio.webp"}
                 alt="especialista"
                 width={70}
                 height={332}
-                className="h-[332] w-auto"
+                className="h-[260px] mw:h-[332px] w-auto"
               />
           </div>
         </div>

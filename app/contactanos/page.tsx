@@ -8,29 +8,33 @@ export const metadata: Metadata = {
 
 const ContactUs = () => {
   return (
-    <div
-      className="min-h-screen w-full lg:bg-auto bg-no-repeat lg:bg-bottom bg-bottom responsive-bg"
-      style={{
-        backgroundImage: `linear-gradient(#634AE27A, #634AE27A), url('/consulta-asesoría-psicológica-online.webp')`,
-      }}
-    >
-      <div className="container mx-auto px-0 md:px-0 lg:px-0 py-20">
-        <div className="grid lg:grid-row-2 gap-8 items-center">
-          <div className="text-white space-y-6">
-            <h1 className="text-2xl md:text-5xl lg:text-6xl xl:text-7xl ml-12 font-bold">
-              <p className="mb-4">¡La solución que buscas,</p>
-              <p className="mb-12">empieza aquí!</p>
-            </h1>
-            <h3 className="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold ml-12">
-              Contáctanos
-            </h3>
-          </div>
-          <div className="w-full md:w-96 lg:w-96 flex justify-center lg:justify-start">
-            <FormContacto />
-          </div>
+    <div className="w-full relative overflow-y-hidden over overflow-x-clip"
+        style={{
+          backgroundImage: 'linear-gradient(90.11deg, rgba(54, 22, 216, 0.48) 44.23%, rgba(120, 99, 227, 0.48) 94.52%)'
+        }}    
+    > 
+      <div
+        className="z-0 absolute pointer-events-none top-0 left-0 -bottom-[20px] -right-[5vw] bg-[url('/consulta-asesoría-psicológica-online.webp')] bg-no-repeat bg-[length:850px] sm:bg-[length:1300px] bg-bottom opacity-50"
+      ></div>
+      <div className="relative z-10 max-w-scv18 mx-auto min-h-screen">
+        <div className="container px-scv7 pt-scv7 sm:pt-scv8 sm:px-scv9">
+            <div className="text-white space-y-6">
+              <h1 style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}} 
+                  className="text-cv6 sm:text-cv10 sm:leading-[60px] font-bold w-full max-w-scv17">
+                ¡La solución que buscas, empieza aquí!
+              </h1>
+              <h3 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
+                className="text-cv7 sm:text-cv8  font-bold mt-scv6">
+                Contáctanos
+              </h3>
+            </div>
+            <div className="mt-scv5 w-full flex pb-scv9">
+              <FormContacto />
+            </div>
         </div>
       </div>
     </div>
+    
   );
 };
 

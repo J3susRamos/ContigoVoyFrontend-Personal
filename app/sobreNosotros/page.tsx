@@ -11,25 +11,28 @@ export	const metadata: Metadata = {
 const dataQS: QuienesSomos[] = [
   {
     quienesSomos:
-      "Contigo Voy es un centro psicológico online dedicado al bienestar emocional en todas  las <br/> etapas de la vida. Contamos con un equipo de especialistas nacionales e internacionales <br/> que ofrecen terapia individual, de pareja y familiar, proporcionando un apoyo profesional <br/> personalizado para cada persona.",
+      "Contigo Voy es un centro psicológico online dedicado al bienestar emocional en todas las etapas de la vida. Contamos con un equipo de especialistas nacionales e internacionales que ofrecen terapia individual, de pareja y familiar, proporcionando un apoyo profesional personalizado para cada persona.",
     mision:
-      "Nuestra misión es contribuir al bienestar emocional y mental de las personas <br/>mediante servicios de terapia psicológica online accesibles y de calidad.",
+      "Nuestra misión es contribuir al bienestar emocional y mental de las personas mediante servicios de terapia psicológica online accesibles y de calidad.",
     vision:
-      "Ser la plataforma líder en salud mental, facilitando un acceso más directo a las <br/> terapias y orientación psicológica. Nos comprometemos a ofrecer un servicio <br/>eficiente, garantizando apoyo emocional y bienestar para todos.",
+      "Ser la plataforma líder en salud mental, facilitando un acceso más directo a las terapias y orientación psicológica. Nos comprometemos a ofrecer un servicio eficiente, garantizando apoyo emocional y bienestar para todos.",
     valor1:
-      "Valoramos la capacidad de entender y compartir los sentimientos de nuestros <br/>clientes, ofreciendo un espacio donde se sientan escuchados y comprendidos.",
+      "Valoramos la capacidad de entender y compartir los sentimientos de nuestros clientes, ofreciendo un espacio donde se sientan escuchados y comprendidos.",
     valor2:
-      "Nos comprometemos a crear un ambiente seguro y fiable, donde cada individuo <br/> pueda expresarse sin miedo al juicio y con total confidencialidad, fortaleciendo la <br/>relación entre psicólogos y pacientes.",
+      "Nos comprometemos a crear un ambiente seguro y fiable, donde cada individuo pueda expresarse sin miedo al juicio y con total confidencialidad, fortaleciendo la relación entre psicólogos y pacientes.",
     valor3:
-      "Mantenemos altos estándares en todos los aspectos de nuestro servicio, <br/> garantizando calidad y responsabilidad en cada interacción.",
+      "Mantenemos altos estándares en todos los aspectos de nuestro servicio, garantizando calidad y responsabilidad en cada interacción.",
   },
 ];
 
 export default function Home() {
   return (
     <div
-      className="w-full h-full pt-8"
-      >
+      className="w-full relative overflow-y-hidden over overflow-x-clip"
+      style={{
+        backgroundImage: 'linear-gradient(90.11deg, rgba(54, 22, 216, 0.48) 44.23%, rgba(120, 99, 227, 0.48) 94.52%)'
+      }}    
+    >
       <SobreNosotrosStructure qs={dataQS} />
     </div>
   );

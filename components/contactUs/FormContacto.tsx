@@ -1,6 +1,6 @@
 "use client";
 import { Contact } from "@/interface";
-import { Button, Form, Input } from "@heroui/react";
+import { Button, Form, input, Input } from "@heroui/react";
 import React, { useState } from "react";
 
 export default function FormContacto() {
@@ -90,12 +90,12 @@ export default function FormContacto() {
 
   return (
     <Form
-      className="lg:w-full max-w-md bg-[#B8B8FF] rounded-2xl p-6 md:mr-10  relative z-0 w-64 mr-32"
+      className="w-full max-w-scv12 sm:max-w-scv13 bg-[#B8B8FF] opacity-75 rounded-2xl px-scv4 pt-scv6 pb-scv4 md:mr-10  relative z-0"
       validationBehavior="native"
       onSubmit={handleSubmit}
     >
       {action && (
-        <div className="absolute top-0 left-0 w-full h-[90px] flex items-center justify-center bg-[#9494F3] rounded-2xl z-10 mt-[190px]">
+        <div className="absolute top-0 left-0 w-full h-[90px] flex items-center justify-center bg-[#9494F3]  rounded-2xl z-10 mt-[190px]">
           <div className="m-8 text-start">
             <p className="text-white font-light text-base">
               {action}
@@ -106,6 +106,7 @@ export default function FormContacto() {
       <div className="space-y-3 w-full relative">
         <Input
           isRequired
+          size="lg"
           name="nombre"
           placeholder="Nombres"
           type="text"
@@ -114,6 +115,7 @@ export default function FormContacto() {
         />
         <Input
           isRequired
+          size="lg"
           name="apellido"
           placeholder="Apellidos"
           type="text"
@@ -122,6 +124,7 @@ export default function FormContacto() {
         />
         <Input
           isRequired
+          size="lg"
           name="celular"
           placeholder="Celular"
           type="tel"
@@ -130,6 +133,7 @@ export default function FormContacto() {
         />
         <Input
           isRequired
+          size="lg"
           name="email"
           placeholder="Correo"
           type="email"
@@ -138,6 +142,7 @@ export default function FormContacto() {
         />
         <Input
           name="comentario"
+          size="lg"
           placeholder="Comentario"
           type="textarea"
           value={formData.comentario}
@@ -146,7 +151,8 @@ export default function FormContacto() {
 
         <div className="w-full flex justify-center pt-4">
           <Button
-            style={{ backgroundColor: "#634AE3", color: "white" }}
+            style={{ backgroundColor: "#634AE3", color: "white", borderRadius: "28PX", fontWeight: "700" }}
+            className="py-[8px] px-[36px] sm:px-[54px] sm:text-cv4"
             type="submit"
             disabled={loading}
           >

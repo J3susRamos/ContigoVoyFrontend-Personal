@@ -22,31 +22,33 @@ const AnchorIcon = () => {
 
 // Uso de las propiedades tipadas en el componente
 const AccordionQuest: React.FC<AccordionQuestProps> = ({ faqs }) => {
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  
+  // const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
   return (
     <Accordion
-      selectionMode="single"
-      selectedKeys={selectedKey ? new Set([selectedKey]) : new Set()}
-      onSelectionChange={(keys) => {
-        const selected = Array.from(keys)[0] as string;
-        setSelectedKey((prevKey) => (prevKey === selected ? null : selected));
-      }}
+      selectionMode="multiple"
+      // selectedKeys={selectedKey ? new Set([selectedKey]) : new Set()}
+      // onSelectionChange={(keys) => {
+      //   const selected = Array.from(keys)[0] as string;
+      //   setSelectedKey((prevKey) => (prevKey === selected ? null : selected));
+      // }
     >
+
       {faqs.map(({ Question, Answer }) => (
         <AccordionItem
           key={Question}
           aria-label={Question}
-          title={<div className=" text-white text-base lg:text-lg lg:w-full w-[280px]">{Question}</div>}
+          title={<div style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}}  className=" pr-scv6 text-white text-cv4">{Question}</div>}
           indicator={
-            <div className="lg:mx-9  truncate">
+            <div className="sm:mx-scv4 truncate">
               <AnchorIcon />
             </div>
           }
-          className="border-b border-white "
+          className="border-b border-white  mt-scv5"
         >
           
-          <div className="text-[#fff] mx-2 rounded-xl p-4 border border-[#fff]">
+          <div style={{textShadow: "2px 2px 3px rgba(0,0,0,0.45)"}} className="text-[#fff] mb-scv5 text-cv4 sm:text-cv4 rounded-xl py-scv3 px-scv5 border border-[#fff]">
             {Answer}
           </div>
         </AccordionItem>
