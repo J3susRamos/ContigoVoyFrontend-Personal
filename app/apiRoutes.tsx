@@ -6,7 +6,8 @@ import {
   PsicologoApiResponse,
   PsicologoApiResponseAlone,
   PsicologoPreviewData,
-  DashboardApiResponse
+  DashboardApiResponse,
+  GeneroEstadisticaApiResponse
 } from "@/interface";
 import {parseCookies} from "nookies";
 
@@ -146,6 +147,26 @@ export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
 
   if (!res.ok) {
     throw new Error("Error al obtener los datos del dashboard");
+  }
+
+  return await res.json();
+}
+
+export async function GetPacientesEstadisticasEdad(): Promise<GeneroEstadisticaApiResponse> {
+  const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/estadisticas/genero`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener los datos de estadisticas de genero");
   }
 
   return await res.json();

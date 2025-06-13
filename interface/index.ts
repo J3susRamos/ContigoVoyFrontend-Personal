@@ -470,3 +470,21 @@ export interface DashboardApiResponse {
   errorBag: never[];
   result: DashboardResult;
 }
+
+export interface GeneroEstadisticaDetalle {
+  cantidad: number;
+  porcentaje: number;
+}
+
+export interface GeneroEstadisticaResult {
+  Masculino: GeneroEstadisticaDetalle;
+  Femenino: GeneroEstadisticaDetalle;
+}
+
+export interface GeneroEstadisticaApiResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  result: GeneroEstadisticaResult;
+  errorBag: never[];
+}
