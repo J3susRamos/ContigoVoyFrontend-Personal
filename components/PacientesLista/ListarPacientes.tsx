@@ -1,5 +1,4 @@
 import CerrarSesion from "../CerrarSesion";
-import { parseCookies } from "nookies";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useRef, useCallback } from "react";
@@ -42,8 +41,8 @@ export default function ListarPacientes() {
   }, [router]);
 
   const handleGetPacientes = async (showToast = true) => {
-    let pacientsData = await pacientesGet();
-    let status = pacientsData.state;
+    const pacientsData = await pacientesGet();
+    const status = pacientsData.state;
     let data = pacientsData.result;
     switch(status){
       case 0:

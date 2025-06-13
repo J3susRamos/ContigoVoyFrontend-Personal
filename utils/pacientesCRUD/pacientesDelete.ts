@@ -1,7 +1,5 @@
 import { parseCookies } from "nookies";
 
-// state 0: Error
-// state 1: Succesful 
 async function pacientesDelete(idPaciente: number) {
     try{
         const cookies = parseCookies();
