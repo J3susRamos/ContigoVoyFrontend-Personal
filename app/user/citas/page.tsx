@@ -27,6 +27,11 @@ const columns = [
 
 export default function App() {
   const [filterValue, setFilterValue] = useState("");
+  /* Para filtros */
+  /* const [filters, setFilters] = useState<{genero: string[], edad: string[]}>({
+    genero: [],
+    edad: []
+  }) */
   const [selectedKeys, setSelectedKeys] = useState<Set<React.Key>>(new Set());
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS)
@@ -69,7 +74,7 @@ export default function App() {
           motivo: cita.motivo,
           estado: cita.estado,
           duracion: cita.duracion,
-          idCita: cita.idCita
+          idCita: cita.idCita,
         }));
         setCitas(formattedCitas);
         showToast("success", "Citas obtenidas correctamente");
@@ -89,7 +94,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    handleGetCitas().catch(error => {
+    handleGetCitas().catch((error) => {
       console.error("Error fetching citas:", error);
     });
   }, []);
@@ -105,7 +110,7 @@ export default function App() {
     let filteredCitas = [...citas];
     if (hasSearchFilter) {
       filteredCitas = filteredCitas.filter((cita) =>
-          cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
+        cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     return filteredCitas;
@@ -122,7 +127,7 @@ export default function App() {
 
   const headerColumns = useMemo(() => {
     return columns.filter((column) =>
-        Array.from(visibleColumns).includes(column.uid)
+      Array.from(visibleColumns).includes(column.uid)
     );
   }, [visibleColumns]);
 
@@ -155,14 +160,16 @@ export default function App() {
       <div>
         {/* mainNavbar */}
         <Navbar
-            filterValue={filterValue}
-            onSearchChange={onSearchChange}
-            onClear={onClear}
-            visibleColumns={visibleColumns}
-            setVisibleColumns={setVisibleColumns}
-            columns={columns} onAddNew={function (): void {
-          throw new Error("Function not implemented.");
-        }}        />
+          filterValue={filterValue}
+          onSearchChange={onSearchChange}
+          onClear={onClear}
+          visibleColumns={visibleColumns}
+          setVisibleColumns={setVisibleColumns}
+          columns={columns}
+          onAddNew={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
 
         {/* Contenido */}
         {isLoading ? (
@@ -182,7 +189,11 @@ export default function App() {
             selectedKeys={selectedKeys}
             setSelectedKeysAction={setSelectedKeys}
             onCitaDeleted={(idCita) => {
-              setCitas(prevCitas => prevCitas.filter(cita => Number(cita.idCita) !== Number(idCita)));
+              setCitas((prevCitas) =>
+                prevCitas.filter(
+                  (cita) => Number(cita.idCita) !== Number(idCita)
+                )
+              );
             }}
           />
         )}

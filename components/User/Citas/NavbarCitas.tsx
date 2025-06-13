@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { Icons } from "@/icons";
 import { Input, Button } from "@heroui/react";
+import { DayPicker, DateRange } from "react-day-picker";
+import { es } from "date-fns/locale";
 
 interface NavbarProps {
   filterValue: string;
@@ -12,6 +14,13 @@ interface NavbarProps {
   onAddNew: () => void;
 }
 
+type SubmenusState = {
+  genero: boolean;
+  estado: boolean;
+  fechaInicio: boolean;
+  edad: boolean;
+};
+
 export const Navbar: React.FC<NavbarProps> = ({
   filterValue,
   onSearchChange,
@@ -20,8 +29,44 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [generoSeleccionado, setGeneroSeleccionado] = useState<string[]>([]);
-  const [submenuAbierto, setSubmenuAbierto] = useState(false);
+  const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
+  const [estadoSeleccionado, setEstadoSeleccionado] = useState<string[]>([]);
+  const [submenus, setSubmenus] = useState({
+    genero: false,
+    edad: false,
+    estado: false,
+    fechaInicio: false,
+  });
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const [rangoFecha, setRangoFecha] = useState<DateRange | undefined>();
+
+  // Para aplicar filtro luego:
+  const filtrarPorFecha = () => {
+    if (rangoFecha?.from && rangoFecha?.to) {
+      const desde = rangoFecha.from.toISOString().split("T")[0]; // yyyy-mm-dd
+      const hasta = rangoFecha.to.toISOString().split("T")[0];
+      console.log("Filtrando desde:", desde, "hasta:", hasta);
+      // Aquí aplicas tu filtro en la tabla
+    }
+  };
+
+  const toggleSubmenu = (keyToToggle: keyof SubmenusState): void => {
+    setSubmenus((prev) => {
+      // Creamos un nuevo objeto con todas las claves en false
+      const newState: SubmenusState = {
+        genero: false,
+        estado: false,
+        fechaInicio: false,
+        edad: false,
+      };
+
+      // Alternamos solo la clave especificada
+      newState[keyToToggle] = !prev[keyToToggle];
+
+      return newState;
+    });
+  };
 
   // Cerrar el menú si se hace clic fuera
   useEffect(() => {
@@ -29,7 +74,6 @@ export const Navbar: React.FC<NavbarProps> = ({
       const target = event.target as Node;
       if (menuRef.current && target && !menuRef.current.contains(target)) {
         setMenuAbierto(false);
-        setSubmenuAbierto(false);
       }
     };
 
@@ -70,19 +114,41 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex flex-col w-[17rem] bg-white shadow-lg rounded-xl grow-0 py-1">
                   <MenuItem
                     text="Género"
-                    onClick={() => setSubmenuAbierto(!submenuAbierto)}
+                    onClick={() => {
+                      toggleSubmenu("genero");
+                    }}
                   />
-                  <MenuItem text="Edad" />
-                  <MenuItem text="Fecha de creación" />
-                  <MenuItem text="Fecha de ultima cita" />
+                  <MenuItem
+                    text="Edad"
+                    onClick={() => {
+                      toggleSubmenu("edad");
+                    }}
+                  />
+                  <MenuItem
+                    text="Estado"
+                    onClick={() => {
+                      toggleSubmenu("estado");
+                    }}
+                  />
+                  <MenuItem
+                    text="Fecha de inicio"
+                    onClick={() => {
+                      toggleSubmenu("fechaInicio");
+                    }}
+                  />
                 </div>
                 {/* Submenú de género */}
-                {submenuAbierto && (
-                  <div className=" w-64 bg-white  shadow-xl rounded-xl p-4 pt-2 ">
-                    <h3 className="mb-1 text-[#634AE2] pl-10 text-lg">
-                      Género
-                    </h3>
-                    <div className="flex flex-col text-sm pl-10 text-gray-600">
+                {submenus.genero && (
+                  <Submenu
+                    titulo="Género"
+                    onPressAceptar={() => {
+                      console.log("Generos aplicados:", generoSeleccionado);
+                    }}
+                    onPressBorrar={() => {
+                      setGeneroSeleccionado([]);
+                    }}
+                  >
+                    <div className="flex flex-col text-sm pl-10">
                       {["Masculino", "Femenino", "Otros"].map((opcion) => (
                         <label
                           key={opcion}
@@ -113,31 +179,134 @@ export const Navbar: React.FC<NavbarProps> = ({
                         </label>
                       ))}
                     </div>
-
-                    <div className="flex justify-between mt-4">
-                      <Button
-                        size="sm"
-                        className="bg-[#E7E7FF] text-[#634AE2] text-md font-light rounded-2xl"
-                        onPress={() => {
-                          console.log("Filtro aplicado:", generoSeleccionado);
-                          setSubmenuAbierto(false);
-                        }}
-                      >
-                        Aceptar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="light"
-                        onPress={() => {
-                          setGeneroSeleccionado([]);
-                          setSubmenuAbierto(false);
-                        }}
-                        className="border-[#8888E0] border-1 text-[#634AE2] text-md font-light rounded-2xl"
-                      >
-                        Borrar
-                      </Button>
+                  </Submenu>
+                )}
+                {/* Submenú de edad */}
+                {submenus.edad && (
+                  <Submenu
+                    titulo="Edad"
+                    onPressAceptar={() => {
+                      console.log("Edades aplicadas:", edadSeleccionada);
+                    }}
+                    onPressBorrar={() => {
+                      setEdadSeleccionada([]);
+                    }}
+                  >
+                    <div className="flex flex-col text-sm pl-10">
+                      {[
+                        "0 - 10",
+                        "10 - 20",
+                        "20 - 30",
+                        "30 - 40",
+                        "40 - 50",
+                        "50 - 60",
+                        "60 +",
+                      ].map((opcion) => (
+                        <label
+                          key={opcion}
+                          className="text-[#634AE2] text-lg flex items-center gap-4"
+                        >
+                          <input
+                            type="checkbox"
+                            name="genero"
+                            value={opcion}
+                            checked={edadSeleccionada.includes(opcion)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setEdadSeleccionada([
+                                  ...edadSeleccionada,
+                                  opcion,
+                                ]);
+                              } else {
+                                setEdadSeleccionada(
+                                  edadSeleccionada.filter(
+                                    (item) => item !== opcion
+                                  )
+                                );
+                              }
+                            }}
+                            className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
+                          />
+                          {opcion}
+                        </label>
+                      ))}
                     </div>
-                  </div>
+                  </Submenu>
+                )}
+                {submenus.estado && (
+                  <Submenu
+                    titulo="Estado"
+                    onPressAceptar={() => {
+                      console.log("Estados aplicados:", estadoSeleccionado);
+                    }}
+                    onPressBorrar={() => {
+                      setEstadoSeleccionado([]);
+                    }}
+                  >
+                    <div className="flex flex-col text-sm pl-10">
+                      {["Pendiente", "Cancelada"].map((opcion) => (
+                        <label
+                          key={opcion}
+                          className="text-[#634AE2] text-lg flex items-center gap-4"
+                        >
+                          <input
+                            type="checkbox"
+                            name="genero"
+                            value={opcion}
+                            checked={estadoSeleccionado.includes(opcion)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setEstadoSeleccionado([
+                                  ...estadoSeleccionado,
+                                  opcion,
+                                ]);
+                              } else {
+                                setEstadoSeleccionado(
+                                  estadoSeleccionado.filter(
+                                    (item) => item !== opcion
+                                  )
+                                );
+                              }
+                            }}
+                            className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
+                          />
+                          {opcion}
+                        </label>
+                      ))}
+                    </div>
+                  </Submenu>
+                )}
+                {submenus.fechaInicio && (
+                  <Submenu
+                    titulo="Fecha de Inicio"
+                    onPressAceptar={() => filtrarPorFecha}
+                    onPressBorrar={() => setRangoFecha(undefined)}
+                  >
+                    <div className="w-full">
+                      <DayPicker
+                        mode="range"
+                        selected={rangoFecha}
+                        onSelect={setRangoFecha}
+                        numberOfMonths={1}
+                        weekStartsOn={1}
+                        locale={es}
+                        modifiersClassNames={{
+                          selected: "bg-indigo-300 text-white",
+                          range_start: "rounded-l-full",
+                          range_end: "rounded-r-full",
+                          today: "font-bold underline",
+                        }}
+                        classNames={{
+                          caption: "flex justify-center gap-2 my-2",
+                          nav_button: "text-indigo-600",
+                          month: "w-full",
+                          table: "w-full",
+                          head_cell: "text-indigo-400 font-medium",
+                          cell: "text-indigo-700 hover:bg-indigo-100 transition-all rounded-full p-1 text-sm",
+                        }}
+                      />
+                    </div>
+                  </Submenu>
                 )}
               </div>
             )}
@@ -227,5 +396,42 @@ const MenuItem = ({ text, onClick }: MenuItemProps) => {
         />
       </svg>
     </button>
+  );
+};
+
+interface SubmenuProps {
+  titulo: string;
+  onPressAceptar: () => void;
+  onPressBorrar: () => void;
+  children: ReactNode;
+}
+const Submenu = ({
+  titulo,
+  onPressAceptar,
+  onPressBorrar,
+  children,
+}: SubmenuProps) => {
+  return (
+    <div className=" w-64 bg-white  shadow-xl rounded-xl p-4 pt-2 ">
+      <h3 className="mb-1 text-[#634AE2] pl-10 text-lg">{titulo}</h3>
+      {children}
+      <div className="flex justify-between mt-4">
+        <Button
+          size="sm"
+          className="bg-[#E7E7FF] text-[#634AE2] text-md font-light rounded-2xl"
+          onPress={onPressAceptar}
+        >
+          Aceptar
+        </Button>
+        <Button
+          size="sm"
+          variant="light"
+          onPress={onPressBorrar}
+          className="border-[#8888E0] border-1 text-[#634AE2] text-md font-light rounded-2xl"
+        >
+          Borrar
+        </Button>
+      </div>
+    </div>
   );
 };
