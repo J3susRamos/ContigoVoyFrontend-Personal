@@ -8,7 +8,6 @@ import CerrarSesion from "@/components/CerrarSesion";
 import { Citas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
-import LoadingPages from "@/components/LoadingPages";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "codigo",
@@ -156,7 +155,6 @@ export default function App() {
   if (isAuthorized === null || isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <LoadingPages />
       </div>
     );
   }
@@ -164,7 +162,7 @@ export default function App() {
   if (isAuthorized === null) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <LoadingPages />
+
       </div>
     );
   }

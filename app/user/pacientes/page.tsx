@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ListarPacientes from "@/components/PacientesLista/ListarPacientes";
-import LoadingPages from "@/components/LoadingPages";
 
 export default function Pacientes() {
   const router = useRouter();
@@ -23,7 +22,6 @@ export default function Pacientes() {
   if (isAuthorized === null) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <LoadingPages />
       </div>
     );
   }
