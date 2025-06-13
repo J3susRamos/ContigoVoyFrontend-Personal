@@ -11,8 +11,13 @@ import { DashboardResult } from "@/interface";
 
 const COLORS = ["#BABAFF", "#9494F3", "#58A6FF", "#B158FF"];
 
+type GeneroData = {
+  name: string;
+  Total: number;
+};
+
 function PieChartGrafic({ data }: { data: DashboardResult }) {
-  const [genero, setGenero] = useState<any[]>([]);
+  const [genero, setGenero] = useState<GeneroData[]>([]);
 
   useEffect(() => {
     if (

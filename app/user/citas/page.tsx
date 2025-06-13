@@ -42,11 +42,10 @@ export default function App() {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [citas, setCitas] = useState<Citas[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
-  const handleGetCitas = async () => {
+  const handleGetCitas = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -93,13 +92,13 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [cookies]);
 
   useEffect(() => {
     if (isAuthorized) {
       handleGetCitas();
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, handleGetCitas]);
 
   const [sortDescriptor] = useState({
     column: "fecha_inicio",
@@ -150,22 +149,6 @@ export default function App() {
   const onClear = useCallback(() => {
     setFilterValue("");
   }, []);
-
-  // Cargando o no autorizado
-  if (isAuthorized === null || isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-      </div>
-    );
-  }
-
-  if (isAuthorized === null) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-
-      </div>
-    );
-  }
   
   if (!isAuthorized) return null;
   
