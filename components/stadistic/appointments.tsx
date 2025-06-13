@@ -69,21 +69,15 @@ export default function Appointments() {
         nuevos_pacientes: result?.nuevos_pacientes ?? 0,
         citas_confirmadas: result?.citas_confirmadas ?? 0,
       });
-
       setLoading(false);
     };
     loadData();
   }, []);
-  console.log(citasPsicologo);
-
-  const handleAddNewCita = () => {
-    console.log("Agregar nueva cita");
-  };
 
   return (
-    <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
-      {/* Botón para agregar nueva cita */}
-
+    
+    <div className="pt-4 grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
+     {/* citas reservadas y minutos ocupados */}
       <div className="col-span-2 flex items-center justify-between w-full mr-24  mb-4 font-normal">
         <div className="flex items-center text-base gap-6">
           <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-6">
@@ -105,13 +99,6 @@ export default function Appointments() {
             </span>
           </div>
         </div>
-
-        <button
-          onClick={handleAddNewCita}
-          className="bg-primary dark:bg-primary hover:bg-primary/90 dark:hover:bg-primary/90 text-primary-foreground dark:text-primary-foreground font-semibold py-2 px-4 rounded-xl mb-4"
-        >
-          + Nueva cita
-        </button>
       </div>
 
       {/* Primer cuadro con LineChart */}
