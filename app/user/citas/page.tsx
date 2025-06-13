@@ -31,7 +31,6 @@ const columns = [
 export default function App() {
   const router = useRouter();
   const cookies = parseCookies();
-  const rol = cookies["rol"];
 
   const [isAuthorized, setIsAuthorized] = useState(() => {
     const cookies = parseCookies();
