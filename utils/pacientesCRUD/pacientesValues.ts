@@ -1,12 +1,6 @@
 import { parseCookies } from "nookies";
 
-// param: atributo a buscar
 async function pacientesValues(param: string) {
-    
-    // const pacientesData = await pacientesGet();
-    // let data = pacientesData.result;
-    // let state = pacientesData.state;
-
     try{
         const cookies = parseCookies();
         const token = cookies["session"];
@@ -30,7 +24,6 @@ async function pacientesValues(param: string) {
         console.error(error);
         return {result: [], state: 0};  
     }
-
 }
 
 export default pacientesValues;

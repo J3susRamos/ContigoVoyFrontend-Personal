@@ -6,6 +6,7 @@ import CerrarSesion from "@/components/CerrarSesion";
 import { ListaAtencion } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
+import { useRouter } from "next/navigation";
 
 const columns = [
   { name: "Código", uid: "codigo", sortable: true },
@@ -19,13 +20,27 @@ const INITIAL_VISIBLE_COLUMNS = ["codigo", "paciente", "fecha_inicio", "diagnost
 export default function App() {
   const [filterValue, setFilterValue] = useState("");
   const [atencion, setAtencion] = useState<ListaAtencion[]>([]);
-  const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
+  const [visibleColumns, setVisibleColumns] = useState<Set<string>>(new Set(INITIAL_VISIBLE_COLUMNS));
   const [sortDescriptor, setSortDescriptor] = useState({
     column: "fecha_inicio",
     direction: "ascending",
   });
+
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  // Verificar el rol
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+
+    if (userData.rol === "PSICOLOGO") {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+      router.push("/unauthorized"); 
+    }
+  }, [router]);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -56,7 +71,7 @@ export default function App() {
 
   const renderCell = useCallback((atencion: ListaAtencion, columnKey: React.Key) => {
     const cellValue = atencion[columnKey as keyof typeof atencion];
-    
+
     switch (columnKey) {
       case "codigo":
         return atencion.codigo;
@@ -77,11 +92,7 @@ export default function App() {
   }, []);
 
   const onSearchChange = useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-    } else {
-      setFilterValue("");
-    }
+    setFilterValue(value || "");
   }, []);
 
   const onClear = useCallback(() => {
@@ -89,25 +100,17 @@ export default function App() {
   }, []);
 
   const handleSortByDate = () => {
-    setSortDescriptor({
+    setSortDescriptor((prev) => ({
       column: "fecha_inicio",
-      direction:
-        sortDescriptor.column === "fecha_inicio" &&
-        sortDescriptor.direction === "ascending"
-          ? "descending"
-          : "ascending",
-    });
+      direction: prev.direction === "ascending" ? "descending" : "ascending",
+    }));
   };
-  
+
   const handleSortByName = () => {
-    setSortDescriptor({
+    setSortDescriptor((prev) => ({
       column: "paciente",
-      direction:
-        sortDescriptor.column === "paciente" &&
-        sortDescriptor.direction === "ascending"
-          ? "descending"
-          : "ascending",
-    });
+      direction: prev.direction === "ascending" ? "descending" : "ascending",
+    }));
   };
 
   const handleGetCitas = async () => {
@@ -140,14 +143,23 @@ export default function App() {
       console.error(error);
       showToast("error", "Error de conexión. Intenta nuevamente.");
       setAtencion([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    handleGetCitas().catch(error => {
-      console.error("Error fetching citas:", error);
-    });
-  }, []);
+    if (isAuthorized) {
+      handleGetCitas();
+    }
+  }, [isAuthorized]);
+
+  if (isAuthorized === null || isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">

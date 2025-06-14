@@ -451,3 +451,40 @@ export interface UltimaAtencion {
   idAtencion: number;
   tratamiento: string;
 }
+
+export interface DashboardResult {
+  total_citas: number;
+  citas_completadas: number;
+  citas_pendientes: number;
+  citas_canceladas: number;
+  total_minutos_reservados: number | string;
+  total_pacientes: number;
+  nuevos_pacientes: number;
+  citas_confirmadas: number;
+}
+
+export interface DashboardApiResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  errorBag: never[];
+  result: DashboardResult;
+}
+
+export interface GeneroEstadisticaDetalle {
+  cantidad: number;
+  porcentaje: number;
+}
+
+export interface GeneroEstadisticaResult {
+  Masculino: GeneroEstadisticaDetalle;
+  Femenino: GeneroEstadisticaDetalle;
+}
+
+export interface GeneroEstadisticaApiResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  result: GeneroEstadisticaResult;
+  errorBag: never[];
+}

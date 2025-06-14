@@ -1,12 +1,14 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PanelProps, UserInterface } from "@/interface";
-import { fetchUser } from "@/utils/recuperarDataUser";
 import React, { useEffect, useState } from "react";
+
+export const fetchUser = async () => {
+};
 
 export const DataUser = React.forwardRef<HTMLDivElement, PanelProps>(
   ({ estado, setEstado }, ref) => {
-    const [user, setUser] = useState<UserInterface>({
+    const [user] = useState<UserInterface>({
       name: null,
       email: null,
       lastname: null,
@@ -14,7 +16,7 @@ export const DataUser = React.forwardRef<HTMLDivElement, PanelProps>(
       iniciales: null,
     });
     useEffect(() => {
-      fetchUser(setUser).catch(error => {
+      fetchUser().catch(error => {
         console.error("Error fetching user:", error);
       });
     }, []);
@@ -22,7 +24,7 @@ export const DataUser = React.forwardRef<HTMLDivElement, PanelProps>(
       <div ref={ref}>
         <Avatar
           className="cursor-pointer"
-          onClick={() => setEstado(!estado)} // Alterna el estado al hacer clico
+          onClick={() => setEstado(!estado)} // Alterna el estado al hacer clic
         >
           <AvatarImage src={user.photo || "https://github.com/shadcn.png"} />
           <AvatarFallback>{user.iniciales}</AvatarFallback>
@@ -31,4 +33,5 @@ export const DataUser = React.forwardRef<HTMLDivElement, PanelProps>(
     );
   }
 );
+
 DataUser.displayName = 'DataUser';

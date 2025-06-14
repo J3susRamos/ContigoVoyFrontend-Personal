@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/User/Citas/NavbarCitas";
 import { TableCitas } from "@/components/User/Citas/TableCitas";
 import CerrarSesion from "@/components/CerrarSesion";
@@ -26,6 +28,14 @@ const columns = [
 ];
 
 export default function App() {
+  const router = useRouter();
+  const cookies = parseCookies();
+
+  const [isAuthorized, setIsAuthorized] = useState(() => {
+    const cookies = parseCookies();
+    return cookies["rol"] !== "admin";
+  });
+  
   const [filterValue, setFilterValue] = useState("");
   /* Para filtros */
   /* const [filters, setFilters] = useState<{genero: string[], edad: string[]}>({
@@ -37,14 +47,13 @@ export default function App() {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [citas, setCitas] = useState<Citas[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGetCitas = async () => {
+  const handleGetCitas = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const cookies = parseCookies();
       const token = cookies["session"];
       const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
       const response = await fetch(url, {
@@ -66,7 +75,6 @@ export default function App() {
       const data = await response.json();
 
       if (Array.isArray(data.result)) {
-        // Mapear los datos de la API a la estructura esperada
         const formattedCitas = data.result.map((cita: Citas) => ({
           codigo: cita.codigo,
           paciente: cita.paciente,
@@ -79,9 +87,7 @@ export default function App() {
         setCitas(formattedCitas);
         showToast("success", "Citas obtenidas correctamente");
       } else {
-        // Same here, handle directly instead of throwing
-        console.error("Formato de respuesta inválido:", data);
-        setError("Error al obtener las citas");
+        setError("Formato de respuesta inválido");
         showToast("error", "Formato de respuesta inválido");
       }
     } catch (error) {
@@ -91,18 +97,28 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [cookies]);
 
   useEffect(() => {
-    handleGetCitas().catch((error) => {
-      console.error("Error fetching citas:", error);
-    });
-  }, []);
+    if (isAuthorized) {
+      handleGetCitas();
+    }
+  }, [isAuthorized, handleGetCitas]);
 
   const [sortDescriptor] = useState({
     column: "fecha_inicio",
     direction: "ascending",
   });
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+
+    if (userData.rol === "PSICOLOGO") {
+      setIsAuthorized(true);
+    } else {
+      setIsAuthorized(false);
+      router.push("/unauthorized"); 
+    }
+  }, [router]);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -132,20 +148,18 @@ export default function App() {
   }, [visibleColumns]);
 
   const onSearchChange = useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-    } else {
-      setFilterValue("");
-    }
+    setFilterValue(value || "");
   }, []);
 
   const onClear = useCallback(() => {
     setFilterValue("");
   }, []);
+  
+  if (!isAuthorized) return null;
+  
 
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
-      {/* Header */}
       <header className="mt-4 z-30 px-4">
         <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
           <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
@@ -158,7 +172,6 @@ export default function App() {
       </header>
 
       <div>
-        {/* mainNavbar */}
         <Navbar
           filterValue={filterValue}
           onSearchChange={onSearchChange}
@@ -166,17 +179,10 @@ export default function App() {
           visibleColumns={visibleColumns}
           setVisibleColumns={setVisibleColumns}
           columns={columns}
-          onAddNew={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          onAddNew={() => {}}
         />
 
-        {/* Contenido */}
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64 text-primary dark:text-primary-foreground">
-            <div className="text-lg font-medium">Cargando citas...</div>
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="flex justify-center items-center h-64">
             <div className="text-lg font-medium text-destructive dark:text-destructive">
               {error}

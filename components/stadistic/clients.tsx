@@ -17,7 +17,7 @@ const fetchPorcentajeGenero = async () => {
   const cookies = parseCookies();
   const token = cookies.session;
   if (!token) throw new Error("No autenticated");
-  const response = await fetch("http://127.0.0.1:8000/api/estadisticas/porcentaje-genero", {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/estadisticas/porcentaje-genero`, {
     headers: {
       Authorization: `Bearer ${token}`
     },
@@ -30,7 +30,7 @@ const fetchEstadisticasEdad = async () => {
   const cookies = parseCookies();
   const token = cookies.session;
   if (!token) throw new Error("No autenticated");
-  const response = await fetch("http://127.0.0.1:8000/api/pacientes/estadisticas/edad", {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes/estadisticas/edad`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   const data = await response.json();
@@ -41,7 +41,7 @@ const fetchEstadisticasEdad = async () => {
 const fetchEstadisticasLugar = async () => {
   const token = localStorage.getItem('auth_token');
   if (!token) throw new Error("No autenticado");
-  const response = await fetch('http://127.0.0.1:8000/api/pacientes/estadisticas/lugar', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes/estadisticas/lugar`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
