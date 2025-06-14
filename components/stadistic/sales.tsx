@@ -1,8 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
   Tooltip,
   ResponsiveContainer,
   LineChart,
@@ -10,14 +7,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
-
-const genero = [
-  { name: "Citas completadas", Total: 40 },
-  { name: "Citas pendientes", Total: 30 },
-  { name: "Citas canceladas", Total: 20 },
-  { name: "Ausencias", Total: 10 },
-];
+import {  CustomTooltip } from "./CustomTooltipComponent";
+import { GetPsicologoDashboard } from "@/app/apiRoutes";
+import { DashboardResult } from "@/interface";
+import PieChartGrafic from "./grafics/PieChartGrafic";
 
 const COLORS = ["#BABAFF", "#9494F3", "#58A6FF", "#B158FF"];
 
@@ -32,10 +25,50 @@ const data = [
 ];
 
 export default function Sales() {
+
+   const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
+      total_citas: 0,
+      citas_completadas: 0,
+      citas_pendientes: 0,
+      citas_canceladas: 0,
+      total_minutos_reservados: 0,
+      total_pacientes: 0,
+      nuevos_pacientes: 0,
+      citas_confirmadas: 0,
+    });
+    //Estado de carga para
+      const [loading, setLoading] = useState<boolean>(true);
+      // Datos para el gráfico de pastel
+      const genero = [
+        { name: "Citas completadas"},
+        { name: "Citas pendientes"},
+        { name: "Citas canceladas"},
+        { name: "Ausencias"},
+      ];
+
+  useEffect(() => {
+      const loadData = async () => {
+        const response = await GetPsicologoDashboard();
+        const result = response.result;
+        setCitasPsicologo({
+          total_citas: result?.total_citas ?? 0,
+          citas_completadas: result?.citas_completadas ?? 0,
+          citas_pendientes: result?.citas_pendientes ?? 0,
+          citas_canceladas: result?.citas_canceladas ?? 0,
+          total_minutos_reservados: result?.total_minutos_reservados ?? 0,
+          total_pacientes: result?.total_pacientes ?? 0,
+          nuevos_pacientes: result?.nuevos_pacientes ?? 0,
+          citas_confirmadas: result?.citas_confirmadas ?? 0,
+        });
+        setLoading(false);
+      };
+      loadData();
+    }, []);
+
+
   return (
     <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[950px] mx-auto">
       <div className="flex flex-col w-[547px] h-[660px] gap-5">
-
         {/* Primer cuadro con LineChart */}
         <div className="w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
           <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
@@ -111,9 +144,7 @@ export default function Sales() {
               Ausencias
             </div>
           </div>
-          <div className="flex-1 p-4">
-            {/* Contenido de la tabla */}
-          </div>
+          <div className="flex-1 p-4">{/* Contenido de la tabla */}</div>
         </div>
       </div>
 
@@ -126,30 +157,16 @@ export default function Sales() {
           </p>
         </div>
 
-        <div className="w-full h-[380px] flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                dataKey="Total"
-                data={genero}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={130}
-                fill="#8884d8"
-                label={renderCustomizedLabel}
-                labelLine={false}
-              >
-                {genero.map((_entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip />} />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="w-full h-[240px] flex items-center justify-center">
+          {/* Esqueleto precarga del grafico pastel */}
+          {loading && (
+            <div className="w-[200px] h-[200px] rounded-full bg-muted animate-pulse relative">
+              <div className="absolute top-0 left-0 w-full h-full border-[4px] border-primary/20 rounded-full animate-spin-slow"></div>
+              <div className="absolute top-[25%] left-[25%] w-[100px] h-[100px] bg-background rounded-full"></div>
+            </div>
+          )}
+          {/* Grafico con circular con PieChart */}
+          {!loading && <PieChartGrafic data={citasPsicologo} />}
         </div>
 
         {/* Leyenda del PieChart */}
