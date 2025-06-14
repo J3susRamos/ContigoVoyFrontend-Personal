@@ -34,7 +34,7 @@ export const eliminarBlog = async (id: number | null) => {
   try {
     const cookies = parseCookies();
     const token = cookies["session"];
-    const reponse = await fetch(
+    const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${id}`,
       {
         method: "DELETE",
@@ -46,15 +46,18 @@ export const eliminarBlog = async (id: number | null) => {
       }
     );
 
-    if (!reponse.ok) {
-      throw new Error("Error deleting blog");
+    if (!response.ok) {
+      // Handle error response without throwing
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Delete failed:", errorData);
+      return { success: false, error: errorData.message || "Error deleting blog" };
     }
 
-    const data = await reponse.json();
-    return data;
+    const result = await response.json();
+    return { success: true, data: result };
   } catch (error) {
     console.error("Error deleting blog:", error);
-    throw error;
+    return { success: false, error: "Network error occurred" };
   }
 };
 
@@ -70,22 +73,28 @@ export function Listarblog({
       const Data = await BlogGet();
       setBlog(Data);
     };
-    fetchBlogs();
+    fetchBlogs().catch(error => {
+      console.error("Error fetching blogs:", error);
+    });
   }, []);
 
   const handleEliminarBlog = async (id: number | null) => {
-    try {
-      await eliminarBlog(id);
+    const result = await eliminarBlog(id);
+    if (result.success) {
       const updatedBlogs = await BlogGet();
       setBlog(updatedBlogs);
-    } catch (error) {
-      console.error("Error al eliminar el blog:", error);
+    } else {
+      console.error("Error deleting blog:", result.error);
     }
   };
 
-  const handleEditarBlog = (id: number | null) => {
+  const handleEditarBlog = async (id: number | null) => {
     if (id !== null) {
-      onEdit(id);
+      try {
+        await onEdit(id);
+      } catch (error) {
+        console.error("Error editing blog:", error);
+      }
     }
   };
 

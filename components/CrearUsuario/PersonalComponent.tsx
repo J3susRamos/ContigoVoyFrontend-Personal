@@ -1,10 +1,11 @@
 "use client";
-import type { FormData } from "@/interface";
 import React from "react";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import { Suceesfully } from "./SuccesFull";
 import { PersonalForm } from "./DataFormularios";
 import { DataView } from "./DataView";
+import type { FormData } from "@/interface";
+import { useRouter } from "next/navigation";
 
 export const initialFormState: FormData = {
   name: "",
@@ -27,25 +28,43 @@ export const initialFormState: FormData = {
 };
 
 export default function PersonalComponent() {
+  const router = useRouter();
+
+  const userData = typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("user") || "{}")
+    : {};
+
+  const isAdmin = userData.rol === "ADMIN";
+
+  React.useEffect(() => {
+    if (!isAdmin) {
+      // Redirige si no es admin
+      router.push("/unauthorized"); // o la ruta que prefieras
+    }
+  }, [isAdmin, router]);
+
   const [currentView, setCurrentView] = React.useState<"form" | "data">("form");
   const [formData, setFormData] = React.useState<FormData>(initialFormState);
+  const [IsSend, setIsSend] = React.useState(false);
 
   const handleNext = (data: FormData) => {
-    setFormData(data); 
-    setCurrentView("data"); 
+    setFormData(data);
+    setCurrentView("data");
   };
 
   const handleBack = () => {
-    setCurrentView("form"); 
+    setCurrentView("form");
   };
-
-  const [IsSend, setIsSend] = React.useState(false);
 
   const resetForm = () => {
     setCurrentView("form");
     setIsSend(false);
     setFormData(initialFormState);
   };
+
+  if (!isAdmin) {
+    return null; // o un loader si prefieres
+  }
 
   return (
     <>

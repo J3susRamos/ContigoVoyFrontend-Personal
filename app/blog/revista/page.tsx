@@ -1,5 +1,4 @@
 "use client";
-import LoadingPages from "@/components/LoadingPages";
 import { BlogPreviewData } from "@/interface";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,19 +27,18 @@ function RevistaContent() {
       }
     };
 
-    // Call the async function and handle the returned promise
     fetchData().catch(error => {
       console.error("Error in fetchData:", error);
     });
   }, [blogId]);
 
-  if (loading) return <div><LoadingPages/></div>;
+  if (loading) return null;
   if (!blogData) return <div>No se encontró el blog</div>;
 }
 
 export default function Revista() {
   return (
-    <Suspense fallback={<div><LoadingPages/></div>}>
+    <Suspense fallback={null}>
       <RevistaContent />
     </Suspense>
   );

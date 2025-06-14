@@ -43,7 +43,6 @@ const SubHeader = ({children} : {children: ReactNode}) =>{
 }
 
 export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
-  
 
   return (
     <div className="relative z-10 max-w-scv18 mx-auto min-h-screen">
