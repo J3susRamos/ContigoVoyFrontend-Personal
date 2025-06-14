@@ -30,18 +30,14 @@ const columns = [
 export default function App() {
   const router = useRouter();
   const cookies = parseCookies();
-
-  const [isAuthorized, setIsAuthorized] = useState(() => {
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  /* const [isAuthorized, setIsAuthorized] = useState(() => {
     const cookies = parseCookies();
     return cookies["rol"] !== "admin";
-  });
+  }); */
   
   const [filterValue, setFilterValue] = useState("");
-  /* Para filtros */
-  /* const [filters, setFilters] = useState<{genero: string[], edad: string[]}>({
-    genero: [],
-    edad: []
-  }) */
+
   const [selectedKeys, setSelectedKeys] = useState<Set<React.Key>>(new Set());
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS)
@@ -49,6 +45,8 @@ export default function App() {
   const [citas, setCitas] = useState<Citas[]>([]);
   const [, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  
 
   const handleGetCitas = useCallback(async () => {
     try {
@@ -103,20 +101,22 @@ export default function App() {
     if (isAuthorized) {
       handleGetCitas();
     }
-  }, [isAuthorized, handleGetCitas]);
+  }, [isAuthorized]);
 
   const [sortDescriptor] = useState({
     column: "fecha_inicio",
     direction: "ascending",
   });
+
   useEffect(() => {
+    const cookies = parseCookies();
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
-    if (userData.rol === "PSICOLOGO") {
-      setIsAuthorized(true);
-    } else {
-      setIsAuthorized(false);
-      router.push("/unauthorized"); 
+    const isAuth = userData.rol === "PSICOLOGO" || cookies["rol"] !== "admin";
+    setIsAuthorized(isAuth);
+
+    if (!isAuth) {
+      router.push("/unauthorized");
     }
   }, [router]);
 
@@ -155,9 +155,8 @@ export default function App() {
     setFilterValue("");
   }, []);
   
-  if (!isAuthorized) return null;
   
-
+  if (isAuthorized === null) return null;
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
       <header className="mt-4 z-30 px-4">

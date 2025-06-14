@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { Icons } from "@/icons";
 import { Input, Button } from "@heroui/react";
-import { DayPicker, DateRange } from "react-day-picker";
+import { DayPicker, DateRange, MonthCaptionProps } from "react-day-picker";
 import { es } from "date-fns/locale";
 
 interface NavbarProps {
@@ -31,6 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [generoSeleccionado, setGeneroSeleccionado] = useState<string[]>([]);
   const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
   const [estadoSeleccionado, setEstadoSeleccionado] = useState<string[]>([]);
+  const [mesActual, setMesActual] = useState(new Date());
   const [submenus, setSubmenus] = useState({
     genero: false,
     edad: false,
@@ -290,6 +291,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                         numberOfMonths={1}
                         weekStartsOn={1}
                         locale={es}
+                        month={mesActual}
+                        onMonthChange={setMesActual}
+                        hideNavigation
+                        components={{
+                          MonthCaption: (props) => (
+                            <CustomCaption {...props} setMesActual={setMesActual} />
+                          ),
+                        }}
+                        
                         modifiersClassNames={{
                           selected: "bg-indigo-300 text-white",
                           range_start: "rounded-l-full",
@@ -299,8 +309,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                         classNames={{
                           caption: "flex justify-center gap-2 my-2",
                           nav_button: "text-indigo-600",
-                          month: "w-full",
-                          table: "w-full",
+                          months: "w-full flex flex-col justify-center", // Centra y ocupa todo
+                          month: "w-full ml-auto",                      // Ocupa el 100% del contenedor
+                          table: "w-full ml-auto",                      // Elimina cualquier restricción de tamaño
                           head_cell: "text-indigo-400 font-medium",
                           cell: "text-indigo-700 hover:bg-indigo-100 transition-all rounded-full p-1 text-sm",
                         }}
@@ -432,6 +443,53 @@ const Submenu = ({
           Borrar
         </Button>
       </div>
+    </div>
+  );
+};
+
+
+type CustomCaptionProps = MonthCaptionProps & {
+  setMesActual: React.Dispatch<React.SetStateAction<Date>>;
+};
+const CustomCaption: React.FC<CustomCaptionProps> = ({ calendarMonth, setMesActual }) => {
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
+  const months = Array.from({ length: 12 }, (_, i) =>
+    es.localize.month(i as unknown as Parameters<typeof es.localize.month>[0], {
+      width: 'wide',
+    })
+  );
+
+  return (
+    <div className="flex justify-center gap-2 mb-2">
+      <select
+        className="rounded-full px-3 py-1 bg-indigo-100 text-indigo-700 focus:outline-none"
+        value={calendarMonth.date.getMonth()}
+        onChange={(e) =>
+          setMesActual(new Date(calendarMonth.date.getFullYear(), Number(e.target.value)))
+        }
+      >
+        {months.map((month, idx) => (
+          <option key={month} value={idx}>
+            {month.charAt(0).toUpperCase() + month.slice(1)}
+          </option>
+        ))}
+      </select>
+
+      <select
+        className="rounded-full px-3 py-1 bg-indigo-100 text-indigo-700 focus:outline-none"
+        value={calendarMonth.date.getFullYear()}
+        onChange={(e) =>
+          setMesActual(new Date(Number(e.target.value), calendarMonth.date.getMonth()))
+        }
+      >
+        {years.map((year) => (
+          <option key={year} value={year}>
+            {year}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
