@@ -13,7 +13,7 @@ import { Icons } from "@/icons";
 import { DashboardResult } from "@/interface";
 import PieChartGrafic from "./grafics/PieChartGrafic";
 
-const COLORS = ["#BABAFF", "#9494F3", "#58A6FF", "#B158FF"];
+const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
 
 // Datos para el LineChart
 const data = [
@@ -41,8 +41,8 @@ export default function Appointments() {
   // Datos para el gráfico de pastel
   const genero = [
     { name: "Citas completadas"},
-    { name: "Citas pendientes"},
     { name: "Citas canceladas"},
+    { name: "Citas pendientes"},
     { name: "Ausencias"},
   ];
   const fetchDashboard = async () => {
