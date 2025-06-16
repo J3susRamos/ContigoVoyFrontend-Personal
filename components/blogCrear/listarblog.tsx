@@ -2,6 +2,7 @@ import { BlogApiGEt } from "@/interface";
 import { Image } from "@heroui/react";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
+import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 
 export const BlogGet = async () => {
   try {
@@ -66,6 +67,7 @@ export function Listarblog({
 }: {
   onEdit: (id: number) => Promise<void>;
 }) {
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [bloge, setBlog] = useState<BlogApiGEt[]>([]);
 
   useEffect(() => {
@@ -96,6 +98,11 @@ export function Listarblog({
         console.error("Error editing blog:", error);
       }
     }
+  };
+
+  const confirmDelete = async () => {
+    await handleEliminarBlog(deleteId);
+    setDeleteId(null);
   };
 
   return (
@@ -149,7 +156,7 @@ export function Listarblog({
                   </div>
                   <div className="">
                     <button
-                      onClick={() => handleEliminarBlog(blog.idBlog)}
+                      onClick={() => setDeleteId(blog.idBlog)}
                       className="flex flex-col items-center justify-center hover:opacity-75"
                     >
                       <svg
@@ -172,6 +179,12 @@ export function Listarblog({
           ))}
         </tbody>
       </table>
+      <ConfirmDeleteModal
+          isOpen={deleteId !== null}
+          onClose={() => setDeleteId(null)}
+          onConfirm={confirmDelete}
+          message="¿Estás seguro de eliminar este blog?"
+      />
     </div>
   );
 }
