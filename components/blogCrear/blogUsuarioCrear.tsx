@@ -274,7 +274,7 @@ const handleEdit = async (id: number) => {
 
           {/* Boton Ver Blogs */}
           <Button
-            onPress={() => setView("blogs")}
+            onPress={() => setView(" blogs")}
             className="text-white text-[16px] leading-[20px] bg-[#634AE2] a"
           >
             Ver Blogs
