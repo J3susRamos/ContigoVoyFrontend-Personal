@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 body, html {
   margin: 0;
   padding: 0;
@@ -33,9 +34,7 @@ body {
   background-size: contain;
 }
 
-.mask-fade-bottom {
-  mask-image: linear-gradient(to bottom, black 98%, transparent 100%);
-}
+
 
 @media (max-width: 640px) { /* sm */
   .responsive-bg {
@@ -326,4 +325,22 @@ body {
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #BABAFF;
   }
+}
+
+.mask-horizontal-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.mask-all-fade {
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }

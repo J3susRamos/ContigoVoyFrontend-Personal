@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function ServicesStructure({
   services,
@@ -22,28 +23,36 @@ export default function ServicesStructure({
     <div className="relative ">
       {services.map((item, index) => (
         <div className="embla__slide" key={index}>
-          <div className="flex justify-between mx-6  pt-6 text-title pb-8 items-center ">
-            <p className="lg:text-xl font-semibold lg:pl-[71px]  pl-2 lg:pr-32">
+          <div className="flex justify-between px-scv6 gap-x-[98px] py-scv3  text-title items-center ">
+            <p className="text-cv5 lg:text-xl font-semibold lg:pl-[71px]lg:pr-32">
               {item.title}
             </p>
-            <div className="w-40 lg:w-64">
-              <div className="pl-2 text-[15px] font-semibold">{item.edad}</div>
-            </div>
+            <p className="text-cv3 font-semibold">{item.edad}</p>
           </div>
           {/* se muestra solo en mobile*/}
           <div className="block md:hidden">
             <div
-              className="lg:h-[578px] flex items-center lg:pl-[79px] lg:pr-0 h-[400px] pr-[200px] pl-8"
+              className="flex lg:h-[578px] lg:pl-[79px] min-h-[350px] lg:pr-0 pr-scv10 pl-8 relative overflow-y-hidden overflow-x-clip"
               style={{
-                backgroundImage: `linear-gradient(rgba(120, 99, 227, 0.612), rgba(120, 99, 227, 0.612)), url(${item.background})`,
+                backgroundImage: `linear-gradient(rgba(120, 99, 227, 0.612), rgba(120, 99, 227, 0.612))`,
                 backgroundPosition: "right center",
                 backgroundSize: "auto 400px",
                 backgroundRepeat: "no-repeat",
               }}
             >
-              <div className="relative w-[700px] flex items-center justify-center text-white text-left  font-bold  text-[21px] leading-1 ">
-                {item.motto}
+              <div className="absolute -right-[50px] h-full  w-[576px]">
+                 <Image
+                  src={item.background}
+                  alt={item.title + item.motto}
+                  fill
+                  className="mix-blend-multiply opacity-70 bg-cover mask-horizontal-fade "
+                />
               </div>
+             
+              <p className="text-cv6 pt-scv7 relative max-w-[350px] text-white text-left  h-auto font-bold leading-1 pb-scv8 ">
+                {item.motto}
+              </p>
+
             </div>
           </div>
           <div className="hidden md:block">
@@ -61,88 +70,95 @@ export default function ServicesStructure({
               </div>
             </div>
           </div>
-          <div className="pt-12 flex justify-center">
-            <div className="lg:max-w-[829px] max-w-[430px] mx-8 text-title h-[89px] font-normal text-[16px] leading-[28px] text-center">
+
+          <div className="mt-scv7 px-scv6 flex justify-center">
+            <p className="text-cv4 lg:max-w-[829px] max-w-[550px] text-title font-normal  leading-[28px] text-center">
               {item.description}
-            </div>
+            </p>
           </div>
           
-          <div className="flex flex-col items-center h-fit md:hidden">
-            <div
-              className="w-[600px] h-[708px] mt-10"
-              style={{
-                backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100%), url(${item.bgup})`,
-                backgroundPosition: "center",
-                backgroundSize: "80% 80%",
-                backgroundRepeat: "no-repeat",
-              }}
+          <div className="w-full max-w-[560px] mx-auto h-[600px] lg:h-[770px] overflow-hidden relative ">
+            <Image
+              src={item.bgup}
+              alt={item.description}
+              fill
+              className="object-cover object-center mask-all-fade"    
             />
           </div>
-        
-          
-          <div className=" lg:pt-5 flex justify-center px-4 md:px-0 pb-3">
-            <div className="w-full text-title md:w-[937px] h-auto md:h-[74px]  font-semibold text-[20px] md:text-[24px] leading-[28px] md:leading-[33px] text-center">
+  
+               
+          <div className="flex flex-col py-scv7">
+            <h3 className="text-cv5 font-semibold py-6 w-full text-title  leading-[28px] text-center">
               {item.tittlecards}
-            </div>
-          </div>
-          <div className="flex justify-center pt-5">
-            <div className="block md:hidden w-[280px]">
-              <Carousel
-                opts={{
-                  loop: true,
-                  align: "start",
-                }}
-                plugins={[
-                  Autoplay({
-                    delay: 4000,
-                  }),
-                ]}
-                className="w-full bg-transparent"
-              >
-                <CarouselContent>
-                  {item.cards?.slice(0, 5).map((card, index) => (
-                    <CarouselItem key={index} >
-                      <Card className="border-none bg-transparent shadow-none">
-                        <CardContent className="p-0">
-                          <span className="text-4xl font-semibold  ">
-                            <div
-                              key={card.id}
-                              className="flex flex-col rounded-3xl bg-[#634AE2] items-center  "
-                            >
-                              <div className="w-full md:w-[360px] h-auto md:h-[236px] flex flex-col rounded-lg p-4">
-                                <div className="flex justify-center items-center">
-                                  <Image
-                                    src={card.icon}
-                                    alt={card.text}
-                                    width={183}
-                                    height={88}
-                                    className="w-[140px] md:w-[183.27px] h-[68px] md:h-[88px] object-contain"
-                                  />
-                                </div>
-                                <div className="flex-grow flex items-center justify-center px-1 pt-3">
-                                  <p className="text-center text-[14px] md:text-[16px] text-white font-normal leading-[20px] md:leading-[24px] w-full">
-                                    {card.text}
-                                  </p>
+            </h3>
+          
+            <div className="flex justify-center">
+              <div className="flex md:hidden max-w-[300px]">
+                <Carousel
+                  opts={{
+                    loop: true,
+                    align: "start",
+                  }}
+                  plugins={[
+                    Autoplay({
+                      delay: 4000,
+                    }),
+                  ]}
+                  className="w-full bg-transparent"
+                >
+                  <CarouselContent>
+                    {item.cards?.slice(0, 5).map((card, index) => (
+                      <CarouselItem key={index} >
+                        <Card className="border-none bg-transparent shadow-none">
+                          <CardContent className="p-0">
+                            <span className="text-4xl font-semibold  ">
+                              <div
+                                key={card.id}
+                                className="flex flex-col rounded-[34px] bg-[#634AE2] items-center  "
+                              >
+                                <div className="w-full md:w-[370px] h-[220px] md:h-[236px] flex flex-col rounded-lg p-4">
+                                  <div className="flex justify-center items-center mt-scv5">
+                                    <Image
+                                      src={card.icon}
+                                      alt={card.text}
+                                      width={183}
+                                      height={88}
+                                      className="w-[140px] md:w-[183.27px] h-[68px] md:h-[88px] object-contain"
+                                    />
+                                  </div>
+                                  <div className="flex-grow flex items-center justify-center px-1 pt-scv2 pb-scv5">
+                                    <p className="text-center text-[14px] md:text-[16px] text-white font-normal leading-[20px] md:leading-[24px] w-full">
+                                      {card.text}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </span>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious
-                  variant="ghost"
-                  className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none "
-                />
-                <CarouselNext
-                  variant="ghost"
-                  className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none "
-                />
-              </Carousel>
+                            </span>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious
+                    variant="ghost"
+                    className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none "
+                    defaultIcon = {false}
+                  >
+                   <ChevronLeft  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                  </CarouselPrevious>
+                  <CarouselNext
+                    variant="ghost"
+                    defaultIcon = {false}
+                    className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none "
+                  > 
+                    <ChevronRight  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                  </CarouselNext>
+                </Carousel>
+              </div>
             </div>
+
           </div>
+
           <div className="hidden md:flex justify-center py-8 px-4 md:px-8">
             {/* Oculto en móviles, visible en pantallas medianas y grandes */}
             <div className="flex flex-col items-center gap-y-12">
@@ -317,11 +333,17 @@ export default function ServicesStructure({
                   <CarouselPrevious
                     variant="ghost"
                     className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none "
-                  />
+                    defaultIcon = {false}
+                  >
+                   <ChevronLeft  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                  </CarouselPrevious>
                   <CarouselNext
                     variant="ghost"
+                    defaultIcon = {false}
                     className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none "
-                  />
+                  > 
+                    <ChevronRight  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                  </CarouselNext>
                 </Carousel>
               </div>
             </div>
