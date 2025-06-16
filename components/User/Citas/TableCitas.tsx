@@ -25,6 +25,7 @@ export const TableCitas: React.FC<TableProps> = ({
 
   useEffect(() => {
     setIsClient(true);
+    
   }, []);
 
   //Funcion para eliminar Citas

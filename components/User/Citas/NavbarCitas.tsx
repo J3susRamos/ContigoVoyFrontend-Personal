@@ -1,11 +1,22 @@
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Icons } from "@/icons";
 import { Input, Button } from "@heroui/react";
 import { DayPicker, DateRange, MonthCaptionProps } from "react-day-picker";
 import { es } from "date-fns/locale";
+import { format } from "date-fns";
+import { Filters } from "@/app/user/citas/page";
 
 interface NavbarProps {
   filterValue: string;
+  filters: Filters;
+  setFilters: Dispatch<SetStateAction<Filters>>;
   onSearchChange: (value?: string) => void;
   onClear: () => void;
   visibleColumns: Set<string>;
@@ -21,8 +32,17 @@ type SubmenusState = {
   edad: boolean;
 };
 
+const SubmenusInitialState: SubmenusState = {
+  genero: false,
+  estado: false,
+  fechaInicio: false,
+  edad: false,
+}
+
 export const Navbar: React.FC<NavbarProps> = ({
   filterValue,
+  filters,
+  setFilters,
   onSearchChange,
   onClear,
   onAddNew,
@@ -32,12 +52,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
   const [estadoSeleccionado, setEstadoSeleccionado] = useState<string[]>([]);
   const [mesActual, setMesActual] = useState(new Date());
-  const [submenus, setSubmenus] = useState({
-    genero: false,
-    edad: false,
-    estado: false,
-    fechaInicio: false,
-  });
+  const [submenus, setSubmenus] = useState(SubmenusInitialState);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const [rangoFecha, setRangoFecha] = useState<DateRange | undefined>();
@@ -48,7 +63,11 @@ export const Navbar: React.FC<NavbarProps> = ({
       const desde = rangoFecha.from.toISOString().split("T")[0]; // yyyy-mm-dd
       const hasta = rangoFecha.to.toISOString().split("T")[0];
       console.log("Filtrando desde:", desde, "hasta:", hasta);
-      // Aquí aplicas tu filtro en la tabla
+
+      setFilters((prev) => ({
+        ...prev,
+        fechaInicio: [desde, hasta],
+      }));
     }
   };
 
@@ -84,15 +103,32 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    setSubmenus({
+      genero: false,
+      edad: false,
+      estado: false,
+      fechaInicio: false,
+    });
+  }, [filters]);
+
   return (
     <div className="flex w-full mt-8 z-40">
-      <div className="bg-primary dark:bg-primary w-full h-[8vh] flex flex-row justify-start items-center px-4">
-        <div className="flex flex-row gap-4 w-full items-center pl-12">
-          <div className="relative inline-block">
+      <div className="bg-primary dark:bg-primary w-full h-[8vh] flex justify-start items-center px-4">
+        <div className="flex gap-4 w-full items-center pl-12">
+          <div className="relative inline-block" ref={menuRef}>
             <Button
               variant="bordered"
               className="border-none text-primary-foreground dark:text-primary-foreground font-light text-xl"
-              onPress={() => setMenuAbierto(!menuAbierto)}
+              onPress={() => {
+                setMenuAbierto(!menuAbierto);
+                setSubmenus({
+                  genero: false,
+                  edad: false,
+                  estado: false,
+                  fechaInicio: false,
+                });
+              }}
             >
               <span
                 className="text-primary-foreground dark:text-primary-foreground transition-colors"
@@ -112,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Menú principal */}
             {menuAbierto && (
               <div className="absolute z-50 flex w-max p-2 text-[#634AE2] text-lg">
-                <div className="flex flex-col w-[17rem] bg-white shadow-lg rounded-xl grow-0 py-1">
+                <div className="flex flex-col w-[17rem] bg-white shadow-lg rounded-xl grow-0 py-1 max-h-[9.5rem]">
                   <MenuItem
                     text="Género"
                     onClick={() => {
@@ -143,10 +179,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Submenu
                     titulo="Género"
                     onPressAceptar={() => {
-                      console.log("Generos aplicados:", generoSeleccionado);
+                      setFilters((prev) => ({
+                        ...prev,
+                        genero: generoSeleccionado,
+                      }));
                     }}
                     onPressBorrar={() => {
                       setGeneroSeleccionado([]);
+                      setFilters((prev) => ({
+                        ...prev,
+                        genero: [],
+                      }));
                     }}
                   >
                     <div className="flex flex-col text-sm pl-10">
@@ -187,10 +230,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Submenu
                     titulo="Edad"
                     onPressAceptar={() => {
-                      console.log("Edades aplicadas:", edadSeleccionada);
+                      setFilters((prev) => ({
+                        ...prev,
+                        edad: edadSeleccionada,
+                      }));
                     }}
                     onPressBorrar={() => {
                       setEdadSeleccionada([]);
+                      setFilters((prev) => ({
+                        ...prev,
+                        edad: [],
+                      }));
                     }}
                   >
                     <div className="flex flex-col text-sm pl-10">
@@ -238,14 +288,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <Submenu
                     titulo="Estado"
                     onPressAceptar={() => {
-                      console.log("Estados aplicados:", estadoSeleccionado);
+                      setFilters((prev) => ({
+                        ...prev,
+                        estado: estadoSeleccionado,
+                      }));
                     }}
                     onPressBorrar={() => {
                       setEstadoSeleccionado([]);
+                      setFilters((prev) => ({
+                        ...prev,
+                        estado: [],
+                      }));
                     }}
                   >
                     <div className="flex flex-col text-sm pl-10">
-                      {["Pendiente", "Cancelada"].map((opcion) => (
+                      {[
+                        "Confirmada",
+                        "Completada",
+                        "Pendiente",
+                        "Cancelada",
+                      ].map((opcion) => (
                         <label
                           key={opcion}
                           className="text-[#634AE2] text-lg flex items-center gap-4"
@@ -280,43 +342,53 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {submenus.fechaInicio && (
                   <Submenu
                     titulo="Fecha de Inicio"
-                    onPressAceptar={() => filtrarPorFecha}
-                    onPressBorrar={() => setRangoFecha(undefined)}
+                    onPressAceptar={() => {
+                      filtrarPorFecha();
+                    }}
+                    onPressBorrar={() => {
+                      setRangoFecha(undefined);
+                      setFilters((prev) => ({
+                        ...prev,
+                        fechaInicio: [],
+                      }));
+                    }}
                   >
-                    <div className="w-full">
-                      <DayPicker
-                        mode="range"
-                        selected={rangoFecha}
-                        onSelect={setRangoFecha}
-                        numberOfMonths={1}
-                        weekStartsOn={1}
-                        locale={es}
-                        month={mesActual}
-                        onMonthChange={setMesActual}
-                        hideNavigation
-                        components={{
-                          MonthCaption: (props) => (
-                            <CustomCaption {...props} setMesActual={setMesActual} />
-                          ),
-                        }}
-                        
-                        modifiersClassNames={{
-                          selected: "bg-indigo-300 text-white",
-                          range_start: "rounded-l-full",
-                          range_end: "rounded-r-full",
-                          today: "font-bold underline",
-                        }}
-                        classNames={{
-                          caption: "flex justify-center gap-2 my-2",
-                          nav_button: "text-indigo-600",
-                          months: "w-full flex flex-col justify-center", // Centra y ocupa todo
-                          month: "w-full ml-auto",                      // Ocupa el 100% del contenedor
-                          table: "w-full ml-auto",                      // Elimina cualquier restricción de tamaño
-                          head_cell: "text-indigo-400 font-medium",
-                          cell: "text-indigo-700 hover:bg-indigo-100 transition-all rounded-full p-1 text-sm",
-                        }}
-                      />
-                    </div>
+                    <DayPicker
+                      mode="range"
+                      selected={rangoFecha}
+                      onSelect={setRangoFecha}
+                      numberOfMonths={1}
+                      weekStartsOn={1}
+                      locale={es}
+                      month={mesActual}
+                      onMonthChange={setMesActual}
+                      hideNavigation
+                      formatters={{
+                        formatWeekdayName: customWeekdayFormatter,
+                      }}
+                      components={{
+                        MonthCaption: (props) => (
+                          <CustomCaption
+                            {...props}
+                            setMesActual={setMesActual}
+                          />
+                        ),
+                      }}
+                      modifiersClassNames={{
+                        selected: "bg-[#E7E7FF]",
+                        range_start: "rounded-l-full",
+                        range_end: "rounded-r-full",
+                        today: "font-light underline",
+                      }}
+                      className="w-full"
+                      classNames={{
+                        months: "flex justify-center w-full",
+                        month: "w-full",
+                        weekday: "font-normal",
+                        day: "px-1 text-center font-normal py-0",
+                        month_grid: "w-full",
+                      }}
+                    />
                   </Submenu>
                 )}
               </div>
@@ -423,13 +495,13 @@ const Submenu = ({
   children,
 }: SubmenuProps) => {
   return (
-    <div className=" w-64 bg-white  shadow-xl rounded-xl p-4 pt-2 ">
+    <div className="w-60 bg-white  shadow-xl rounded-xl py-4 px-2 pt-2 ">
       <h3 className="mb-1 text-[#634AE2] pl-10 text-lg">{titulo}</h3>
       {children}
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-between mt-3">
         <Button
           size="sm"
-          className="bg-[#E7E7FF] text-[#634AE2] text-md font-light rounded-2xl"
+          className="bg-[#E7E7FF] text-[#634AE2] text-md px-5 font-light rounded-2xl"
           onPress={onPressAceptar}
         >
           Aceptar
@@ -438,7 +510,7 @@ const Submenu = ({
           size="sm"
           variant="light"
           onPress={onPressBorrar}
-          className="border-[#8888E0] border-1 text-[#634AE2] text-md font-light rounded-2xl"
+          className="border-[#8888E0] border-1 text-[#634AE2] px-5 text-md font-light rounded-2xl"
         >
           Borrar
         </Button>
@@ -447,27 +519,33 @@ const Submenu = ({
   );
 };
 
+const customWeekdayFormatter = (date: Date) =>
+  format(date, "EEEEE", { locale: es }).toUpperCase();
 
 type CustomCaptionProps = MonthCaptionProps & {
   setMesActual: React.Dispatch<React.SetStateAction<Date>>;
 };
-const CustomCaption: React.FC<CustomCaptionProps> = ({ calendarMonth, setMesActual }) => {
-
+const CustomCaption: React.FC<CustomCaptionProps> = ({
+  calendarMonth,
+  setMesActual,
+}) => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
   const months = Array.from({ length: 12 }, (_, i) =>
     es.localize.month(i as unknown as Parameters<typeof es.localize.month>[0], {
-      width: 'wide',
+      width: "wide",
     })
   );
 
   return (
-    <div className="flex justify-center gap-2 mb-2">
+    <div className="grid grid-cols-[1fr_5rem] gap-2 mb-2">
       <select
-        className="rounded-full px-3 py-1 bg-indigo-100 text-indigo-700 focus:outline-none"
+        className="rounded-full px-1 py-1 bg-[#ECECFF] text-[#634AE2] focus:outline-none"
         value={calendarMonth.date.getMonth()}
         onChange={(e) =>
-          setMesActual(new Date(calendarMonth.date.getFullYear(), Number(e.target.value)))
+          setMesActual(
+            new Date(calendarMonth.date.getFullYear(), Number(e.target.value))
+          )
         }
       >
         {months.map((month, idx) => (
@@ -478,10 +556,12 @@ const CustomCaption: React.FC<CustomCaptionProps> = ({ calendarMonth, setMesActu
       </select>
 
       <select
-        className="rounded-full px-3 py-1 bg-indigo-100 text-indigo-700 focus:outline-none"
+        className="rounded-full px-2 py-1 bg-[#ECECFF] text-[#634AE2] focus:outline-none"
         value={calendarMonth.date.getFullYear()}
         onChange={(e) =>
-          setMesActual(new Date(Number(e.target.value), calendarMonth.date.getMonth()))
+          setMesActual(
+            new Date(Number(e.target.value), calendarMonth.date.getMonth())
+          )
         }
       >
         {years.map((year) => (
