@@ -2,7 +2,6 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardTitle,
@@ -34,13 +33,13 @@ export default function ReservarPsiPreview({
     correo: "",
     fecha_cita: "",
     hora_cita: "",
-    idPsicologo: psicologo.idPsicologo
+    idPsicologo: psicologo.idPsicologo,
   });
 
   const handleSelectHorario = (hora: string, fecha: string) => {
     setHoraSeleccionada(hora);
     setFechaSeleccionada(fecha);
-    
+
     setFormData((prevData) => ({
       ...prevData,
       fecha,
@@ -79,7 +78,9 @@ export default function ReservarPsiPreview({
     // Validación de número
     const telefonoRegex = /^[0-9]{9,}$/;
     if (!telefonoRegex.test(data.celular)) {
-      setError("El número de celular debe contener solo números y tener al menos 9 dígitos.");
+      setError(
+        "El número de celular debe contener solo números y tener al menos 9 dígitos."
+      );
       setLoading(false);
       return;
     }
@@ -110,7 +111,6 @@ export default function ReservarPsiPreview({
       );
 
       const result: { message?: string } = await response.json();
-
       if (!response.ok) {
         setError(result.message || "Error al enviar el formulario");
         setLoading(false);
@@ -118,10 +118,16 @@ export default function ReservarPsiPreview({
       }
 
       // Continuar con el flujo
-      setFormData({ nombre: "", celular: "", correo: "", fecha_cita: "", hora_cita: "", idPsicologo: psicologo.idPsicologo});
-      setIsConfirmOpen(false); 
+      setFormData({
+        nombre: "",
+        celular: "",
+        correo: "",
+        fecha_cita: "",
+        hora_cita: "",
+        idPsicologo: psicologo.idPsicologo,
+      });
+      setIsConfirmOpen(false);
       setIsSuccessOpen(true);
-
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message || "No se pudo enviar el formulario.");
@@ -135,9 +141,9 @@ export default function ReservarPsiPreview({
 
   return (
     <>
-      <Card className="w-full md:max-w-md bg-background p-5 rounded-3xl border-[#9494F3]">
+      <Card className="flex flex-col w-full bg-background py-4 px-6 rounded-3xl border-[#9494F3] min-h-[255px]">
         <div>
-          <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="w-full flex gap-10">
             <div className="col-span-1 flex sm:justify-start">
               <div className="flex items-center relative">
                 <Avatar className="w-24 h-24">
@@ -158,9 +164,9 @@ export default function ReservarPsiPreview({
               </div>
             </div>
 
-            <div className="col-span-2 text-[#634AE2]">
-              <CardDescription className="text-[#634AE2]">
-                {psicologo.titulo}  
+            <div className="col-span-2 text-[#634AE2] flex flex-col justify-center">
+              <CardDescription className="text-[#634AE2] font-light">
+                {psicologo.titulo}
               </CardDescription>
               <CardTitle className="text-[#634AE2] text-xl sm:text-2xl">
                 {psicologo.nombre} <br />
@@ -168,28 +174,27 @@ export default function ReservarPsiPreview({
               </CardTitle>
             </div>
           </div>
-          <hr className="my-2.5 border-t border-[#9494F3] w-[390px]" />
-        </div>
+          <hr className="my-2.5 border-t border-[#9494F3] w-[100%]" />
+          </div>
+     
+        <p className="text-[#634AE2] pb-3 text-sm sm:text-base">
+          {psicologo.introduccion.slice(0, 50)}...
+        </p>
 
-        <CardContent className="border-[#9494F3] mt-2">
-          <p className="text-[#634AE2] pt-3 text-sm sm:text-base">
-            {psicologo.introduccion.slice(0, 50)}...
-          </p>
-          <CardFooter className="grid grid-cols-2 gap-2 sm:flex sm:space-x-8 pt-3 text-xs">
-            <Button
-              onPress={() => setIsScheduleOpen(true)}
-              className="rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light"
-            >
-              Agendar
-            </Button>
-            <Button
-              onPress={() => setIsProfileOpen(true)}
-              className="rounded-3xl bg-[#fff] px-6 sm:px-8 py-1 sm:py-0 border-[#634AE2] font-light border-1 text-[#634AE2]"
-            >
-              Ver Perfil
-            </Button>
-          </CardFooter>
-        </CardContent>
+        <CardFooter className="flex justify-center gap-2 sm:flex sm:space-x-8 text-xs p-3 pb-0 mt-auto">
+          <Button
+            onPress={() => setIsScheduleOpen(true)}
+            className="rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light h-8 text-[16px]"
+          >
+            Agendar
+          </Button>
+          <Button
+            onPress={() => setIsProfileOpen(true)}
+            className="rounded-3xl bg-[#fff] px-6 sm:px-8 py-1 sm:py-0 border-[#634AE2] font-light border-1 text-[#634AE2] h-8 text-[16px]"
+          >
+            Ver perfil
+          </Button>
+        </CardFooter>
       </Card>
 
       {/*modal de profile */}
@@ -256,6 +261,7 @@ export default function ReservarPsiPreview({
         </ModalContent>
       </Modal>
 
+      {/* Horarios */}
       <Modal
         isOpen={isScheduleOpen}
         onOpenChange={setIsScheduleOpen}
@@ -273,14 +279,16 @@ export default function ReservarPsiPreview({
         <ModalContent>
           <ModalBody>
             <div className="flex flex-col items-center justify-center">
-              <h1 className="text-[#634AE2] text-2xl font-bold">Agendar cita</h1>
+              <h1 className="text-[#634AE2] text-2xl font-bold">
+                Agendar cita
+              </h1>
               <HorarioPsicologo
                 idPsicologo={psicologo.idPsicologo}
                 horario={psicologo.horario}
                 onClose={() => setIsScheduleOpen(false)}
                 onOpenConfirm={() => setIsConfirmOpen(true)}
-                onSelectHorario={handleSelectHorario} 
-                />
+                onSelectHorario={handleSelectHorario}
+              />
               <div className="w-full flex justify-center">
                 <Button
                   onPress={() => setIsScheduleOpen(false)}
@@ -352,7 +360,8 @@ export default function ReservarPsiPreview({
                 />
               </div>
               <p className="text-sm text-center text-[#634AE2] mt-2">
-                Has seleccionado: <strong>{fechaSeleccionada}</strong> a las <strong>{horaSeleccionada}</strong>
+                Has seleccionado: <strong>{fechaSeleccionada}</strong> a las{" "}
+                <strong>{horaSeleccionada}</strong>
               </p>
               {error && <p className="text-red-500 text-sm">{error}</p>}
               <div className="flex justify-center mt-6">
@@ -360,8 +369,8 @@ export default function ReservarPsiPreview({
                   type="submit"
                   className="rounded-3xl bg-[#634AE2] text-white px-6 py-1 font-light"
                   disabled={loading}
-                  >
-                    {loading ? "Enviando..." : "Reservar"}
+                >
+                  {loading ? "Enviando..." : "Reservar"}
                 </Button>
               </div>
             </form>
@@ -392,10 +401,13 @@ export default function ReservarPsiPreview({
               height={128}
               className="mx-auto mb-4"
             />
-            <h2 className="text-2xl font-semibold mb-4">¡LISTO! Tu cita ha sido reservada</h2>
-            <p className="mb-6">En unos minutos te enviaremos un correo de confirmación.</p>
-            <div className="flex justify-center mb-4">
-            </div>
+            <h2 className="text-2xl font-semibold mb-4">
+              ¡LISTO! Tu cita ha sido reservada
+            </h2>
+            <p className="mb-6">
+              En unos minutos te enviaremos un correo de confirmación.
+            </p>
+            <div className="flex justify-center mb-4"></div>
             <Button
               onPress={() => setIsSuccessOpen(false)}
               className="inline-block rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light"

@@ -25,6 +25,7 @@ export const TableCitas: React.FC<TableProps> = ({
 
   useEffect(() => {
     setIsClient(true);
+    
   }, []);
 
   //Funcion para eliminar Citas
@@ -86,6 +87,7 @@ export const TableCitas: React.FC<TableProps> = ({
     localStorage.setItem("idCita", String(idCita));
     window.location.href = "/user/historial/AtencionPaciente";
   };
+  
   const handleDeleteCita = useCallback((idCita: number) => {
       if (confirm("¿Estás seguro de eliminar esta cita?")) {
           HandleDeleteCitas(idCita).catch(error => {
