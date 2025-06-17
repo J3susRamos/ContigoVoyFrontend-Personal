@@ -370,6 +370,7 @@ export interface Citas {
   age: string;
   motivo: string;
   duracion: string;
+  genero: string;
 }
 
 export interface CitasConteo {
