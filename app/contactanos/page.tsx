@@ -8,11 +8,7 @@ export const metadata: Metadata = {
 
 const ContactUs = () => {
   return (
-    <div className="min-h-screen w-full relative overflow-y-hidden  overflow-x-clip"
-        style={{
-          backgroundImage: 'linear-gradient(90.11deg, rgba(54, 22, 216, 0.48) 44.23%, rgba(120, 99, 227, 0.48) 94.52%)'
-        }}    
-    > 
+    <div className="min-h-screen w-full relative overflow-y-hidden  overflow-x-clip bg-large-gradient"> 
       <div className="lg:relative overflow-y-hidden overflow-x-clip">
         <div
           className="mix-blend-multiply z-0 absolute pointer-events-none top-0 -left-[150px] lg:-left-0 -bottom-[20px] -right-[0] sm:-right-[130px]  bg-[url('/consulta-asesoría-psicológica-online.webp')] bg-no-repeat bg-[length:850px] sm:bg-[length:1250px] bg-bottom opacity-70"

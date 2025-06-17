@@ -28,10 +28,7 @@ const dataQS: QuienesSomos[] = [
 export default function Home() {
   return (
     <div
-      className="w-full relative overflow-y-hidden over overflow-x-clip"
-      style={{
-        backgroundImage: 'linear-gradient(90.11deg, rgba(54, 22, 216, 0.48) 44.23%, rgba(120, 99, 227, 0.48) 94.52%)'
-      }}    
+      className="w-full relative overflow-y-hidden over overflow-x-clip bg-large-gradient"  
     >
       <SobreNosotrosStructure qs={dataQS} />
     </div>

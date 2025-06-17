@@ -76,7 +76,7 @@ export default function MainSlider() {
               <div
                 className="lg:h-[650px] h-[340px] w-full md:pt-0 bg-cover flex items-center lg:bg-center bg-right vg-left lg:pl-[79px] pl-[30px] custom-bg-position"
                 style={{
-                  backgroundImage: `linear-gradient(to right,rgba(120, 99, 227, 0.64), rgba(99, 74, 226, 0.48)),url(${item.background})`,
+                  backgroundImage: `linear-gradient(270deg, rgba(99, 74, 226, 0.24) 28.05%, rgba(99, 74, 226, 0.7) 47.87%, #7863E3 64.18%),url(${item.background})`,
                 }}
               >
                 <div>

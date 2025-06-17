@@ -12,6 +12,10 @@ export default {
   ],
   theme: {
   	extend: {
+		backgroundImage: {
+			'small-gradient': 'linear-gradient(rgba(120, 99, 227, 0.612), rgba(120, 99, 227, 0.612))',
+        	'large-gradient': 'linear-gradient(270deg, rgba(99, 74, 226, 0.24) 28.05%, rgba(99, 74, 226, 0.7) 47.87%, #7863E3 64.18%)',
+      	},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
