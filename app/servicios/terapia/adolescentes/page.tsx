@@ -1,6 +1,15 @@
 import ServicesStructure from "@/components/Services/ServicesStructure"
+
 import { ServicesStructureProps } from "@/interface"
- const TeenTerapias:ServicesStructureProps[] =[{
+
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terapia para Adolescentes Online | Contigo Voy Psicólogos Especializados",
+  description: "Terapia para adolescentes online con psicólogos expertos. Mejora autoestima, manejo emocional, habilidades sociales y orientación vocacional segura.",
+};
+
+const TeenTerapias:ServicesStructureProps[] =[{
 
   title: "Terapia para adolescentes",
     edad: "De 13 a 18 años de edad",

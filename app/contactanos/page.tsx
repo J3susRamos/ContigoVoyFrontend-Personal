@@ -2,15 +2,16 @@ import { Metadata } from "next";
 import FormContacto from "@/components/contactUs/FormContacto";
 
 export const metadata: Metadata = {
-  title: "Contactanos - ContigoVoy",
-  description: "Contáctanos para recibir apoyo emocional y psicológico",
+  title: "Contáctanos - Centro psicológico | Contigo Voy",
+  description: "En Contigo Voy te escuchamos, llena nuestro formulario de contacto y da el primer paso hacia tu bienestar con un equipo psicológico que te acompaña siempre",
 };
 
 const ContactUs = () => {
+  
   return (
     <div className="min-h-screen w-full relative overflow-y-hidden  overflow-x-clip bg-large-gradient"> 
       <div className="lg:relative overflow-y-hidden overflow-x-clip">
-        <div
+        <div role="img" aria-label="Contactanos Terapia Psicológica Contigo Voy Online"
           className="mix-blend-multiply z-0 absolute pointer-events-none top-0 -left-[150px] lg:-left-0 -bottom-[20px] -right-[0] sm:-right-[130px]  bg-[url('/consulta-asesoría-psicológica-online.webp')] bg-no-repeat bg-[length:850px] sm:bg-[length:1250px] bg-bottom opacity-70"
         ></div>
         <div className="relative z-10 max-w-scv18 mx-auto">

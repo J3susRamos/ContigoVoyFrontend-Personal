@@ -6,37 +6,37 @@ import { useEffect } from "react";
 const enterprises = [
   {
     icon: "/Companies/LogoTAMI.webp",
-    alt: "Tami",
+    alt: "TAMI empresa confía en la Orientación Psicológica Online Contigo Voy",
     width: 98,
     height: 114,
   },
   {
     icon: "/Companies/YUNTASLogo.webp",
-    alt: "Yuntas",
+    alt: "Yuntas Empresa confía en la Orientación Psicológica Online Contigo Voy",
     width: 114,
     height: 114,
   },
   {
     icon: "/Companies/ASDEN.webp",
-    alt: "Asden",
+    alt: "ASDEN Empresa confía en la Orientación Psicológica Online Contigo Voy",
     width: 126,
     height: 114,
   },
   {
     icon: "/Companies/LOGONLS.webp",
-    alt: "Nls",
+    alt: "NEON LED PUBLICIDAD Empresa confía en la Orientación Psicológica Online Contigo Voy",
     width: 138,
     height: 104,
   },
   {
     icon: "/Companies/DigiLogo.webp",
-    alt: "Digimedia",
+    alt: "Digi Media Empresa confía en la Orientación Psicológica Online Contigo Voy",
     width: 114,
     height: 114,
   },
   {
     icon: "/Companies/NHLLOGO.webp",
-    alt: "Nhl",
+    alt: "NHL Decoraciones Empresa confía en la Orientación Psicológica Online Contigo Voy",
     width: 93,
     height: 114,
   },

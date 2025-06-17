@@ -1,5 +1,11 @@
 import ServicesStructure from "@/components/Services/ServicesStructure"
 import { ServicesStructureProps } from "@/interface"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terapia Infantil Online en Contigo Voy | Psicólogos para niños de 3 a 12 años",
+  description: "Recupera la armonía con terapia familiar online. Mejora la comunicación, resuelve conflictos y fortalece los vínculos entre los miembros de tu familia.Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea.",
+};
 
 const NinosTerapias:ServicesStructureProps[] =[{
 

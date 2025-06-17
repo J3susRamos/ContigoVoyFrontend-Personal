@@ -33,7 +33,7 @@ export default function Footer() {
           >
             <Image
               src="/LogoBlanco.webp"
-              alt="Contigo Voy Logo"
+              alt="Confidencialidad Contigo Voy Terapia Psicológica Online"
               width={150}
               height={60}
             />
@@ -109,7 +109,7 @@ export default function Footer() {
                         <span className="text-white text-[10px]">Perú</span>
                         <Image
                           src="/WSP.webp"
-                          alt="WhatsApp Argentina"
+                          alt="WhatsApp Terapia Peru Psicológica Online"
                           width={14}
                           height={14}
                           className="flex-shrink-0"
@@ -129,7 +129,7 @@ export default function Footer() {
                         <span className="text-white text-[10px]">Argentina</span>
                         <Image
                           src="/WSP.webp"
-                          alt="WhatsApp Argentina"
+                          alt="WhatsApp Terapia Argentina Psicológica Online"
                           width={14}
                           height={14}
                           className="flex-shrink-0"

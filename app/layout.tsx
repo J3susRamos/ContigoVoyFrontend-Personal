@@ -25,8 +25,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
     <head>
       <meta charSet="utf-8"/>
+      <meta http-equiv="Content-Language" content="es" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="author" content="Contigo Voy" />
       <meta name="google-site-verification" content="E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY" />
-      <title></title>
     </head>
       <body className={`${lexend.className} antialiased`}>
         <ThemeProvider

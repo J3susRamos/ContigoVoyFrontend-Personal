@@ -1,5 +1,14 @@
 import ServicesStructure from "@/components/Services/ServicesStructure"
 import { ServicesStructureProps } from "@/interface"
+
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terapia Empresarial Online | Contigo Voy - Bienestar Laboral ",
+  description: "Reduce el estrés y mejora el clima laboral. Terapia empresarial online para líderes y equipos. Más productividad y bienestar emocional. Basta de burnout.",
+};
+
+
  const FamilyTerapias:ServicesStructureProps[] =[{
   title: "Terapia empresarial",
   edad: "",

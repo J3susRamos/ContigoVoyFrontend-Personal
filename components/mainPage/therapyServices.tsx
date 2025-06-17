@@ -10,31 +10,37 @@ export default function TherapyServices() {
     {
       id: "/terapia/infantes",
       icon: "/imagesTherapy/childTherapy.webp",
+      alt: "Servicio Terapia Psicológica para Niños Contigo Voy Online",
       title: "Terapia <br/> para niños",
     },
     {
       id: "/terapia/adolescentes",
       icon: "/imagesTherapy/TeenTherapy.webp",
+      alt: "Servicio Terapia Psicológica para Adolescentes Contigo Voy Online",
       title: "Terapia<br/> para adolescentes",
     },
     {
-      id: "/terapia/adultos",
+      id: "/terapia/parejas",
       icon: "/imagesTherapy/coupleTherapy.webp",
-      title: "Terapia<br/> para adultos",
+      alt: "Servicio Terapia Psicológica para Pareja Contigo Voy Online",
+      title: "Terapia<br/> de parejas",
     },
     {
-      id: "/terapia/parejas",
+      id: "/terapia/adultos",
       icon: "/imagesTherapy/adultTherapy.webp",
-      title: "Terapia<br/> de pareja",
+      alt: "Servicio Terapia Psicológica para Adultos Contigo Voy Online",
+      title: "Terapia<br/> para adultos",
     },
     {
       id: "/terapia/familia",
       icon: "/imagesTherapy/familyTherapy.webp",
+      alt: "Servicio Terapia Psicológica Para Familias Contigo Voy Online",
       title: "Terapia<br/> familiar",
     },
     {
       id: "/terapia/familia",
       icon: "/imagesTherapy/familyTherapy.webp",
+      alt: "Servicio Terapia Psicológica para Empresas Contigo Voy Online",
       title: "Terapia<br/> empresarial",
     },
   ];
@@ -67,7 +73,7 @@ export default function TherapyServices() {
                   <div className="flex flex-col items-end mb-[25px]">
                     <Image
                       src={service.icon}
-                      alt={service.title}
+                      alt={service.alt}
                       width={63}
                       height={63}
                     />
@@ -106,7 +112,7 @@ export default function TherapyServices() {
                   <div className="flex flex-col items-end mb-[25px]">
                     <Image
                       src={service.icon}
-                      alt={service.title}
+                      alt={service.alt}
                       width={63}
                       height={63}
                     />
@@ -134,7 +140,7 @@ export default function TherapyServices() {
           <div className=" justify-center hidden lg:block items-start mt-6 ">
             <Image
               src="/FOTOACEPTADA1.webp"
-              alt="Descripción de la imagen"
+              alt="Servicio Terapia Psicológica Contigo Voy Online"
               width={500}
               height={400}
             />
@@ -189,7 +195,7 @@ export default function TherapyServices() {
               <Image
               className="mx-auto mask-fade-bottom"
                 src="/FOTOACEPTADA1.webp"
-                alt="Descripción de la imagen"
+                alt="Servicio Terapia Psicológica Contigo Voy Online"
                 width={400}
                 height={500}
               />

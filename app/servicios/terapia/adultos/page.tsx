@@ -1,6 +1,14 @@
 import ServicesStructure from "@/components/Services/ServicesStructure"
 import { ServicesStructureProps } from "@/interface"
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terapia para Adultos Online | Contigo Voy Psicólogos para Bienestar Emocional",
+  description: "Terapia psicológica para adultos online. Manejo de estrés, ansiedad y duelo con psicólogos certificados. Mejora tu bienestar emocional hoy.",
+};
+
+
  const AdultoTerapias:ServicesStructureProps[] =[{
 
   title: "Terapia para adultos",

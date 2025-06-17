@@ -3,8 +3,8 @@ import AccordionQuest from "@/components/AccordionQuest";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Preguntas Frecuentes - ContigoVoy",
-  description: "Preguntas Frecuentes sobre terapia psicológica",
+  title: "Preguntas Frecuentes | Terapia Psicológica - Contigo Voy",
+  description: "¿Tienes dudas sobre nuestros servicios de atención psicológica en línea? En nuestra sección de preguntas frecuentes, resuelve tus inquietudes y se parte de nosotros.",
 };
 
 export default function App() {
