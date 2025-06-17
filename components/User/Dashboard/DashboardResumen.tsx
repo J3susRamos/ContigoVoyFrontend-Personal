@@ -1,44 +1,46 @@
 "use client";
+import { GetPsicologoDashboard } from "@/app/apiRoutes";
+import { DashboardResult } from "@/interface";
 import React, { useEffect, useState } from "react";
 
 export default function DashboardResumen() {
-  const [datos, setDatos] = useState({
-    citas_completadas: 0,
-    citas_pendientes: 0,
-    citas_canceladas: 0,
-    total_minutos_reservados: 0,
-    total_pacientes: 0,
-    nuevos_pacientes: 0,
-  });
+  const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
+      total_citas: 0,
+      citas_completadas: 0,
+      citas_pendientes: 0,
+      citas_canceladas: 0,
+      total_minutos_reservados: 0,
+      total_pacientes: 0,
+      nuevos_pacientes: 0,
+      citas_confirmadas: 0,
+    });
+ 
+const fetchDashboard = async () => {
+    try {
+      const response = await GetPsicologoDashboard();
+      return response.result;
+    } catch (error) {
+      console.error("Error al cargar el dashboard", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log("Token usado:", "2|vBqJWZdysEz5EJ7S0Zi2pxk4gwd4lTRXm6SF5mD55450f717"); // 🔍 Verifica si está bien
+    const loadData = async () => {
+      const result = await fetchDashboard();
+      if (!result) return;
 
-        const response = await fetch("http://127.0.0.1:8000/api/dashboard/psicologo", {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-            Accept: "application/json",
-          },
-        });
-        const result = await response.json();
-        console.log("Respuesta del backend:", result);
-
-        if (result.success) {
-          setDatos(result.data);
-        } else {
-          console.warn("Error en datos del dashboard:", result.message);
-        }
-      } catch (error) {
-        console.error("Error al conectar con el dashboard:", error);
-      }
+      setCitasPsicologo({
+        total_citas: result?.total_citas ?? 0,
+        citas_completadas: result?.citas_completadas ?? 0,
+        citas_pendientes: result?.citas_pendientes ?? 0,
+        citas_canceladas: result?.citas_canceladas ?? 0,
+        total_minutos_reservados: result?.total_minutos_reservados ?? 0,
+        total_pacientes: result?.total_pacientes ?? 0,
+        nuevos_pacientes: result?.nuevos_pacientes ?? 0,
+        citas_confirmadas: result?.citas_confirmadas ?? 0,
+      });
     };
-
-    fetchData().catch(error => {
-      console.error("Error fetching dashboard data:", error);
-    });
+    loadData();
   }, []);
 
   return (
@@ -50,22 +52,22 @@ export default function DashboardResumen() {
           </div>
           <div className="mx-10 sm:mx-14 md:mx-20 lg:mx-24">
             <ul className="list-disc pl-7 text-[#634AE2] text-xl font-normal   p-6">
-              <li>{datos.citas_completadas} citas completadas</li>
-              <li>{datos.citas_pendientes} citas pendientes</li>
-              <li>{datos.citas_canceladas} citas canceladas</li>
-              <li>{datos.total_minutos_reservados} minutos reservados</li>
+              <li>{citasPsicologo.citas_completadas} citas completadas</li>
+              <li>{citasPsicologo.citas_pendientes} citas pendientes</li>
+              <li>{citasPsicologo.citas_canceladas} citas canceladas</li>
+              <li>{citasPsicologo.total_minutos_reservados} minutos reservados</li>
             </ul>
           </div>
         </div>
 
         <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
           <div className="font-normal text-xl">Total Paciente</div>
-          <div className="font-bold text-6xl">{datos.total_pacientes}</div>
+          <div className="font-bold text-6xl">{citasPsicologo.total_pacientes}</div>
         </div>
 
         <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
           <div className="font-normal text-xl">Nuevos Pacientes</div>
-          <div className="font-bold text-6xl">{datos.nuevos_pacientes}</div>
+          <div className="font-bold text-6xl">{citasPsicologo.nuevos_pacientes}</div>
         </div>
       </div>
     </>
