@@ -8,7 +8,7 @@ import {
   PsicologoPreviewData,
   DashboardApiResponse,
   GeneroEstadisticaApiResponse,
-  Citas
+  CitasApiResponse
 } from "@/interface";
 import {parseCookies} from "nookies";
 
@@ -174,7 +174,7 @@ export async function GetPacientesEstadisticasEdad(): Promise<GeneroEstadisticaA
 }
 
 //Traer citas del psicologo por mes
-export async function GetCitasPsicologoPorMes(): Promise<Citas>{
+export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/`,
     {

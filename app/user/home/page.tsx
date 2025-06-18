@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import DashboardComponents from "@/components/User/Dashboard/DashboardComponents";
-import { UsuarioLocalStorage } from "@/interface";
+import { Citas, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
+import { GetCitasPsicologoPorMes } from "@/app/apiRoutes";
 
 const PageHome = () => {
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
+  const [citasDelDia, setCitasDelDia] = useState<Citas[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -13,6 +15,19 @@ const PageHome = () => {
       if (storedUser) {
         setUser(JSON.parse(storedUser) as UsuarioLocalStorage);
       }
+
+      GetCitasPsicologoPorMes().then(res => {
+        const hoy = new Date();
+        const citasHoy = res.result.filter((cita: Citas) => {
+          const fecha = new Date(cita.fecha_inicio);
+          return (
+            fecha.getDate() === hoy.getDate() &&
+            fecha.getMonth() === hoy.getMonth() &&
+            fecha.getFullYear() === hoy.getFullYear()
+          );
+        });
+        setCitasDelDia(citasHoy);
+      });
     }
   }, []);
 
@@ -45,7 +60,7 @@ const PageHome = () => {
             Prepárate para un gran día.
           </p>
           <p className="text-base md:text-xl font-bold text-primary dark:text-primary-foreground">
-            Tienes x citas programadas para hoy
+            Tienes {citasDelDia?.length} citas programadas para hoy
           </p>
           <p className="text-base md:text-xl font-normal text-primary dark:text-primary-foreground">
             Aprovecha para planificar tus próximos objetivos.
