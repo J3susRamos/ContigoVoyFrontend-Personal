@@ -1,21 +1,42 @@
 import { Button } from "@heroui/react";
 import React, { ReactNode } from "react";
 
-interface SubmenuProps {
+interface SubmenuProps<T, K extends keyof T> {
   titulo: string;
   isOpen: boolean;
-  onPressAceptar: () => void;
-  onPressBorrar: () => void;
+  filterKey: K;
+  value: T[K];
+  setFilters: React.Dispatch<React.SetStateAction<T>>;
+  setLocalValue: React.Dispatch<React.SetStateAction<T[K]>>;
   children: ReactNode;
 }
 
-const FilterSubMenu = ({
+const FilterSubMenu = <T, K extends keyof T>({
   titulo,
-  onPressAceptar,
-  onPressBorrar,
+  filterKey,
+  value,
+  setFilters,
+  setLocalValue,
   children,
   isOpen,
-}: SubmenuProps) => {
+}: SubmenuProps<T, K>) => {
+  const handleAceptar = () => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterKey]: value,
+    }));
+  };
+
+  const handleBorrar = () => {
+    const emptyValue =
+      Array.isArray(value) ? [] : typeof value === "boolean" ? false : undefined;
+
+    setLocalValue(emptyValue as T[K]);
+    setFilters((prev) => ({
+      ...prev,
+      [filterKey]: emptyValue as T[K],
+    }));
+  };
   return (
     <>
       {isOpen && (
@@ -26,14 +47,14 @@ const FilterSubMenu = ({
             <Button
               size="sm"
               className="bg-[#E7E7FF] text-[#634AE2] text-md px-5 font-light rounded-2xl"
-              onPress={onPressAceptar}
+              onPress={handleAceptar}
             >
               Aceptar
             </Button>
             <Button
               size="sm"
               variant="light"
-              onPress={onPressBorrar}
+              onPress={handleBorrar}
               className="border-[#8888E0] border-1 text-[#634AE2] px-5 text-md font-light rounded-2xl"
             >
               Borrar

@@ -25,11 +25,11 @@ export interface Filters {
   fechaInicio: string[];
 }
 
-export const FiltersInitialState = {
-  genero: [] as string[],
-  estado: [] as string[],
-  edad: [] as string[],
-  fechaInicio: [] as string[],
+export const FiltersInitialState: Filters = {
+  genero: [],
+  estado: [],
+  edad: [],
+  fechaInicio: [],
 };
 
 const columns = [
@@ -78,6 +78,8 @@ export default function App() {
       }
 
       const data = await response.json();
+      console.log(data);
+      
 
       if (Array.isArray(data.result)) {
         const formattedCitas = data.result.map((cita: Citas) => ({
@@ -88,6 +90,7 @@ export default function App() {
           estado: cita.estado,
           duracion: cita.duracion,
           idCita: cita.idCita,
+          genero: cita.genero,
         }));
         setCitas(formattedCitas);
         showToast("success", "Citas obtenidas correctamente");
@@ -130,6 +133,13 @@ export default function App() {
   const filteredItems = useMemo(() => {
     let filteredCitas = [...citas];
 
+      // ✅ FILTRO POR GENERO
+      if (filters.genero.length > 0) {
+        filteredCitas = filteredCitas.filter((cita) =>
+          filters.genero.includes(cita.genero)
+        );
+      }
+
     // ✅ FILTRO POR ESTADO
     if (filters.estado.length > 0) {
       filteredCitas = filteredCitas.filter((cita) =>
@@ -167,7 +177,6 @@ export default function App() {
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, filteredItems]);
-  console.log(sortedItems);
 
   const headerColumns = useMemo(() => {
     return columns.filter((column) =>
