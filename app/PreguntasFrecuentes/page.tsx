@@ -32,7 +32,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen w-full relative overflow-y-hidden overflow-x-clip bg-large-gradient"> 
+    <div className="flex flex-col justify-center min-h-screen w-full relative overflow-y-hidden overflow-x-clip bg-large-gradient"> 
       <div className="lg:relative overflow-y-hidden overflow-x-clip">
         <div
           className="mix-blend-multiply opacity-70 z-0 absolute pointer-events-none top-0 left-0 -bottom-[20px] -right-[0] sm:-right-[130px] lg:-right-[260px] bg-[url('/preguntas-sobre-terapia-en-linea.webp')] bg-no-repeat bg-[length:700px] sm:bg-[length:900px] lg:bg-[length:1140px] bg-bottom"

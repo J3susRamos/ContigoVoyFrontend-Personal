@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 const ContactUs = () => {
   
   return (
-    <div className="min-h-screen w-full relative overflow-y-hidden  overflow-x-clip bg-large-gradient"> 
-      <div className="lg:relative overflow-y-hidden overflow-x-clip">
+    <div className="flex flex-col justify-center min-h-screen w-full relative overflow-y-hidden overflow-x-clip bg-large-gradient"> 
+      <div className="lg:relative overflow-y-hidden overflow-x-clip ">
         <div role="img" aria-label="Contactanos Terapia Psicológica Contigo Voy Online"
           className="mix-blend-multiply z-0 absolute pointer-events-none top-0 -left-[150px] lg:-left-0 -bottom-[20px] -right-[0] sm:-right-[130px]  bg-[url('/consulta-asesoría-psicológica-online.webp')] bg-no-repeat bg-[length:850px] sm:bg-[length:1250px] bg-bottom opacity-70"
         ></div>
