@@ -1,6 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Icons } from "@/icons";
+import { GetCitasPsicologoPorMes } from "@/app/apiRoutes";
+import { Citas } from "@/interface";
 
 type Cita = {
   id: number;
@@ -31,6 +33,27 @@ const columns = [
 ];
 
 export default function DashboardCitas() {
+
+  const [citasDelDia, setCitasDelDia] = useState<Citas[]>([]);
+
+  useEffect(() => {
+      
+        GetCitasPsicologoPorMes().then(res => {
+          const hoy = new Date();
+          const citasHoy = res.result.filter((cita: Citas) => {
+            const fecha = new Date(cita.fecha_inicio);
+            return (
+              fecha.getDate() === hoy.getDate() &&
+              fecha.getMonth() === hoy.getMonth() &&
+              fecha.getFullYear() === hoy.getFullYear() &&
+              cita.estado === "Confirmada"
+            );
+          });
+          setCitasDelDia(citasHoy);
+        });
+      }, []);
+      console.log(citasDelDia)
+
   return (
     <div className="bg-card w-full pt-8 rounded-2xl">
       <div className="flex rounded-r-full py-5 text-[#fff] bg-[#6364F4] justify-center font-normal text-2xl w-4/6">

@@ -61,7 +61,7 @@ const fetchDashboard = async () => {
         </div>
 
         <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
-          <div className="font-normal text-xl">Total Paciente</div>
+          <div className="font-normal text-xl">Total Pacientes</div>
           <div className="font-bold text-6xl">{citasPsicologo.total_pacientes}</div>
         </div>
 

@@ -23,7 +23,8 @@ const PageHome = () => {
           return (
             fecha.getDate() === hoy.getDate() &&
             fecha.getMonth() === hoy.getMonth() &&
-            fecha.getFullYear() === hoy.getFullYear()
+            fecha.getFullYear() === hoy.getFullYear() &&
+              cita.estado === "Confirmada"
           );
         });
         setCitasDelDia(citasHoy);
