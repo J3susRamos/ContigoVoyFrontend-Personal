@@ -4,13 +4,6 @@ import ReservarComponents from "@/components/ReservarComponents";
 import { GetPsicologos } from "../apiRoutes";
 import { PsicologoApiResponse } from "@/interface";
 
-import { Metadata } from "next";
-
-export	const metadata: Metadata = {
-  title: "Consulta Psicológica Online | Reserva tu Cita  ",
-  description: "Agenda tu terapia psicológica en minutos. Psicólogos online disponibles para ti. Conecta desde donde estés. Tu primera sesión es gratuita.",
-};
-
 export default function BlogPage() {
   const [psicologos, setPsicologos] = useState<PsicologoApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
