@@ -47,15 +47,11 @@ export default function ServicesStructure({
                   className="mix-blend-multiply opacity-70 bg-cover mask-horizontal-fade "
                 />
               </div>
-              
               <p className="text-cv6 sm:text-cv8 pt-scv7 pb-scv8 sm:py-0 top-1/2 -translate-y-1/2 relative max-w-[350px] sm:max-w-[600px] text-white text-left h-auto font-bold leading-1  ">
                 {item.motto}
               </p>
             </div>
-           
-
           </div>
-        
         
           <div className="mt-scv7 px-scv6 flex justify-center">
             <p className="text-cv4 sm:text-cv5 sm:leading-[32px] lg:max-w-[829px] max-w-[550px] text-title font-normal  leading-[28px] text-center">
@@ -72,8 +68,7 @@ export default function ServicesStructure({
             />
           </div>
   
-               
-          <div className="flex flex-col py-scv7">
+          <div className="flex flex-col pt-scv7">
             <h3 className="text-cv5 sm:text-cv7 font-semibold py-6 w-full text-title  leading-[28px] text-center">
               {item.tittlecards}
             </h3>
@@ -176,75 +171,50 @@ export default function ServicesStructure({
           </div>
 
           
-          <div
-            className="hidden md:block"
-            style={{
-              backgroundImage: `url(${item.bgdown})`,
-              backgroundPosition: "right bottom",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "1280px 788px",
-            }}
-          >
-            <div className="pt-8 md:pt-24 flex items-center px-10 md:px-0 md:pl-96">
-              <div className="w-full max-w-[837px] text-title h-[74px] font-semibold text-[24px] leading-[33px] text-center">
-                {item.tittleIcon}
+          <div className="hidden md:flex max-w-scv18 mx-auto pl-8">
+            <div className="flex-[1.5] pt-scv9">
+              <div className="flex justify-center">
+                <div className="w-full text-title font-semibold text-[24px] leading-[33px] text-center">
+                  {item.tittleIcon}
+                </div>
               </div>
+
+                
+              <div className="flex justify-center flex-wrap gap-x-scv8 gap-y-scv7 pt-scv7 pb-scv10">
+                {item.iconos?.map((icono, index) => (
+                  <div
+                    key={index}
+                    className="w-[190px] flex flex-col items-center gap-4"
+                  >
+                    <div className=" rounded-full w-32 h-32 p-scv6 bg-[#9494F3] flex items-center justify-center">
+                      <div className="relative w-full h-full ">
+                        <Image
+                          src={icono.iconImage}
+                          alt={icono.text}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-center pt-3 text-cv3 text-title font-semibold leading-[20px] max-w-[190px]">
+                      {icono.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+                
+             
             </div>
-
-            <div className="flex justify-start pl-64 pb-32 pt-8 w-full h-auto">
-              <div className="flex pt-14 flex-col items-center gap-y-20">
-                {/* Primera fila - 3 iconos */}
-                <div className="flex flex-col md:flex-row lg:gap-y-0  gap-y-12 md:gap-y-0 md:gap-x-[229px]">
-                  {item.iconos?.slice(0, 3).map((icono, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col items-center gap-4"
-                    >
-                      <div className=" rounded-full  bg-[#9494F3] p-6">
-                        <div className="w-32 h-32 flex items-center justify-center">
-                          <Image
-                            src={icono.iconImage}
-                            alt={icono.text}
-                            width={80}
-                            height={80}
-                            className="w-20 h-20 object-contain"
-                          />
-                        </div>
-                      </div>
-                      <p className="text-center pt-3 text-[16px] text-title  font-semibold leading-[20px] max-w-[200px]">
-                        {icono.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-y-12 md:gap-y-0 md:gap-x-[229px]">
-                  {item.iconos?.slice(3, 5).map((icono) => (
-                    <div
-                      key={icono.id}
-                      className="flex flex-col items-center "
-                    >
-                      <div className="rounded-full bg-[#9494F3] p-6">
-                        <div className="w-32 h-32 flex items-center justify-center">
-                          <Image
-                            src={icono.iconImage}
-                            alt={icono.text}
-                            width={80}
-                            height={80}
-                            className="w-20 h-20 object-contain"
-                          />
-                        </div>
-                      </div>
-
-                      <p className="text-center pt-3 text-[16px] text-title font-semibold leading-[20px] max-w-[120px]">
-                        {icono.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="flex-1 relative">
+              <Image
+                fill
+                alt={item.tittleIcon}
+                src={item.bgdown}
+                className="object-cover object-right mask-horizontal-fade"
+              />
             </div>
           </div>
+
           <div className="block md:hidden">
             <div className="flex items-center px-10 ">
               <div className="w-full max-w-[837px] text-title font-semibold text-[20px] leading-[33px] text-center">
@@ -310,12 +280,14 @@ export default function ServicesStructure({
               </div>
             </div>
           </div>
+
           <SliderPrice />
-          <div className="sticky bottom-0 left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10] h-36 md:h-32">
-            <div className="lg:block hidden">
-              <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 space-x-0">
+
+          <div className="sticky bottom-0 left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]">
+              
+              <div className="flex flex-col lg:flex-row gap-y-scv3 items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 py-scv4 space-x-0">
                 <p
-                  className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center px-16"
+                  className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center prx-16"
                   dangerouslySetInnerHTML={{ __html: item.textfooter }}
                 />
                 <Link href="/ReservarCita">
@@ -324,21 +296,7 @@ export default function ServicesStructure({
                   </button>
                 </Link>
               </div>
-            </div>
 
-            <div className="block lg:hidden w-full">
-              <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 space-x-0">
-                <p
-                  className="text-[15px] w-full font-medium text-[#634AE2] lg:text-start text-center "
-                  dangerouslySetInnerHTML={{ __html: item.textfootermobile }}
-                />
-                <Link href="/ReservarCita">
-                  <button className="w-full h-10 bg-[#5A4AE8] rounded-[34px] text-white font-normal text-[15px] leading-[33px] text-center mt-2 md:mt-0 px-12 whitespace-nowrap">
-                    Reserva tu cita gratuita
-                  </button>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       ))}

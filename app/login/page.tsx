@@ -1,12 +1,6 @@
 "use client";
 import Login from "@/components/auth/login";
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Regístrate - Inicia Sesión | Contigo Voy",
-  description: "Accede a tu cuenta o regístrate fácilmente en Contigo Voy. Disfruta de todos los beneficios de nuestra plataforma pensada para tu bienestar. ¡Empieza hoy!",
-};
 
 export default function Logeo() {
   return (
