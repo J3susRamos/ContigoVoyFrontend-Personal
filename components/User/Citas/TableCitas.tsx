@@ -68,6 +68,7 @@ export const TableCitas: React.FC<TableProps> = ({
       const allKeys = new Set(users.map((user) => user.codigo));
       setSelectedKeysAction(allKeys);
     }
+    
   }, [selectedKeys, users, setSelectedKeysAction]);
 
   const handleSelectItem = useCallback(

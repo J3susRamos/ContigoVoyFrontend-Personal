@@ -7,13 +7,11 @@ interface MenuItem<T extends Record<string, boolean>> {
 
 
 interface MenuProps<T extends Record<string, boolean>> {
-  maxHeight: string;
   menuItems: MenuItem<T>[];
   setSubmenus: Dispatch<SetStateAction<T>>;
 }
 
 export const FilterMenu = <T extends Record<string, boolean>>({
-  maxHeight,
   menuItems,
   setSubmenus,
 }: MenuProps<T>) => {
@@ -28,7 +26,7 @@ export const FilterMenu = <T extends Record<string, boolean>>({
 
   return (
     <div
-      className={`flex flex-col w-[17rem] bg-white shadow-lg rounded-xl grow-0 py-1 max-h-[${maxHeight}]`}
+      className={`flex flex-col w-[17rem] bg-white shadow-lg rounded-xl grow-0 py-1`}
     >
       {menuItems.map((item, index) => (
         <button

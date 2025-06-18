@@ -10,6 +10,20 @@ import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
 import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 
+export interface FiltersPaciente {
+  genero: string[];
+  edad: string[];
+  fechaCreacion: string[];
+  fechaUltimaCita: string[];
+}
+
+export const FiltersInitialState: FiltersPaciente = {
+  genero: [],
+  edad: [],
+  fechaCreacion: [],
+  fechaUltimaCita: [],
+};
+
 export default function ListarPacientes() {
   const [paciente, setPaciente] = useState<Paciente[]>([]);
   const [filteredPacientes, setFilteredPacientes] = useState<Paciente[]>([]);
@@ -17,6 +31,40 @@ export default function ListarPacientes() {
   const toastShownRef = useRef(false);
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [filters, setFilters] = useState<FiltersPaciente>(FiltersInitialState);
+
+  const calcularEdad = (fechaNacimiento: string | Date): number => {
+    const nacimiento = new Date(fechaNacimiento);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+    return edad;
+  };
+
+  useEffect(() => {
+    let filtrados = [...paciente];
+  
+    // Filtrar por género si hay valores
+    if (filters.genero.length > 0) {
+      filtrados = filtrados.filter((p) => filters.genero.includes(p.genero));
+    }
+  
+    // Filtrar por edad si hay valores
+    if (filters.edad.length > 0) {
+      filtrados = filtrados.filter((p) => {
+        const edadPaciente = calcularEdad(p.fecha_nacimiento); // Asumiendo campo `fechaNacimiento`
+        return filters.edad.some((rango) => {
+          const [min, max] = rango.split(" - ").map(Number);
+          return edadPaciente >= min && edadPaciente <= max;
+        });
+      });
+    }
+  
+    setFilteredPacientes(filtrados);
+  }, [filters, paciente]);
 
   const onSearchChange = useCallback((value?: string) => {
     const searchValue = value || "";
@@ -44,6 +92,8 @@ export default function ListarPacientes() {
 
   const handleGetPacientes = async (showToast = true) => {
     const pacientsData = await pacientesGet();
+    console.log(pacientsData);
+    
     const status = pacientsData.state;
     let data = pacientsData.result;
     switch(status){
@@ -69,6 +119,7 @@ export default function ListarPacientes() {
     }
     setPaciente(data);
     setFilteredPacientes(data);
+    
   };
 
   const HandleDeletePaciente = async (idPaciente: number) => {
@@ -128,6 +179,8 @@ export default function ListarPacientes() {
             onSearchChange={onSearchChange}
             onClear={onClear}
             onAddNew={handleAddNew}
+            filters={filters}
+            setFilters={setFilters}
         />
 
         {/* Encabezado de tabla */}

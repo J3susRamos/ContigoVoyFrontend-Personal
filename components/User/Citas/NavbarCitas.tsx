@@ -1,18 +1,11 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Icons } from "@/icons";
 import { Input } from "@heroui/react";
-import { DayPicker, DateRange, MonthCaptionProps } from "react-day-picker";
-import { es } from "date-fns/locale";
-import { format } from "date-fns";
 import { Filters } from "@/app/user/citas/page";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterButton from "@/components/ui/Filters/FilterButton";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
+import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
 
 interface NavbarProps {
   filterValue: string;
@@ -26,14 +19,7 @@ interface NavbarProps {
   onAddNew: () => void;
 }
 
-type SubmenusState = {
-  genero: boolean;
-  estado: boolean;
-  fechaInicio: boolean;
-  edad: boolean;
-};
-
-const SubmenusInitialState: SubmenusState = {
+const SubmenusInitialState = {
   genero: false,
   estado: false,
   fechaInicio: false,
@@ -49,28 +35,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   onAddNew,
 }) => {
   const [menuAbierto, setMenuAbierto] = useState(false);
-  // const [generoSeleccionado, setGeneroSeleccionado] = useState<string[]>([]);
-  // const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
-  const [estadoSeleccionado, setEstadoSeleccionado] = useState<string[]>([]);
-  const [mesActual, setMesActual] = useState(new Date());
   const [submenus, setSubmenus] = useState(SubmenusInitialState);
 
-
-  const [rangoFecha, setRangoFecha] = useState<DateRange | undefined>();
-
-  // Para aplicar filtro luego:
-  const filtrarPorFecha = () => {
-    if (rangoFecha?.from && rangoFecha?.to) {
-      const desde = rangoFecha.from.toISOString().split("T")[0]; // yyyy-mm-dd
-      const hasta = rangoFecha.to.toISOString().split("T")[0];
-      console.log("Filtrando desde:", desde, "hasta:", hasta);
-
-      setFilters((prev) => ({
-        ...prev,
-        fechaInicio: [desde, hasta],
-      }));
-    }
-  };
+  const [estadoSeleccionado, setEstadoSeleccionado] = useState<string[]>([]);
+  const [generoSeleccionado, setGeneroSeleccionado] = useState<string[]>([]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState<
+    [string, string] | string[]
+  >([]);
 
   useEffect(() => {
     setSubmenus({
@@ -85,14 +56,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     <div className="flex w-full mt-8 z-40">
       <div className="bg-primary dark:bg-primary w-full h-[8vh] flex justify-start items-center px-4">
         <div className="flex gap-4 w-full items-center pl-12">
-          <FilterButton
-            menuOpen={menuAbierto}
-            setMenuOpen={setMenuAbierto}
-            >
+          <FilterButton menuOpen={menuAbierto} setMenuOpen={setMenuAbierto}>
             <FilterMenu
               setSubmenus={setSubmenus}
-              maxHeight="5rem"
               menuItems={[
+                {
+                  text: "Género",
+                  key: "genero"
+                },
                 {
                   text: "Estado",
                   key: "estado",
@@ -102,27 +73,59 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key: "fechaInicio",
                 },
               ]}
-              />
-              {/* Submenú de género */}
-              {/* <FilterSubMenu
-                titulo="Género"
-                isOpen={submenus.genero}
-                onPressAceptar={() => {
-                  setFilters((prev) => ({
-                    ...prev,
-                    genero: generoSeleccionado,
-                  }));
-                }}
-                onPressBorrar={() => {
-                  setGeneroSeleccionado([]);
-                  setFilters((prev) => ({
-                    ...prev,
-                    genero: [],
-                  }));
-                }}
-              >
-                <div className="flex flex-col text-sm pl-10">
-                  {["Masculino", "Femenino", "Otros"].map((opcion) => (
+            />
+
+            <FilterSubMenu
+              titulo="Género"
+              isOpen={submenus.genero}
+              value={generoSeleccionado}
+              setFilters={setFilters}
+              setLocalValue={setGeneroSeleccionado}
+              filterKey="genero"
+            >
+              <div className="flex flex-col text-sm pl-10">
+                {["Masculino", "Femenino", "Otros"].map((opcion) => (
+                  <label
+                    key={opcion}
+                    className="text-[#634AE2] text-lg flex items-center gap-4"
+                  >
+                    <input
+                      type="checkbox"
+                      name="genero"
+                      value={opcion}
+                      checked={generoSeleccionado.includes(opcion)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setGeneroSeleccionado([
+                            ...generoSeleccionado,
+                            opcion,
+                          ]);
+                        } else {
+                          setGeneroSeleccionado(
+                            generoSeleccionado.filter((item) => item !== opcion)
+                          );
+                        }
+                      }}
+                      className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
+                    />
+                    {opcion}
+                  </label>
+                ))}
+              </div>
+            </FilterSubMenu>
+
+            {/* Submenú de estado */}
+            <FilterSubMenu
+              titulo="Estado"
+              isOpen={submenus.estado}
+              value={estadoSeleccionado}
+              setFilters={setFilters}
+              setLocalValue={setEstadoSeleccionado}
+              filterKey="estado"
+            >
+              <div className="flex flex-col text-sm pl-10">
+                {["Confirmada", "Completada", "Pendiente", "Cancelada"].map(
+                  (opcion) => (
                     <label
                       key={opcion}
                       className="text-[#634AE2] text-lg flex items-center gap-4"
@@ -131,16 +134,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                         type="checkbox"
                         name="genero"
                         value={opcion}
-                        checked={generoSeleccionado.includes(opcion)}
+                        checked={estadoSeleccionado.includes(opcion)}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setGeneroSeleccionado([
-                              ...generoSeleccionado,
+                            setEstadoSeleccionado([
+                              ...estadoSeleccionado,
                               opcion,
                             ]);
                           } else {
-                            setGeneroSeleccionado(
-                              generoSeleccionado.filter((item) => item !== opcion)
+                            setEstadoSeleccionado(
+                              estadoSeleccionado.filter(
+                                (item) => item !== opcion
+                              )
                             );
                           }
                         }}
@@ -148,166 +153,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                       />
                       {opcion}
                     </label>
-                  ))}
-                </div>
-              </FilterSubMenu> */}
+                  )
+                )}
+              </div>
+            </FilterSubMenu>
 
-              {/* Submenú de edad */}
-              {/* <FilterSubMenu
-                titulo="Edad"
-                isOpen={submenus.edad}
-                onPressAceptar={() => {
-                  setFilters((prev) => ({
-                    ...prev,
-                    edad: edadSeleccionada,
-                  }));
-                }}
-                onPressBorrar={() => {
-                  setEdadSeleccionada([]);
-                  setFilters((prev) => ({
-                    ...prev,
-                    edad: [],
-                  }));
-                }}
-              >
-                <div className="flex flex-col text-sm pl-10">
-                  {[
-                    "0 - 10",
-                    "10 - 20",
-                    "20 - 30",
-                    "30 - 40",
-                    "40 - 50",
-                    "50 - 60",
-                    "60 +",
-                  ].map((opcion) => (
-                    <label
-                      key={opcion}
-                      className="text-[#634AE2] text-lg flex items-center gap-4"
-                    >
-                      <input
-                        type="checkbox"
-                        name="genero"
-                        value={opcion}
-                        checked={edadSeleccionada.includes(opcion)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setEdadSeleccionada([...edadSeleccionada, opcion]);
-                          } else {
-                            setEdadSeleccionada(
-                              edadSeleccionada.filter((item) => item !== opcion)
-                            );
-                          }
-                        }}
-                        className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
-                      />
-                      {opcion}
-                    </label>
-                  ))}
-                </div>
-              </FilterSubMenu> */}
-
-              {/* Submenú de estado */}
-              <FilterSubMenu
-                titulo="Estado"
-                isOpen={submenus.estado}
-                onPressAceptar={() => {
-                  setFilters((prev) => ({
-                    ...prev,
-                    estado: estadoSeleccionado,
-                  }));
-                }}
-                onPressBorrar={() => {
-                  setEstadoSeleccionado([]);
-                  setFilters((prev) => ({
-                    ...prev,
-                    estado: [],
-                  }));
-                }}
-              >
-                <div className="flex flex-col text-sm pl-10">
-                  {["Confirmada", "Completada", "Pendiente", "Cancelada"].map(
-                    (opcion) => (
-                      <label
-                        key={opcion}
-                        className="text-[#634AE2] text-lg flex items-center gap-4"
-                      >
-                        <input
-                          type="checkbox"
-                          name="genero"
-                          value={opcion}
-                          checked={estadoSeleccionado.includes(opcion)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setEstadoSeleccionado([
-                                ...estadoSeleccionado,
-                                opcion,
-                              ]);
-                            } else {
-                              setEstadoSeleccionado(
-                                estadoSeleccionado.filter(
-                                  (item) => item !== opcion
-                                )
-                              );
-                            }
-                          }}
-                          className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
-                        />
-                        {opcion}
-                      </label>
-                    )
-                  )}
-                </div>
-              </FilterSubMenu>
-
-              {/* Submenú de fecha de inicio */}
-              <FilterSubMenu
-                titulo="Fecha de Inicio"
-                isOpen={submenus.fechaInicio}
-                onPressAceptar={() => {
-                  filtrarPorFecha();
-                }}
-                onPressBorrar={() => {
-                  setRangoFecha(undefined);
-                  setFilters((prev) => ({
-                    ...prev,
-                    fechaInicio: [],
-                  }));
-                }}
-              >
-                <DayPicker
-                  mode="range"
-                  selected={rangoFecha}
-                  onSelect={setRangoFecha}
-                  numberOfMonths={1}
-                  weekStartsOn={1}
-                  locale={es}
-                  month={mesActual}
-                  onMonthChange={setMesActual}
-                  hideNavigation
-                  formatters={{
-                    formatWeekdayName: customWeekdayFormatter,
-                  }}
-                  components={{
-                    MonthCaption: (props) => (
-                      <CustomCaption {...props} setMesActual={setMesActual} />
-                    ),
-                  }}
-                  modifiersClassNames={{
-                    selected: "bg-[#E7E7FF]",
-                    range_start: "rounded-l-full",
-                    range_end: "rounded-r-full",
-                    today: "font-light underline",
-                  }}
-                  className="w-full"
-                  classNames={{
-                    months: "flex justify-center w-full",
-                    month: "w-full",
-                    weekday: "font-normal",
-                    day: "px-1 text-center font-normal py-0",
-                    month_grid: "w-full",
-                  }}
-                />
-              </FilterSubMenu>
+            {/* Submenú de fecha de inicio */}
+            <FilterSubMenu
+              titulo="Fecha de Inicio"
+              isOpen={submenus.fechaInicio}
+              value={fechaSeleccionada}
+              setFilters={setFilters}
+              setLocalValue={setFechaSeleccionada}
+              filterKey="fechaInicio"
+            >
+              <FilterCalendar
+                fechaSeleccionada={fechaSeleccionada}
+                setFechaSeleccionada={setFechaSeleccionada}
+              />
+            </FilterSubMenu>
           </FilterButton>
           {/* Icono de lupa */}
           <span
@@ -363,61 +227,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-const customWeekdayFormatter = (date: Date) =>
-  format(date, "EEEEE", { locale: es }).toUpperCase();
-
-type CustomCaptionProps = MonthCaptionProps & {
-  setMesActual: React.Dispatch<React.SetStateAction<Date>>;
-};
-const CustomCaption: React.FC<CustomCaptionProps> = ({
-  calendarMonth,
-  setMesActual,
-}) => {
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
-  const months = Array.from({ length: 12 }, (_, i) =>
-    es.localize.month(i as unknown as Parameters<typeof es.localize.month>[0], {
-      width: "wide",
-    })
-  );
-
-  return (
-    <div className="grid grid-cols-[1fr_5rem] gap-2 mb-2">
-      <select
-        className="rounded-full px-1 py-1 bg-[#ECECFF] text-[#634AE2] focus:outline-none"
-        value={calendarMonth.date.getMonth()}
-        onChange={(e) =>
-          setMesActual(
-            new Date(calendarMonth.date.getFullYear(), Number(e.target.value))
-          )
-        }
-      >
-        {months.map((month, idx) => (
-          <option key={month} value={idx}>
-            {month.charAt(0).toUpperCase() + month.slice(1)}
-          </option>
-        ))}
-      </select>
-
-      <select
-        className="rounded-full px-2 py-1 bg-[#ECECFF] text-[#634AE2] focus:outline-none"
-        value={calendarMonth.date.getFullYear()}
-        onChange={(e) =>
-          setMesActual(
-            new Date(Number(e.target.value), calendarMonth.date.getMonth())
-          )
-        }
-      >
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
     </div>
   );
 };
