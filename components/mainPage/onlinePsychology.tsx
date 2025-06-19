@@ -11,9 +11,10 @@ const features = [
     icon: (
       <Image
         src={"/OnlinePsychologyImages/terapiaonline.webp"}
-        alt="especialista"
+        alt="Psicología online Beneficios Terapia en casa"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Recibe terapia en casa",
@@ -26,9 +27,10 @@ const features = [
     icon: (
       <Image
         src={"/OnlinePsychologyImages/listapsicologo.webp"}
-        alt="especialista"
+        alt="Psicología online Beneficios Elige a tu Psicologo"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Elige a tu psicólogo",
@@ -42,9 +44,10 @@ const features = [
     icon: (
       <Image
         src={"/OnlinePsychologyImages/terapiaencasa.webp"}
-        alt="especialista"
+        alt="Psicología online Beneficios tu terapia en línea"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Inicia tu terapia en línea",
@@ -57,9 +60,10 @@ const features = [
     icon: (
       <Image
         src={"/OnlinePsychologyImages/agendahorario.webp"}
-        alt="especialista"
+        alt="Psicología online Beneficios elige tu horario ideal"
         width={70}
         height={60}
+        className="w-[50px] mw:w-[70px]"
       />
     ),
     title: "Agenda tu horario ideal",
@@ -125,18 +129,18 @@ export default function ChooseUs() {
   };
 
   return (
-    <div className="w-full max-w-full flex flex-col items-center justify-center py-16 my-4 bg-[#9494f3] relative overflow-hidden">
+    <div className="w-full max-w-full flex flex-col items-center justify-center pt-8 pb-14  mw:pt-12 mw:pb-16 my-4 bg-[#9494f3] relative overflow-hidden">
       <div className="relative w-full max-w-full">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center "
+          className="text-center pb-2 "
         >
-          <h2 className="lg:text-[32px] text-2xl leading-[40px] font-bold text-white lg:mb-6 mb-3">
+          <h2 className="lg:text-[32px] text-[15px] mw:text-[20px] leading-[31px] font-bold text-white lg:mb-6 mw:mb-1">
             ¿Qué es la psicología online?
           </h2>
-          <p className="text-[16px] text-white max-w-3xl lg:mx-auto font-light lg:leading-[20px] mx-20 ">
+          <p className="text-[11px] mw:text-[13px] text-white max-w-3xl lg:mx-auto font-light mw:px-[63px] lg:leading-[20px] mx-10 ">
             Es una forma accesible y eficaz de cuidar tu salud mental.
           </p>
         </motion.div>
@@ -163,10 +167,10 @@ export default function ChooseUs() {
                         {feature.icon}
                       </div>
                     </div>
-                    <h3 className="text-[18px] pt-5 leading-[22.5px] font-bold text-white   tracking-normal pb-3">
+                    <h3 className="text-[11px] pt-5 leading-[22.5px] font-bold text-white   tracking-normal pb-3">
                       <span className="block">{feature.title}</span>
                     </h3>
-                    <p className="text-[16px] leading-[20px] text-white justify-center  tracking-normal font-light md:mx-0">
+                    <p className="text-[8px] leading-[20px] text-white justify-center  tracking-normal font-light md:mx-0">
                       {feature.description}
                     </p>
                   </motion.div>
@@ -194,58 +198,52 @@ export default function ChooseUs() {
 
         {/**contenido para pantallas pequeñas*/}
         <div className="block lg:hidden w-full">
-          <div className="grid grid-cols-2 ">
+          <div className="flex justify-between items-end">
 
             {/* Columna izquierda: Carrusel de iconos */}
-            <div className="col-span-1">
               <div className="embla" ref={emblaRef}>
                 <div className="embla__container">
                   {features.map((feature, index) => (
-                    <div className="embla__slide" key={index}>
-                      <div className="flex flex-col items-center justify-center p-6">
-                        <div className="flex flex-col items-center justify-center w-28 h-28 rounded-full bg-[#634AE2] backdrop-blur-sm transition-all duration-300 cursor-pointer">
-                          <div className="bg-[#634AE2] rounded-full group-hover:bg-[#9494F3] transition-colors duration-300 w-14">
+                    <div className="embla__slide pl-[24px] pr-[18px]" key={index}>
+                      <div className="pl-[20px] pt-5 pb-3 mw:pb-6">
+                        <div className="flex flex-col items-center justify-center w-[90px] h-[90px] mw:w-[124px] mw:h-[124px] rounded-full bg-[#634AE2] backdrop-blur-sm transition-all duration-300 cursor-pointer">
+                          <div className="bg-[#634AE2] flex justify-center rounded-full group-hover:bg-[#9494F3] transition-colors duration-300 w-[90px]">
                             {feature.icon}
                           </div>
                         </div>
                       </div>
-                      <h3 className="text-[13px] font-bold text-white tracking-normal pb-3 mx-5">
+                      <h3 className="text-[11px] mw:text-[13px] font-bold text-white tracking-normal pb-2">
                         <span className="block">{feature.title}</span>
                       </h3>
-                      <p className="text-[13px] leading-[20px] text-white justify-center tracking-normal font-light mx-5">
+                      <p className="text-[11px] mw:text-[13px] leading-[13px] text-white justify-center tracking-normal font-light">
                         {feature.description}
                       </p>
                     </div>
                   ))}
                 </div>
+                <div className="flex justify-center space-x-2 mt-[24px] mw:mt-[45px]">
+                  {features.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => scrollTo(index)}
+                      aria-label={`Ir a la sección ${index + 1}`}
+                      className={`
+                        w-3 h-3 rounded-full transition-all duration-300
+                        ${selectedIndex === index ? "bg-[#634AE2]" : "bg-white"}
+                      `}
+                    />
+                  ))}
+                </div> 
               </div>
-
-        
-              <div className="flex justify-center space-x-2 mt-6">
-                {features.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => scrollTo(index)}
-                    aria-label={`Ir a la sección ${index + 1}`}
-                    className={`
-              w-3 h-3 rounded-full transition-all duration-300
-              ${selectedIndex === index ? "bg-[#634AE2]" : "bg-white"}
-            `}
-                  />
-                ))}
-              </div>
-            </div>
 
             {/* Columna derecha: Imagen */}
-            <div className="col-span-1">
-              <div
-                className=" h-[345px] -mr-10 md:-mr-0 bg-cover bg-center bg-no-repeat rounded-lg"
-                style={{
-                  backgroundImage: `url(/mediaLunaInicio.webp)`,
-                  backgroundSize: "auto",
-                }}
+              <Image
+                src={"/mediaLunaInicio.webp"}
+                alt="especialista"
+                width={70}
+                height={332}
+                className="h-[260px] mw:h-[332px] w-auto"
               />
-            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import {
   GetPsicologosById,
   UpdatePsicologo,
 } from "@/app/apiRoutes";
+import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import showToast from "@/components/ToastStyle";
 import { PsicologoPreviewData } from "@/interface";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
@@ -40,6 +41,19 @@ export default function AllPsicologos({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [formData, setFormData] = useState<PsicologoPreviewData | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+
+  const openDeleteModal = (id: number) => {
+    setDeleteId(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    await handleDelete(deleteId);
+    setIsDeleteModalOpen(false);
+    setDeleteId(null);
+  };
 
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -73,6 +87,7 @@ export default function AllPsicologos({
     }
   };
   const handleDelete = async (id: number | null) => {
+
     try {
       await DeletePsycologo(id);
       showToast("success", "El psicólogo se eliminó correctamente");
@@ -153,7 +168,7 @@ export default function AllPsicologos({
                         </button>
                         <div className="flex flex-col items-center">
                           <button
-                            onClick={() => handleDelete(column.idPsicologo)}
+                            onClick={() => openDeleteModal(column.idPsicologo)}
                             className="flex flex-col items-center"
                           >
                             <svg
@@ -506,6 +521,12 @@ export default function AllPsicologos({
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <ConfirmDeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={confirmDelete}
+          message="¿Estás seguro de eliminar este psicólogo?"
+      />
     </>
   );
 }

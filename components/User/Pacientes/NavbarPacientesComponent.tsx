@@ -2,11 +2,6 @@ import React from "react";
 import { Icons } from "@/icons";
 import {
   Input,
-  Button,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
 } from "@heroui/react";
 
 interface NavbarProps {
@@ -30,113 +25,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
       <div className="bg-primary dark:bg-primary w-full h-[8vh] flex flex-row justify-start items-center px-4">
         <div className="flex flex-row gap-4 w-full items-center pl-12">
           {/* Icono de filtro */}
-          <span
-            className="text-primary-foreground dark:text-primary-foreground transition-colors"
-            dangerouslySetInnerHTML={{
-              __html: Icons.filter.replace(/<svg /, '<svg fill="currentColor" '),
-            }}
-            style={{
-              width: "1.2em",
-              height: "1.2em",
-            }}
-          />
-          <Dropdown
-            classNames={{
-              base: "bg-none",
-            }}
-          >
-            <DropdownTrigger className="text-primary-foreground dark:text-primary-foreground font-light text-xl">
-              <Button variant="bordered" className="border-none">
-                Filtrar
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Filtrar por">
-              <DropdownItem
-                key="genero"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-primary dark:text-primary-foreground data-[hover=true]:bg-primary data-[hover=true]:text-primary-foreground",
-                  title: "ml-3 text-[16px]",
-                }}
-              >
-                Género
-                <span
-                  className="inline-flex items-center ml-[127px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(/<svg /, '<svg fill="currentColor"'),
-                  }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
-              
-              <DropdownItem
-                key="edad"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-primary dark:text-primary-foreground data-[hover=true]:bg-primary data-[hover=true]:text-primary-foreground",
-                  title: "ml-3 text-[16px]",
-                }}
-              >
-                Edad
-                <span
-                  className="inline-flex items-center ml-[139px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(/<svg /, '<svg fill="currentColor"'),
-                  }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
-              
-              <DropdownItem
-                key="FechaCreacion"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-primary dark:text-primary-foreground data-[hover=true]:bg-primary data-[hover=true]:text-primary-foreground",
-                  title: "ml-3 text-[16px]",
-                }}
-              >
-                Fecha de creación
-                <span
-                  className="inline-flex items-center ml-[37px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(/<svg /, '<svg fill="currentColor"'),
-                  }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
-              
-              <DropdownItem
-                key="FechaUltimaCita"
-                classNames={{
-                  base: "rounded-2x1 text-base font-normal h-6 text-primary dark:text-primary-foreground data-[hover=true]:bg-primary data-[hover=true]:text-primary-foreground",
-                  title: "ml-3 text-[16px]",
-                }}
-              >
-                Fecha de última cita
-                <span
-                  className="inline-flex items-center ml-[18px]"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(/<svg /, '<svg fill="currentColor"'),
-                  }}
-                  style={{
-                    width: "1.5em",
-                    height: "1.5em",
-                    transform: "rotate(-90deg)",
-                  }}
-                />
-              </DropdownItem>
-
-            </DropdownMenu>
-          </Dropdown>
+          {/* <FilterButton/>    */}
 
           {/* Icono de lupa */}
           <span

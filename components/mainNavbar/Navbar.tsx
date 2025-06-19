@@ -42,17 +42,17 @@ const navItems = [
 
 const Navbar = () => {
   return (
-    <nav className="bg-background h-[102px] lg:h-[115px] flex items-center fixed w-full z-40 top-0">
-      <div className="w-full p-6 flex items-center justify-between">
+    <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
+      <div className="w-full p-6 flex items-center justify-between  ">
         <Link href="/" className="pl-[60px] min-[1450px]:pl-[58px] z-0">
           <Image
             src="/LOGO.webp"
-            alt="Company Logo"
+            alt="Centro Psicológico Contigo Voy Online"
             width={143}
             height={50}
             priority
             style={{height: 'auto' }}
-            className="w-[143px] sm:w-[160px] lg:w-[179px] lg:max-w-[179px] h-auto"
+            className="w-[143px] sm:w-[160px] lg:max-w-[160px] h-auto"
             suppressHydrationWarning
           />
         </Link>

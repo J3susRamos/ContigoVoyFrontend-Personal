@@ -28,7 +28,7 @@ const CitasPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setCitas(data.result); // Asume que data.result contiene los conteos de citas
+        setCitas(data.result); 
         showToast("success", "Citas obtenidas correctamente");
       } else {
         showToast("error", data.message || "Error al obtener las citas");

@@ -26,7 +26,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
   };
 
   return (
-    <div className="absolute left-6 top-8 lg:top-9 w-10">
+    <div className="absolute left-6 top-5 w-10">
       {/* Botón para abrir el menú */}
       <button
         className="text-2xl focus:outline-none w-full"
