@@ -125,10 +125,10 @@ export default function DashboardCitas() {
                 <td className="font-light text-xl text-[#634AE2] border-r border-[#BABAFF] py-2 px-4">
                   {item.hora}
                 </td>
-                <td className="pr-32 font-light text-lg text-[#BABAFF] py-2 px-4">
+                <td className="pr-32 font-light text-lg text-[#634AE2] py-2 px-4 ">
                   {citasPorHora[item.hora] && citasPorHora[item.hora].length > 0 ? (
                     citasPorHora[item.hora].map((cita, idx) => (
-                      <div key={cita.idCita || idx} className="mb-2">
+                      <div key={cita.idCita || idx} className="my-2 bg-[#E7E7FF] font-bold w-fit px-12 py-1 rounded-3xl">
                         <div>
                           {new Date(cita.fecha_inicio).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} {cita.paciente}
                         </div>
