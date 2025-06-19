@@ -28,11 +28,6 @@ const generateDefaultAppointments = (startHour: number = 1, endHour: number = 24
 
 const cita: Cita[] = generateDefaultAppointments();
 
-const columns = [
-  { key: "hora", label: "Hora" },
-  { key: "descripcion", label: "Descripción" },
-];
-
 const fechaHoy = new Date().toLocaleDateString('es-ES', {
   day: 'numeric',
   month: 'long'
