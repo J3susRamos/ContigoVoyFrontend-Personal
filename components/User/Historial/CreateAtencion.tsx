@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Icons } from "@/icons";
 import { useDropzone } from "react-dropzone";
 import CerrarSesion from "@/components/CerrarSesion";
-import { AtencionFormData, Citas, Enfermedad} from "@/interface";
+import { AtencionFormData, Citas, Enfermedad } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import Link from "next/link";
@@ -32,7 +32,8 @@ function DropzoneWithoutKeyboard() {
 
 const CreateAtencion = () => {
   const router = useRouter();
-  const [cita, setCita] = useState<Citas | null>(  {idCita: " ",
+  const [cita, setCita] = useState<Citas | null>({
+    idCita: " ",
     idPaciente: " ",
     idPsicologo: " ",
     paciente: " ",
@@ -48,7 +49,8 @@ const CreateAtencion = () => {
   const [CEA10SearchTerm, setCEA10SearchTerm] = useState("");
   const [showDSM5Dropdown, setShowDSM5Dropdown] = useState(false);
   const [showCEA10Dropdown, setShowCEA10Dropdown] = useState(false);
-  const [selectedEnfermedad, setSelectedEnfermedad] = useState<Enfermedad | null>(null);
+  const [selectedEnfermedad, setSelectedEnfermedad] =
+    useState<Enfermedad | null>(null);
   const nameDropdownRef = useRef<HTMLDivElement>(null);
   const DSM5DropdownRef = useRef<HTMLDivElement>(null);
   const CEA10DropdownRef = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ const CreateAtencion = () => {
   });
 
   //Datos del Paciente
-  const handleGetCita = async (idCita:number) => {
+  const handleGetCita = async (idCita: number) => {
     try {
       const cookies = parseCookies();
       const token = cookies["session"];
@@ -85,7 +87,6 @@ const CreateAtencion = () => {
       const data = await response.json();
       if (response.ok) {
         setCita(data.result);
-
       }
     } catch (error) {
       console.error(error);
@@ -121,11 +122,11 @@ const CreateAtencion = () => {
       router.push("/user/citas");
       return;
     }
-    
+
     const idParsed = parseInt(id);
     handleGetCita(idParsed)
       .then(() => handleGetEnfermedades())
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, [router]);
@@ -284,7 +285,6 @@ const CreateAtencion = () => {
             <div className="flex-1 items-center justify-items-center">
               <div>Codigo del Paciente *</div>
               <div className="relative">
-
                 <input
                   type="text"
                   readOnly
@@ -536,26 +536,24 @@ const CreateAtencion = () => {
         </div>
       </div>
       <div className="flex justify-between w-full p-4">
-        <button className="text-[#fff] bg-[#634AE2] rounded-full w-28 h-8">
-          Volver
-        </button>
         <Link
           href={{
             pathname: "/user/citas",
           }}
-          className="relative group"
+          className="text-[#fff] bg-[#634AE2] rounded-full py-1 px-7"
           passHref
         >
-          <button
-            onClick={HandlePostAtencion}
-            className="text-[#634AE2] bg-[#fff] rounded-full border-2 border-[#634AE2] w-28 h-8"
-          >
-            Registrar
-          </button>
+          Volver
         </Link>
+        <button
+          onClick={HandlePostAtencion}
+          className="text-[#634AE2] bg-[#fff] rounded-full border-2 border-[#634AE2] w-28 h-8"
+        >
+          Registrar
+        </button>
       </div>
     </div>
   );
-}
+};
 
 export default CreateAtencion;
