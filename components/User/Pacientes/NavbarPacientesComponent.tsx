@@ -5,6 +5,7 @@ import FilterButton from "@/components/ui/Filters/FilterButton";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
 import { FiltersPaciente } from "@/components/PacientesLista/ListarPacientes";
+import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
 
 interface NavbarProps {
   filterValue: string;
@@ -21,7 +22,6 @@ interface NavbarProps {
 const SubmenusInitialState = {
   genero: false,
   edad: false,
-  fechaCreacion: false,
   fechaUltimaCita: false,
 };
 
@@ -31,26 +31,27 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
   onClear,
   onAddNew,
   filters,
-  setFilters
+  setFilters,
 }) => {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [submenus, setSubmenus] = useState(SubmenusInitialState);
   const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
-
+  const [fechaCitaSeleccionada, setFechaCitaSeleccionada] = useState<
+    [string, string] | string[]
+  >([]);
   const [generoSeleccionado, setGeneroSeleccionado] = useState<string[]>([]);
 
   useEffect(() => {
     setSubmenus({
       genero: false,
       edad: false,
-      fechaCreacion: false,
       fechaUltimaCita: false,
     });
   }, [filters, menuAbierto]);
 
   return (
-    <div className="flex w-full mt-8 z-40">
-      <div className="bg-primary dark:bg-primary w-full h-[8vh] flex flex-row justify-start items-center px-4">
+    <div className="flex w-full z-40">
+      <div className="bg-[#6265f4] dark:bg-primary w-full h-[8vh] flex flex-row justify-start items-center px-4">
         <div className="flex flex-row gap-4 w-full items-center pl-12">
           {/* Icono de filtro */}
           <FilterButton menuOpen={menuAbierto} setMenuOpen={setMenuAbierto}>
@@ -64,10 +65,6 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                 {
                   text: "Edad",
                   key: "edad",
-                },
-                {
-                  text: "Fecha de creación",
-                  key: "fechaCreacion",
                 },
                 {
                   text: "Fecha de última cita",
@@ -120,7 +117,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
               isOpen={submenus.edad}
               value={edadSeleccionada}
               setFilters={setFilters}
-              setLocalValue={setGeneroSeleccionado}
+              setLocalValue={setEdadSeleccionada}
               filterKey="edad"
             >
               <div className="flex flex-col text-sm pl-10">
@@ -157,6 +154,19 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                   </label>
                 ))}
               </div>
+            </FilterSubMenu>
+            <FilterSubMenu
+              titulo="Fecha de última cita"
+              isOpen={submenus.fechaUltimaCita}
+              setFilters={setFilters}
+              value={fechaCitaSeleccionada}
+              setLocalValue={setFechaCitaSeleccionada}
+              filterKey="fechaUltimaCita"
+            >
+              <FilterCalendar
+                fechaSeleccionada={fechaCitaSeleccionada}
+                setFechaSeleccionada={setFechaCitaSeleccionada}
+              />
             </FilterSubMenu>
           </FilterButton>
 

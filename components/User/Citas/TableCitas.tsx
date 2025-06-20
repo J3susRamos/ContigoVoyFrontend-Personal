@@ -12,6 +12,7 @@ interface TableProps {
   selectedKeys: Set<React.Key>;
   setSelectedKeysAction: (keys: Set<React.Key>) => void;
   onCitaDeleted?: (idCita: number) => void;
+  menuOpen: boolean;
 }
 
 export const TableCitas: React.FC<TableProps> = ({
@@ -20,6 +21,7 @@ export const TableCitas: React.FC<TableProps> = ({
   selectedKeys,
   setSelectedKeysAction,
   onCitaDeleted,
+  menuOpen
 }) => {
   const [isClient, setIsClient] = useState(false);
 
@@ -195,9 +197,9 @@ export const TableCitas: React.FC<TableProps> = ({
   }
 
   return (
-    <div className="overflow-x-auto max-h-[585px] p-5 w-full mx-auto">
+    <div className={`overflow-x-auto max-h-[585px] p-5 w-full mx-auto ${menuOpen && 'opacity-50'}`}>
       <table className="w-full text-primary dark:text-primary-foreground border-separate border-spacing-y-2">
-        <thead className="sticky top-0 bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground">
+        <thead className="sticky top-0 bg-[#6265f4] dark:bg-primary text-primary-foreground dark:text-primary-foreground">
           <tr>
             <th className="p-4 text-center rounded-tl-full">
               <input
