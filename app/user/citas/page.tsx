@@ -25,7 +25,7 @@ export interface Filters {
   fechaInicio: string[];
 }
 
-export const FiltersInitialState = {
+const FiltersInitialState = {
   genero: [] as string[],
   estado: [] as string[],
   edad: [] as string[],
@@ -43,11 +43,8 @@ const columns = [
 
 export default function App() {
   const router = useRouter();
-  const cookies = parseCookies();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-
   const [filterValue, setFilterValue] = useState("");
-
   const [selectedKeys, setSelectedKeys] = useState<Set<React.Key>>(new Set());
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS)
@@ -59,6 +56,7 @@ export default function App() {
   const handleGetCitas = useCallback(async () => {
     try {
       setError(null);
+      const cookies = parseCookies(); // Move parseCookies inside the function
       const token = cookies["session"];
       const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
       const response = await fetch(url, {
@@ -100,13 +98,13 @@ export default function App() {
       setError("Error al obtener las citas");
       showToast("error", "Error de conexión. Intenta nuevamente.");
     }
-  }, [cookies]);
+  }, []);
 
   useEffect(() => {
     if (isAuthorized) {
       handleGetCitas();
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, handleGetCitas]);
 
   const [sortDescriptor] = useState({
     column: "fecha_inicio",
