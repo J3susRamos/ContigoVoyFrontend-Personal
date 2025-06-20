@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/User/Citas/NavbarCitas";
@@ -101,9 +100,15 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (isAuthorized) {
-      handleGetCitas();
-    }
+    const fetchCitas = async () => {
+      if (isAuthorized) {
+        await handleGetCitas();
+      }
+    };
+    
+    fetchCitas().catch(error => {
+      console.error("Error fetching citas:", error);
+    });
   }, [isAuthorized, handleGetCitas]);
 
   const [sortDescriptor] = useState({
@@ -128,14 +133,14 @@ export default function App() {
   const filteredItems = useMemo(() => {
     let filteredCitas = [...citas];
 
-    // ✅ FILTRO POR ESTADO
+    // Filtro por estado
     if (filters.estado.length > 0) {
       filteredCitas = filteredCitas.filter((cita) =>
         filters.estado.includes(cita.estado)
       );
     }
 
-    // ✅ FILTRO POR FECHA DE INICIO
+    // Filtro por fecha de inicio
     if (filters.fechaInicio.length === 2) {
       const [from, to] = filters.fechaInicio;
       const fromDate = new Date(from + "T00:00:00");
