@@ -17,6 +17,8 @@ interface NavbarProps {
   onAddNew: () => void;
   filters: FiltersPaciente;
   setFilters: Dispatch<SetStateAction<FiltersPaciente>>;
+  menuAbierto: boolean;
+  setMenuAbierto: Dispatch<SetStateAction<boolean>>;
 }
 
 const SubmenusInitialState = {
@@ -32,8 +34,10 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
   onAddNew,
   filters,
   setFilters,
+  menuAbierto,
+  setMenuAbierto
 }) => {
-  const [menuAbierto, setMenuAbierto] = useState(false);
+  
   const [submenus, setSubmenus] = useState(SubmenusInitialState);
   const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
   const [fechaCitaSeleccionada, setFechaCitaSeleccionada] = useState<
