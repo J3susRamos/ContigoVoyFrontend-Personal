@@ -4,10 +4,10 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/User/Citas/NavbarCitas";
 import { TableCitas } from "@/components/User/Citas/TableCitas";
-import CerrarSesion from "@/components/CerrarSesion";
 import { Citas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
+import HeaderUser from "@/components/User/HeaderUser";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "codigo",
@@ -25,7 +25,7 @@ export interface Filters {
   fechaInicio: string[];
 }
 
-export const FiltersInitialState: Filters = {
+const FiltersInitialState: Filters = {
   genero: [],
   estado: [],
   edad: [],
@@ -52,6 +52,7 @@ export default function App() {
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const [citas, setCitas] = useState<Citas[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>(FiltersInitialState);
@@ -76,7 +77,6 @@ export default function App() {
         showToast("error", "Error al obtener las citas");
         return;
       }
-
       const data = await response.json();
       console.log(data);
       
@@ -91,6 +91,7 @@ export default function App() {
           duracion: cita.duracion,
           idCita: cita.idCita,
           genero: cita.genero,
+          edad: cita.edad
         }));
         setCitas(formattedCitas);
         showToast("success", "Citas obtenidas correctamente");
@@ -139,6 +140,16 @@ export default function App() {
           filters.genero.includes(cita.genero)
         );
       }
+
+      // Filtrar por edad si hay valores
+    if (filters.edad.length > 0) {
+      filteredCitas = filteredCitas.filter((p) => {
+        return filters.edad.some((rango) => {
+          const [min, max] = rango.split(" - ").map(Number);
+          return p.edad >= min && p.edad <= max;
+        });
+      });
+    }
 
     // ✅ FILTRO POR ESTADO
     if (filters.estado.length > 0) {
@@ -195,17 +206,7 @@ export default function App() {
   if (isAuthorized === null) return null;
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
-      <header className="mt-4 z-30 px-4">
-        <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
-          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-            Lista de Citas
-          </h1>
-          <div className="flex gap-x-5 mt-2">
-            <CerrarSesion />
-          </div>
-        </div>
-      </header>
-
+      <HeaderUser title="Lista de citas"/>
       <div>
         <Navbar
           filterValue={filterValue}
@@ -217,6 +218,8 @@ export default function App() {
           setVisibleColumns={setVisibleColumns}
           columns={columns}
           onAddNew={() => {}}
+          menuOpen={menuAbierto}
+          setMenuOpen={setMenuAbierto}
         />
 
         {error ? (
@@ -232,6 +235,7 @@ export default function App() {
                 users={sortedItems}
                 headerColumns={headerColumns}
                 selectedKeys={selectedKeys}
+                menuOpen={menuAbierto}
                 setSelectedKeysAction={setSelectedKeys}
                 onCitaDeleted={(idCita) => {
                   setCitas((prevCitas) =>

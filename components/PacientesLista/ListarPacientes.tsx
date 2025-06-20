@@ -1,4 +1,3 @@
-import CerrarSesion from "../CerrarSesion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useRef, useCallback } from "react";
@@ -9,18 +8,17 @@ import { useRouter } from "next/navigation";
 import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
 import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
+import HeaderUser from "../User/HeaderUser";
 
 export interface FiltersPaciente {
   genero: string[];
   edad: string[];
-  fechaCreacion: string[];
   fechaUltimaCita: string[];
 }
 
 export const FiltersInitialState: FiltersPaciente = {
   genero: [],
   edad: [],
-  fechaCreacion: [],
   fechaUltimaCita: [],
 };
 
@@ -33,17 +31,6 @@ export default function ListarPacientes() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [filters, setFilters] = useState<FiltersPaciente>(FiltersInitialState);
 
-  const calcularEdad = (fechaNacimiento: string | Date): number => {
-    const nacimiento = new Date(fechaNacimiento);
-    const hoy = new Date();
-    let edad = hoy.getFullYear() - nacimiento.getFullYear();
-    const mes = hoy.getMonth() - nacimiento.getMonth();
-    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-      edad--;
-    }
-    return edad;
-  };
-
   useEffect(() => {
     let filtrados = [...paciente];
   
@@ -55,13 +42,24 @@ export default function ListarPacientes() {
     // Filtrar por edad si hay valores
     if (filters.edad.length > 0) {
       filtrados = filtrados.filter((p) => {
-        const edadPaciente = calcularEdad(p.fecha_nacimiento); // Asumiendo campo `fechaNacimiento`
         return filters.edad.some((rango) => {
           const [min, max] = rango.split(" - ").map(Number);
-          return edadPaciente >= min && edadPaciente <= max;
+          return p.edad >= min && p.edad <= max;
         });
       });
     }
+
+       // ✅ FILTRO POR FECHA DE ULTIMA CITA
+       if (filters.fechaUltimaCita.length === 2) {
+        const [from, to] = filters.fechaUltimaCita;
+        const fromDate = new Date(from + "T00:00:00");
+        const toDate = new Date(to + "T23:59:59");
+  
+        filtrados = filtrados.filter((cita) => {
+          const citaDate = new Date(cita.ultima_cita_fecha);
+          return citaDate >= fromDate && citaDate <= toDate;
+        });
+      }
   
     setFilteredPacientes(filtrados);
   }, [filters, paciente]);
@@ -162,16 +160,7 @@ export default function ListarPacientes() {
   return (
       <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
         {/* Header */}
-        <header className="mt-4 z-30 px-4">
-          <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
-            <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-              Pacientes
-            </h1>
-            <div className="flex gap-x-5 mt-2">
-              <CerrarSesion />
-            </div>
-          </div>
-        </header>
+        <HeaderUser title="Lista de pacientes"/>
 
         {/* Navbar with filters */}
         <NavbarPacientes
@@ -186,7 +175,7 @@ export default function ListarPacientes() {
         {/* Encabezado de tabla */}
         <table className="max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8">
           <thead className="rounded-full">
-          <tr className="bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11">
+          <tr className="bg-[#6265f4] dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11">
             <th className="rounded-tl-full text-2xl font-normal">○</th>
             <th className="font-normal">Paciente</th>
             <th className="font-normal">Código</th>

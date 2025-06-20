@@ -17,6 +17,8 @@ interface NavbarProps {
   setVisibleColumns: (columns: Set<string>) => void;
   columns: { name: string; uid: string; sortable?: boolean }[];
   onAddNew: () => void;
+  menuOpen: boolean;
+  setMenuOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const SubmenusInitialState = {
@@ -33,12 +35,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSearchChange,
   onClear,
   onAddNew,
+  menuOpen,
+  setMenuOpen
 }) => {
-  const [menuAbierto, setMenuAbierto] = useState(false);
+  
   const [submenus, setSubmenus] = useState(SubmenusInitialState);
 
   const [estadoSeleccionado, setEstadoSeleccionado] = useState<string[]>([]);
   const [generoSeleccionado, setGeneroSeleccionado] = useState<string[]>([]);
+  const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
   const [fechaSeleccionada, setFechaSeleccionada] = useState<
     [string, string] | string[]
   >([]);
@@ -50,19 +55,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       estado: false,
       fechaInicio: false,
     });
-  }, [filters, menuAbierto]);
+  }, [filters, menuOpen]);
 
   return (
-    <div className="flex w-full mt-8 z-40">
-      <div className="bg-primary dark:bg-primary w-full h-[8vh] flex justify-start items-center px-4">
+    <div className="flex w-full z-40">
+      <div className="bg-[#6265f4] dark:bg-primary w-full h-[8vh] flex justify-start items-center px-4">
         <div className="flex gap-4 w-full items-center pl-12">
-          <FilterButton menuOpen={menuAbierto} setMenuOpen={setMenuAbierto}>
+          <FilterButton menuOpen={menuOpen} setMenuOpen={setMenuOpen}>
             <FilterMenu
               setSubmenus={setSubmenus}
               menuItems={[
                 {
                   text: "Género",
                   key: "genero"
+                },
+                {
+                  text: "Edad",
+                  key: "edad"
                 },
                 {
                   text: "Estado",
@@ -75,6 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ]}
             />
 
+            {/* Submenú de genero */}
             <FilterSubMenu
               titulo="Género"
               isOpen={submenus.genero}
@@ -103,6 +113,51 @@ export const Navbar: React.FC<NavbarProps> = ({
                         } else {
                           setGeneroSeleccionado(
                             generoSeleccionado.filter((item) => item !== opcion)
+                          );
+                        }
+                      }}
+                      className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
+                    />
+                    {opcion}
+                  </label>
+                ))}
+              </div>
+            </FilterSubMenu>
+
+            {/* Submenú de edad */}
+            <FilterSubMenu
+              titulo="Edad"
+              isOpen={submenus.edad}
+              value={edadSeleccionada}
+              setFilters={setFilters}
+              setLocalValue={setEdadSeleccionada}
+              filterKey="edad"
+            >
+              <div className="flex flex-col text-sm pl-10">
+                {[
+                  "0 - 10",
+                  "10 - 20",
+                  "20 - 30",
+                  "30 - 40",
+                  "40 - 50",
+                  "50 - 60",
+                  "60 +",
+                ].map((opcion) => (
+                  <label
+                    key={opcion}
+                    className="text-[#634AE2] text-lg flex items-center gap-4"
+                  >
+                    <input
+                      type="checkbox"
+                      name="genero"
+                      value={opcion}
+                      checked={edadSeleccionada.includes(opcion)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEdadSeleccionada([...edadSeleccionada, opcion]);
+                        } else {
+                          setEdadSeleccionada(
+                            edadSeleccionada.filter((item) => item !== opcion)
                           );
                         }
                       }}
