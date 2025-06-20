@@ -283,12 +283,14 @@ export interface Paciente {
   email: string,
   celular: string,
   fecha_nacimiento: Date,
+  edad: number,
   imagen: string,
   genero: string,
   ocupacion: string,
   estadoCivil: string,
   direccion: string,
   idPsicologo: number
+  ultima_cita_fecha: Date
 }
 
 export interface Paciente2 {
@@ -367,9 +369,10 @@ export interface Citas {
   codigo: string;
   fecha_inicio: string;
   estado: string;
-  age: string;
+  edad: number;
   motivo: string;
   duracion: string;
+  genero: string;
 }
 
 export interface CitasConteo {
