@@ -27,7 +27,7 @@ export function MobileNavbar({ navItems }: { navItems: NavItems[] }) {
   return (
     <div>
       {/* NavBar */}
-      <div className="mt-28 fixed left-0 top-0 w-[80px] h-full p-4 bg-background z-50 rounded-r-2xl flex flex-col items-center">
+      <div className="fixed left-0 top-0 w-[80px] h-full p-4 bg-background z-50 rounded-r-2xl flex flex-col items-center">
         {/* Logo reducido */}
         <div className="flex justify-center mb-4">
           <Link href="/public">

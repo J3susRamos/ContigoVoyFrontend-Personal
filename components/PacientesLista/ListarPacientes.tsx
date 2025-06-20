@@ -30,6 +30,7 @@ export default function ListarPacientes() {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [filters, setFilters] = useState<FiltersPaciente>(FiltersInitialState);
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   useEffect(() => {
     let filtrados = [...paciente];
@@ -170,13 +171,15 @@ export default function ListarPacientes() {
             onAddNew={handleAddNew}
             filters={filters}
             setFilters={setFilters}
+            menuAbierto={menuAbierto}
+            setMenuAbierto={setMenuAbierto}
         />
 
         {/* Encabezado de tabla */}
-        <table className="max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8">
+        <table className={`max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8 ${menuAbierto && 'opacity-50'}`}>
           <thead className="rounded-full">
           <tr className="bg-[#6265f4] dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11">
-            <th className="rounded-tl-full text-2xl font-normal">○</th>
+            <th className="rounded-tl-full text-xl font-normal py-3">○</th>
             <th className="font-normal">Paciente</th>
             <th className="font-normal">Código</th>
             <th className="font-normal">DNI</th>
