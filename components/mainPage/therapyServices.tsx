@@ -49,7 +49,7 @@ export default function TherapyServices() {
     <>
       <div className="max-w-full px-0 mb-4 mx-auto ">
         <motion.h2
-          className="lg:text-4xl text-2xl font-bold mt-scv7 sm:mt-scv9 text-center text-title lg:mb-8 mb-7"
+          className="text-cv5 sm:text-cv7 font-bold mt-scv7 sm:mt-scv9 text-center text-title lg:mb-8 mb-7"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
