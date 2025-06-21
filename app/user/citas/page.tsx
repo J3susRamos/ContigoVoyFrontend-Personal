@@ -4,10 +4,10 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/User/Citas/NavbarCitas";
 import { TableCitas } from "@/components/User/Citas/TableCitas";
-import CerrarSesion from "@/components/CerrarSesion";
 import { Citas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
+import HeaderUser from "@/components/User/HeaderUser";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "codigo",
@@ -25,11 +25,11 @@ export interface Filters {
   fechaInicio: string[];
 }
 
-export const FiltersInitialState = {
-  genero: [] as string[],
-  estado: [] as string[],
-  edad: [] as string[],
-  fechaInicio: [] as string[],
+const FiltersInitialState: Filters = {
+  genero: [],
+  estado: [],
+  edad: [],
+  fechaInicio: [],
 };
 
 const columns = [
@@ -52,6 +52,7 @@ export default function App() {
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const [citas, setCitas] = useState<Citas[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>(FiltersInitialState);
@@ -76,8 +77,8 @@ export default function App() {
         showToast("error", "Error al obtener las citas");
         return;
       }
-
       const data = await response.json();
+      console.log(data);
 
       if (Array.isArray(data.result)) {
         const formattedCitas = data.result.map((cita: Citas) => ({
@@ -88,6 +89,8 @@ export default function App() {
           estado: cita.estado,
           duracion: cita.duracion,
           idCita: cita.idCita,
+          genero: cita.genero,
+          edad: cita.edad,
         }));
         setCitas(formattedCitas);
         showToast("success", "Citas obtenidas correctamente");
@@ -130,6 +133,23 @@ export default function App() {
   const filteredItems = useMemo(() => {
     let filteredCitas = [...citas];
 
+    // ✅ FILTRO POR GENERO
+    if (filters.genero.length > 0) {
+      filteredCitas = filteredCitas.filter((cita) =>
+        filters.genero.includes(cita.genero)
+      );
+    }
+
+    // Filtrar por edad si hay valores
+    if (filters.edad.length > 0) {
+      filteredCitas = filteredCitas.filter((p) => {
+        return filters.edad.some((rango) => {
+          const [min, max] = rango.split(" - ").map(Number);
+          return p.edad >= min && p.edad <= max;
+        });
+      });
+    }
+
     // ✅ FILTRO POR ESTADO
     if (filters.estado.length > 0) {
       filteredCitas = filteredCitas.filter((cita) =>
@@ -167,7 +187,6 @@ export default function App() {
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, filteredItems]);
-  console.log(sortedItems);
 
   const headerColumns = useMemo(() => {
     return columns.filter((column) =>
@@ -186,111 +205,120 @@ export default function App() {
   if (isAuthorized === null) return null;
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
-      <header className="mt-4 z-30 px-4">
-        <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
-          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-            Lista de Citas
-          </h1>
-          <div className="flex gap-x-5 mt-2">
-            <CerrarSesion />
+      <HeaderUser title="Lista de citas" />
+      <Navbar
+        filterValue={filterValue}
+        filters={filters}
+        setFilters={setFilters}
+        onSearchChange={onSearchChange}
+        onClear={onClear}
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        columns={columns}
+        onAddNew={() => {}}
+        menuOpen={menuAbierto}
+        setMenuOpen={setMenuAbierto}
+      />
+      {error ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg font-medium text-destructive dark:text-destructive">
+            {error}
           </div>
         </div>
-      </header>
-
-      <div>
-        <Navbar
-          filterValue={filterValue}
-          filters={filters}
-          setFilters={setFilters}
-          onSearchChange={onSearchChange}
-          onClear={onClear}
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          columns={columns}
-          onAddNew={() => {}}
-        />
-
-        {error ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg font-medium text-destructive dark:text-destructive">
-              {error}
-            </div>
-          </div>
-        ) : (
-          <>
-            {sortedItems.length > 0 ? (
-              <TableCitas
-                users={sortedItems}
-                headerColumns={headerColumns}
-                selectedKeys={selectedKeys}
-                setSelectedKeysAction={setSelectedKeys}
-                onCitaDeleted={(idCita) => {
-                  setCitas((prevCitas) =>
-                    prevCitas.filter(
-                      (cita) => Number(cita.idCita) !== Number(idCita)
-                    )
-                  );
-                }}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center py-16 px-4">
+      ) : (
+        <>
+          {sortedItems.length > 0 ? (
+            <TableCitas
+              users={sortedItems}
+              headerColumns={headerColumns}
+              selectedKeys={selectedKeys}
+              menuOpen={menuAbierto}
+              setSelectedKeysAction={setSelectedKeys}
+              onCitaDeleted={(idCita) => {
+                setCitas((prevCitas) =>
+                  prevCitas.filter(
+                    (cita) => Number(cita.idCita) !== Number(idCita)
+                  )
+                );
+              }}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 px-4">
               <div className="bg-white dark:bg-card rounded-lg shadow-sm border border-gray-200 dark:border-border p-8 max-w-md w-full text-center">
                 {/* Icono dinámico basado en si hay filtros activos */}
                 <div className="mx-auto w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
-                  {(filterValue || Object.values(filters).some(filter => filter && filter.length > 0)) ? (
+                  {filterValue ||
+                  Object.values(filters).some(
+                    (filter) => filter && filter.length > 0
+                  ) ? (
                     // Icono de búsqueda/filtro cuando hay filtros activos
-                    <svg 
-                      className="w-8 h-8 text-primary dark:text-primary-foreground" 
-                      fill="none" 
-                      stroke="currentColor" 
+                    <svg
+                      className="w-8 h-8 text-primary dark:text-primary-foreground"
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
                     </svg>
                   ) : (
                     // Icono de calendario cuando no hay filtros (sin citas)
-                    <svg 
-                      className="w-8 h-8 text-primary dark:text-primary-foreground" 
-                      fill="none" 
-                      stroke="currentColor" 
+                    <svg
+                      className="w-8 h-8 text-primary dark:text-primary-foreground"
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 9a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v7a2 2 0 01-2 2H10z" 
+                      <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                      <line
+                        x1="15"
+                        y1="9"
+                        x2="9"
+                        y2="15"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <line
+                        x1="9"
+                        y1="9"
+                        x2="15"
+                        y2="15"
+                        strokeWidth="2"
+                        strokeLinecap="round"
                       />
                     </svg>
                   )}
                 </div>
-                
+
                 {/* Título dinámico */}
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground mb-2">
-                  {(filterValue || Object.values(filters).some(filter => filter && filter.length > 0)) 
-                    ? "No se encontraron resultados" 
-                    : "No hay citas registradas"
-                  }
+                  {filterValue ||
+                  Object.values(filters).some(
+                    (filter) => filter && filter.length > 0
+                  )
+                    ? "No se encontraron resultados"
+                    : "No hay citas registradas"}
                 </h3>
-                
+
                 {/* Descripción dinámica */}
                 <p className="text-gray-600 dark:text-muted-foreground">
-                  {(filterValue || Object.values(filters).some(filter => filter && filter.length > 0)) 
-                    ? "No hay citas que coincidan con los filtros aplicados. Intenta ajustar tus criterios de búsqueda." 
-                    : "Aún no se han programado citas médicas en el sistema."
-                  }
+                  {filterValue ||
+                  Object.values(filters).some(
+                    (filter) => filter && filter.length > 0
+                  )
+                    ? "No hay citas que coincidan con los filtros aplicados. Intenta ajustar tus criterios de búsqueda."
+                    : "Aún no se han programado citas médicas en el sistema."}
                 </p>
               </div>
             </div>
-            )}
-          </>
-        )}
-      </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

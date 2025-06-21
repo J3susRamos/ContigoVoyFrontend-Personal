@@ -54,7 +54,7 @@ const FilterButton = ({ children, setMenuOpen, menuOpen }: Props) => {
         Filtrar
       </Button>
       {menuOpen && (
-        <div className="absolute z-50 flex w-max p-2 text-[#634AE2] text-lg">
+        <div className="absolute z-50 flex items-start w-max p-2 text-[#634AE2] text-lg">
           {children}
         </div>
       )}

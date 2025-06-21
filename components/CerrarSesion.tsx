@@ -45,10 +45,10 @@ export default function CerrarSesion() {
       )}
       <Button
         radius="full"
-        className="border-primary dark:border-primary-foreground text-primary dark:text-primary-foreground border-2 bg-transparent hover:bg-primary/10 dark:hover:bg-primary-foreground/10 h-8 mx-auto"
+        className="border-primary border-1 dark:border-primary-foreground text-primary dark:text-primary-foreground bg-transparent hover:bg-primary/10 dark:hover:bg-primary-foreground/10 h-8 mx-auto px-8 text-medium"
         onPress={logout}
       >
-        Cerrar Sesión
+        Cerrar sesión
       </Button>
     </div>
   );

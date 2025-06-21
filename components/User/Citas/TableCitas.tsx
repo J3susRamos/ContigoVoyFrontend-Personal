@@ -12,6 +12,7 @@ interface TableProps {
   selectedKeys: Set<React.Key>;
   setSelectedKeysAction: (keys: Set<React.Key>) => void;
   onCitaDeleted?: (idCita: number) => void;
+  menuOpen: boolean;
 }
 
 export const TableCitas: React.FC<TableProps> = ({
@@ -20,46 +21,49 @@ export const TableCitas: React.FC<TableProps> = ({
   selectedKeys,
   setSelectedKeysAction,
   onCitaDeleted,
+  menuOpen,
 }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    
   }, []);
 
   //Funcion para eliminar Citas
-  const HandleDeleteCitas = useCallback(async (idCita: number) => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/${idCita}`;
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
+  const HandleDeleteCitas = useCallback(
+    async (idCita: number) => {
+      try {
+        const cookies = parseCookies();
+        const token = cookies["session"];
+        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/${idCita}`;
+        const response = await fetch(url, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
 
-      if (response.ok) {
-        showToast("success", "Cita eliminada correctamente");
-        if (onCitaDeleted) {
-          onCitaDeleted(idCita); 
+        if (response.ok) {
+          showToast("success", "Cita eliminada correctamente");
+          if (onCitaDeleted) {
+            onCitaDeleted(idCita);
+          }
+        } else {
+          showToast(
+            "error",
+            data.status_message || "Error de conexión. Intenta nuevamente"
+          );
         }
-      } else {
-        showToast(
-          "error",
-          data.status_message || "Error de conexión. Intenta nuevamente"
-        );
+      } catch (error) {
+        console.error(error);
+        showToast("error", "Error de conexión. Intenta nuevamente");
       }
-    } catch (error) {
-      console.error(error);
-      showToast("error", "Error de conexión. Intenta nuevamente");
-    }
-  }, [onCitaDeleted]);
+    },
+    [onCitaDeleted]
+  );
 
   const handleSelectAll = useCallback(() => {
     if (selectedKeys.size === users.length) {
@@ -87,14 +91,17 @@ export const TableCitas: React.FC<TableProps> = ({
     localStorage.setItem("idCita", String(idCita));
     window.location.href = "/user/historial/AtencionPaciente";
   };
-  
-  const handleDeleteCita = useCallback((idCita: number) => {
+
+  const handleDeleteCita = useCallback(
+    (idCita: number) => {
       if (confirm("¿Estás seguro de eliminar esta cita?")) {
-          HandleDeleteCitas(idCita).catch(error => {
-              console.error("Error deleting appointment:", error);
-          });
+        HandleDeleteCitas(idCita).catch((error) => {
+          console.error("Error deleting appointment:", error);
+        });
       }
-  }, [HandleDeleteCitas]);
+    },
+    [HandleDeleteCitas]
+  );
 
   const renderCell = useCallback(
     (user: Citas, columnKey: keyof Citas | "actions") => {
@@ -137,7 +144,7 @@ export const TableCitas: React.FC<TableProps> = ({
               }}
               className="flex flex-col items-center pt-1"
             >
-            <div className="flex flex-col items-center pt-1">
+              <div className="flex flex-col items-center pt-1">
                 <span
                   className="text-lg text-[#3df356] cursor-pointer active:opacity-50"
                   dangerouslySetInnerHTML={{ __html: Icons.hand }}
@@ -147,7 +154,7 @@ export const TableCitas: React.FC<TableProps> = ({
                   Agregar Atencion
                 </div>
                 <span className="text-xs text-[#3df356] mt-2">Atencion</span>
-            </div>
+              </div>
             </button>
           </div>
         );
@@ -194,65 +201,63 @@ export const TableCitas: React.FC<TableProps> = ({
   }
 
   return (
-    <div className="overflow-x-auto max-h-[585px] p-5 w-full mx-auto">
-      <table className="w-full text-primary dark:text-primary-foreground border-separate border-spacing-y-2">
-        <thead className="sticky top-0 bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground">
-          <tr>
-            <th className="p-4 text-center rounded-tl-full">
+    <div className="max-w-screen-2xl mx-auto w-full pt-9 px-8">
+  <div className="overflow-auto max-h-[calc(100vh-300px)] relative"> 
+    <table className={`w-full border-separate border-spacing-y-4 ${menuOpen && "opacity-50"}`}>
+      <thead className="sticky top-0 z-10 bg-clip-padding">
+        <tr className="bg-[#6265f4] dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11 relative"> 
+          <th className="rounded-tl-full text-xl font-normal py-3 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[#6265f4] dark:bg-primary -z-10 rounded-tl-full"></div>
+            <input
+              type="checkbox"
+              className="w-4 h-4 rounded-full border-[#634AE2] bg-white focus:ring-0 checked:bg-[#634AE2] appearance-none relative z-10"
+              checked={selectedKeys.size === users.length && users.length > 0}
+              onChange={handleSelectAll}
+            />
+          </th>
+          {headerColumns.map((column) => (
+            <th
+              key={column.uid}
+              className="p-4 text-lg font-normal text-center text-primary-foreground dark:text-primary-foreground"
+            >
+              {column.name}
+            </th>
+          ))}
+          <th className="rounded-tr-full font-normal relative overflow-hidden">
+            <div className="absolute inset-0 bg-[#6265f4] dark:bg-primary -z-10 rounded-tr-full"></div>
+            Más
+          </th>
+        </tr>
+
+      </thead>
+      <tbody className="relative text-center bg-card dark:bg-card text-primary dark:text-primary-foreground font-normal text-[16px] leading-[20px]">
+        {users.map((item) => (
+          <tr
+            key={item.idCita}
+            className="border-y-4 bg-card dark:bg-card hover:bg-muted dark:hover:bg-muted relative"
+          >
+            <td className="p-4 text-center rounded-l-3xl">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded-full border-[#634AE2] bg-white focus:ring-0 checked:bg-[#634AE2] appearance-none"
-                checked={selectedKeys.size === users.length && users.length > 0}
-                onChange={handleSelectAll}
+                className="w-4 h-4 rounded-full border-[#634AE2] border-3 bg-white focus:ring-0 checked:bg-[#634AE2] appearance-none"
+                checked={selectedKeys.has(item.codigo)}
+                onChange={() => handleSelectItem(item.codigo)}
               />
-            </th>
-            {headerColumns.map((column, index) => (
-              <th
-                key={column.uid}
-                className={`p-4 text-lg font-normal text-center ${
-                  index === headerColumns.length - 1 ? "" : ""
-                }`}
-              >
-                {column.name}
-              </th>
-            ))}
-            <th className="p-4 text-center rounded-tr-full">
-              <div className="text-lg font-normal text-center">Más</div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((item) => (
-            <tr
-              key={item.codigo}
-              className="border-y-4 bg-card dark:bg-card hover:bg-muted dark:hover:bg-muted"
-            >
-              <td className="p-4 text-center rounded-l-3xl">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 rounded-full border-[#634AE2] border-3 bg-white focus:ring-0 checked:bg-[#634AE2] appearance-none"
-                  checked={selectedKeys.has(item.codigo)}
-                  onChange={() => handleSelectItem(item.codigo)}
-                />
-              </td>
+            </td>
 
-              {headerColumns.map((column, index) => (
-                <td
-                  key={column.uid}
-                  className={`p-4 text-lg text-center ${
-                    index === headerColumns.length - 1 ? "" : ""
-                  }`}
-                >
-                  {renderCell(item, column.uid as keyof Citas)}
-                </td>
-              ))}
-              <td className="p-4 text-center rounded-r-3xl">
-                {renderCell(item, "actions")}
+            {headerColumns.map((column) => (
+              <td key={column.uid} className="p-4 text-lg text-center">
+                {renderCell(item, column.uid as keyof Citas)}
               </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+            ))}
+            <td className="p-4 text-center rounded-r-3xl">
+              {renderCell(item, "actions")}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
   );
 };
