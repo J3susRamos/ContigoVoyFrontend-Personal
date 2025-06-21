@@ -4,6 +4,14 @@ import TherapyServices from "@/components/mainPage/therapyServices";
 import MainSlider from "@/components/mainPage/mainslider";
 import RealiableCompanies from "@/components/mainPage/ReliableCompanies";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terapia Psicológica Online | Contigo Voy",
+  description: "Conecta con tu bienestar. Psicólogos online, comienza tu terapia hoy. Contigo Voy te acompaña desde el primer paso. Agenda tu cita, la primera es gratis.",
+};
+
+
 export default function Home() {
   return (
     <div className="w-full overflow-hidden">

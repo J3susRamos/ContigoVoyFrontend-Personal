@@ -2,6 +2,7 @@ import type { Config } from "tailwindcss";
 import {heroui} from "@heroui/react";
 import tailwindcss_animate from "tailwindcss-animate";
 
+
 export default {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,6 +12,10 @@ export default {
   ],
   theme: {
   	extend: {
+		backgroundImage: {
+			'small-gradient': 'linear-gradient(rgba(120, 99, 227, 0.612), rgba(120, 99, 227, 0.612))',
+        	'large-gradient': 'linear-gradient(270deg, rgba(99, 74, 226, 0.24) 28.05%, rgba(99, 74, 226, 0.7) 47.87%, #7863E3 64.18%)',
+      	},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -58,8 +63,51 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
-  	}
+  		},
+		fontSize: {
+			'cv1' : '12px',
+			'cv2' : '14px',
+			'cv3' : '16px',
+			'cv4' : '18px',
+			'cv5' : '20px',
+			'cv6' : '24px',
+			'cv7' : '30px',
+			'cv8' : '36px',
+			'cv9' : '48px',
+			'cv10' : '60px',
+			'cv11' : '72px',
+		},
+		spacing: {
+			'scv1': '4px',
+			'scv2': '8px',
+			'scv3': '12px',
+			'scv4': '16px',
+			'scv5': '24px',
+			'scv6': '32px',
+			'scv7': '48px',
+			'scv8': '64px',
+			'scv9': '96px',
+			'scv10': '128px',
+			'scv11': '192px',
+			'scv12': '256px',
+			'scv13': '324px',
+			'scv14': '512px',
+			'scv15': '640px',
+			'scv16': '720px',
+			'scv17': '860px',
+			'scv18': '1280px'
+		},
+	
+		
+  	},
+	screens: {
+        'mw': '400px',     
+		'sm': '640px',
+		'md': '768px',
+		'lg': '1024px',
+		'xl': '1280px',
+		'2xl': '1536px',
+    },
   },
   darkMode: ["class"],
   plugins: [heroui(), tailwindcss_animate],

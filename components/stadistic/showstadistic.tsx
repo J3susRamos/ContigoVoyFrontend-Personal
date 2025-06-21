@@ -8,7 +8,7 @@ import Performance from "./performance";
 
 export default function ShowStadistic() {
   const [view, setView] = useState("clientes");
-  const [rol, setRol] = useState(""); // rol del usuario
+  const [, setRol] = useState(""); // rol del usuario
   const [allowedViews, setAllowedViews] = useState<string[]>([]); // vistas permitidas
 
   useEffect(() => {
@@ -21,9 +21,9 @@ export default function ShowStadistic() {
         setAllowedViews(["clientes", "citas", "ventas", "rendimiento"]);
       } else if (user.rol === "PSICOLOGO") {
         setAllowedViews(["clientes", "citas", "ventas"]);
-        setView("clientes"); 
+        setView("clientes");
       } else {
-        setAllowedViews(["clientes"]); 
+        setAllowedViews(["clientes"]);
         setView("clientes");
       }
     }

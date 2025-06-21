@@ -20,8 +20,8 @@ export function ThemeToggle() {
   }
 
   return (
-    <div>
-      <label htmlFor="theme-toggle" className="relative inline-block w-16 h-8">
+    <>
+      <label htmlFor="theme-toggle" className="relative inline-block w-16 h-8" style={{marginLeft: '12px'}}>
         <span id="theme-label" className="sr-only">
           Alternar modo oscuro
         </span>
@@ -61,6 +61,6 @@ export function ThemeToggle() {
           dangerouslySetInnerHTML={{ __html: Icons.moon }}
         ></span>
       </label>
-    </div>
+    </>
   );
 }

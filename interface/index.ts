@@ -283,12 +283,14 @@ export interface Paciente {
   email: string,
   celular: string,
   fecha_nacimiento: Date,
+  edad: number,
   imagen: string,
   genero: string,
   ocupacion: string,
   estadoCivil: string,
   direccion: string,
   idPsicologo: number
+  ultima_cita_fecha: Date
 }
 
 export interface Paciente2 {
@@ -367,9 +369,10 @@ export interface Citas {
   codigo: string;
   fecha_inicio: string;
   estado: string;
-  age: string;
+  edad: number;
   motivo: string;
   duracion: string;
+  genero: string;
 }
 
 export interface CitasConteo {
@@ -450,4 +453,41 @@ export interface UltimaAtencion {
   comentario: string;
   idAtencion: number;
   tratamiento: string;
+}
+
+export interface DashboardResult {
+  total_citas: number;
+  citas_completadas: number;
+  citas_pendientes: number;
+  citas_canceladas: number;
+  total_minutos_reservados: number | string;
+  total_pacientes: number;
+  nuevos_pacientes: number;
+  citas_confirmadas: number;
+}
+
+export interface DashboardApiResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  errorBag: never[];
+  result: DashboardResult;
+}
+
+export interface GeneroEstadisticaDetalle {
+  cantidad: number;
+  porcentaje: number;
+}
+
+export interface GeneroEstadisticaResult {
+  Masculino: GeneroEstadisticaDetalle;
+  Femenino: GeneroEstadisticaDetalle;
+}
+
+export interface GeneroEstadisticaApiResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  result: GeneroEstadisticaResult;
+  errorBag: never[];
 }

@@ -7,7 +7,6 @@ import { ListaAtencion } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import { useRouter } from "next/navigation";
-import LoadingPages from "@/components/LoadingPages";
 
 const columns = [
   { name: "Código", uid: "codigo", sortable: true },
@@ -158,7 +157,6 @@ export default function App() {
   if (isAuthorized === null || isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <LoadingPages />
       </div>
     );
   }

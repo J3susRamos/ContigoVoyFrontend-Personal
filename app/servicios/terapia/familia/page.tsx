@@ -1,5 +1,12 @@
 import ServicesStructure from "@/components/Services/ServicesStructure"
 import { ServicesStructureProps } from "@/interface"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terapia Familiar Online | Contigo Voy fortalece los lazos en tu hogar",
+  description: "Recupera la armonía con terapia familiar online. Mejora la comunicación, resuelve conflictos y fortalece los vínculos entre los miembros de tu familia.",
+};
+
  const FamilyTerapias:ServicesStructureProps[] =[{
   title: "Terapia familiar",
   edad: "Para todos los miembros",

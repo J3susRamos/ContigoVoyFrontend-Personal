@@ -26,20 +26,16 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
   };
 
   return (
-    <div className="absolute left-4 top-6">
+    <div className="absolute left-6 top-5 w-10">
       {/* Botón para abrir el menú */}
       <button
-        className="p-2 text-2xl focus:outline-none"
+        className="text-2xl focus:outline-none w-full"
         aria-label="Abrir menú"
         onClick={toggleMenu}
       >
         <span
           dangerouslySetInnerHTML={{
-            __html: Icons.hamburger.replace(/<svg /, '<svg fill="#634AE2" '),
-          }}
-          style={{
-            width: "1.2em",
-            height: "1.2em",
+            __html: Icons.hamburger.replace(/<svg /, '<svg fill="#634AE2" width=100% height=100%'),
           }}
         />
       </button>

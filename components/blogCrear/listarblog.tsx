@@ -2,6 +2,7 @@ import { BlogApiGEt } from "@/interface";
 import { Image } from "@heroui/react";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
+import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 
 export const BlogGet = async () => {
   try {
@@ -34,7 +35,7 @@ export const eliminarBlog = async (id: number | null) => {
   try {
     const cookies = parseCookies();
     const token = cookies["session"];
-    const reponse = await fetch(
+    const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${id}`,
       {
         method: "DELETE",
@@ -46,15 +47,18 @@ export const eliminarBlog = async (id: number | null) => {
       }
     );
 
-    if (!reponse.ok) {
-      throw new Error("Error deleting blog");
+    if (!response.ok) {
+      // Handle error response without throwing
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Delete failed:", errorData);
+      return { success: false, error: errorData.message || "Error deleting blog" };
     }
 
-    const data = await reponse.json();
-    return data;
+    const result = await response.json();
+    return { success: true, data: result };
   } catch (error) {
     console.error("Error deleting blog:", error);
-    throw error;
+    return { success: false, error: "Network error occurred" };
   }
 };
 
@@ -63,6 +67,7 @@ export function Listarblog({
 }: {
   onEdit: (id: number) => Promise<void>;
 }) {
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [bloge, setBlog] = useState<BlogApiGEt[]>([]);
 
   useEffect(() => {
@@ -70,42 +75,54 @@ export function Listarblog({
       const Data = await BlogGet();
       setBlog(Data);
     };
-    fetchBlogs();
+    fetchBlogs().catch(error => {
+      console.error("Error fetching blogs:", error);
+    });
   }, []);
 
   const handleEliminarBlog = async (id: number | null) => {
-    try {
-      await eliminarBlog(id);
+    const result = await eliminarBlog(id);
+    if (result.success) {
       const updatedBlogs = await BlogGet();
       setBlog(updatedBlogs);
-    } catch (error) {
-      console.error("Error al eliminar el blog:", error);
+    } else {
+      console.error("Error deleting blog:", result.error);
     }
   };
 
-  const handleEditarBlog = (id: number | null) => {
+  const handleEditarBlog = async (id: number | null) => {
     if (id !== null) {
-      onEdit(id);
+      try {
+        await onEdit(id);
+      } catch (error) {
+        console.error("Error editing blog:", error);
+      }
     }
+  };
+
+  const confirmDelete = async () => {
+    await handleEliminarBlog(deleteId);
+    setDeleteId(null);
   };
 
   return (
-    <div className="max-h-[500px] overflow-y-auto overflow-scroll:scrollbar-none">
-      <table className="w-full border-separate border-spacing-y-4 ">
-        <thead className="rounded-full">
-          <tr className="bg-[#6364F4] text-white h-11 ">
-            <th className="rounded-tl-full font-normal">ID</th>
-            <th className="font-normal">Tema</th>
-            <th className="font-normal">Categoria</th>
-            <th className="font-normal">Imagen</th>
-            <th className="rounded-tr-full font-normal">Acciones</th>
+
+    <div className="max-h-[500px] max-w-[1000px] w-full overflow-y-auto overflow-scroll:scrollbar-none rounded-2xl">
+      <table className="w-full border-separate border-spacing-y-4 rounded-t-lg rounded-2xl">
+        <thead className="rounded-[36px]">
+          <tr className="bg-opacity-0 text-white h-11 rounded-[36px]">
+            <th className="rounded-tl-[36px] font-normal bg-[#6364F4]">ID</th>
+            <th className="font-normal bg-[#6364F4]">Tema</th>
+            <th className="font-normal bg-[#6364F4]">Categoria</th>
+            <th className="font-normal bg-[#6364F4]">Imagen</th>
+            <th className="rounded-tr-[36px] font-normal bg-[#6364F4]">Acciones</th>
           </tr>
         </thead>
 
-        <tbody className="text-center   bg-white text-[#634AE2] font-normal text-[16px] leading-[20px]  ">
+        <tbody className="text-center   text-[#634AE2] font-normal text-[16px] leading-[20px]  ">
           {bloge.map((blog) => (
-            <tr key={blog.idBlog} className="border-b hover:bg-gray-100  ">
-              <td className="px-4 py-2 rounded-l-[34px]">{blog.idBlog}</td>
+            <tr key={blog.idBlog} style={{clipPath: 'xywh(0 0 100% 100% round 24px)'}} className="border-b bg-white hover:bg-gray-100 rounded-[36px] ">
+              <td className="px-4 py-2">{blog.idBlog}</td>
               <td className="px-4 py-2 ">{blog.tema}</td>
               <td className="px-4 py-2">{blog.categoria}</td>
               <td className="px-4 py-2 flex justify-center items-center">
@@ -139,7 +156,7 @@ export function Listarblog({
                   </div>
                   <div className="">
                     <button
-                      onClick={() => handleEliminarBlog(blog.idBlog)}
+                      onClick={() => setDeleteId(blog.idBlog)}
                       className="flex flex-col items-center justify-center hover:opacity-75"
                     >
                       <svg
@@ -162,6 +179,12 @@ export function Listarblog({
           ))}
         </tbody>
       </table>
+      <ConfirmDeleteModal
+          isOpen={deleteId !== null}
+          onClose={() => setDeleteId(null)}
+          onConfirm={confirmDelete}
+          message="¿Estás seguro de eliminar este blog?"
+      />
     </div>
   );
 }

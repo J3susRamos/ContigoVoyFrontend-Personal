@@ -1,13 +1,17 @@
 "use client";
 import { QuienesSomos } from "@/interface";
 import { Accordion, AccordionItem } from "@heroui/react";
+import { ReactNode } from "react";
+import Image from "next/image";
+import { Indicator } from "@radix-ui/react-checkbox";
 
 const AnchorIcon = () => {
   return (
     <svg
+      style={{filter: 'drop-shadow(4px 5px 16px rgba(0,0,0,0.35)) drop-shadow(2px 2px 3px rgba(0,0,0,0.45))'}}
       aria-hidden="true"
       focusable="false"
-      height="24"
+      height="40"
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2.5}
@@ -18,198 +22,128 @@ const AnchorIcon = () => {
   );
 };
 
+const TextItem = ({information} : {information : string}) =>{
+  return (
+    <p
+      style={{textShadow: '2px 2px 3px rgba(0,0,0,0.45)'}}
+      className="text-cv4 sm:text-cv5 leading-7 px-scv6"
+    >{information} 
+    </p>
+  )
+}
+
+const SubHeader = ({children} : {children: ReactNode}) =>{
+  return (
+    <h3
+      style={{textShadow: '2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)'}} 
+      className="font-semibold text-cv6 sm:text-cv7 mt-8 mb-6"
+    >{children} 
+    </h3>
+  )
+}
+
 export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
-  
 
   return (
-    <div
-      className="w-full"
-      style={{
-        backgroundImage: `linear-gradient(to right, #3616D87A 0%, #3616D870 30%, #7863E37A 70%, #7863E370 100%)`,
-        backgroundColor: "#fff",
-      }}
-    >
-      {/* Muestra para pantallas grandes */}
-      <div className="lg:block hidden">
-        {qs.map((item, index) => (
-          <div key={index} className="text-center">
-            <div className="pt-8 text-[#fff]">
-              <div className="grid grid-cols-3">
-                <div className="col-span-2">
-                  <section>
-                    <h2 className="text-5xl font-bold mb-3">¿Quiénes Somos?</h2>
-                    <p
-                      className="font-extralight text-lg pt-3"
-                      dangerouslySetInnerHTML={{ __html: item.quienesSomos }}
-                    />
-                  </section>
-
-                  <section className="pt-7">
-                    <h3 className="font-semibold text-2xl">Misión</h3>
-                    <p
-                      className="font-extralight text-lg pt-2"
-                      dangerouslySetInnerHTML={{ __html: item.mision }}
-                    />
-                  </section>
-
-                  <section className="pt-7">
-                    <h3 className="font-semibold text-2xl">Visión</h3>
-                    <p
-                      className="font-extralight text-lg pt-2"
-                      dangerouslySetInnerHTML={{ __html: item.vision }}
-                    />
-                  </section>
+    <div className="flex relative z-10 max-w-scv18 mx-auto min-h-screen">
+      {qs.map((item, index) => (
+        <div key={index} className="flex-1 flex flex-col items-center justify-between text-center pt-[36px] sm:pt-scv8 text-[#fff]">
+       
+          <Accordion 
+              selectionMode="single" 
+              itemClasses={{
+                titleWrapper: 'flex-initial',
+                trigger: 'flex justify-center px-scv4',
+                base: 'md:px-scv9 lg:px-scv11'
+              }}
+          >
+            <AccordionItem
+              key="quienes-somos"
+              aria-label="¿Quiénes Somos?"
+              className="relative"
+              title={
+                <h2 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
+                  className="text-cv8 font-bold text-[#fff] text-center leading-10 mb-scv1">
+                  ¿Quiénes Somos?
+                </h2>
+              }
+              indicator={
+                <div className="flex items-center justify-center">
+                  <AnchorIcon />
                 </div>
-                <div className="col-span-1 flex items-start ">
-                  <div
-                    className="w-[450px] mask-fade-bottom flex items-end h-[550px] bg-white bg-contain md:bg-cover bg-center bg-no-repeat"
-                    style={{
-                      backgroundImage: `linear-gradient(to right, #7863E37A 0%, #7863E37A 30%, #7863E37A 70%, #7863E370 100%),url('/AboutUs/psicologaAbout.webp')`,
-                      backgroundSize: "cover",
-                    }}
-                  />
-                </div>
-              </div>
-              <div
-                className="h-80 sm:h-[800px] bg-white bg-contain md:bg-cover bg-center bg-no-repeat"
-                style={{
-                  backgroundImage: `linear-gradient(to right, #3616D87A 0%, #3616D870 30%, #7863E37A 70%, #7863E370 100%),url('/AboutUs/nosotros-centro-psicologico-contigovoy-Manos-apoyándose.webp')`,
-                }}
-              />
-
-              <section className="pt-20">
-                <h3 className="font-medium text-3xl">Valores de Marca</h3>
-                <div className="pt-7">
-                  <h4 className="font-semibold text-2xl">Empatía</h4>
-                  <p
-                    className="font-extralight text-lg pt-2"
-                    dangerouslySetInnerHTML={{ __html: item.valor1 }}
-                  />
-                </div>
-                <div className="pt-7">
-                  <h4 className="font-semibold text-2xl">Confianza</h4>
-                  <p
-                    className="font-extralight text-lg pt-2"
-                    dangerouslySetInnerHTML={{ __html: item.valor2 }}
-                  />
-                </div>
-                <div className="pt-7">
-                  <h4 className="font-semibold text-2xl">Profesionalismo</h4>
-                  <p
-                    className="font-extralight text-lg pt-2"
-                    dangerouslySetInnerHTML={{ __html: item.valor3 }}
-                  />
-                </div>
+              }
+            >
+              <section>
+                <TextItem information={item.quienesSomos}/>
               </section>
-            </div>
-            <div
-              className="h-96 md:h-[890px] bg-white bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `linear-gradient(to right, #3616D87A 0%, #3616D870 30%, #7863E37A 70%, #7863E370 100%),url('/AboutUs/terapeutas-especializados-familia-feliz.webp')`,
-              }}
+              <section>
+                <SubHeader>Misión</SubHeader>
+                <TextItem information={item.mision}/>
+              </section>
+              <section>
+                <SubHeader>Visión</SubHeader>
+                <TextItem information={item.vision}/>
+              </section>
+            </AccordionItem>
+          </Accordion>
+          <div className="w-full h-[340px] lg:h-[540px] overflow-hidden relative">
+            <Image
+              src='/AboutUs/nosotros-centro-psicologico-contigovoy-Manos-apoyándose.webp'
+              alt="nosotros-centro-psicologico-contigovoy-Manos-apoyándose"
+              fill
+              className="object-cover object-center opacity-50 mask-horizontal-fade"    
             />
           </div>
-        ))}
-      </div>
-
-      {/* Muestra para pantallas pequeñas */}
-      <div className="block lg:hidden w-full">
-        {qs.map((item, index) => (
-          <div key={index} className="text-center">
-            <div className="pt-8 text-[#fff]">
-              <Accordion selectionMode="single">
-                <AccordionItem
-                  key="quienes-somos"
-                  aria-label="¿Quiénes Somos?"
-                  title={
-                    <h2 className="text-3xl font-bold text-[#fff] text-center">
-                      ¿Quiénes Somos?
-                    </h2>
-                  }
-                  indicator={
-                    <div className="flex items-center justify-center">
-                      <AnchorIcon />
-                    </div>
-                  }
-                >
-                  <section>
-                    <p
-                      className="font-extralight text-sm pt-3 mx-5"
-                      dangerouslySetInnerHTML={{ __html: item.quienesSomos }}
-                    />
-                  </section>
-                  <section className="pt-7">
-                    <h3 className="font-semibold text-xl">Misión</h3>
-                    <p
-                      className="font-extralight text-sm pt-2 mx-5"
-                      dangerouslySetInnerHTML={{ __html: item.mision }}
-                    />
-                  </section>
-                  <section className="pt-7">
-                    <h3 className="font-semibold text-xl">Visión</h3>
-                    <p
-                      className="font-extralight text-sm pt-2 mx-5"
-                      dangerouslySetInnerHTML={{ __html: item.vision }}
-                    />
-                  </section>
-                </AccordionItem>
-              </Accordion>
-
-              <div
-                className="h-80 sm:h-[800px] bg-white bg-contain md:bg-cover bg-center bg-no-repeat"
-                style={{
-                  backgroundImage: `linear-gradient(to right, #3616D87A 0%, #3616D870 30%, #7863E37A 70%, #7863E370 100%),url('/AboutUs/nosotros-centro-psicologico-contigovoy-Manos-apoyándose.webp')`,
-                }}
-              ></div>
-
-              <Accordion selectionMode="single">
-                <AccordionItem
-                  key="valores-marca"
-                  aria-label="Valores de Marca"
-                  title={
-                    <h2 className="text-xl font-bold text-[#fff] text-center">
-                      Valores de la marca
-                    </h2>
-                  }
-                  indicator={
-                    <div className="flex items-center justify-center">
-                      <AnchorIcon />
-                    </div>
-                  }
-                >
-                  <section className="pt-0">
-                    <h4 className="font-semibold text-xl">Empatía</h4>
-                    <p
-                      className="font-extralight text-sm pt-2 mx-5"
-                      dangerouslySetInnerHTML={{ __html: item.valor1 }}
-                    />
-                  </section>
-                  <section className="pt-7">
-                    <h4 className="font-semibold text-xl">Confianza</h4>
-                    <p
-                      className="font-extralight text-sm pt-2 mx-5"
-                      dangerouslySetInnerHTML={{ __html: item.valor2 }}
-                    />
-                  </section>
-                  <section className="pt-7">
-                    <h4 className="font-semibold text-xl">Profesionalismo</h4>
-                    <p
-                      className="font-extralight text-sm pt-2 mx-5"
-                      dangerouslySetInnerHTML={{ __html: item.valor3 }}
-                    />
-                  </section>
-                </AccordionItem>
-              </Accordion>
-            </div>
-            <div
-              className="h-96 md:h-[890px] bg-white bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `linear-gradient(to right, #3616D87A 0%, #3616D870 30%, #7863E37A 70%, #7863E370 100%),url('/AboutUs/terapeutas-especializados-familia-feliz.webp')`,
-              }}
+          <Accordion 
+            selectionMode="single" 
+            style={{position: 'relative'}}
+            itemClasses={{
+              titleWrapper: 'flex-initial',
+              trigger: 'flex justify-center px-scv4 pt-scv7',
+              base: 'md:px-scv9 lg:px-scv11'
+            }}
+          >
+            <AccordionItem
+              key="valores-marca"
+              aria-label="Valores de Marca"
+              
+              title={
+                <h2 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
+                  className="text-cv8 font-bold text-[#fff] text-center leading-10 ">
+                  Valores de la marca
+                </h2>
+              }
+              indicator={
+                <div>
+                  <AnchorIcon />
+                </div>
+              }
+            >
+              <section>
+                <SubHeader>Empatía</SubHeader>
+                <TextItem information={item.valor1}/>
+              </section>
+              <section>
+                <SubHeader>Confianza</SubHeader>
+                <TextItem information={item.valor2}/>
+              </section>
+              <section>
+                <SubHeader>Profesionalismo</SubHeader>
+                <TextItem information={item.valor3}/>
+              </section>
+            </AccordionItem>
+          </Accordion>
+          <div className="w-full h-[340px] lg:h-[770px] overflow-hidden relative mt-scv5 ">
+            <Image
+              src='/AboutUs/terapeutas-especializados-familia-feliz.webp'
+              alt="terapeutas-especializados-familia-feliz"
+              fill
+              className="object-cover object-center opacity-50 mask-horizontal-fade"    
             />
           </div>
-        ))}
-      </div>
+        </div>
+
+      ))}
     </div>
   );
 }

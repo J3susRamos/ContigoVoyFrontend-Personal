@@ -3,8 +3,8 @@ import AccordionQuest from "@/components/AccordionQuest";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Preguntas Frecuentes - ContigoVoy",
-  description: "Preguntas Frecuentes sobre terapia psicológica",
+  title: "Preguntas Frecuentes | Terapia Psicológica - Contigo Voy",
+  description: "¿Tienes dudas sobre nuestros servicios de atención psicológica en línea? En nuestra sección de preguntas frecuentes, resuelve tus inquietudes y se parte de nosotros.",
 };
 
 export default function App() {
@@ -32,18 +32,25 @@ export default function App() {
   ];
 
   return (
-    <div
-      className="min-h-screen bg-no-repeat lg:bg-bottom  bg-bottom background_faq"
-      style={{
-        backgroundImage: `linear-gradient(#634AE27A, #634AE27A), url('/preguntas-sobre-terapia-en-linea.webp')`,
-      }}
-    >
-      <div className="lg:text-left md:text-left font-bold lg:text-5xl text-2xl pt-[60px] pb-[70px] text-white lg:pl-20 text-center md:pl-20">
-        Preguntas frecuentes
+    <div className="min-h-screen w-full relative overflow-y-hidden overflow-x-clip bg-large-gradient"> 
+      <div className="lg:relative overflow-y-hidden overflow-x-clip">
+        <div
+          className="mix-blend-multiply opacity-70 z-0 absolute pointer-events-none top-0 left-0 -bottom-[20px] -right-[0] sm:-right-[130px] lg:-right-[260px] bg-[url('/preguntas-sobre-terapia-en-linea.webp')] bg-no-repeat bg-[length:700px] sm:bg-[length:900px] lg:bg-[length:1140px] bg-bottom"
+        ></div>
+        <div
+          className="relative z-10 max-w-scv18 mx-auto"
+        >
+          <div style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
+            className=" text-white text-cv8 sm:text-cv9 text-center sm:text-left font-bold px-scv7 pt-scv7 sm:pt-scv8 pb-scv6 md:pl-scv9">
+            Preguntas frecuentes
+          </div>
+          <div className="grid gap-4 pb-scv13 sm:pb-scv12  sm:max-w-scv15  px-scv7 md:pr-0 sm:pl-10  md:px-scv9">
+            <AccordionQuest faqs={faqs} />
+          </div>
+        </div>
       </div>
-      <div className="grid gap-4 pb-28 max-w-full sm:max-w-[150px] md:max-w-2xl pl-5 sm:pl-10 md:pl-20">
-        <AccordionQuest faqs={faqs} />
-      </div>
+      
     </div>
+    
   );
 }
