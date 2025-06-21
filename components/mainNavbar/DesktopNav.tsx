@@ -93,7 +93,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
 
                     {dropdownVisible && (
                       <motion.div
-                        className="absolute top-full left-0 mt-2 bg-background shadow-lg rounded-lg w-60 z-10"
+                        className="absolute border-b-2 border-warning-800  shadow-2xl top-full left-0 bg-background pt-scv4  rounded-lg w-60 z-10"
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
@@ -103,7 +103,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
                           {serviciosLinks.map((service) => (
                             <Link key={service.link} href={service.link}>
                               <div
-                                className={`px-4 py-2 text-sm rounded-full transition-colors duration-300 ${
+                                className={`px-4 py-2 text-sm rounded-full ${
                                   pathname === service.link
                                     ? "bg-[#634AE2] text-white"
                                     : "text-title hover:bg-[#634AE2] hover:text-white"

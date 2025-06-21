@@ -49,7 +49,7 @@ export default function MainSlider() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({
       stopOnInteraction: false,
-      delay: 400000,
+      delay: 4000,
     }),
   ]);
   const [selectedIndex, setSelectedIndex] = useState(0);
