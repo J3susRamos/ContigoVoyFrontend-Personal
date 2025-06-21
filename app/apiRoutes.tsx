@@ -8,11 +8,7 @@ import {
   PsicologoPreviewData,
   DashboardApiResponse,
   GeneroEstadisticaApiResponse,
-<<<<<<< HEAD
   CitasApiResponse
-=======
-  Citas
->>>>>>> 5cdb8a5 (cambios para el dashboard principal, su ruta y tipado)
 } from "@/interface";
 import {parseCookies} from "nookies";
 
@@ -178,11 +174,7 @@ export async function GetPacientesEstadisticasEdad(): Promise<GeneroEstadisticaA
 }
 
 //Traer citas del psicologo por mes
-<<<<<<< HEAD
 export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
-=======
-export async function GetCitasPsicologoPorMes(): Promise<Citas>{
->>>>>>> 5cdb8a5 (cambios para el dashboard principal, su ruta y tipado)
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/`,
     {
