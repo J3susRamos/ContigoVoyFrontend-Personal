@@ -44,7 +44,7 @@ export default function ServicesStructure({
                   src={item.background}
                   alt={item.title + item.motto}
                   fill
-                  className="mix-blend-multiply opacity-70 bg-cover mask-horizontal-fade "
+                  className="mix-blend-multiply bg-cover mask-horizontal-fade "
                 />
               </div>
               <p className="text-cv6 sm:text-cv8 pt-scv7 pb-scv8 sm:py-0 top-1/2 -translate-y-1/2 relative max-w-[350px] sm:max-w-[600px] text-white text-left h-auto font-bold leading-1  ">

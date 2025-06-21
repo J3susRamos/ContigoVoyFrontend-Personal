@@ -45,9 +45,9 @@ const SubHeader = ({children} : {children: ReactNode}) =>{
 export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
 
   return (
-    <div className="flex relative z-10 max-w-scv18 mx-auto min-h-screen">
+    <div className="flex  z-10 max-w-scv18 mx-auto min-h-screen">
       {qs.map((item, index) => (
-        <div key={index} className="flex-1 flex flex-col items-center justify-between text-center pt-[36px] sm:pt-scv8 text-[#fff]">
+        <div key={index} className=" flex-1 flex flex-col items-center justify-between text-center pt-[36px] sm:pt-scv8 text-[#fff]">
        
           <Accordion 
               selectionMode="single" 
@@ -91,7 +91,7 @@ export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
               src='/AboutUs/nosotros-centro-psicologico-contigovoy-Manos-apoyándose.webp'
               alt="nosotros-centro-psicologico-contigovoy-Manos-apoyándose"
               fill
-              className="object-cover object-center opacity-50 mask-horizontal-fade"    
+              className="mix-blend-soft-light object-cover object-center mask-horizontal-fade "    
             />
           </div>
           <Accordion 
@@ -138,7 +138,7 @@ export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
               src='/AboutUs/terapeutas-especializados-familia-feliz.webp'
               alt="terapeutas-especializados-familia-feliz"
               fill
-              className="object-cover object-center opacity-50 mask-horizontal-fade"    
+              className="mix-blend-soft-light object-cover object-center  mask-horizontal-fade"    
             />
           </div>
         </div>
