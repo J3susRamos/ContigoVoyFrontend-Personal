@@ -49,7 +49,7 @@ export default function MainSlider() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({
       stopOnInteraction: false,
-      delay: 4000,
+      delay: 400000,
     }),
   ]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -77,15 +77,14 @@ export default function MainSlider() {
               <div className=" mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right -right-scv7" style={{
                   backgroundImage: `url(${item.background})`,
                 }}>
-
               </div>
               <div
-                className="relative  z-10 lg:h-[650px]  min-h-[340px] w-full md:pt-0 bg-cover flex items-center lg:bg-center bg-right vg-left lg:pl-[79px] pl-[30px]  custom-bg-position"
+                className="mx-auto relative max-w-scv18 w-full  z-10 lg:min-h-[650px]  min-h-[340px]  md:pt-0 bg-cover flex items-center vg-left pl-[30px]"
               >
-                <div className="isolation my-scv6">
+                <div className="my-scv6">
                   <div
                     style={{textShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}}
-                    className="mr-scv6 max-w-scv13 lg:h-20 lg:mb-24 text-cv8 leading-10 font-bold text-white sm:text-[36px] lg:text-[62px] sm:leading-[42px] lg:leading-[77.5px] mt-13"
+                    className="mr-scv6 max-w-scv13 lg:max-w-scv14 text-cv8 lg:text-cv9 leading-10 lg:leading-[60px] font-bold text-white mt-13"
                     dangerouslySetInnerHTML={{
                       __html: item.phrase,
                     }}
@@ -102,7 +101,7 @@ export default function MainSlider() {
                       >
                         <div
                           style={{textShadow: '4px 5px 16px rgba(0,0,0,0.55), 2px 2px 3px rgba(0,0,0,0.85)'}}
-                          className="mr-scv6 max-w-scv14 font-lexend text-cv3 text-white lg:font-normal min-[350px]:text-[13px] font-light lg:text-[20px]  xl:leading-[px]  tracking-[2%]  sm:text-base lg:pb-14 lg:text-xl my-3 mb-6"
+                          className="mr-scv6 max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
                           dangerouslySetInnerHTML={{
                             __html: item.smallPhrase,
                           }}
@@ -114,7 +113,7 @@ export default function MainSlider() {
                   
                   <div className="relative block">
                     <Link href="/ReservarCita">
-                      <Button style={{boxShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}} className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-[20px]">
+                      <Button style={{boxShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}} className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-cv6">
                         Reservar Cita
                       </Button>
                     </Link>
@@ -126,7 +125,6 @@ export default function MainSlider() {
         </div>
       </div>
 
-      {/* Dots Navigation */}
       <div className="lg:block hidden">
         <div className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
           {sections.map((_, index) => (

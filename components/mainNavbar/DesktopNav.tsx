@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "../Themetoggle";
 import { MobileNav } from "./MobileNav";
+import { ChevronDown } from "lucide-react";
 
 interface NavItem {
   name: string;
@@ -79,14 +80,15 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
                     className="relative"
                   >
                     <Link
-                      className={`relative px-4 py-2 ${
+                      className={`relative px-4 py-2 flex items-center gap-x-scv1 ${
                         hovered === idx || pathname.includes("/terapia")
                           ? "bg-[#634AE2] rounded-full text-white"
                           : "text-title hover:bg-[#634AE2] hover:text-white rounded-full"
                       }`}
                       href="#"
                     >
-                      <span className="relative z-20 text-base">Servicios</span>
+                      <span className="relative z-20 text-base ">Servicios</span>
+                      <ChevronDown className={`transition-transform duration-300 ${hovered === idx ? "rotate-180": ""}`}/>
                     </Link>
 
                     {dropdownVisible && (

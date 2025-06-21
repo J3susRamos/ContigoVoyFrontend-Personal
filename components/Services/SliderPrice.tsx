@@ -127,8 +127,8 @@ const cardservices = [
 
 export default function SliderPrice() {
   return (
-    <div className="h-[650px] w-full items-center bg-[#D4D4FF]">
-      <h1 className="text-center p-10 text-4xl text-[#634AE2] font-semibold  ">
+    <div className="h-[650px] w-full items-center bg-large-gradient">
+      <h1 className="text-center p-10 text-4xl text-white font-semibold  ">
         Promociones
       </h1>
       <div className="flex justify-center">
