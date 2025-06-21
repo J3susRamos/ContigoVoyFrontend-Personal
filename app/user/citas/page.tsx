@@ -152,7 +152,7 @@ export default function App() {
       });
     }
 
-    // 🔍 FILTRO POR TEXTO EN PACIENTE
+    // Filtro por texto en paciente
     if (hasSearchFilter) {
       filteredCitas = filteredCitas.filter((cita) =>
         cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
