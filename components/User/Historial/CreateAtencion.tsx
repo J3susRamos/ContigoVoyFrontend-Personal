@@ -41,7 +41,7 @@ const CreateAtencion = () => {
     fecha_inicio: " ",
     estado: " ",
     duracion: " ",
-    age: " ",
+    edad: 0,
     motivo: " ",
     genero: " ",
     fecha_nacimiento: " "
