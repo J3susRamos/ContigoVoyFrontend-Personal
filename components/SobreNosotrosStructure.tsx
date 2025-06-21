@@ -3,7 +3,6 @@ import { QuienesSomos } from "@/interface";
 import { Accordion, AccordionItem } from "@heroui/react";
 import { ReactNode } from "react";
 import Image from "next/image";
-import { Indicator } from "@radix-ui/react-checkbox";
 
 const AnchorIcon = () => {
   return (

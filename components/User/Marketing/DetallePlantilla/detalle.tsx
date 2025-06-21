@@ -5,9 +5,18 @@ import CerrarSesion from "@/components/CerrarSesion";
 import { ArrowLeft, Mail, Send, Image } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+type EmailBlock =
+    | { type: "divider" }
+    | { type: "image"; imageUrl: string }
+    | {
+    type: "header" | "text";
+    content: string;
+    styles?: { color?: string; bold?: boolean; italic?: boolean };
+};
+
 const DetalleCampania = () => {
   const router = useRouter();
-  const [emailBlocks, setEmailBlocks] = useState<any[]>([]);
+  const [emailBlocks, setEmailBlocks] = useState<EmailBlock[]>([]);
   const [campaignName, setCampaignName] = useState("Campaña sin título");
   const [emailSubject, setEmailSubject] = useState("Asunto sin definir");
   const [sender] = useState("manuel@gmail.com");

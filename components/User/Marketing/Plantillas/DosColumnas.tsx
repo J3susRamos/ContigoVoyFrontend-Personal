@@ -14,6 +14,7 @@ interface EmailBlock {
     italic: boolean;
     color: string;
   };
+  imageUrl?: string;
   imageUrls?: string[]; 
   filesUrls?: string[];
 }
@@ -156,7 +157,7 @@ const EmailMarketingEditor = () => {
     );
   };
 
-  const updateBlockStyle = (id: string, style: keyof EmailBlock['styles'], value: any) => {
+  const updateBlockStyle = (id: string, style: keyof EmailBlock['styles'], value: boolean | string ) => {
     setEmailBlocks(blocks =>
       blocks.map(block =>
         block.id === id ? { ...block, styles: { ...block.styles, [style]: value } } : block
