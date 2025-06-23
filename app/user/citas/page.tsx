@@ -43,7 +43,7 @@ const columns = [
 
 export default function App() {
   const router = useRouter();
-  const cookies = parseCookies();
+  const cookies = useMemo(() => parseCookies(), []);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const [filterValue, setFilterValue] = useState("");
@@ -78,7 +78,6 @@ export default function App() {
         return;
       }
       const data = await response.json();
-      console.log(data);
 
       if (Array.isArray(data.result)) {
         const formattedCitas = data.result.map((cita: Citas) => ({
@@ -105,28 +104,25 @@ export default function App() {
     }
   }, [cookies]);
 
-  useEffect(() => {
-    if (isAuthorized) {
-      handleGetCitas();
-    }
-  }, [isAuthorized]);
-
   const [sortDescriptor] = useState({
     column: "fecha_inicio",
     direction: "ascending",
   });
-
+  
   useEffect(() => {
-    const cookies = parseCookies();
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
-    const isAuth = userData.rol === "PSICOLOGO" || cookies["rol"] !== "admin";
-    setIsAuthorized(isAuth);
-
-    if (!isAuth) {
+    if (userData.rol !== "PSICOLOGO") {
       router.push("/unauthorized");
+    } else {
+      setIsAuthorized(true);
     }
   }, [router]);
+
+  useEffect(() => {
+    handleGetCitas();
+  }, [handleGetCitas]);
+
 
   const hasSearchFilter = Boolean(filterValue);
 
