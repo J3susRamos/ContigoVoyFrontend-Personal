@@ -227,7 +227,7 @@ const EmailMarketingEditor = () => {
                     ) : block.type === 'image' && block.imageUrl ? (
                       <img
                         src={block.imageUrl}
-                        alt="Imagen"
+                        alt="Imagen de la plantilla"
                         className="w-full h-auto max-h-[250px] object-cover rounded mb-4"
                       />
                     ) : (

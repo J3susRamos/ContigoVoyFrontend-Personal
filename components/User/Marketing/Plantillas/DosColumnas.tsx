@@ -243,7 +243,7 @@ const EmailMarketingEditor = () => {
                 ) : block.type === 'image' && block.imageUrl ? (
                   <img
                     src={block.imageUrl}
-                    alt="Imagen"
+                    alt="Imagen de la plantilla"
                     className="max-w-full h-auto rounded mb-4"
                 />
                 )  : block.type === 'columns' ? (
