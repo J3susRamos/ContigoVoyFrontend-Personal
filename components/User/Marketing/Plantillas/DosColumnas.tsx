@@ -253,7 +253,7 @@ const EmailMarketingEditor = () => {
                         <img
                           src={url}
                           alt={`Columna ${index + 1}`}
-                          className="w-full h-auto rounded"
+                          className="w-full h-48 object-cover rounded"
                         />
                       </div>
                     ) : null
@@ -391,10 +391,10 @@ const EmailMarketingEditor = () => {
 
                       {url && (
                         <img
-                          src={url}
-                          alt={`Columna ${index + 1}`}
-                          className="w-full h-auto rounded"
-                        />
+                        src={url}
+                        alt={`Columna ${index + 1}`}
+                        className="w-full h-48 object-cover rounded"
+                      />                                    
                       )}
                     </div>
                   ))}
