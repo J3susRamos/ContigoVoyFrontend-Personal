@@ -51,7 +51,7 @@ export default function DashboardCitas() {
             );
           });
           setCitasDelDia(citasHoy);
-        });
+        }).catch(err => console.log(err));
       }, []);
 
   // Agrupar citas por hora y minutos
