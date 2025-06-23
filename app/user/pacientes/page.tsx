@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ListarPacientes from "@/components/PacientesLista/ListarPacientes";
+import ListarPacientes from "@/components/User/Pacientes/ListarPacientes";
+import HeaderUser from "@/components/User/HeaderUser";
 
 export default function Pacientes() {
   const router = useRouter();
@@ -11,8 +12,7 @@ export default function Pacientes() {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
-    // Si es ADMIN, redirige al 404
-    if (userData.rol === "ADMIN") {
+    if (userData.rol !== "PSICOLOGO") {
       router.push("/unauthorized");
     } else {
       setIsAuthorized(true);
@@ -27,7 +27,8 @@ export default function Pacientes() {
   }
 
   return (
-    <div>
+    <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
+      <HeaderUser title="Lista de pacientes"/>
       <ListarPacientes />
     </div>
   );
