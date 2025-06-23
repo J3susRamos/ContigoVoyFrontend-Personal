@@ -9,7 +9,7 @@ import {
 import { renderCustomizedLabel, CustomTooltip } from "../CustomTooltipComponent";
 import { DashboardResult } from "@/interface";
 
-const COLORS = ["#BABAFF", "#9494F3", "#58A6FF", "#B158FF"];
+const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
 
 type GeneroData = {
   name: string;
@@ -27,8 +27,8 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
     ) {
         setGenero([
           { name: "Citas completadas", Total: data.citas_completadas },
-          { name: "Citas pendientes", Total: data.citas_pendientes },
           { name: "Citas canceladas", Total: data.citas_canceladas },
+          { name: "Citas pendientes", Total: data.citas_pendientes },
           { name: "Ausencias", Total: 0 },
         ]);
     }
