@@ -14,7 +14,8 @@ export default {
   	extend: {
 		backgroundImage: {
 			'small-gradient': 'linear-gradient(rgba(120, 99, 227, 0.612), rgba(120, 99, 227, 0.612))',
-        	'large-gradient': 'linear-gradient(270deg, rgba(99, 74, 226, 0.24) 28.05%, rgba(99, 74, 226, 0.7) 47.87%, #7863E3 64.18%)',
+        	'large-gradient': 'linear-gradient(60deg, hsl(211, 84%, 27%) 0%, hsl(250, 77%, 64%) 50%, hsl(280, 87%, 76%) 100%)',
+			'recursive-gradient': 'linear-gradient(90deg, hsl(211, 84%, 27%) 0%, hsl(250, 77%, 64%) 40%, hsl(280, 87%, 76%) 80%, hsl(250, 77%, 64%) 94%, hsl(211, 84%, 27%) 100%)'
       	},
   		colors: {
   			background: 'hsl(var(--background))',

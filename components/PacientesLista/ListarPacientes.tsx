@@ -1,4 +1,3 @@
-import CerrarSesion from "../CerrarSesion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useRef, useCallback } from "react";
@@ -9,6 +8,19 @@ import { useRouter } from "next/navigation";
 import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
 import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
+import HeaderUser from "../User/HeaderUser";
+
+export interface FiltersPaciente {
+  genero: string[];
+  edad: string[];
+  fechaUltimaCita: string[];
+}
+
+export const FiltersInitialState: FiltersPaciente = {
+  genero: [],
+  edad: [],
+  fechaUltimaCita: [],
+};
 
 export default function ListarPacientes() {
   const [paciente, setPaciente] = useState<Paciente[]>([]);
@@ -17,6 +29,41 @@ export default function ListarPacientes() {
   const toastShownRef = useRef(false);
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [filters, setFilters] = useState<FiltersPaciente>(FiltersInitialState);
+  const [menuAbierto, setMenuAbierto] = useState(false);
+
+  useEffect(() => {
+    let filtrados = [...paciente];
+  
+    // Filtrar por género si hay valores
+    if (filters.genero.length > 0) {
+      filtrados = filtrados.filter((p) => filters.genero.includes(p.genero));
+    }
+  
+    // Filtrar por edad si hay valores
+    if (filters.edad.length > 0) {
+      filtrados = filtrados.filter((p) => {
+        return filters.edad.some((rango) => {
+          const [min, max] = rango.split(" - ").map(Number);
+          return p.edad >= min && p.edad <= max;
+        });
+      });
+    }
+
+       // ✅ FILTRO POR FECHA DE ULTIMA CITA
+       if (filters.fechaUltimaCita.length === 2) {
+        const [from, to] = filters.fechaUltimaCita;
+        const fromDate = new Date(from + "T00:00:00");
+        const toDate = new Date(to + "T23:59:59");
+  
+        filtrados = filtrados.filter((cita) => {
+          const citaDate = new Date(cita.ultima_cita_fecha);
+          return citaDate >= fromDate && citaDate <= toDate;
+        });
+      }
+  
+    setFilteredPacientes(filtrados);
+  }, [filters, paciente]);
 
   const onSearchChange = useCallback((value?: string) => {
     const searchValue = value || "";
@@ -44,6 +91,8 @@ export default function ListarPacientes() {
 
   const handleGetPacientes = async (showToast = true) => {
     const pacientsData = await pacientesGet();
+    console.log(pacientsData);
+    
     const status = pacientsData.state;
     let data = pacientsData.result;
     switch(status){
@@ -69,6 +118,7 @@ export default function ListarPacientes() {
     }
     setPaciente(data);
     setFilteredPacientes(data);
+    
   };
 
   const HandleDeletePaciente = async (idPaciente: number) => {
@@ -111,16 +161,7 @@ export default function ListarPacientes() {
   return (
       <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
         {/* Header */}
-        <header className="mt-4 z-30 px-4">
-          <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
-            <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-              Pacientes
-            </h1>
-            <div className="flex gap-x-5 mt-2">
-              <CerrarSesion />
-            </div>
-          </div>
-        </header>
+        <HeaderUser title="Lista de pacientes"/>
 
         {/* Navbar with filters */}
         <NavbarPacientes
@@ -128,13 +169,17 @@ export default function ListarPacientes() {
             onSearchChange={onSearchChange}
             onClear={onClear}
             onAddNew={handleAddNew}
+            filters={filters}
+            setFilters={setFilters}
+            menuAbierto={menuAbierto}
+            setMenuAbierto={setMenuAbierto}
         />
 
         {/* Encabezado de tabla */}
-        <table className="max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8">
+        <table className={`max-w-screen-2xl mx-auto w-full pt-9 border-separate border-spacing-y-4 px-8 ${menuAbierto && 'opacity-50'}`}>
           <thead className="rounded-full">
-          <tr className="bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11">
-            <th className="rounded-tl-full text-2xl font-normal">○</th>
+          <tr className="bg-[#6265f4] dark:bg-primary text-primary-foreground dark:text-primary-foreground h-11">
+            <th className="rounded-tl-full text-xl font-normal py-3">○</th>
             <th className="font-normal">Paciente</th>
             <th className="font-normal">Código</th>
             <th className="font-normal">DNI</th>

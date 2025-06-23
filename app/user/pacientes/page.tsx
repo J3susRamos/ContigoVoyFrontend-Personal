@@ -11,7 +11,6 @@ export default function Pacientes() {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
-    // Si es ADMIN, redirige al 404
     if (userData.rol === "ADMIN") {
       router.push("/unauthorized");
     } else {

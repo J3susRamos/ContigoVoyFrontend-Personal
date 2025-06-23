@@ -13,8 +13,13 @@ import {
 import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date"
 import "react-country-state-city/dist/react-country-state-city.css"
+import Image from "next/image";
+import { Plus } from "lucide-react";
+import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 
 export default function App() {
+  const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [url, setUrl] = useState("");
   const [country, setCountry] = useState<Country | null>(null);
   const [currentState, setCurrentState] = useState<City | null>(null);
   const [currentCity, setCurrentCity] = useState<State | null>(null);
@@ -36,6 +41,25 @@ export default function App() {
     antecedentesMedicos: "",
     medicamentosPrescritos: "",
   });
+  // Corrige el tipo de currentState y currentCity en el formData
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      // Convertir la imagen a WebP
+      const webpImage = await convertImageToWebP(file);
+      // Convertir la imagen WebP a Base64
+      const base64 = await convertToBase64(webpImage);
+      setBase64Image(base64);
+      setUrl(""); // Clear URL input when uploading an image
+    } catch (error) {
+      console.error("Error processing image:", error);
+      showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
+    }
+  };
+
   const handleDateChange = (value: CalendarDate | null) => {
     if (value) {
       // Formatear directamente como DD/MM/YYYY
@@ -110,7 +134,7 @@ export default function App() {
         email: formData.email,
         celular: formData.celular,
         fecha_nacimiento: formData.fecha_nacimiento,
-        imagen: "http://algo",
+        imagen: base64Image || url || "http://algo",
         genero: formData.genero,
         ocupacion: formData.ocupacion,
         estadoCivil: formData.estadoCivil,
@@ -119,8 +143,9 @@ export default function App() {
 
       const cookies = parseCookies();
       const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/pacientes`;
-      const response = await fetch(url, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const urlApi = apiUrl ? `${apiUrl}api/pacientes` : "/api/pacientes";
+      const response = await fetch(urlApi, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -152,7 +177,8 @@ export default function App() {
           antecedentesMedicos: "",
           medicamentosPrescritos: "",
         });
-        
+        setBase64Image(null);
+        setUrl("");
       } else {
         showToast("error", data.message || "Error al crear el paciente");
       }
@@ -352,8 +378,47 @@ export default function App() {
               className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
+          {/* Imagen */}
+          <h1 className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
+            Imagen
+          </h1>
+
+          {/* Seccion de subida de imagen */}
+          <div className="w-full flex flex-col gap-2">
+            {/* Boton de subir imagen */}
+            <div className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
+              {base64Image ? (
+                <Image
+                  src={base64Image}
+                  alt="Imagen seleccionada"
+                  width={300}
+                  height={128}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center">
+                  <Plus
+                    width={40}
+                    height={40}
+                    strokeWidth={2}
+                    className="text-[#634AE2]"
+                  />
+                  <span className="text-[#634AE2] text-sm mt-2">
+                    Subir foto del paciente
+                  </span>
+                </div>
+              )}
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
+            </div>
+          </div>
         </div>
-        
+
         {/*Segunda Columna*/}
         <div className="flex-1 mr-5 ml-5 bg-card dark:bg-card rounded-2xl p-6 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
@@ -495,7 +560,7 @@ export default function App() {
           </div>
         </div>
       </div>
-      
+
       <div className="flex justify-center w-full p-4">
         <button
           onClick={HandlePostPaciente}

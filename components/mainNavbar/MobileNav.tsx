@@ -3,6 +3,7 @@ import { ThemeToggle } from "../Themetoggle";
 import { Icons } from "@/icons";
 import Link from "next/link";
 import { NavItem } from "@/interface";
+import { ChevronDown } from "lucide-react";
 
 export function MobileNav({ navItems }: { navItems: NavItem[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -88,13 +89,14 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
                   <>
                     {navItem.name === "Servicios" ? (
                       <button
-                        className="w-full bg-none text-[#634AE2] font-bold text-xl text-left pl-8 mt-5"
+                        className="w-full bg-none text-[#634AE2] font-bold text-xl text-left pl-8 mt-5 flex items-center gap-x-2"
                         onClick={(e) => {
                           e.preventDefault();
                           toggleServices();
                         }}
                       >
                         {navItem.name}
+                        <ChevronDown  strokeWidth={3} className= { isServicesOpen ? "rotate-180" : ""}/>
                       </button>
                     ) : (
                       <Link href={navItem.link}>
