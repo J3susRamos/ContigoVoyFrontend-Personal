@@ -373,6 +373,14 @@ export interface Citas {
   motivo: string;
   duracion: string;
   genero: string;
+  fecha_nacimiento: string;
+}
+export interface CitasApiResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  errorBag: never[];
+  result: Citas[];
 }
 
 export interface CitasConteo {

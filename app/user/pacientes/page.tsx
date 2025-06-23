@@ -11,7 +11,6 @@ export default function Pacientes() {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
-
     if (userData.rol !== "PSICOLOGO") {
       router.push("/unauthorized");
     } else {
