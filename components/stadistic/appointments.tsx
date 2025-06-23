@@ -91,10 +91,10 @@ export default function Appointments() {
             </div>
           </div>
         </div>
-
+  <div className="max-xl:flex max-xl:flex-col max-xl:gap-8 flex gap-10 max-sm:max-w-[300px]">
         {/* LineChart */}
-        <div className="w-full h-[220px] sm:h-[300px] md:h-[400px] bg-card dark:bg-card rounded-2xl flex flex-col">
-          <div className="rounded-r-full w-3/4 sm:w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+        <div className="w-full min-h-[400px] bg-card dark:bg-card rounded-2xl flex flex-col min-w-[480px] ">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-0 sm:mr-10 text-lg sm:text-xl">
               Citas totales <br /> del período:
             </p>
@@ -144,10 +144,10 @@ export default function Appointments() {
             </ResponsiveContainer>
           </div>
         </div>
-
+        
         {/* PieChart */}
-        <div className="w-full h-[220px] sm:h-[300px] md:h-[400px] bg-card dark:bg-card rounded-2xl flex flex-col">
-          <div className="rounded-r-full w-3/4 sm:w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+        <div className="w-full h-fit bg-card dark:bg-card rounded-2xl min-w-[480px] flex flex-col min-h-[400px] max-sm:max-w-[300px]">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-0 sm:mr-10 text-lg sm:text-xl">
               Estado de <br /> cita:
             </p>
@@ -162,7 +162,7 @@ export default function Appointments() {
                 <PieChartGrafic data={citasPsicologo} />
             )}
           </div>
-          <div className="grid justify-start gap-3 sm:gap-5 grid-cols-2 w-full max-w-xs ml-4 sm:ml-10">
+          <div className="grid grid-cols-2 m-auto gap-x-3 h-[80px]">
             {genero.map((entry, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div
@@ -174,6 +174,7 @@ export default function Appointments() {
               </span>
                 </div>
             ))}
+          </div>
           </div>
         </div>
       </div>
