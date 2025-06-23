@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+
 import { Accordion, AccordionItem } from "@heroui/react";
 import { AccordionQuestProps } from "@/interface";
 

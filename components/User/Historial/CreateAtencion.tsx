@@ -41,8 +41,10 @@ const CreateAtencion = () => {
     fecha_inicio: " ",
     estado: " ",
     duracion: " ",
-    age: " ",
+    edad: 0,
     motivo: " ",
+    genero: " ",
+    fecha_nacimiento: " "
   });
   const [enfermedades, setEnfermedades] = useState<Enfermedad[]>([]);
   const [DSM5SearchTerm, setDSM5SearchTerm] = useState("");

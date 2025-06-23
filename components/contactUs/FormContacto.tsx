@@ -1,6 +1,6 @@
 "use client";
 import { Contact } from "@/interface";
-import { Button, Form, input, Input } from "@heroui/react";
+import { Button, Form, Input } from "@heroui/react";
 import React, { useState } from "react";
 
 export default function FormContacto() {

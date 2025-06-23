@@ -109,7 +109,7 @@ export default function App() {
     if (isAuthorized) {
       handleGetCitas();
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, handleGetCitas]);
 
   const [sortDescriptor] = useState({
     column: "fecha_inicio",

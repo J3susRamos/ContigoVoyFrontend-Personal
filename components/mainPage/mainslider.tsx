@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { AnimatePresence, motion } from "framer-motion";
 import Autoplay from "embla-carousel-autoplay";
-
 import { Button } from "@heroui/react";
 import Link from "next/link";
 
@@ -16,30 +15,30 @@ interface SliderSection {
 
 const sections: SliderSection[] = [
   {
-    phrase: "Estamos contigo <br> y para ti ",
+    phrase: "Estamos contigo y para ti ",
     smallPhrase:
-      "Con nuestras terapias virtuales, transformamos <br> tu vida y te acompañamos en cada paso de tu <br> camino hacia la sanación.",
+      "Con nuestras terapias virtuales, transformamos tu vida y te acompañamos en cada paso de tu camino hacia la sanación.",
     button: true,
     background: "/carruselImages/salud-mental-terapia-virtual.webp",
   },
   {
-    phrase: "Apoyo a un <br> click de distancia",
+    phrase: "Apoyo a un click de distancia",
     smallPhrase:
-      "Nuestras terapias virtuales te permiten cuidar <br> de tu bienestar desde la comodidad de tu <br>hogar cuando más lo necesites.",
+      "Nuestras terapias virtuales te permiten cuidar de tu bienestar desde la comodidad de tu hogar cuando más lo necesites.",
     button: true,
     background: "/carruselImages/centro-psicologico-terapia-online.webp",
   },
   {
-    phrase: "Tu bienestar emocional <br> inicia aqui",
+    phrase: "Tu bienestar emocional inicia aqui",
     smallPhrase:
-      "Transforma tu vida con nuestras <br> terapias diseñadas para ayudarte <br> a sanar y crecer.",
+      "Transforma tu vida con nuestras terapias diseñadas para ayudarte a sanar y crecer.",
     button: true,
     background: "/carruselImages/bienestar-mental-terapia-virtual.webp",
   },
   {
-    phrase: "No dejemos que el <br> silencio sea el enemigo",
+    phrase: "No dejemos que el silencio sea el enemigo",
     smallPhrase:
-      "8 de cada 10 peruanos no reciben <br> la atención mental que necesitan. <br>",
+      "8 de cada 10 peruanos no reciben la atención mental que necesitan.",
     button: true,
     background: "/carruselImages/psicologo-en-linea-ayuda-emocional.webp",
   },
@@ -72,17 +71,19 @@ export default function MainSlider() {
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           {sections.map((item, index) => (
-            <div className="embla__slide" key={index}>
+            <div className="relative embla__slide overflow-hidden" key={index}>
+              <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
+              <div className=" mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right -right-scv7" style={{
+                  backgroundImage: `url(${item.background})`,
+                }}>
+              </div>
               <div
-                className="lg:h-[650px] h-[340px] w-full md:pt-0 bg-cover flex items-center lg:bg-center bg-right vg-left lg:pl-[79px] pl-[30px] custom-bg-position"
-                style={{
-                  backgroundImage: `linear-gradient(270deg, rgba(99, 74, 226, 0.24) 28.05%, rgba(99, 74, 226, 0.7) 47.87%, #7863E3 64.18%),url(${item.background})`,
-                }}
+                className="mx-auto relative max-w-scv18 w-full  z-10 lg:min-h-[650px]  min-h-[340px]  md:pt-0 bg-cover flex items-center vg-left pl-[30px]"
               >
-                <div>
+                <div className="my-scv6">
                   <div
                     style={{textShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}}
-                    className=" lg:h-20 lg:mb-24 font-bold text-white sm:text-[36px] lg:text-[62px] text-[25px] sm:leading-[42px] lg:leading-[77.5px] mt-13 leading-8"
+                    className="mr-scv6 max-w-scv13 lg:max-w-scv14 text-cv8 lg:text-cv9 leading-10 lg:leading-[60px] font-bold text-white mt-13"
                     dangerouslySetInnerHTML={{
                       __html: item.phrase,
                     }}
@@ -98,8 +99,8 @@ export default function MainSlider() {
                         exit={{ opacity: 0 }}
                       >
                         <div
-                          style={{textShadow: '2px 2px 3px rgba(0,0,0,0.45)'}}
-                          className="font-lexend text-white lg:font-normal min-[350px]:text-[13px] font-light lg:text-[20px] text-[11px] xl:leading-[px]  tracking-[2%]  sm:text-base lg:pb-14 lg:text-xl my-2 mb-6"
+                          style={{textShadow: '4px 5px 16px rgba(0,0,0,0.55), 2px 2px 3px rgba(0,0,0,0.85)'}}
+                          className="mr-scv6 max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
                           dangerouslySetInnerHTML={{
                             __html: item.smallPhrase,
                           }}
@@ -110,11 +111,11 @@ export default function MainSlider() {
                   </AnimatePresence>
                   
                   <div className="relative block">
-                  <Link href="/ReservarCita">
-                    <Button className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-[20px]">
-                      Reservar Cita
-                    </Button>
-                  </Link>
+                    <Link href="/ReservarCita">
+                      <Button style={{boxShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}} className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-cv6">
+                        Reservar Cita
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -123,7 +124,6 @@ export default function MainSlider() {
         </div>
       </div>
 
-      {/* Dots Navigation */}
       <div className="lg:block hidden">
         <div className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
           {sections.map((_, index) => (
