@@ -134,7 +134,7 @@ export default function App() {
         email: formData.email,
         celular: formData.celular,
         fecha_nacimiento: formData.fecha_nacimiento,
-        imagen: base64Image || url || "http://algo",
+        imagen: base64Image || url,
         genero: formData.genero,
         ocupacion: formData.ocupacion,
         estadoCivil: formData.estadoCivil,
@@ -208,7 +208,7 @@ export default function App() {
           <h1>Datos del Paciente</h1>
         </div>
       </div>
-      <div className="flex mt-4 text-primary dark:text-primary font-bold text-normal">
+      <div className="flex mt-4 text-primary dark:text-primary font-bold text-normal max-xl:flex-col max-xl:gap-10">
         <div className="flex-1 ml-5 mr-5 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="flex pt-6">
             <div className="flex-1 items-center justify-items-center">
@@ -384,16 +384,16 @@ export default function App() {
           </h1>
 
           {/* Seccion de subida de imagen */}
-          <div className="w-full flex flex-col gap-2">
+          <div className="w-[300px] flex flex-col gap-2 m-auto">
             {/* Boton de subir imagen */}
-            <div className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
+            <div className="relative border border-border dark:border-border rounded-lg h-[300px] bg-input w-full flex justify-center items-center cursor-pointer overflow-hidden">
               {base64Image ? (
                 <Image
                   src={base64Image}
                   alt="Imagen seleccionada"
                   width={300}
-                  height={128}
-                  className="w-full h-full object-cover"
+                  height={300}
+                  className="w-full h-[300px] object-cover object-center"
                 />
               ) : (
                 <div className="flex flex-col items-center">
@@ -401,9 +401,9 @@ export default function App() {
                     width={40}
                     height={40}
                     strokeWidth={2}
-                    className="text-[#634AE2]"
+                    className="text-card-foreground dark:text-card-foreground"
                   />
-                  <span className="text-[#634AE2] text-sm mt-2">
+                  <span className="text-card-foreground dark:text-card-foreground text-sm mt-2">
                     Subir foto del paciente
                   </span>
                 </div>
