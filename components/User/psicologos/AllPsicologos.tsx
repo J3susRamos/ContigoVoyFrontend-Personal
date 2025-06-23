@@ -125,8 +125,8 @@ export default function AllPsicologos({
           </div>
         </div>
 
-        <div className="w-full mt-4">
-          <table className="max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8">
+        <div className="w-full mt-4 overflow-x-auto">
+          <table className="min-w-[600px] max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8">
             <thead className="rounded-full">
               <tr className="bg-[#6364F4] text-white h-11">
                 <th className="px-4 py-2 text-2xl rounded-l-[34px]">
