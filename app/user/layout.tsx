@@ -9,7 +9,7 @@ export default function HomeLayout({
   return (
       <div className="min-h-screen bg-[#eaeded]">
         <NavbarUser />
-        <div className="min-h-[80vh] ml-20 lg:min-h-[89vh] lg:ml-72">
+        <div className="min-h-[80vh] lg:min-h-[89vh] lg:ml-72">
           {children}
         </div>
       </div>
