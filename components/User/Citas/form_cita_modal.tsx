@@ -48,15 +48,9 @@ export const FormCita: React.FC<FormCitaProps> = ({
   // Fetch pacientes when modal opens
   useEffect(() => {
     if (isOpen) {
-      const loadPacientes = async () => {
-        try {
-          await fetchPacientes();
-        } catch (error) {
-          console.error("Error loading pacientes:", error);
-        }
-      };
-      loadPacientes().catch(error => {
-        console.error("Error in loadPacientes:", error);
+      fetchPacientes().catch((error) => {
+        console.error("Error in fetchPacientes:", error);
+        showToast("error", "Error al cargar pacientes");
       });
     }
   }, [isOpen]);
@@ -65,7 +59,8 @@ export const FormCita: React.FC<FormCitaProps> = ({
     try {
       const cookies = parseCookies();
       const token = cookies["session"];
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes-psicologo`, {
+      // General Pacientes API endpoint
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes`, {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -127,7 +122,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
       const cookies = parseCookies();
       const token = cookies["session"];
       
-      // Convert a time format from HH:MM to HH:MM:SS for the API
+      // Convert the time format from HH:MM to HH:MM:SS for the API
       const timeWithSeconds = formData.hora_cita.includes(':') && formData.hora_cita.split(':').length === 2 
         ? `${formData.hora_cita}:00` 
         : formData.hora_cita;
@@ -194,11 +189,17 @@ export const FormCita: React.FC<FormCitaProps> = ({
     <Modal 
       isOpen={isOpen} 
       onClose={handleClose}
+      onOpenChange={(open) => {
+        if (!open) {
+          handleClose();
+        }
+      }}
       size="2xl"
       placement="center"
+      closeButton
     >
       <ModalContent>
-        {() => (
+        {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
               Agregar Nueva Cita
@@ -286,7 +287,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={handleClose}>
+                <Button color="danger" variant="light" onPress={onClose}>
                   Cancelar
                 </Button>
                 <Button 
