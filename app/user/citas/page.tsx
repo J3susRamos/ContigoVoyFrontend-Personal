@@ -327,10 +327,10 @@ export default function App() {
       )}
       <FormCita
         isOpen={showFormCita}
-        onClose={() => setShowFormCita(false)}
-        onCitaCreated={() => {
+        onCloseAction={() => setShowFormCita(false)}
+        onCitaCreatedAction={() => {
           setShowFormCita(false);
-          handleGetCitas(); // Refresh the list
+          handleGetCitas();
         }}
       />
     </div>
