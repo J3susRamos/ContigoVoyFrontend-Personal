@@ -8,6 +8,7 @@ import { Citas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import HeaderUser from "@/components/User/HeaderUser";
+import { FormCita } from "@/components/User/Citas/form_cita_modal";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "codigo",
@@ -56,6 +57,7 @@ export default function App() {
   const [citas, setCitas] = useState<Citas[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>(FiltersInitialState);
+  const [showFormCita, setShowFormCita] = useState(false);
 
   const handleGetCitas = useCallback(async () => {
     try {
@@ -202,6 +204,10 @@ export default function App() {
     setFilterValue("");
   }, []);
 
+  const handleAddNew = () => {
+    setShowFormCita(true);
+  };
+
   if (isAuthorized === null) return null;
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
@@ -215,7 +221,7 @@ export default function App() {
         visibleColumns={visibleColumns}
         setVisibleColumns={setVisibleColumns}
         columns={columns}
-        onAddNew={() => {}}
+        onAddNew={handleAddNew}
         menuOpen={menuAbierto}
         setMenuOpen={setMenuAbierto}
       />
@@ -319,6 +325,14 @@ export default function App() {
           )}
         </>
       )}
+      <FormCita
+        isOpen={showFormCita}
+        onClose={() => setShowFormCita(false)}
+        onCitaCreated={() => {
+          setShowFormCita(false);
+          handleGetCitas(); // Refresh the list
+        }}
+      />
     </div>
   );
 }
