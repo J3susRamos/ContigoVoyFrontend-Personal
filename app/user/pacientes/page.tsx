@@ -28,6 +28,7 @@ export default function Pacientes() {
   return (
     <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
       <HeaderUser title="Lista de pacientes"/>
+      
       <ListarPacientes />
     </div>
   );

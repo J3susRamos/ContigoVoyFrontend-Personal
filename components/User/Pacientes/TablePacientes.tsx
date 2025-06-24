@@ -1,129 +1,20 @@
-import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import { Paciente } from "@/interface";
 import { cn } from "@/lib/utils";
-import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
-import showToastFunction from "../../ToastStyle";
 import Link from "next/link";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
+import React from "react";
 
 interface Props {
   filteredPacientes: Paciente[];
-  setPaciente: Dispatch<SetStateAction<Paciente[]>>;
   className: string;
+  onDeleteInit: (id: number) => void;
 }
 
-const TablePacientes = ({
-  filteredPacientes,
-  setPaciente,
-  className,
-}: Props) => {
-  const [deleteId, setDeleteId] = useState<number | null>(null);
-  const toastShownRef = useRef(false);
-
-  const handleGetPacientes = useCallback(
-    async (showToast = true) => {
-      try {
-        const pacientsData = await pacientesGet();
-        console.log(pacientsData);
-
-        const status = pacientsData.state;
-        let data = pacientsData.result;
-
-        switch (status) {
-          case 0:
-            showToastFunction(
-              "error",
-              "Error de conexión. Intenta nuevamente."
-            );
-            break;
-          case 1:
-            showToastFunction(
-              "error",
-              data.message || "Error al obtener los pacientes"
-            );
-            break;
-          case 2:
-            if (Array.isArray(data)) {
-              if (showToast && !toastShownRef.current) {
-                showToastFunction(
-                  "success",
-                  "Pacientes cargados correctamente"
-                );
-                toastShownRef.current = true;
-              }
-            } else {
-              console.error("La propiedad 'result' no es un array:", data);
-              showToastFunction("error", "Formato de respuesta inválido");
-              data = [];
-            }
-            break;
-        }
-
-        setPaciente(data);
-      } catch (error) {
-        console.error("Error en handleGetPacientes:", error);
-        showToastFunction("error", "Error inesperado al obtener pacientes");
-      }
-    },
-    [setPaciente]
-  );
-
-  const HandleDeletePaciente = useCallback(
-    async (idPaciente: number) => {
-      try {
-        const pacienteData = await pacientesDelete(idPaciente);
-        const state = pacienteData.state;
-
-        switch (state) {
-          case 0:
-            showToastFunction(
-              "error",
-              "Error de conexión. Intenta nuevamente."
-            );
-            break;
-          case 1:
-            showToastFunction(
-              "error",
-              pacienteData.result.status_message ||
-                "Error de conexión. Intenta nuevamente."
-            );
-            break;
-          case 2:
-            showToastFunction("success", "Paciente eliminado correctamente");
-            await handleGetPacientes(false);
-            break;
-        }
-      } catch (error) {
-        console.error("Error en HandleDeletePaciente:", error);
-        showToastFunction("error", "Error inesperado al eliminar paciente");
-      }
-    },
-    [handleGetPacientes]
-  );
-
-  const confirmDelete = useCallback(async () => {
-    if (deleteId) {
-      await HandleDeletePaciente(deleteId);
-      setDeleteId(null);
-    }
-  }, [HandleDeletePaciente, deleteId]);
+const TablePacientes = ({ filteredPacientes, className, onDeleteInit }: Props) => {
 
   const redirectToPaciente = (idPaciente: number) => {
     localStorage.setItem("idPaciente", String(idPaciente));
     window.location.href = "/user/pacientes/DetallePaciente";
   };
-
-  useEffect(() => {
-    handleGetPacientes();
-  }, [handleGetPacientes]);
 
   return (
     <>
@@ -242,7 +133,7 @@ const TablePacientes = ({
                       </button>
                       <div className="flex flex-col items-center">
                         <button
-                          onClick={() => setDeleteId(paciente.idPaciente)}
+                          onClick={() => onDeleteInit(paciente.idPaciente)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -294,12 +185,6 @@ const TablePacientes = ({
           </div>
         </div>
       )}
-      <ConfirmDeleteModal
-        isOpen={deleteId !== null}
-        onClose={() => setDeleteId(null)}
-        onConfirm={confirmDelete}
-        message="¿Estás seguro de eliminar este paciente?"
-      />
     </>
   );
 };
