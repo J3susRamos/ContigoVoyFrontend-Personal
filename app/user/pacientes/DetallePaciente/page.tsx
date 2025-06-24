@@ -9,7 +9,6 @@ import Link from "next/link";
 import HistorialClinico from "@/components/User/Pacientes/HistorialClinico";
 import CitasPaciente from "@/components/User/Pacientes/CitasPaciente";
 import { Paciente } from "@/interface";
-import { AlignCenter } from "lucide-react";
 
 const PageHome = () => {
   const router = useRouter();
