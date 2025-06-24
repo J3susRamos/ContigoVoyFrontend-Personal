@@ -59,7 +59,7 @@ export default function RealiableCompanies() {
   }, [emblaApi]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center bg-background lg:mt-8 ">
+    <div className="w-full flex flex-col items-center justify-center bg-background lg:my-8  ">
       <p
         className="text-title text-cv5 sm:text-cv7 font-bold mx-auto text-center mb-scv5"
         style={{ lineHeight: "1.2" }}
