@@ -25,7 +25,7 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
 
   const handleAddNew = useCallback(() => {
       router.push(`/user/pacientes/EditarPaciente?id=${idPaciente}`);
-    }, [router]);
+    }, [router, idPaciente]);
 
   return (
       <div>

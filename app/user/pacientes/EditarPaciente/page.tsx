@@ -1,13 +1,14 @@
 "use client";
-import EditarPaciente from "@/components/User/Pacientes/EditarPaciente";
-import { useSearchParams } from "next/navigation";
+export const dynamic = "force-dynamic";
 
-const EditarPacientePage = () => {
-  const params = useSearchParams();
-  const id = params.get("id");
-  console.log(id);
-  
-  return <EditarPaciente />;
-};
+import { Suspense } from "react";
+import EditarPacienteWrapper from "./EditarPacienteWrapper";
 
-export default EditarPacientePage;
+export default function EditarPacientePage() {
+  return (
+    <Suspense fallback={<p className="text-center mt-10">Cargando paciente...</p>}>
+      <EditarPacienteWrapper />
+    </Suspense>
+  );
+}
+
