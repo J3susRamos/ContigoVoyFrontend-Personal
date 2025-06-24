@@ -231,9 +231,9 @@ export const TableCitas: React.FC<TableProps> = ({
 
       </thead>
       <tbody className="relative text-center bg-card dark:bg-card text-primary dark:text-primary-foreground font-normal text-[16px] leading-[20px]">
-        {users.map((item) => (
+        {users.map((item, index) => (
           <tr
-            key={item.idCita}
+            key={index}
             className="border-y-4 bg-card dark:bg-card hover:bg-muted dark:hover:bg-muted relative"
           >
             <td className="p-4 text-center rounded-l-3xl">
