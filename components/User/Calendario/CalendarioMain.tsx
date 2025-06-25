@@ -15,8 +15,14 @@ import {
 import { getLocalTimeZone, today } from "@internationalized/date";
 import Week from "./SelectorDate";
 import Calendario from "./Calendar";
+import { Citas } from "@/interface";
+import { useMemo } from "react";
 
-export default function CalendarioMain() {
+interface CalProps {
+  citas: Citas[];
+}
+
+export default function CalendarioMain({ citas }: CalProps) {
   const [vistaActual, setVistaActual] = useState("calendario");
 
   const Fecha = today(getLocalTimeZone());
@@ -33,6 +39,16 @@ export default function CalendarioMain() {
   };
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const citasPorDia = useMemo(() => {
+    const agrupadas: Record<string, Citas[]> = {};
+    citas.forEach((cita) => {
+      const fecha = cita.fecha_inicio.split(" ")[0]; // "2025-04-01"
+      if (!agrupadas[fecha]) agrupadas[fecha] = [];
+      agrupadas[fecha].push(cita);
+    });
+    return agrupadas;
+  }, [citas]);
 
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
@@ -81,7 +97,7 @@ export default function CalendarioMain() {
       </div>
 
       <div className="bg-[#f8f8ff] dark:bg-background">
-        {vistaActual === "calendario" ? <Calendario /> : <Week />}
+        {vistaActual === "calendario" ? <Calendario citasPorDia={citasPorDia} /> : <Week />}
       </div>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
