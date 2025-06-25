@@ -23,10 +23,9 @@ export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
         className="text-2xl focus:outline-none w-full"
         aria-label="Abrir menú"
         onClick={toggleMenu}
-      >
-        <span
+      >        <span
           dangerouslySetInnerHTML={{
-            __html: Icons.hamburger.replace(/<svg /, '<svg fill="#634AE2" width=100% height=100%'),
+            __html: Icons.hamburger.replace(/<svg /, '<svg fill="#634AE2" width="100%" height="100%" '),
           }}
         />
       </button>
@@ -87,12 +86,10 @@ export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Footer con cerrar sesión */}
+        </div>        {/* Footer con cerrar sesión */}
         <div className="p-4 border-t border-gray-300 dark:border-gray-600">
           <div onClick={closeMenu}>
-            <CerrarSesion />
+            <CerrarSesion isMobile={true} />
           </div>
         </div>
       </div>
