@@ -16,6 +16,7 @@ import "react-country-state-city/dist/react-country-state-city.css"
 import Image from "next/image";
 import { Plus } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
+import Link from "next/link";
 
 export default function EditarPaciente({ id }: { id: string | null }) {
 
@@ -568,6 +569,11 @@ export default function EditarPaciente({ id }: { id: string | null }) {
         >
           Actualizar
         </button>
+        <Link href="/user/pacientes/DetallePaciente/" 
+        className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-28 h-8 mr-12 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200"
+        >
+          Volver
+        </Link>
       </div>
     </div>
   );
