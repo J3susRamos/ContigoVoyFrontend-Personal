@@ -43,6 +43,7 @@ export default function AllPsicologos({
   const [formData, setFormData] = useState<PsicologoPreviewData | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const openDeleteModal = (id: number) => {
     setDeleteId(id);
@@ -124,11 +125,25 @@ export default function AllPsicologos({
           </div>
         </div>
 
-        <div className="w-full mt-4">
-          <table className="max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8">
+        <div className="w-full mt-4 overflow-x-auto">
+          <table className="min-w-[600px] max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8">
             <thead className="rounded-full">
               <tr className="bg-[#6364F4] text-white h-11">
-                <th className="rounded-tl-full text-2xl font-normal">○</th>
+                <th className="px-4 py-2 text-2xl rounded-l-[34px]">
+                  <input
+                      type="checkbox"
+                      checked={selectedIds.length === Data.length && Data.length > 0}
+                      onChange={e => {
+                        if (e.target.checked) {
+                          setSelectedIds(Data.map(p => p.idPsicologo));
+                        } else {
+                          setSelectedIds([]);
+                        }
+                      }}
+                      aria-label="Seleccionar todos los psicólogos"
+                      className="accent-[#634AE2] w-4 h-4 rounded-full border-2 border-[#634AE2]"
+                  />
+                </th>
                 <th className="font-normal">Apellido</th>
                 <th className="font-normal">Nombre</th>
                 <th className="font-normal">Pais</th>
@@ -140,7 +155,21 @@ export default function AllPsicologos({
             <tbody className="text-center bg-white text-[#634AE2] font-normal text-[16px] leading-[20px]">
               {Data.map((column, index) => (
                 <tr key={index} className="border-b hover:bg-gray-100">
-                  <td className="px-4 py-2 text-2xl rounded-l-[34px]">○</td>
+                  <td className="px-4 py-2 text-2xl rounded-l-[34px]">
+                    <input
+                        type="checkbox"
+                        checked={selectedIds.includes(column.idPsicologo)}
+                        onChange={e => {
+                          if (e.target.checked) {
+                            setSelectedIds(prev => [...prev, column.idPsicologo]);
+                          } else {
+                            setSelectedIds(prev => prev.filter(id => id !== column.idPsicologo));
+                          }
+                        }}
+                        aria-label={`Seleccionar psicólogo ${column.nombre} ${column.apellido}`}
+                        className="circle-checkbox"
+                    />
+                  </td>
                   <td className="px-4 py-2">{column.apellido}</td>
                   <td className="px-4 py-2">{column.nombre}</td>
                   <td className="px-4 py-2">{column.pais}</td>
