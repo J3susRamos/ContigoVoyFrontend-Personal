@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { Icons } from "@/icons";
 import CerrarSesion from "@/components/CerrarSesion";
+import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
-import { City, Country, FormPaciente, State } from "@/interface";
+import { City, Country, FormPaciente, Paciente2, State } from "@/interface";
 import {
   CountrySelect,
   StateSelect,
@@ -17,10 +18,8 @@ import { Plus } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 
 export default function EditarPaciente({ id }: { id: string | null }) {
-  console.log(id)
 
-  const [base64Image, setBase64Image] = useState<string | null>(null);
-  // const [url, setUrl] = useState("");
+ const [base64Image, setBase64Image] = useState<string | null>(null);
   const [country, setCountry] = useState<Country | null>(null);
   const [currentState, setCurrentState] = useState<City | null>(null);
   const [currentCity, setCurrentCity] = useState<State | null>(null);
@@ -55,7 +54,6 @@ export default function EditarPaciente({ id }: { id: string | null }) {
       // Convertir la imagen WebP a Base64
       const base64 = await convertToBase64(webpImage);
       setBase64Image(base64);
-      // setUrl(""); // Clear URL input when uploading an image
     } catch (error) {
       console.error("Error processing image:", error);
       showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
@@ -127,7 +125,68 @@ export default function EditarPaciente({ id }: { id: string | null }) {
     }
   };
 
+  const HandleUpdatePaciente = async () => {
+    try {
+      const pacienteData: Omit<Paciente2, "idPaciente"> = {
+        DNI: formData.DNI,
+        nombre: formData.nombre,
+        apellido: `${formData.apellidoPaterno} ${formData.apellidoMaterno}`,
+        email: formData.email,
+        celular: formData.celular,
+        fecha_nacimiento: formData.fecha_nacimiento,
+        imagen: base64Image || '',
+        genero: formData.genero,
+        ocupacion: formData.ocupacion,
+        estadoCivil: formData.estadoCivil,
+        direccion: `${formData.direccion}, ${formData.pais}, ${formData.provincia}, ${formData.departamento}`,
+      };
 
+      const cookies = parseCookies();
+      const token = cookies["session"];
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const urlApi = apiUrl ? `${apiUrl}api/pacientes/${id}` : `/api/pacientes/${id}`;
+      const response = await fetch(urlApi, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(pacienteData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showToast("success", "Paciente actualizado correctamente");
+        setFormData({
+          nombre: "",
+          apellidoPaterno: "",
+          apellidoMaterno: "",
+          DNI: "",
+          email: "",
+          imagen: "",
+          celular: "",
+          fecha_nacimiento: "",
+          genero: "",
+          estadoCivil: "",
+          ocupacion: "",
+          direccion: "",
+          departamento: "",
+          provincia: "",
+          pais: "",
+          antecedentesMedicos: "",
+          medicamentosPrescritos: "",
+        });
+        setBase64Image(null);
+      } else {
+        showToast("error", data.message || "Error al actualizar el paciente");
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("error", "Error de conexión. Intenta nuevamente.");
+    }
+  };
 
   return (
     <div className="p-4 bg-[#f8f8ff] dark:bg-background min-h-screen">
@@ -504,7 +563,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
 
       <div className="flex justify-center w-full p-4">
         <button
-          // onClick={HandlePostPaciente}
+          onClick={HandleUpdatePaciente}
           className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-28 h-8 mr-12 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200"
         >
           Actualizar
