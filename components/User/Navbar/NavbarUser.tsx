@@ -60,7 +60,7 @@ const navItemsBase = [
   },
   {
     name: "Politicas y Privacidad",
-    link: "/",
+    link: "/user/politicas",
     icono: Icons.politicasyPriv,
   },
 ];

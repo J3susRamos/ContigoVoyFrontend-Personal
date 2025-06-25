@@ -1,0 +1,27 @@
+"use client";
+
+import CerrarSesion from "@/components/CerrarSesion";
+
+export default function Politicas() {
+  return (
+    <div className="h-full">
+      <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+              {/* Encabezado */}
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4">
+                <div>
+                  <h1 className="text-2xl md:text-4xl font-bold text-gray-800 dark:text-white">
+                    Politicas y Privacidad
+                  </h1>
+                </div>
+                <div className="mt-4 md:mt-0">
+                  <CerrarSesion />
+                </div>
+              </div>
+        
+              {/* Contenido principal */}
+              <div className="min-h-[80vh] p-6">
+              </div>
+            </div>
+    </div>
+  )
+}
