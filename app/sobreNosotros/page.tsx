@@ -4,8 +4,9 @@ import { QuienesSomos } from "@/interface";
 import { Metadata } from "next";
 
 export	const metadata: Metadata = {
-  title: "Centro Psicológico | Contigo Voy ",
-  description: "Somos un equipo de psicólogos especializados en terapia online donde encontrarás un espacio seguro y confidencial. Tu salud mental es nuestra prioridad. ",
+  title: "Terapia con propósito | Centro Psicológico Contigo Voy ",
+  description:
+    "Somos un centro psicológico que brinda apoyo emocional y terapia efectiva. Descubre nuestros valores y compromiso basada en respeto, escucha y conexión. ",
 };
 
 const dataQS: QuienesSomos[] = [

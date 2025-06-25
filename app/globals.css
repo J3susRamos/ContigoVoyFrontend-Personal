@@ -34,6 +34,35 @@ body {
   background-size: contain;
 }
 
+/* En styles/globals.css */
+.circle-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #634AE2;
+  accent-color: #634AE2;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background: #fff;
+}
+.circle-checkbox:checked {
+  background-color: #634AE2;
+}
+.circle-checkbox:after {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: 2px auto;
+  border-radius: 50%;
+  background: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.circle-checkbox:checked:after {
+  opacity: 1;
+}
 
 
 @media (max-width: 640px) { /* sm */
