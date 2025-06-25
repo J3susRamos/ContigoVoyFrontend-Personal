@@ -1,32 +1,21 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/User/Citas/NavbarCitas";
-import { TableCitas } from "@/components/User/Citas/TableCitas";
-import { Citas } from "@/interface";
-import { parseCookies } from "nookies";
-import showToast from "@/components/ToastStyle";
 import HeaderUser from "@/components/User/HeaderUser";
-import EmptyTable, { GenericFilters } from "@/components/ui/EmptyTable";
+import { GenericFilters } from "@/components/ui/EmptyTable";
+import ListarCitas from "@/components/User/Citas/ListarCitas";
 
-const INITIAL_VISIBLE_COLUMNS = [
-  "codigo",
-  "paciente",
-  "fecha_inicio",
-  "motivo",
-  "estado",
-  "duracion",
-];
 
-export interface Filters extends GenericFilters {
+export interface FiltersCitas extends GenericFilters {
   genero: string[];
   estado: string[];
   edad: string[];
   fechaInicio: string[];
 }
 
-const FiltersInitialState: Filters = {
+const FiltersInitialState: FiltersCitas = {
   genero: [],
   estado: [],
   edad: [],
@@ -44,66 +33,10 @@ const columns = [
 
 export default function App() {
   const router = useRouter();
-  const cookies = useMemo(() => parseCookies(), []);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-
   const [filterValue, setFilterValue] = useState("");
-
-  const [selectedKeys, setSelectedKeys] = useState<Set<React.Key>>(new Set());
-  const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
   const [menuAbierto, setMenuAbierto] = useState(false);
-  const [citas, setCitas] = useState<Citas[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [filters, setFilters] = useState<Filters>(FiltersInitialState);
-
-  const handleGetCitas = useCallback(async () => {
-    try {
-      setError(null);
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        console.error(`Error: ${response.status} ${response.statusText}`);
-        setError("Error al obtener las citas");
-        showToast("error", "Error al obtener las citas");
-        return;
-      }
-      const data = await response.json();
-
-      if (Array.isArray(data.result)) {
-        const formattedCitas = data.result.map((cita: Citas) => ({
-          codigo: cita.codigo,
-          paciente: cita.paciente,
-          fecha_inicio: cita.fecha_inicio,
-          motivo: cita.motivo,
-          estado: cita.estado,
-          duracion: cita.duracion,
-          idCita: cita.idCita,
-          genero: cita.genero,
-          edad: cita.edad,
-        }));
-        setCitas(formattedCitas);
-        showToast("success", "Citas obtenidas correctamente");
-      } else {
-        setError("Formato de respuesta inválido");
-        showToast("error", "Formato de respuesta inválido");
-      }
-    } catch (error) {
-      console.error(error);
-      setError("Error al obtener las citas");
-      showToast("error", "Error de conexión. Intenta nuevamente.");
-    }
-  }, [cookies]);
+  const [filters, setFilters] = useState<FiltersCitas>(FiltersInitialState);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -115,86 +48,29 @@ export default function App() {
     }
   }, [router]);
 
-  useEffect(() => {
-    handleGetCitas();
-  }, [handleGetCitas]);
-
-  const filteredItems = useMemo(() => {
-    if (!citas?.length) return [];
-
-    return citas.filter((cita) => {
-      if (filters.genero.length > 0 && !filters.genero.includes(cita.genero)) {
-        return false;
-      }
-
-      if (
-        filters.edad.length > 0 &&
-        !filters.edad.some((rango) => {
-          const [min, max] = rango.split(" - ").map(Number);
-          return cita.edad >= min && cita.edad <= max;
-        })
-      ) {
-        return false;
-      }
-
-      if (filters.estado.length > 0 && !filters.estado.includes(cita.estado)) {
-        return false;
-      }
-
-      if (filters.fechaInicio.length === 2) {
-        const [from, to] = filters.fechaInicio;
-        const citaDate = new Date(cita.fecha_inicio);
-        const fromDate = new Date(from + "T00:00:00");
-        const toDate = new Date(to + "T23:59:59");
-
-        if (citaDate < fromDate || citaDate > toDate) {
-          return false;
-        }
-      }
-
-      if (
-        filterValue &&
-        !cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
-      ) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [citas, filterValue, filters]);
-
-  const headerColumns = useMemo(() => {
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
-  }, [visibleColumns]);
-
   const onSearchChange = useCallback((value?: string) => {
     setFilterValue(value || "");
   }, []);
 
-  const onClear = useCallback(() => {
-    setFilterValue("");
-  }, []);
 
   if (isAuthorized === null) return null;
   return (
-    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
       <HeaderUser title="Lista de citas" />
       <Navbar
         filterValue={filterValue}
         filters={filters}
         setFilters={setFilters}
         onSearchChange={onSearchChange}
-        onClear={onClear}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
         columns={columns}
         onAddNew={() => {}}
         menuOpen={menuAbierto}
         setMenuOpen={setMenuAbierto}
       />
-      {error ? (
+      <section className={`${menuAbierto && 'opacity-50'}`}>
+        <ListarCitas filters={filters} filterValue={filterValue}/>
+      </section>
+      {/* {error ? (
         <div className="flex justify-center items-center h-64">
           <div className="text-lg font-medium text-destructive dark:text-destructive">
             {error}
@@ -204,7 +80,7 @@ export default function App() {
         <>
           {filteredItems.length > 0 ? (
             <TableCitas
-              users={filteredItems}
+              filteredCitas={filteredItems}
               headerColumns={headerColumns}
               selectedKeys={selectedKeys}
               menuOpen={menuAbierto}
@@ -219,8 +95,12 @@ export default function App() {
             />
           ) : (
             <EmptyTable
-              filters={filters}
-              filterValue={filterValue}
+              filters={
+                !!filterValue ||
+                Object.values(filters).some(
+                  (filter) => filter && filter.length > 0
+                )
+              }
               messages={{
                 emptyTitle: "No hay citas registradas",
                 noResultsDescription:
@@ -231,7 +111,7 @@ export default function App() {
             />
           )}
         </>
-      )}
+      )} */}
     </div>
   );
 }

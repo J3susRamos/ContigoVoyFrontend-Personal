@@ -1,20 +1,17 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Icons } from "@/icons";
 import { Input } from "@heroui/react";
-import { Filters } from "@/app/user/citas/page";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterButton from "@/components/ui/Filters/FilterButton";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
 import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
+import { FiltersCitas } from "@/app/user/citas/page";
 
 interface NavbarProps {
   filterValue: string;
-  filters: Filters;
-  setFilters: Dispatch<SetStateAction<Filters>>;
+  filters: FiltersCitas;
+  setFilters: Dispatch<SetStateAction<FiltersCitas>>;
   onSearchChange: (value?: string) => void;
-  onClear: () => void;
-  visibleColumns: Set<string>;
-  setVisibleColumns: (columns: Set<string>) => void;
   columns: { name: string; uid: string; sortable?: boolean }[];
   onAddNew: () => void;
   menuOpen: boolean;
@@ -33,7 +30,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   filters,
   setFilters,
   onSearchChange,
-  onClear,
   onAddNew,
   menuOpen,
   setMenuOpen
@@ -254,7 +250,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 "placeholder:text-accent-foreground dark:placeholder:text-accent-foreground",
             }}
             value={filterValue}
-            onClear={onClear}
             onValueChange={onSearchChange}
           />
 

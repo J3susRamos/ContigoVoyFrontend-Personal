@@ -4,15 +4,14 @@ import { Input } from "@heroui/react";
 import FilterButton from "@/components/ui/Filters/FilterButton";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
-import { FiltersPaciente } from "@/components/User/Pacientes/ListarPacientes";
 import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
 import { useRouter } from "next/navigation";
+import { FiltersPaciente } from "@/app/user/pacientes/page";
 
 
 interface NavbarProps {
   filterValue: string;
   onSearchChange: (value?: string) => void;
-  // onClear: () => void;
   visibleColumns?: Set<string>;
   setVisibleColumns?: (columns: Set<string>) => void;
   columns?: { name: string; uid: string; sortable?: boolean }[];

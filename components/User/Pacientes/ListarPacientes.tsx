@@ -7,31 +7,22 @@ import React, {
 } from "react";
 import { Paciente } from "@/interface";
 
-import { NavbarPacientes } from "@/components/User/Pacientes/NavbarPacientesComponent";
 import TablePacientes from "./TablePacientes";
 import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
 import showToastFunction from "../../ToastStyle";
 import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
-import EmptyTable, { GenericFilters } from "@/components/ui/EmptyTable";
+import EmptyTable from "@/components/ui/EmptyTable";
+import { FiltersPaciente } from "@/app/user/pacientes/page";
 
-export interface FiltersPaciente extends GenericFilters {
-  genero: string[];
-  edad: string[];
-  fechaUltimaCita: string[];
+interface Props{
+  filters: FiltersPaciente;
+  filterValue: string;
 }
 
-export const FiltersInitialState: FiltersPaciente = {
-  genero: [],
-  edad: [],
-  fechaUltimaCita: [],
-};
+export default function ListarPacientes({filters, filterValue }: Props) {
 
-export default function ListarPacientes() {
   const [paciente, setPaciente] = useState<Paciente[]>([]);
-  const [filterValue, setFilterValue] = useState("");
-  const [filters, setFilters] = useState<FiltersPaciente>(FiltersInitialState);
-  const [menuAbierto, setMenuAbierto] = useState(false);
   const toastShownRef = useRef(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -123,9 +114,6 @@ export default function ListarPacientes() {
     });
   }, [paciente, filters, filterValue]);
 
-  const onSearchChange = (value?: string) => {
-    setFilterValue(value || "");
-  };
 
   const handleDelete = async (idPaciente: number) => {
     setIsDeleting(true);
@@ -160,24 +148,16 @@ export default function ListarPacientes() {
 
   return (
     <>
-      <NavbarPacientes
-        filterValue={filterValue}
-        onSearchChange={onSearchChange}
-        filters={filters}
-        setFilters={setFilters}
-        menuAbierto={menuAbierto}
-        setMenuAbierto={setMenuAbierto}
-      />
       {pacientesFiltrados.length > 0 ? (
         <TablePacientes
           filteredPacientes={pacientesFiltrados}
           onDeleteInit={(id) => setDeleteId(id)}
-          className={`${menuAbierto && "opacity-50"}`}
         />
       ) : (
         <EmptyTable
-          filters={filters}
-          filterValue={filterValue}
+          filters={!!filterValue ||
+            Object.values(filters).some(
+              (filter) => filter && filter.length > 0)}
           messages={{
             emptyTitle: "No hay pacientes registrados",
             noResultsDescription:
