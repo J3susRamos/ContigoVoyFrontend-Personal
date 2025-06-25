@@ -2,6 +2,11 @@
 
 import CerrarSesion from "@/components/CerrarSesion";
 
+// Contenido estático separado
+const POLITICAS_CONTENT = {
+  title: "Políticas y Privacidad"
+}
+
 export default function Politicas() {
   return (
     <div className="h-full">
@@ -10,7 +15,7 @@ export default function Politicas() {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4">
                 <div>
                   <h1 className="text-2xl md:text-4xl font-bold text-gray-800 dark:text-white">
-                    Politicas y Privacidad
+                    {POLITICAS_CONTENT.title}
                   </h1>
                 </div>
                 <div className="mt-4 md:mt-0">
