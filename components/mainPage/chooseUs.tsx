@@ -186,7 +186,7 @@ export default function ChooseUs() {
               whileHover={{ scale: 1.05 }}
               className="group w-scv11 flex flex-col items-center"
             >
-              <div className="flex flex-col items-center justify-center w-40 h-40 rounded-full bg-[#634AE2] group-hover:bg-[#3f2577] group-hover:shadow-2xl transition-all duration-500 space-y-4">
+              <div className="flex flex-col items-center justify-center w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-[#634AE2] group-hover:bg-[#3f2577] group-hover:shadow-2xl transition-all duration-500 space-y-4">
                 <div className="p-4 bg-transparent rounded-full">
                   {feature.icon}
                 </div>

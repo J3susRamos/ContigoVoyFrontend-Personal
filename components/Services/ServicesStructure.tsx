@@ -71,7 +71,7 @@ export default function ServicesStructure({
             />
           </div>
 
-          <div className="flex flex-col pt-scv7">
+          <div className="flex flex-col pt-scv8">
             <h3 className="text-cv5 sm:text-cv7 font-semibold py-6 w-full text-title  leading-[28px] text-center">
               {item.tittlecards}
             </h3>
@@ -169,10 +169,10 @@ export default function ServicesStructure({
             </div>
           </div>
 
-          <div className="hidden md:flex max-w-scv18 mx-auto pl-8">
+          <div className="hidden md:flex max-w-scv18 mx-auto pl-8 mt-scv8">
             <div className="flex-[1.5] pt-scv9">
               <div className="flex justify-center">
-                <div className="w-full text-title font-semibold text-[24px] leading-[33px] text-center">
+                <div className="w-full text-title font-semibold text-[24px] leading-[33px] text-center px-scv6">
                   {item.tittleIcon}
                 </div>
               </div>
@@ -183,7 +183,7 @@ export default function ServicesStructure({
                     key={index}
                     className="w-[190px] flex flex-col items-center gap-4"
                   >
-                    <div className=" rounded-full w-32 h-32 p-scv6 bg-[#9494F3] flex items-center justify-center">
+                    <div className=" rounded-full w-32 h-32 p-scv6 bg-[#634AE2] flex items-center justify-center">
                       <div className="relative w-full h-full ">
                         <Image
                           src={icono.iconImage}
@@ -210,7 +210,7 @@ export default function ServicesStructure({
             </div>
           </div>
 
-          <div className="block md:hidden">
+          <div className="block md:hidden mt-scv8">
             <div className="flex items-center px-10 ">
               <div className="w-full max-w-[837px] text-title font-semibold text-[20px] leading-[33px] text-center">
                 {item.tittleIcon}
@@ -276,7 +276,7 @@ export default function ServicesStructure({
             </div>
           </div>
 
-          <SliderPrice />
+          <SliderPrice promotions={item.promotionCards} />
 
           <div
             className={`${
@@ -287,7 +287,7 @@ export default function ServicesStructure({
               onClick={() => setIsSticky(false)}
               className={`${
                 !isSticky ? "hidden" : ""
-              } transition-all duration-300 bg-[#DEDEFF] absolute top-0 right-0 -translate-y-[100%]  text-[#634AE2]  font-bold px-3 py-1 rounded-tl-lg`}
+              } transition-all duration-300 bg-[#DEDEFF] absolute top-0 right-0 -translate-y-[100%]  text-[#634AE2]  font-bold px-3 py-1 sm:px-10 sm:py-2 sm:text-cv4 rounded-tl-lg`}
             >
               X
             </button>
