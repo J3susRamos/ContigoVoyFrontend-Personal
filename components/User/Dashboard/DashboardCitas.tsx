@@ -47,7 +47,7 @@ export default function DashboardCitas() {
               fecha.getDate() === hoy.getDate() &&
               fecha.getMonth() === hoy.getMonth() &&
               fecha.getFullYear() === hoy.getFullYear() &&
-              cita.estado === "Confirmada"
+              (cita.estado === "Confirmada" || cita.estado === "Pendiente")
             );
           });
           setCitasDelDia(citasHoy);
