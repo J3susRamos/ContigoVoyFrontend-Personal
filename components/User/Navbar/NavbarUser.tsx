@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { DesktopNavUser } from "./DesktopNavUser";
 import { Icons } from "@/icons";
-import { MobileNavbar } from "./MobileNavbarUser";
+import { MobileNavUserHamburger } from "./MobileNavUserHamburger";
 import { UsuarioLocalStorage } from "@/interface";
 
 const navItemsBase = [
@@ -114,16 +114,32 @@ const NavbarUser = () => {
       
       setNavItems(items);
     }
-  }, []);
-
-  return (
+  }, []);  return (
     <div className="flex flex-row bg-[#f8f8ff] dark:bg-background">
-      {/* mainNavbar Mobile*/}
+      {/* Mobile Navbar - Menú hamburguesa para pantallas menores a 1024px */}
       <div className="lg:hidden bg-[#f8f8ff] dark:bg-background">
-        <MobileNavbar navItems={navItems} />
+        <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
+          <div className="w-full p-6 flex items-center justify-between">
+            <Link href="/" className="ml-[60px] z-0">
+              <Image
+                src="/LOGO.webp"
+                alt="Centro Psicológico Contigo Voy Online"
+                width={143}
+                height={50}
+                priority
+                style={{height: 'auto' }}
+                className="w-[143px] h-auto"
+                suppressHydrationWarning
+              />
+            </Link>
+            <div className="flex items-center gap-x-5">
+              <MobileNavUserHamburger navItems={navItems} />
+            </div>
+          </div>
+        </nav>
       </div>
 
-      {/* mainNavbar */}
+      {/* Desktop Navbar - Solo para pantallas de 1024px o más */}
       <div className="hidden lg:flex w-72 h-screen fixed bg-[#f8f8ff] dark:bg-background">
         <div className="bg-card dark:bg-card w-full h-full rounded-tr-3xl pt-7 flex flex-col">
           <Link href="/">

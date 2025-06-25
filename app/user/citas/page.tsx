@@ -8,6 +8,7 @@ import { Citas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import HeaderUser from "@/components/User/HeaderUser";
+import { FormCita } from "@/components/User/Citas/form_cita_modal";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "codigo",
@@ -43,7 +44,7 @@ const columns = [
 
 export default function App() {
   const router = useRouter();
-  const cookies = useMemo(() => parseCookies(), []);
+  const cookies = parseCookies();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const [filterValue, setFilterValue] = useState("");
@@ -56,6 +57,7 @@ export default function App() {
   const [citas, setCitas] = useState<Citas[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>(FiltersInitialState);
+  const [showFormCita, setShowFormCita] = useState(false);
 
   const handleGetCitas = useCallback(async () => {
     try {
@@ -78,6 +80,7 @@ export default function App() {
         return;
       }
       const data = await response.json();
+      console.log(data);
 
       if (Array.isArray(data.result)) {
         const formattedCitas = data.result.map((cita: Citas) => ({
@@ -104,25 +107,28 @@ export default function App() {
     }
   }, [cookies]);
 
+  useEffect(() => {
+    if (isAuthorized) {
+      handleGetCitas();
+    }
+  }, [isAuthorized]);
+
   const [sortDescriptor] = useState({
     column: "fecha_inicio",
     direction: "ascending",
   });
-  
+
   useEffect(() => {
+    const cookies = parseCookies();
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
-    if (userData.rol !== "PSICOLOGO") {
+    const isAuth = userData.rol === "PSICOLOGO" || cookies["rol"] !== "admin";
+    setIsAuthorized(isAuth);
+
+    if (!isAuth) {
       router.push("/unauthorized");
-    } else {
-      setIsAuthorized(true);
     }
   }, [router]);
-
-  useEffect(() => {
-    handleGetCitas();
-  }, [handleGetCitas]);
-
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -198,6 +204,10 @@ export default function App() {
     setFilterValue("");
   }, []);
 
+  const handleAddNew = () => {
+    setShowFormCita(true);
+  };
+
   if (isAuthorized === null) return null;
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
@@ -211,7 +221,7 @@ export default function App() {
         visibleColumns={visibleColumns}
         setVisibleColumns={setVisibleColumns}
         columns={columns}
-        onAddNew={() => {}}
+        onAddNew={handleAddNew}
         menuOpen={menuAbierto}
         setMenuOpen={setMenuAbierto}
       />
@@ -315,6 +325,14 @@ export default function App() {
           )}
         </>
       )}
+      <FormCita
+        isOpen={showFormCita}
+        onCloseAction={() => setShowFormCita(false)}
+        onCitaCreatedAction={() => {
+          setShowFormCita(false);
+          handleGetCitas();
+        }}
+      />
     </div>
   );
 }
