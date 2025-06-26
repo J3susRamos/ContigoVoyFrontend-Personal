@@ -1,20 +1,21 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { Icons } from "@/icons";
 import { Input } from "@heroui/react";
 import FilterButton from "@/components/ui/Filters/FilterButton";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
-import { FiltersPaciente } from "@/components/PacientesLista/ListarPacientes";
+import { FiltersPaciente } from "@/components/User/Pacientes/ListarPacientes";
 import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
+import { useRouter } from "next/navigation";
+
 
 interface NavbarProps {
   filterValue: string;
   onSearchChange: (value?: string) => void;
-  onClear: () => void;
+  // onClear: () => void;
   visibleColumns?: Set<string>;
   setVisibleColumns?: (columns: Set<string>) => void;
   columns?: { name: string; uid: string; sortable?: boolean }[];
-  onAddNew: () => void;
   filters: FiltersPaciente;
   setFilters: Dispatch<SetStateAction<FiltersPaciente>>;
   menuAbierto: boolean;
@@ -30,8 +31,6 @@ const SubmenusInitialState = {
 export const NavbarPacientes: React.FC<NavbarProps> = ({
   filterValue,
   onSearchChange,
-  onClear,
-  onAddNew,
   filters,
   setFilters,
   menuAbierto,
@@ -44,6 +43,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
     [string, string] | string[]
   >([]);
   const [generoSeleccionado, setGeneroSeleccionado] = useState<string[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     setSubmenus({
@@ -52,6 +52,12 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
       fechaUltimaCita: false,
     });
   }, [filters, menuAbierto]);
+
+  
+  const handleAddNew = useCallback(() => {
+    router.push("/user/pacientes/DatosCrearPaciente");
+  }, [router]);
+
 
   return (
     <div className="flex w-full z-40">
@@ -200,7 +206,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                 "placeholder:text-accent-foreground dark:placeholder:text-accent-foreground",
             }}
             value={filterValue}
-            onClear={onClear}
+            // onClear={onClear}
             onValueChange={onSearchChange}
           />
 
@@ -221,7 +227,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
             {/* Botón de agregar nuevo paciente */}
             <button
               className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
-              onClick={onAddNew}
+              onClick={handleAddNew}
             >
               Agregar nuevo paciente
             </button>

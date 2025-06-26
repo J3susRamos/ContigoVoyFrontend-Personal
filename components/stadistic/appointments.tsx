@@ -75,20 +75,28 @@ export default function Appointments() {
   }, []);
 
   return (
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 max-w-5xl mx-auto w-full p-4">
-        {/* Header */}
-        <div className="col-span-2 flex flex-col md:flex-row items-center justify-between w-full mb-4 font-normal gap-4">
-          <div className="flex flex-col md:flex-row items-center text-base gap-4 md:gap-6 w-full">
-            <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-3 items-center w-full md:w-auto">
-              <span dangerouslySetInnerHTML={{ __html: Icons.calendario }} />
-              <span>{citasPsicologo["citas_confirmadas"]} citas reservadas</span>
-            </div>
-            <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-3 items-center w-full md:w-auto">
-              <span dangerouslySetInnerHTML={{ __html: Icons.estadisticas }} />
-              <span>
+    
+    <div className="pt-4 grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[920px] mx-auto">
+     {/* citas reservadas y minutos ocupados */}
+      <div className="col-span-2 flex items-center justify-between w-full mr-24  mb-4 font-normal">
+        <div className="flex items-center text-base gap-6">
+          <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-6">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: Icons.calendario,
+              }}
+            />
+            <span>{citasPsicologo["citas_confirmadas"]} citas reservadas</span>
+          </div>
+          <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-6">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: Icons.estadisticas,
+              }}
+            />
+            <span>
               {citasPsicologo["total_minutos_reservados"]} min. ocupados
             </span>
-            </div>
           </div>
         </div>
   <div className="max-xl:flex max-xl:flex-col max-xl:gap-8 flex gap-10 max-sm:max-w-[300px]">
@@ -178,5 +186,6 @@ export default function Appointments() {
           </div>
         </div>
       </div>
+    </div>
   );
 }

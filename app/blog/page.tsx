@@ -19,6 +19,26 @@ export default  function BlogPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    document.title = "Consulta Psicológica Online | Reserva tu Cita ";
+
+    const metaDescription = document.querySelector("meta[name='description']");
+
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+
+        "Agenda tu terapia psicológica en minutos. Psicólogos online disponibles para ti. Conecta desde donde estés. Tu primera sesión es gratuita."
+      );
+    } else {
+      const meta = document.createElement("meta");
+
+      meta.name = "description";
+
+      meta.content =
+        "Agenda tu terapia psicológica en minutos. Psicólogos online disponibles para ti. Conecta desde donde estés. Tu primera sesión es gratuita.";
+
+      document.head.appendChild(meta);
+    }
     async function fetchData() {
       try {
         const dato = await BlogsWebSite();
