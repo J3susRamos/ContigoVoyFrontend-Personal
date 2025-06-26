@@ -99,98 +99,91 @@ export default function Appointments() {
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Primer cuadro con LineChart */}
-      <div className="w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
-        <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">
-            Citas totales <br /> del período:
-          </p>
+  <div className="max-xl:flex max-xl:flex-col max-xl:gap-8 flex gap-10 max-sm:max-w-[300px]">
+        {/* LineChart */}
+        <div className="w-full min-h-[400px] bg-card dark:bg-card rounded-2xl flex flex-col min-w-[480px] ">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-0 sm:mr-10 text-lg sm:text-xl">
+              Citas totales <br /> del período:
+            </p>
+          </div>
+          <div className="flex-1 flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="80%">
+              <LineChart
+                  data={data}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 12 }}
+              >
+                <XAxis
+                    dataKey="name"
+                    tickLine={{ stroke: "hsl(var(--primary))" }}
+                    axisLine={{ stroke: "hsl(var(--primary))" }}
+                    tick={({ x, y, payload }) => (
+                        <text
+                            x={x}
+                            y={y + 15}
+                            fill="hsl(var(--primary))"
+                            textAnchor="middle"
+                            fontSize={12}
+                            fontWeight="500"
+                        >
+                          <tspan x={x} dy="0">
+                            feb,
+                          </tspan>
+                          <tspan x={x} dy="15">
+                            {payload.value}
+                          </tspan>
+                        </text>
+                    )}
+                />
+                <YAxis
+                    tickFormatter={(value: number) => `${value / 1250}`}
+                    tick={{ fill: "hsl(var(--primary))" }}
+                    axisLine={{ stroke: "hsl(var(--primary))" }}
+                    tickLine={{ stroke: "hsl(var(--primary))" }}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Line
+                    type="monotone"
+                    dataKey="pv"
+                    stroke="hsl(var(--primary))"
+                    activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-
-        <div className="flex-1 flex items-center justify-center">
-          <ResponsiveContainer width="90%" height="80%">
-            <LineChart
-              data={data}
-              margin={{ top: 5, right: 30, left: 20, bottom: 12 }}
-            >
-              <XAxis
-                dataKey="name"
-                tickLine={{ stroke: "hsl(var(--primary))" }}
-                axisLine={{ stroke: "hsl(var(--primary))" }}
-                tick={({ x, y, payload }) => {
-                  return (
-                    <text
-                      x={x}
-                      y={y + 15}
-                      fill="hsl(var(--primary))"
-                      textAnchor="middle"
-                      fontSize={12}
-                      fontWeight="500"
-                    >
-                      <tspan x={x} dy="0">
-                        feb,
-                      </tspan>
-                      <tspan x={x} dy="15">
-                        {payload.value}
-                      </tspan>
-                    </text>
-                  );
-                }}
-              />
-              <YAxis
-                tickFormatter={(value: number) => `${value / 1250}`}
-                tick={{ fill: "hsl(var(--primary))" }}
-                axisLine={{ stroke: "hsl(var(--primary))" }}
-                tickLine={{ stroke: "hsl(var(--primary))" }}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Line
-                type="monotone"
-                dataKey="pv"
-                stroke="hsl(var(--primary))"
-                activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Segundo cuadro con PieChart */}
-      <div className="h-[459px] w-[353px] bg-card dark:bg-card rounded-2xl">
-        <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
-            Estado de <br /> cita:
-          </p>
-        </div>
-
-        <div className="w-full h-[240px] flex items-center justify-center">
-          {/* Esqueleto precarga del grafico pastel */}
-          {loading && (
-
-            <div className="w-[200px] h-[200px] rounded-full bg-muted animate-pulse relative">
-              <div className="absolute top-0 left-0 w-full h-full border-[4px] border-primary/20 rounded-full animate-spin-slow"></div>
-              <div className="absolute top-[25%] left-[25%] w-[100px] h-[100px] bg-background rounded-full"></div>
-            </div>
-          )}
-          {/* Grafico con circular con PieChart */}
-          {!loading && <PieChartGrafic data={citasPsicologo} />}
-        </div>
-
-        {/* Leyenda del PieChart */}
-        <div className="grid justify-start gap-5 grid-cols-2 w-[300px] ml-10">
-          {genero.map((entry, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: COLORS[index] }}
-              ></div>
-              <span className="text-primary dark:text-primary-foreground font-normal text-base">
+        
+        {/* PieChart */}
+        <div className="w-full h-fit bg-card dark:bg-card rounded-2xl min-w-[480px] flex flex-col min-h-[400px] max-sm:max-w-[300px]">
+          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-0 sm:mr-10 text-lg sm:text-xl">
+              Estado de <br /> cita:
+            </p>
+          </div>
+          <div className="w-full h-[180px] sm:h-[240px] flex items-center justify-center">
+            {loading ? (
+                <div className="w-[120px] sm:w-[200px] h-[120px] sm:h-[200px] rounded-full bg-muted animate-pulse relative">
+                  <div className="absolute top-0 left-0 w-full h-full border-[4px] border-primary/20 rounded-full animate-spin-slow"></div>
+                  <div className="absolute top-[25%] left-[25%] w-[50px] sm:w-[100px] h-[50px] sm:h-[100px] bg-background rounded-full"></div>
+                </div>
+            ) : (
+                <PieChartGrafic data={citasPsicologo} />
+            )}
+          </div>
+          <div className="grid grid-cols-2 m-auto gap-x-3 h-[80px]">
+            {genero.map((entry, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: COLORS[index] }}
+                  ></div>
+                  <span className="text-primary dark:text-primary-foreground font-normal text-base">
                 {entry.name}
               </span>
-            </div>
-          ))}
+                </div>
+            ))}
+          </div>
+          </div>
         </div>
       </div>
     </div>

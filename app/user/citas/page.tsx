@@ -105,6 +105,11 @@ export default function App() {
     }
   }, [cookies]);
 
+  const [sortDescriptor] = useState({
+    column: "fecha_inicio",
+    direction: "ascending",
+  });
+  
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -118,6 +123,8 @@ export default function App() {
   useEffect(() => {
     handleGetCitas();
   }, [handleGetCitas]);
+
+  const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = useMemo(() => {
     if (!citas?.length) return [];
