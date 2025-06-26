@@ -65,23 +65,25 @@ export default function Sales() {
       loadData();
     }, []);
 
-
   return (
-    <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 place-items-center gap-5 max-w-[950px] mx-auto">
-      <div className="flex flex-col w-[547px] h-[660px] gap-5">
-        {/* Primer cuadro con LineChart */}
-        <div className="w-[547px] h-[459px] bg-card dark:bg-card rounded-2xl flex flex-col">
-          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-10 text-xl">
-              Ingresos del período <br /> seleccionado:
+    <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+      
+      {/* Layout responsivo - Grid que se adapta */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        
+        {/* Gráfico de Ingresos - LineChart (ocupa 2 columnas en desktop) */}
+        <div className="lg:col-span-2 w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col">
+          <div className="rounded-r-full w-full max-w-[350px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
+              Ingresos del período seleccionado
             </p>
           </div>
 
-          <div className="flex-1 flex items-center justify-center">
-            <ResponsiveContainer width="90%" height="80%">
+          <div className="w-full h-[300px] md:h-[350px] lg:h-[400px] flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={data}
-                margin={{ top: 5, right: 30, left: 20, bottom: 12 }}
+                margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
               >
                 <XAxis
                   dataKey="name"
@@ -94,13 +96,13 @@ export default function Sales() {
                         y={y + 15}
                         fill="hsl(var(--primary))"
                         textAnchor="middle"
-                        fontSize={12}
+                        fontSize={10}
                         fontWeight="500"
                       >
                         <tspan x={x} dy="0">
                           feb,
                         </tspan>{" "}
-                        <tspan x={x} dy="15">
+                        <tspan x={x} dy="12">
                           {payload.value}
                         </tspan>
                       </text>
@@ -108,8 +110,8 @@ export default function Sales() {
                   }}
                 />
                 <YAxis
-                  tickFormatter={(value: number) => (value / 1250).toString()}
-                  tick={{ fill: "hsl(var(--primary))" }}
+                  tickFormatter={(value: number) => Math.round(value / 1250).toString()}
+                  tick={{ fill: "hsl(var(--primary))", fontSize: 10 }}
                   axisLine={{ stroke: "hsl(var(--primary))" }}
                   tickLine={{ stroke: "hsl(var(--primary))" }}
                 />
@@ -118,71 +120,89 @@ export default function Sales() {
                   type="monotone"
                   dataKey="uv"
                   stroke="hsl(var(--primary))"
-                  activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
+                  strokeWidth={2}
+                  activeDot={{ r: 6, fill: "hsl(var(--primary))" }}
                 />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Segundo cuadro con encabezados */}
-        <div className="w-full h-[234px] bg-card dark:bg-card rounded-2xl flex flex-col">
-          <div className="w-full h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-between px-6">
-            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
-              Cliente
+        {/* Estado de Citas - PieChart */}
+        <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col">
+          <div className="rounded-r-full w-full max-w-[280px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
+              Estado de citas
+            </p>
+          </div>
+
+          <div className="w-full h-[250px] md:h-[300px] lg:h-[350px] flex items-center justify-center">
+            {/* Esqueleto de carga */}
+            {loading && (
+              <div className="w-[150px] md:w-[200px] h-[150px] md:h-[200px] rounded-full bg-muted animate-pulse relative">
+                <div className="absolute top-0 left-0 w-full h-full border-[4px] border-primary/20 rounded-full animate-spin-slow"></div>
+                <div className="absolute top-[25%] left-[25%] w-[75px] md:w-[100px] h-[75px] md:h-[100px] bg-background rounded-full"></div>
+              </div>
+            )}
+            {/* Gráfico circular */}
+            {!loading && <PieChartGrafic data={citasPsicologo} />}
+          </div>
+
+          {/* Leyenda del PieChart */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+            {genero.map((entry, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: COLORS[index] }}
+                ></div>
+                <span className="text-primary dark:text-primary-foreground font-normal text-xs md:text-sm truncate">
+                  {entry.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Tabla de Resumen Financiero - Full width en mobile, full grid en desktop */}
+        <div className="lg:col-span-3 w-full bg-card dark:bg-card rounded-2xl overflow-hidden">
+          
+          {/* Header responsive */}
+          <div className="w-full bg-primary dark:bg-primary p-4">
+            <div className="hidden md:grid md:grid-cols-5 gap-4 text-center">
+              <div className="text-primary-foreground dark:text-primary-foreground font-medium text-sm lg:text-base">
+                Cliente
+              </div>
+              <div className="text-primary-foreground dark:text-primary-foreground font-medium text-sm lg:text-base">
+                Ingresos
+              </div>
+              <div className="text-primary-foreground dark:text-primary-foreground font-medium text-sm lg:text-base">
+                Pagos Pendientes
+              </div>
+              <div className="text-primary-foreground dark:text-primary-foreground font-medium text-sm lg:text-base">
+                Cancelaciones
+              </div>
+              <div className="text-primary-foreground dark:text-primary-foreground font-medium text-sm lg:text-base">
+                Ausencias
+              </div>
             </div>
-            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
-              Ingresos
-            </div>
-            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
-              Pagos Pendientes
-            </div>
-            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
-              Cancelaciones
-            </div>
-            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-center">
-              Ausencias
+            
+            {/* Título para móviles */}
+            <div className="md:hidden text-center">
+              <h3 className="text-primary-foreground dark:text-primary-foreground font-medium text-lg">
+                Resumen Financiero
+              </h3>
             </div>
           </div>
-          <div className="flex-1 p-4">{/* Contenido de la tabla */}</div>
-        </div>
-      </div>
-
-      {/* Tercer cuadro con PieChart */}
-      <div className="w-[353px] h-[660px] bg-card dark:bg-card rounded-2xl">
-        <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-          <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
-            Estado de <br />
-            cita:
-          </p>
+          
+          {/* Contenido de la tabla */}
+          <div className="p-4 min-h-[120px] flex items-center justify-center">
+            <p className="text-muted-foreground text-sm md:text-base text-center">
+              Los datos de resumen financiero se mostrarán aquí cuando estén disponibles
+            </p>
+          </div>
         </div>
 
-        <div className="w-full h-[240px] flex items-center justify-center">
-          {/* Esqueleto precarga del grafico pastel */}
-          {loading && (
-            <div className="w-[200px] h-[200px] rounded-full bg-muted animate-pulse relative">
-              <div className="absolute top-0 left-0 w-full h-full border-[4px] border-primary/20 rounded-full animate-spin-slow"></div>
-              <div className="absolute top-[25%] left-[25%] w-[100px] h-[100px] bg-background rounded-full"></div>
-            </div>
-          )}
-          {/* Grafico con circular con PieChart */}
-          {!loading && <PieChartGrafic data={citasPsicologo} />}
-        </div>
-
-        {/* Leyenda del PieChart */}
-        <div className="grid justify-start gap-5 grid-cols-2 w-[300px] ml-10 mt-6">
-          {genero.map((entry, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: COLORS[index] }}
-              ></div>
-              <span className="text-primary dark:text-primary-foreground font-normal text-base">
-                {entry.name}
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
