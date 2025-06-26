@@ -212,28 +212,32 @@ export default function App() {
         <div className="flex-1 ml-5 mr-5 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="flex pt-6">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Nombre</div>
+              <label htmlFor="nombre" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Nombre</label>
               <div className="relative">
                 <input
+                  id="nombre"
                   type="text"
                   value={formData.nombre}
                   onChange={(e) =>
                     setFormData({ ...formData, nombre: e.target.value })
                   }
+                  aria-label="Nombre del paciente"
                   className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">DNI</div>
+              <label htmlFor="dni" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">DNI</label>
               <div className="relative">
                 <input
+                  id="dni"
                   type="text"
                   value={formData.DNI}
                   maxLength={8}
                   onChange={(e) =>
                     setFormData({ ...formData, DNI: e.target.value })
                   }
+                  aria-label="Documento Nacional de Identidad"
                   className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
@@ -241,9 +245,10 @@ export default function App() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Paterno</div>
+              <label htmlFor="apellidoPaterno" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Paterno</label>
               <div className="relative">
                 <input
+                  id="apellidoPaterno"
                   type="text"
                   value={formData.apellidoPaterno}
                   onChange={(e) =>
@@ -252,14 +257,16 @@ export default function App() {
                       apellidoPaterno: e.target.value,
                     })
                   }
+                  aria-label="Apellido paterno del paciente"
                   className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Materno</div>
+              <label htmlFor="apellidoMaterno" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Materno</label>
               <div className="relative">
                 <input
+                  id="apellidoMaterno"
                   type="text"
                   value={formData.apellidoMaterno}
                   onChange={(e) =>
@@ -268,6 +275,7 @@ export default function App() {
                       apellidoMaterno: e.target.value,
                     })
                   }
+                  aria-label="Apellido materno del paciente"
                   className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
@@ -280,6 +288,7 @@ export default function App() {
                 <DatePicker
                   showMonthAndYearPickers
                   selectorButtonPlacement="start"
+                  aria-label="Fecha de nacimiento del paciente"
                   classNames={{
                     inputWrapper: "bg-input dark:bg-input rounded-full border border-border dark:border-border",
                     segment: "!text-foreground dark:!text-foreground",
@@ -312,9 +321,10 @@ export default function App() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Ocupacion</div>
+              <label htmlFor="ocupacion" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Ocupacion</label>
               <div className="relative">
                 <input
+                  id="ocupacion"
                   type="text"
                   value={formData.ocupacion}
                   onChange={(e) =>
@@ -323,6 +333,7 @@ export default function App() {
                       ocupacion: e.target.value,
                     })
                   }
+                  aria-label="Ocupación del paciente"
                   className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
@@ -330,13 +341,15 @@ export default function App() {
           </div>
           <div className="flex pt-1">
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Estado civil</div>
+              <label htmlFor="estadoCivil" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Estado civil</label>
               <div className="relative w-60">
                 <select
+                  id="estadoCivil"
                   value={formData.estadoCivil}
                   onChange={(e) =>
                     setFormData({ ...formData, estadoCivil: e.target.value })
                   }
+                  aria-label="Estado civil del paciente"
                   className="font-normal pl-12 pr-3 text-base h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
                 >
                   <option value="" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Seleccionar</option>
@@ -348,13 +361,15 @@ export default function App() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Genero</div>
+              <label htmlFor="genero" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Genero</label>
               <div className="relative w-60">
                 <select
+                  id="genero"
                   value={formData.genero}
                   onChange={(e) =>
                     setFormData({ ...formData, genero: e.target.value })
                   }
+                  aria-label="Género del paciente"
                   className="text-base font-normal pl-12 pr-3 h-9 mt-1 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
                 >
                   <option value="" className="bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground">Seleccionar</option>
@@ -365,9 +380,10 @@ export default function App() {
               </div>
             </div>
           </div>
-          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">Celular</div>
+          <label htmlFor="celular" className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground block">Celular</label>
           <div className="flex justify-center">
             <input
+              id="celular"
               type="text"
               maxLength={9}
               value={formData.celular}
@@ -375,6 +391,7 @@ export default function App() {
                 setFormData({ ...formData, celular: e.target.value })
               }
               placeholder="Ejemp. 999999999"
+              aria-label="Número de celular del paciente"
               className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
@@ -410,9 +427,11 @@ export default function App() {
               )}
 
               <input
+                id="imagenPaciente"
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
+                aria-label="Subir foto del paciente"
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
             </div>
@@ -421,16 +440,18 @@ export default function App() {
 
         {/*Segunda Columna*/}
         <div className="flex-1 mr-5 ml-5 bg-card dark:bg-card rounded-2xl p-6 border dark:border-border shadow-lg dark:shadow-xl">
-          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
+          <label htmlFor="email" className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground block">
             Correo electrónico
-          </div>
+          </label>
           <div className="flex justify-center">
             <input
-              type="text"
+              id="email"
+              type="email"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
+              aria-label="Correo electrónico del paciente"
               className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
@@ -513,24 +534,27 @@ export default function App() {
               </div>
             </div>
             <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Direccion</div>
+              <label htmlFor="direccion" className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Direccion</label>
               <div className="relative">
                 <input
+                  id="direccion"
                   type="text"
                   value={formData.direccion}
                   onChange={(e) =>
                     setFormData({ ...formData, direccion: e.target.value })
                   }
+                  aria-label="Dirección del paciente"
                   className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
                 />
               </div>
             </div>
           </div>
-          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
+          <label htmlFor="antecedentesMedicos" className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground block">
             Antecedentes médicos
-          </div>
+          </label>
           <div className="flex justify-center">
             <input
+              id="antecedentesMedicos"
               type="text"
               value={formData.antecedentesMedicos}
               onChange={(e) =>
@@ -539,14 +563,16 @@ export default function App() {
                   antecedentesMedicos: e.target.value,
                 })
               }
+              aria-label="Antecedentes médicos del paciente"
               className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
-          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
+          <label htmlFor="medicamentosPrescritos" className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground block">
             Medicamentos prescritos
-          </div>
+          </label>
           <div className="flex justify-center">
             <input
+              id="medicamentosPrescritos"
               type="text"
               value={formData.medicamentosPrescritos}
               onChange={(e) =>
@@ -555,6 +581,7 @@ export default function App() {
                   medicamentosPrescritos: e.target.value,
                 })
               }
+              aria-label="Medicamentos prescritos al paciente"
               className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
             />
           </div>
@@ -564,6 +591,7 @@ export default function App() {
       <div className="flex justify-center w-full p-4">
         <button
           onClick={HandlePostPaciente}
+          aria-label="Registrar nuevo paciente"
           className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-28 h-8 mr-12 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200"
         >
           Registrar
