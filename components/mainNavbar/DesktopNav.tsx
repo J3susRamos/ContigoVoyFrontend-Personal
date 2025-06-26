@@ -35,22 +35,19 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
     { name: "Terapia para Parejas", link: "/servicios/terapia/parejas" },
     { name: "Terapia Familiar", link: "/servicios/terapia/familia" },
     { name: "Terapia Empresarial", link: "/servicios/terapia/empresarial" },
-  ];
-
-  return (
+  ];  return (
     <>
-      <div className="min-[1450px]:hidden ">
+      <div className="lg:hidden ">
         <MobileNav navItems={navItems}  />
       </div>
-      <motion.div
-        onMouseLeave={() => setHovered(null)}
+      <motion.div        onMouseLeave={() => setHovered(null)}
         className={cn(
           "relative z-[60] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full px-4 py-2 lg:flex",
           "inset-x-0 h-16"
         )}
       >
         <div className="flex items-center gap-6">
-          <div className="hidden flex-1 flex-row items-center justify-center space-x-0 text-sm text-zinc-600 transition duration-200 hover:text-zinc-800 min-[1450px]:flex gap-1">
+          <div className="hidden flex-1 flex-row items-center justify-center space-x-0 text-sm text-zinc-600 transition duration-200 hover:text-zinc-800 md:flex gap-1">
             {navItems.map((navItem: NavItem, idx: number) => (
               <div key={idx} className="relative">
                 {navItem.isButton ? (

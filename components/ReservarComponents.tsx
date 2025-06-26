@@ -23,7 +23,7 @@ export default function ReservarComponents({
     const filtroGeneroActivo =
       filters.genero.length === 0 || filters.genero.includes(psicologo.genero);
 
-    // Si es que pasa todos los filtros seleccionados
+    // Si pasa todos los filtros seleccionados
     const pasaFiltros = filtroPaisActivo && filtroGeneroActivo;
 
     // Filtro por nombre (search term)
@@ -55,7 +55,13 @@ export default function ReservarComponents({
             setFilters={setFilters}
           />
         </div>
-
+        {/* <div className="grid gap-8 grid-cols-2 max-lg:grid-cols-1 h-full w-full">
+          {filteredPsicologos.map((Item, index) => (
+            <div key={index} className="sm:w-auto max-lg:px-4 w-full">
+              <ReservarPsiPreview psicologo={Item} />
+            </div>
+          ))}
+        </div> */}
         <div className="grid gap-8 grid-cols-2 max-lg:grid-cols-1 h-full w-full">
           {filteredPsicologos.length > 0 ? (
             filteredPsicologos.map((Item, index) => (
