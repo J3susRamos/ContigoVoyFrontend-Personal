@@ -1,4 +1,6 @@
 import React, {
+  Dispatch,
+  SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -13,13 +15,21 @@ import showToast from "@/components/ToastStyle";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import EmptyTable from "@/components/ui/EmptyTable";
 import { TableCitas } from "./TableCitas";
+import { FormCita } from "./form_cita_modal";
 
 interface Props {
   filters: FiltersCitas;
   filterValue: string;
+  showFormCita: boolean;
+  setShowFormCita: Dispatch<SetStateAction<boolean>>;
 }
 
-const ListarCitas = ({ filters, filterValue }: Props) => {
+const ListarCitas = ({
+  filters,
+  filterValue,
+  showFormCita,
+  setShowFormCita,
+}: Props) => {
   const [citas, setCitas] = useState<Citas[]>([]);
   const toastShownRef = useRef(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -174,9 +184,17 @@ const ListarCitas = ({ filters, filterValue }: Props) => {
       </div>
     );
   }
-  
+
   return (
     <>
+      <FormCita
+        isOpen={showFormCita}
+        onCloseAction={() => setShowFormCita(false)}
+        onCitaCreatedAction={() => {
+          setShowFormCita(false);
+          handleGetCitas(false);
+        }}
+      />
       {filteredCitas.length > 0 ? (
         <TableCitas
           filteredCitas={filteredCitas}
@@ -196,7 +214,6 @@ const ListarCitas = ({ filters, filterValue }: Props) => {
           }}
         />
       )}
-
       <ConfirmDeleteModal
         isOpen={deleteId !== null}
         onClose={() => setDeleteId(null)}

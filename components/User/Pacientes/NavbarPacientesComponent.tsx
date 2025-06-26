@@ -60,7 +60,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
 
   return (
     <div className="flex w-full z-40">
-      <div className="bg-[#6265f4] dark:bg-primary w-full h-[8vh] flex flex-row justify-start items-center px-4">
+      <div className="bg-[#6265f4] w-full h-[8vh] flex flex-row justify-start items-center px-4">
         <div className="flex flex-row gap-4 w-full items-center pl-12">
           {/* Icono de filtro */}
           <FilterButton menuOpen={menuAbierto} setMenuOpen={setMenuAbierto}>
@@ -212,12 +212,12 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
           {/* Grupo de icono de agregar y botón */}
           <div className="ml-auto flex items-center gap-4 mr-12">
             <span
-              className="text-primary dark:text-primary transition-colors"
+              className="text-primary transition-colors"
               dangerouslySetInnerHTML={{
                 __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
               }}
               style={{
-                background: "hsl(var(--card))",
+                background: "white",
                 borderRadius: "9999px",
                 borderColor: "hsl(var(--primary))",
               }}
@@ -225,7 +225,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
 
             {/* Botón de agregar nuevo paciente */}
             <button
-              className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
+              className="text-primary-foreground dark:border-white font-light text-xl border-1 rounded-full px-4"
               onClick={handleAddNew}
             >
               Agregar nuevo paciente

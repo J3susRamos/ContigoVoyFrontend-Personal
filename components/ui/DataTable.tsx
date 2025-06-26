@@ -31,7 +31,7 @@ const DataTable = <T,>({ headers, data, renderRow }: DataTableProps<T>) => {
         {data.map((item, index) => (
           <tr
             key={index}
-            className="bg-white text-[#624ae3] text-lg rounded-full shadow-sm hover:bg-gray-50 transition-all cursor-pointer"
+            className="bg-white text-[#624ae3] text-lg rounded-full shadow-sm hover:bg-gray-50 transition-all cursor-pointer dark:bg-[#272627] dark:text-[#fefffe]"
           >
             {renderRow(item)}
           </tr>
