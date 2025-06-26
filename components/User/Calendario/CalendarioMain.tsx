@@ -1,15 +1,9 @@
 "use client";
 import { useState } from "react";
 import CerrarSesion from "@/components/CerrarSesion";
+import { View } from "react-big-calendar";
 import {
   Button,
-  Form,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  Textarea,
   useDisclosure,
 } from "@heroui/react";
 import { getLocalTimeZone, today } from "@internationalized/date";
@@ -17,6 +11,9 @@ import Week from "./SelectorDate";
 import Calendario from "./Calendar";
 import { Citas } from "@/interface";
 import { useMemo } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import ModalCitaExample from "./modal/ModalCitaExample";
+import { addDays, addMonths, addWeeks, subDays, subMonths, subWeeks } from "date-fns";
 
 interface CalProps {
   citas: Citas[];
@@ -24,6 +21,21 @@ interface CalProps {
 
 export default function CalendarioMain({ citas }: CalProps) {
   const [vistaActual, setVistaActual] = useState("calendario");
+  const [view, setView] = useState<View>("week");
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Funciones para navegación
+  const goToToday = () => setCurrentDate(new Date());
+  const goToPrev = () => {
+    if (view === "month") setCurrentDate(subMonths(currentDate, 1));
+    else if (view === "week") setCurrentDate(subWeeks(currentDate, 1));
+    else setCurrentDate(subDays(currentDate, 1));
+  };
+  const goToNext = () => {
+    if (view === "month") setCurrentDate(addMonths(currentDate, 1));
+    else if (view === "week") setCurrentDate(addWeeks(currentDate, 1));
+    else setCurrentDate(addDays(currentDate, 1));
+  };
 
   const Fecha = today(getLocalTimeZone());
 
@@ -37,6 +49,15 @@ export default function CalendarioMain({ citas }: CalProps) {
   const cambiarVista = (vista: string) => {
     setVistaActual(vista);
   };
+
+  const handleViewChange = (newView: View) => {
+    setView(newView);
+  };
+
+  const cambiarVistaGlobal =(vistaActual: string, nuevaVista: View) => {
+    setVistaActual(vistaActual);
+    setView(nuevaVista);
+  }
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -67,25 +88,43 @@ export default function CalendarioMain({ citas }: CalProps) {
         <CerrarSesion />
       </div>
       <div className="w-full h-16 bg-primary dark:bg-primary items-center justify-start flex px-8">
-        <div className="flex gap-2 items-center w-full max-w-[230px]">
+        <div className="flex gap-2 items-center w-full max-w-[530px]">
+          <span
+            className="w-10 h-10 p-0 shadow-lg border-0 flex items-center justify-center"
+            onClick={goToPrev}
+          >
+            <ChevronLeft className="w-5 h-5 text-white" />
+          </span>
+
+          <span
+            className="w-10 h-10 p-0 shadow-lg border-0 flex items-center justify-center"
+            onClick={goToNext}
+          >
+            <ChevronRight className="w-5 h-5 text-white" />
+          </span>
           <Button
             radius="full"
-            className={`text-[16px] leading-[20px] ${
-              vistaActual === "calendario"
-                ? "text-primary dark:text-primary bg-background dark:bg-background"
-                : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
-            }`}
+            className={`text-[16px] leading-[20px] border-4 font-bold bg-transparent border border-background text-background dark:text-primary-foreground font-light`}
+            onPress={goToToday}
+          >
+            Hoy
+          </Button>
+          <Button
+            radius="full"
+            className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario"
+              ? "text-primary dark:text-primary bg-background dark:bg-background"
+              : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
+              }`}
             onPress={() => cambiarVista("calendario")}
           >
             Calendario
           </Button>
           <Button
             radius="full"
-            className={`text-[16px] leading-[20px] ${
-              vistaActual === "horarios"
-                ? "text-primary dark:text-primary bg-background dark:bg-background"
-                : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
-            }`}
+            className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "horarios"
+              ? "text-primary dark:text-primary bg-background dark:bg-background"
+              : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
+              }`}
             onPress={() => cambiarVista("horarios")}
           >
             Mis Horarios
@@ -94,164 +133,45 @@ export default function CalendarioMain({ citas }: CalProps) {
         <div className="text-primary-foreground font-semibold text-2xl hidden md:block mx-auto">
           {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {Fecha.year}
         </div>
+        <div className="flex gap-2 items-center w-full max-w-[530px] justify-end">
+          <Button
+            radius="full"
+            className={`text-[16px] leading-[20px] border-4 font-bold ${ vistaActual === "calendario" && view === "month"
+              ? "text-primary dark:text-primary bg-background dark:bg-background"
+              : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
+              }`}
+            onPress={() => cambiarVistaGlobal("calendario","month")}
+          >
+            Mes
+          </Button>
+          <Button
+            radius="full"
+            className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "week"
+              ? "text-primary dark:text-primary bg-background dark:bg-background"
+              : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
+              }`}
+            onPress={() => cambiarVistaGlobal("calendario","week")}
+          >
+            Semana
+          </Button>
+          <Button
+            radius="full"
+            className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "day"
+              ? "text-primary dark:text-primary bg-background dark:bg-background"
+              : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
+              }`}
+            onPress={() => cambiarVistaGlobal("calendario","day")}
+          >
+            Dia
+          </Button>
+        </div>
       </div>
 
       <div className="bg-[#f8f8ff] dark:bg-background">
-        {vistaActual === "calendario" ? <Calendario citasPorDia={citasPorDia} /> : <Week />}
+        {vistaActual === "horarios" ?<Week /> : <Calendario vista={view} citasPorDia={citasPorDia} date={currentDate} />}
       </div>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="bg-background dark:bg-background">
-          <ModalBody>
-            <Form validationBehavior="native">
-              <Input
-                label="Paciente"
-                labelPlacement="outside"
-                placeholder="Nombre del paciente"
-                classNames={{
-                  label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                  input: "!text-foreground dark:!text-foreground font-light text-center",
-                  errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                  mainWrapper: "flex flex-col items-center",
-                }}
-              />
-
-              <Textarea
-                label="Motivo de consulta"
-                placeholder="Escribe aquí el motivo de tu consulta"
-                labelPlacement="outside"
-                classNames={{
-                  label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                  input: "!text-foreground dark:!text-foreground font-light text-center",
-                  errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                  mainWrapper: "flex flex-col items-center",
-                }}
-              />
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-full md:w-1/2">
-                  <Input 
-                    label="Estado de la cita"
-                    labelPlacement="outside"
-                    placeholder="Estado de la cita"
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-
-                  <Input 
-                    label="Fecha de la cita"
-                    labelPlacement="outside"
-                    placeholder="Fecha de la cita"
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-                  <Input 
-                    label="Tipo de cita" 
-                    labelPlacement="outside"
-                    placeholder="Tipo de cita"
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-                  <Input 
-                    label="Canal de atracción"
-                    labelPlacement="outside"
-                    placeholder="Canal de atracción"
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-                </div>
-                <div className="w-full md:w-1/2">
-                  <Input 
-                    label="Color de la cita"
-                    labelPlacement="outside"
-                    placeholder="Color de la cita"
-                    type="color"
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-                  <Input 
-                    label="Hora de la cita"
-                    labelPlacement="outside"
-                    placeholder="Hora de la cita"
-                    type="time"
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-                  <Input 
-                    label="Duración"
-                    labelPlacement="outside"
-                    placeholder="Duración"
-                    type="number"
-                    min={30}
-                    max={60}
-                    step={15}
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-                  <Input
-                    label="Etiqueta"
-                    labelPlacement="outside"
-                    placeholder="Etiqueta"
-                    classNames={{
-                      label: "!text-primary dark:!text-primary-foreground font-bold text-center mx-auto w-full",
-                      input: "!text-foreground dark:!text-foreground font-light text-center",
-                      errorMessage: "!text-destructive dark:!text-destructive font-light text-center",
-                      mainWrapper: "flex flex-col items-center",
-                    }}
-                  />
-                </div>
-              </div>
-            </Form>
-          </ModalBody>
-          <ModalFooter className="mx-auto">
-            <Button
-              radius="full"
-              className="bg-transparent border border-primary dark:border-primary-foreground text-primary dark:text-primary-foreground"
-            >
-              Modificar
-            </Button>
-            <Button
-              radius="full"
-              className="bg-transparent border border-primary dark:border-primary-foreground text-destructive dark:text-destructive"
-            >
-              Borrar
-            </Button>
-            <Button
-              radius="full"
-              className="bg-primary dark:bg-primary text-primary-foreground font-light"
-            >
-              Guardar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ModalCitaExample isOpen={isOpen} onOpenChange={onOpenChange} />
     </div>
   );
 }
