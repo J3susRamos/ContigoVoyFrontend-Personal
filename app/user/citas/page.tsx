@@ -164,14 +164,14 @@ export default function App() {
       });
     }
 
-    // ✅ FILTRO POR ESTADO
+    // Filter for estado if there are selected states
     if (filters.estado.length > 0) {
       filteredCitas = filteredCitas.filter((cita) =>
         filters.estado.includes(cita.estado)
       );
     }
 
-    // ✅ FILTRO POR FECHA DE INICIO
+    // Filter for date range if both dates are provided
     if (filters.fechaInicio.length === 2) {
       const [from, to] = filters.fechaInicio;
       const fromDate = new Date(from + "T00:00:00");
@@ -183,13 +183,14 @@ export default function App() {
       });
     }
 
-    //  FILTRO POR TEXTO EN PACIENTE
+    //  Filter for search value if it exists
     if (hasSearchFilter) {
       filteredCitas = filteredCitas.filter((cita) =>
         cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
+    // If no filters are applied, return all citas
     return filteredCitas;
   }, [citas, filterValue, hasSearchFilter, filters]);
 
