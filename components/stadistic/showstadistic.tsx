@@ -39,12 +39,11 @@ export default function ShowStadistic() {
   const visibleButtons = allButtons.filter(btn =>
     allowedViews.includes(btn.key)
   );
-
   return (
-    <div className="bg-[#f8f8ff] dark:bg-background">
-      {/* Botones */}
-      <div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
-        <div className="ml-10 flex justify-between items-center w-full max-w-[600px]">
+    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen">
+      {/* Botones - Responsivos */}
+      <div className="w-full bg-primary dark:bg-primary p-4">
+        <div className="flex flex-wrap justify-center md:justify-start items-center gap-2 md:gap-4 max-w-7xl mx-auto">
           {visibleButtons.map((btn, index) => (
             <Button
               key={index}
@@ -52,7 +51,7 @@ export default function ShowStadistic() {
                 view === btn.key
                   ? "bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80"
                   : "bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground hover:bg-primary/80 hover:text-white dark:hover:bg-primary/80 dark:hover:text-white"
-              } text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors`}
+              } text-sm md:text-base font-bold rounded-full px-4 md:px-8 py-2 transition-colors whitespace-nowrap`}
               onClick={() => setView(btn.key)}
             >
               {btn.name}
@@ -62,7 +61,7 @@ export default function ShowStadistic() {
       </div>
 
       {/* Contenido */}
-      <div className="bg-[#f8f8ff] dark:bg-background">
+      <div className="bg-[#f8f8ff] dark:bg-background px-2 md:px-4">
         {view === "clientes" && allowedViews.includes("clientes") && <Clientes />}
         {view === "citas" && allowedViews.includes("citas") && <Citas />}
         {view === "ventas" && allowedViews.includes("ventas") && <Ventas />}
