@@ -14,12 +14,14 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
 
-
-export default function SliderPrice({promotions = []} : {promotions?:PromotionCardProps[]}) {
-  
-  useEffect(()=>{
-     console.log(promotions.length)
-  },[])
+export default function SliderPrice({
+  promotions = [],
+}: {
+  promotions?: PromotionCardProps[];
+}) {
+  useEffect(() => {
+    console.log(promotions.length);
+  }, []);
 
   return (
     <>
@@ -41,7 +43,11 @@ export default function SliderPrice({promotions = []} : {promotions?:PromotionCa
                   }),
                 ]}
               >
-                <CarouselContent>
+                <CarouselContent
+                  className={`${
+                    promotions.length <= 2 ? "justify-center" : ""
+                  }`}
+                >
                   {promotions.map((item, index) => (
                     <CarouselItem
                       key={index}
