@@ -149,9 +149,15 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (isAuthorized) {
-      handleGetCitas();
-    }
+    const fetchCitas = async () => {
+      if (isAuthorized) {
+        await handleGetCitas();
+      }
+    };
+    
+    fetchCitas().catch(error => {
+      console.error("Error fetching citas:", error);
+    });
   }, [isAuthorized]);
 
   if (isAuthorized === null || isLoading) {

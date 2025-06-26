@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Icons } from "@/icons";
-import { Input } from "@heroui/react";
+import { Input, Button } from "@heroui/react";
 import { Filters } from "@/app/user/citas/page";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterButton from "@/components/ui/Filters/FilterButton";
@@ -84,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ]}
             />
 
-            {/* Submenú de genero */}
+            {/* Submenú de género */}
             <FilterSubMenu
               titulo="Género"
               isOpen={submenus.genero}
@@ -258,27 +258,32 @@ export const Navbar: React.FC<NavbarProps> = ({
             onValueChange={onSearchChange}
           />
 
-          {/* Grupo de icono de agregar y botón */}
-          <div className="ml-auto flex items-center gap-4 mr-12">
-            <span
-              className="text-primary dark:text-primary transition-colors"
-              dangerouslySetInnerHTML={{
-                __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
-              }}
-              style={{
-                background: "hsl(var(--card))",
-                borderRadius: "9999px",
-                borderColor: "hsl(var(--primary))",
-              }}
-            />
-
+          <div className="ml-auto flex items-center gap-4">
             {/* Botón de agregar nueva cita */}
-            <button
-              className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
-              onClick={onAddNew}
+            <Button
+              color="secondary"
+              variant="solid"
+              size="sm"
+              className="bg-white text-primary hover:bg-gray-50 font-medium"
+              onPress={onAddNew}
+              startContent={
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+              }
             >
               Agregar nueva cita
-            </button>
+            </Button>
           </div>
         </div>
       </div>
