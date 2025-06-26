@@ -315,6 +315,7 @@ export const Tiptap = ({
         onUpdate={handleUpdate}
         content={contenido}
         autofocus={true}
+        immediatelyRender={false}
       >
         <div className="prose prose-sm sm:prose lg:prose-lg mx-auto p-6 dark:prose-invert">
           <style>{`
