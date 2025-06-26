@@ -23,8 +23,7 @@ interface FormCitaProps {
 
 interface Paciente {
   idPaciente: number;
-  nombre: string;
-  apellido: string;
+  nombre: string; // This now contains the full name from the backend
   codigo: string;
 }
 
@@ -221,7 +220,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                       <SelectItem 
                         key={paciente.idPaciente.toString()}
                       >
-                        {`${paciente.nombre} ${paciente.apellido} (${paciente.codigo})`}
+                        {`${paciente.nombre} (${paciente.codigo})`}
                       </SelectItem>
                     ))}
                   </Select>
