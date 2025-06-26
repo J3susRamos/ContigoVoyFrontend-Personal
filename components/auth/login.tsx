@@ -84,12 +84,10 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await login(credentials.email, credentials.password);
-  };
-
-  return (
+  };  return (
     <>
       <div
-        className=" rounded-[34px] md:rounded-3xl ml-5 md:mx-auto h-[600px] md:w-96 w-72 bg-[#FFFFFF] flex flex-col items-end "
+        className="rounded-[34px] md:rounded-3xl mr-10 md:mx-auto h-[600px] md:w-96 w-80 bg-[#FFFFFF] flex flex-col items-center md:items-end"
         style={{
           backgroundImage: `url(/newlog.webp)`,
           backgroundPosition: "center left",
@@ -97,30 +95,28 @@ export default function Login() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <h1 className="font-semibold pt-10 lg:text-3xl text-2xl text-[#634AE2]  mr-5">
+        <h1 className="font-semibold pt-10 lg:text-3xl text-2xl text-[#634AE2] md:mr-5">
           Iniciar
           <br className="lg:hidden" /> Sesión
         </h1>
-        <div className="transform translate-x-1/2 mt-10">
+        <div className="md:transform md:translate-x-1/2 mt-10">
           <form
             onSubmit={handleSubmit}
-            className="
-        
-        bg-white min-h-72  h-auto md:w-80 w-72 py-10 px-6 rounded-3xl mr-20 "
+            className="bg-white min-h-72 h-auto md:w-80 ml-32 w-72 py-10 px-6 rounded-3xl md:mr-20"
           >
             <div className="flex flex-col gap-y-5 ">
               <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
                 Usuario
-              </label>
-              <Input
+              </label>{" "}              <Input
                 name="email"
                 type="email"
                 autoComplete="email"
                 radius="full"
                 variant="bordered"
                 classNames={{
-                  inputWrapper: "border-1 !border-[#634AE2] ",
-                  input: "w-full dark:text-[#634AE2]",
+                  inputWrapper: "border-1 !border-[#634AE2]",
+                  input:
+                    "w-full dark:text-[#634AE2] text-[#333333] placeholder:text-gray-400 login-input",
                 }}
                 value={credentials.email}
                 onChange={handleChange}
@@ -128,14 +124,14 @@ export default function Login() {
               />
               <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
                 Contraseña
-              </label>
+              </label>{" "}
               <Input
                 name="password"
                 isRequired
-                autoComplete="current-password"
-                classNames={{
-                  inputWrapper: "border-1 !border-[#634AE2] ",
-                  input: "w-full dark:text-[#634AE2]",
+                autoComplete="current-password"                classNames={{
+                  inputWrapper: "border-1 !border-[#634AE2]",
+                  input:
+                    "w-full dark:text-[#634AE2] text-[#333333] placeholder:text-gray-400 login-input",
                 }}
                 radius="full"
                 value={credentials.password}

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { UsuarioLocalStorage } from "@/interface";
 import Image from "next/image";
 
-export default function CerrarSesion() {
+export default function CerrarSesion({ isMobile = false }: { isMobile?: boolean }) {
   const { logout } = useAuth();
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
 
@@ -18,6 +18,19 @@ export default function CerrarSesion() {
       }
     }
   }, []);
+
+  if (isMobile) {
+    // Versión móvil - simplificada
+    return (
+      <Button
+        radius="full"
+        className="w-full border-[#634AE2] border-2 text-[#634AE2] bg-transparent hover:bg-[#634AE2] hover:text-white font-bold text-base py-2 transition-colors"
+        onPress={logout}
+      >
+        Cerrar Sesión
+      </Button>
+    );
+  }
 
   return (
     <div className="flex-row justify-end items-center gap-x-5 mr-8 hidden md:flex">

@@ -149,14 +149,15 @@ export default function App() {
   };
 
   useEffect(() => {
-    const fetchCitas = async () => {
+    const fetchAtenciones = async () => {
       if (isAuthorized) {
         await handleGetCitas();
       }
     };
     
-    fetchCitas().catch(error => {
-      console.error("Error fetching citas:", error);
+    fetchAtenciones().catch((error) => {
+      console.error('Error fetching atenciones:', error);
+      showToast("error", "Error al cargar las atenciones");
     });
   }, [isAuthorized]);
 

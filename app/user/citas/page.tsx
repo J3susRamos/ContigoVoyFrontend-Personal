@@ -44,11 +44,9 @@ const columns = [
 
 export default function App() {
   const router = useRouter();
-  const cookies = parseCookies();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const [filterValue, setFilterValue] = useState("");
-
   const [selectedKeys, setSelectedKeys] = useState<Set<React.Key>>(new Set());
   const [visibleColumns, setVisibleColumns] = useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS)
@@ -59,9 +57,11 @@ export default function App() {
   const [filters, setFilters] = useState<Filters>(FiltersInitialState);
   const [showFormCita, setShowFormCita] = useState(false);
 
-  const handleGetCitas = useCallback(async () => {
+  // Shared function to fetch citas
+  const fetchCitasData = useCallback(async (showSuccessToast: boolean = false) => {
     try {
       setError(null);
+      const cookies = parseCookies();
       const token = cookies["session"];
       const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
       const response = await fetch(url, {
@@ -79,6 +79,7 @@ export default function App() {
         showToast("error", "Error al obtener las citas");
         return;
       }
+      
       const data = await response.json();
       console.log(data);
 
@@ -95,7 +96,10 @@ export default function App() {
           edad: cita.edad,
         }));
         setCitas(formattedCitas);
-        showToast("success", "Citas obtenidas correctamente");
+        
+        if (showSuccessToast) {
+          showToast("success", "Citas obtenidas correctamente");
+        }
       } else {
         setError("Formato de respuesta inválido");
         showToast("error", "Formato de respuesta inválido");
@@ -105,13 +109,21 @@ export default function App() {
       setError("Error al obtener las citas");
       showToast("error", "Error de conexión. Intenta nuevamente.");
     }
-  }, [cookies]);
+  }, []);
 
+  // Initial fetch when authorized
   useEffect(() => {
     if (isAuthorized) {
-      handleGetCitas();
+      fetchCitasData(true).catch((error) => {
+        console.error('Error in initial fetch:', error);
+      });
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, fetchCitasData]);
+
+  // Refresh function for modal (without success toast)
+  const refreshCitas = useCallback(async () => {
+    await fetchCitasData(false);
+  }, [fetchCitasData]);
 
   const [sortDescriptor] = useState({
     column: "fecha_inicio",
@@ -152,14 +164,14 @@ export default function App() {
       });
     }
 
-    // ✅ FILTRO POR ESTADO
+    // Filter for estado if there are selected states
     if (filters.estado.length > 0) {
       filteredCitas = filteredCitas.filter((cita) =>
         filters.estado.includes(cita.estado)
       );
     }
 
-    // ✅ FILTRO POR FECHA DE INICIO
+    // Filter for date range if both dates are provided
     if (filters.fechaInicio.length === 2) {
       const [from, to] = filters.fechaInicio;
       const fromDate = new Date(from + "T00:00:00");
@@ -171,13 +183,14 @@ export default function App() {
       });
     }
 
-    // 🔍 FILTRO POR TEXTO EN PACIENTE
+    //  Filter for search value if it exists
     if (hasSearchFilter) {
       filteredCitas = filteredCitas.filter((cita) =>
         cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
+    // If no filters are applied, return all citas
     return filteredCitas;
   }, [citas, filterValue, hasSearchFilter, filters]);
 
@@ -203,7 +216,7 @@ export default function App() {
   const onClear = useCallback(() => {
     setFilterValue("");
   }, []);
-
+  
   const handleAddNew = () => {
     setShowFormCita(true);
   };
@@ -330,7 +343,7 @@ export default function App() {
         onCloseAction={() => setShowFormCita(false)}
         onCitaCreatedAction={() => {
           setShowFormCita(false);
-          handleGetCitas();
+          void refreshCitas();
         }}
       />
     </div>
