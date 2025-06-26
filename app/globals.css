@@ -34,35 +34,6 @@ body {
   background-size: contain;
 }
 
-/* En styles/globals.css */
-.circle-checkbox {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #634AE2;
-  accent-color: #634AE2;
-  appearance: none;
-  outline: none;
-  cursor: pointer;
-  position: relative;
-  background: #fff;
-}
-.circle-checkbox:checked {
-  background-color: #634AE2;
-}
-.circle-checkbox:after {
-  display: block;
-  width: 12px;
-  height: 12px;
-  margin: 2px auto;
-  border-radius: 50%;
-  background: white;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.circle-checkbox:checked:after {
-  opacity: 1;
-}
 
 
 @media (max-width: 640px) { /* sm */
@@ -372,4 +343,62 @@ body {
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
+}
+
+/* Estilos para corregir el autocompletado del navegador */
+/* Chrome, Safari, Edge, Opera */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #333333 !important;
+  background-color: white !important;
+  color: #333333 !important;
+}
+
+/* Modo oscuro para autocompletado */
+[data-theme="dark"] input:-webkit-autofill,
+[data-theme="dark"] input:-webkit-autofill:hover,
+[data-theme="dark"] input:-webkit-autofill:focus,
+[data-theme="dark"] input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #1f2937 inset !important;
+  -webkit-text-fill-color: #634AE2 !important;
+  background-color: #1f2937 !important;
+  color: #634AE2 !important;
+}
+
+/* Para Firefox */
+input:-moz-autofill {
+  background-color: white !important;
+  color: #333333 !important;
+}
+
+[data-theme="dark"] input:-moz-autofill {
+  background-color: #1f2937 !important;
+  color: #634AE2 !important;
+}
+
+/* Estilos específicos para los inputs del login */
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus,
+.login-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #333333 !important;
+  background-color: transparent !important;
+  color: #333333 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Modo oscuro para inputs del login */
+[data-theme="dark"] .login-input:-webkit-autofill,
+[data-theme="dark"] .login-input:-webkit-autofill:hover,
+[data-theme="dark"] .login-input:-webkit-autofill:focus,
+[data-theme="dark"] .login-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: #634AE2 !important;
+  background-color: transparent !important;
+  color: #634AE2 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
