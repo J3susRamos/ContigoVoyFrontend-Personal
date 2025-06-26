@@ -92,15 +92,20 @@ const PageHome = () => {
 
       {/* mainNavbar estilo personalizado */}
       <div className="flex w-full mt-4 pl-8 h-72 bg-background dark:bg-background">
-        <div
-          className="flex items-center pr-[200px] pl-8 rounded-3xl bg-muted dark:bg-muted"
-          style={{
-            backgroundImage: `url(/Paciente.webp)`,
-            backgroundPosition: "right top",
-            backgroundSize: "auto",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
+                                   
+      {paciente?.imagen ? (
+          <div
+            className="flex items-center min-h-72 pr-[200px] pl-8 rounded-3xl bg-muted dark:bg-muted"
+            style={{
+              backgroundImage: `url("${paciente.imagen}")`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              height: "200px",
+            }}
+          />
+        ):<div className="flex items-center min-h-72 pr-[200px] pl-8 rounded-3xl bg-muted dark:bg-muted"></div>}
+
         <div className="bg-primary dark:bg-primary w-full h-[8vh] flex flex-row items-center px-4 mt-10">
           <div className="flex flex-row gap-4 w-full max-w-xl justify-between">
             {navItems.map((item, idx) => (

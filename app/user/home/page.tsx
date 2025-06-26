@@ -4,7 +4,7 @@ import DashboardComponents from "@/components/User/Dashboard/DashboardComponents
 import { Citas, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
 import { GetCitasPsicologoPorMes } from "@/app/apiRoutes";
-
+import showToast from "@/components/ToastStyle";
 const PageHome = () => {
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
   const [citasDelDia, setCitasDelDia] = useState<Citas[]>([]);
@@ -28,7 +28,10 @@ const PageHome = () => {
           );
         });
         setCitasDelDia(citasHoy);
-      });
+      }).catch(err => {
+        console.log(err)
+        return showToast("success", "No tienes citas agendadas para hoy")}
+      );
     }
   }, []);
 

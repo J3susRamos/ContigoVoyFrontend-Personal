@@ -3,6 +3,7 @@ import { ServicesStructureProps } from "@/interface";
 import SliderPrice from "./SliderPrice";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -12,35 +13,36 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ServicesStructure({
   services,
 }: {
   services: ServicesStructureProps[];
 }) {
+  const [isSticky, setIsSticky] = useState(true);
+
   return (
     <div className="relative ">
       {services.map((item, index) => (
         <div className="embla__slide" key={index}>
           <div className="max-w-scv18 mx-auto flex justify-between px-scv6 lg:px-[79px] gap-x-[98px] py-scv3 sm:py-scv6 text-title items-center ">
-            <p className="text-cv5 sm:text-cv6 font-semibold">
-              {item.title}
-            </p>
+            <p className="text-cv5 sm:text-cv6 font-semibold">{item.title}</p>
             <p className="text-cv3 sm:text-cv5 font-semibold">{item.edad}</p>
           </div>
-   
+
           <div
             className="flex sm:h-[578px]  min-h-[350px] pr-scv10 lg:pr-0 relative overflow-y-hidden overflow-x-clip bg-large-gradient"
             style={{
               backgroundPosition: "right center",
               backgroundRepeat: "no-repeat",
-              textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"
+              textShadow:
+                "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
             }}
           >
             <div className="flex-1 relative max-w-scv18 mx-auto pl-8 lg:pl-[79px]">
               <div className="absolute -right-[220px] h-full w-[576px] sm:w-[1200px]">
-                  <Image
+                <Image
                   src={item.background}
                   alt={item.title + item.motto}
                   fill
@@ -52,27 +54,27 @@ export default function ServicesStructure({
               </p>
             </div>
           </div>
-        
+
           <div className="mt-scv7 px-scv6 flex justify-center">
             <p className="text-cv4 sm:text-cv5 sm:leading-[32px] lg:max-w-[829px] max-w-[550px] text-title font-normal  leading-[28px] text-center">
               {item.description}
             </p>
           </div>
-          
+
           <div className="sm:hidden w-full max-w-[560px] mx-auto h-[600px] lg:h-[770px] overflow-hidden relative mt-scv3 ">
             <Image
               src={item.bgup}
               alt={item.description}
               fill
-              className="object-cover object-center mask-all-fade"    
+              className="object-cover object-center mask-all-fade"
             />
           </div>
-  
-          <div className="flex flex-col pt-scv7">
+
+          <div className="flex flex-col pt-scv8">
             <h3 className="text-cv5 sm:text-cv7 font-semibold py-6 w-full text-title  leading-[28px] text-center">
               {item.tittlecards}
             </h3>
-          
+
             <div className="flex justify-center">
               <div className="flex sm:hidden max-w-[300px] sm:max-w-[360px]">
                 <Carousel
@@ -89,7 +91,7 @@ export default function ServicesStructure({
                 >
                   <CarouselContent>
                     {item.cards?.slice(0, 5).map((card, index) => (
-                      <CarouselItem key={index} >
+                      <CarouselItem key={index}>
                         <Card className="border-none bg-transparent shadow-none">
                           <CardContent className="p-0">
                             <span className="text-4xl font-semibold  ">
@@ -123,16 +125,16 @@ export default function ServicesStructure({
                   <CarouselPrevious
                     variant="ghost"
                     className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                    defaultIcon = {false}
+                    defaultIcon={false}
                   >
-                   <ChevronLeft  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                    <ChevronLeft strokeWidth={4} className="!w-scv5 !h-scv5" />
                   </CarouselPrevious>
                   <CarouselNext
                     variant="ghost"
-                    defaultIcon = {false}
+                    defaultIcon={false}
                     className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                  > 
-                    <ChevronRight  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                  >
+                    <ChevronRight strokeWidth={4} className="!w-scv5 !h-scv5" />
                   </CarouselNext>
                 </Carousel>
               </div>
@@ -141,52 +143,46 @@ export default function ServicesStructure({
             <div className="hidden sm:flex justify-center py-8 px-4 sm:px-8">
               {/* Oculto en móviles, visible en pantallas medianas y grandes */}
               <div className="flex justify-center flex-wrap max-w-scv18 items-center gap-x-scv6 gap-y-scv7">
-                
-                  {item.cards?.map((card) => (
-                    <div
-                      key={card.id}
-                      className="flex flex-col rounded-3xl bg-[#634AE2]"
-                    >
-                      <div className="w-[360px] min-h-[236px] py-scv6 px-scv6 flex flex-col gap-scv4 justify-between rounded-lg p-4">
-                        <div className="flex-1 relative">
-                          <Image
-                            src={card.icon}
-                            alt={card.text}
-                            fill
-                            className="w-[130px] object-contain"
-                          />
-                        </div>
-                      
-                        <p className="text-center text-cv4 text-white font- leading-[19px] w-full">
-                          {card.text}
-                        </p>
-                        
+                {item.cards?.map((card) => (
+                  <div
+                    key={card.id}
+                    className="flex flex-col rounded-3xl bg-[#634AE2]"
+                  >
+                    <div className="w-[360px] min-h-[236px] py-scv6 px-scv6 flex flex-col gap-scv4 justify-between rounded-lg p-4">
+                      <div className="flex-1 relative">
+                        <Image
+                          src={card.icon}
+                          alt={card.text}
+                          fill
+                          className="w-[130px] object-contain"
+                        />
                       </div>
+
+                      <p className="text-center text-cv4 text-white font- leading-[19px] w-full">
+                        {card.text}
+                      </p>
                     </div>
-                  ))}
-                
-              
+                  </div>
+                ))}
               </div>
-            </div>          
+            </div>
           </div>
 
-          
-          <div className="hidden md:flex max-w-scv18 mx-auto pl-8">
+          <div className="hidden md:flex max-w-scv18 mx-auto pl-8 mt-scv8">
             <div className="flex-[1.5] pt-scv9">
               <div className="flex justify-center">
-                <div className="w-full text-title font-semibold text-[24px] leading-[33px] text-center">
+                <div className="w-full text-title font-semibold text-[24px] leading-[33px] text-center px-scv6">
                   {item.tittleIcon}
                 </div>
               </div>
 
-                
               <div className="flex justify-center flex-wrap gap-x-scv8 gap-y-scv7 pt-scv7 pb-scv10">
                 {item.iconos?.map((icono, index) => (
                   <div
                     key={index}
                     className="w-[190px] flex flex-col items-center gap-4"
                   >
-                    <div className=" rounded-full w-32 h-32 p-scv6 bg-[#9494F3] flex items-center justify-center">
+                    <div className=" rounded-full w-32 h-32 p-scv6 bg-[#634AE2] flex items-center justify-center">
                       <div className="relative w-full h-full ">
                         <Image
                           src={icono.iconImage}
@@ -202,8 +198,6 @@ export default function ServicesStructure({
                   </div>
                 ))}
               </div>
-                
-             
             </div>
             <div className="flex-1 relative">
               <Image
@@ -215,7 +209,7 @@ export default function ServicesStructure({
             </div>
           </div>
 
-          <div className="block md:hidden">
+          <div className="block md:hidden mt-scv8">
             <div className="flex items-center px-10 ">
               <div className="w-full max-w-[837px] text-title font-semibold text-[20px] leading-[33px] text-center">
                 {item.tittleIcon}
@@ -265,38 +259,48 @@ export default function ServicesStructure({
                   <CarouselPrevious
                     variant="ghost"
                     className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                    defaultIcon = {false}
+                    defaultIcon={false}
                   >
-                   <ChevronLeft  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                    <ChevronLeft strokeWidth={4} className="!w-scv5 !h-scv5" />
                   </CarouselPrevious>
                   <CarouselNext
                     variant="ghost"
-                    defaultIcon = {false}
+                    defaultIcon={false}
                     className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                  > 
-                    <ChevronRight  strokeWidth={4} className="!w-scv5 !h-scv5"/>
+                  >
+                    <ChevronRight strokeWidth={4} className="!w-scv5 !h-scv5" />
                   </CarouselNext>
                 </Carousel>
               </div>
             </div>
           </div>
 
-          <SliderPrice />
+          <SliderPrice promotions={item.promotionCards} />
 
-          <div className="sticky bottom-0 left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]">
-              
-              <div className="flex flex-col lg:flex-row gap-y-scv3 items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 py-scv4 space-x-0">
-                <p
-                  className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center prx-16"
-                  dangerouslySetInnerHTML={{ __html: item.textfooter }}
-                />
-                <Link href="/ReservarCita">
-                  <button className="w-full md:w-[329px] h-10 md:h-[50px] bg-[#5A4AE8] rounded-[34px] text-white font-normal text-[18px] leading-[33px] text-center mt-2 md:mt-0 px-16 md:px-0">
-                    Reserva tu cita gratuita
-                  </button>
-                </Link>
-              </div>
-
+          <div
+            className={`${
+              isSticky ? "sticky bottom-0" : "relative"
+            }   left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]`}
+          >
+            <button
+              onClick={() => setIsSticky(false)}
+              className={`${
+                !isSticky ? "hidden" : ""
+              } transition-all duration-300 bg-[#DEDEFF] absolute top-0 right-0 -translate-y-[100%]  text-[#634AE2]  font-bold px-3 py-1 sm:px-10 sm:py-2 sm:text-cv4 rounded-tl-lg`}
+            >
+              X
+            </button>
+            <div className="flex flex-col lg:flex-row gap-y-scv3 items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 py-scv4 space-x-0">
+              <p
+                className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center prx-16"
+                dangerouslySetInnerHTML={{ __html: item.textfooter }}
+              />
+              <Link href="/ReservarCita">
+                <button className="w-full md:w-[329px] h-10 md:h-[50px] bg-[#5A4AE8] rounded-[34px] text-white font-normal text-[18px] leading-[33px] text-center mt-2 md:mt-0 px-16 md:px-0">
+                  Reserva tu cita gratuita
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       ))}

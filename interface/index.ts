@@ -39,6 +39,19 @@ export interface FAQ {
 export interface AccordionQuestProps {
   faqs: FAQ[];
 }
+
+export interface PromotionCardProps {
+  id: number;
+  title: string;
+  preciounit: string;
+  cents: string;
+  regularprice: string;
+  list: {
+    id: number;
+    text: string;
+  }[]
+}
+
 //interface Services para el componente ServicesStructure No le mueva nada caracho
 export interface ServicesStructureProps {
   title: string;
@@ -62,7 +75,9 @@ export interface ServicesStructureProps {
   }[];
   textfooter: string;
   textfootermobile:string;
+  promotionCards?: PromotionCardProps[];
 }
+
 //Quienes Somos
 export interface QuienesSomos {
   quienesSomos: string;
@@ -314,6 +329,7 @@ export interface FormPaciente {
   apellidoMaterno: string;
   DNI: string;
   email: string;
+  imagen: string;
   celular: string;
   fecha_nacimiento: string;
   genero: string;

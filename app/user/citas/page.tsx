@@ -22,14 +22,6 @@ const FiltersInitialState: FiltersCitas = {
   fechaInicio: [],
 };
 
-const columns = [
-  { name: "Paciente", uid: "paciente", sortable: true },
-  { name: "Código", uid: "codigo", sortable: true },
-  { name: "Motivo", uid: "motivo", sortable: true },
-  { name: "Estado", uid: "estado", sortable: true },
-  { name: "Fecha de Inicio", uid: "fecha_inicio", sortable: true },
-  { name: "Duración", uid: "duracion", sortable: true },
-];
 
 export default function App() {
   const router = useRouter();
@@ -37,7 +29,7 @@ export default function App() {
   const [filterValue, setFilterValue] = useState("");
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [filters, setFilters] = useState<FiltersCitas>(FiltersInitialState);
-
+  
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -62,56 +54,13 @@ export default function App() {
         filters={filters}
         setFilters={setFilters}
         onSearchChange={onSearchChange}
-        columns={columns}
         onAddNew={() => {}}
         menuOpen={menuAbierto}
         setMenuOpen={setMenuAbierto}
       />
       <section className={`${menuAbierto && 'opacity-50'}`}>
         <ListarCitas filters={filters} filterValue={filterValue}/>
-      </section>
-      {/* {error ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="text-lg font-medium text-destructive dark:text-destructive">
-            {error}
-          </div>
-        </div>
-      ) : (
-        <>
-          {filteredItems.length > 0 ? (
-            <TableCitas
-              filteredCitas={filteredItems}
-              headerColumns={headerColumns}
-              selectedKeys={selectedKeys}
-              menuOpen={menuAbierto}
-              setSelectedKeysAction={setSelectedKeys}
-              onCitaDeleted={(idCita) => {
-                setCitas((prevCitas) =>
-                  prevCitas.filter(
-                    (cita) => Number(cita.idCita) !== Number(idCita)
-                  )
-                );
-              }}
-            />
-          ) : (
-            <EmptyTable
-              filters={
-                !!filterValue ||
-                Object.values(filters).some(
-                  (filter) => filter && filter.length > 0
-                )
-              }
-              messages={{
-                emptyTitle: "No hay citas registradas",
-                noResultsDescription:
-                  "No hay citas que coincidan con los filtros aplicados. Intenta ajustar tus criterios de búsqueda.",
-                emptyDescription:
-                  "Aún no se han programado citas médicas en el sistema.",
-              }}
-            />
-          )}
-        </>
-      )} */}
+      </section>   
     </div>
   );
 }

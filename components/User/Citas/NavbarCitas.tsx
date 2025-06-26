@@ -12,7 +12,6 @@ interface NavbarProps {
   filters: FiltersCitas;
   setFilters: Dispatch<SetStateAction<FiltersCitas>>;
   onSearchChange: (value?: string) => void;
-  columns: { name: string; uid: string; sortable?: boolean }[];
   onAddNew: () => void;
   menuOpen: boolean;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
