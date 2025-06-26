@@ -11,7 +11,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    // Si estamos cerrando el menú, también cerramos el submenú de servicios
+   
     if (isMenuOpen) {
       setIsServicesOpen(false);
     }
@@ -20,23 +20,24 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
   const toggleServices = () => {
     setIsServicesOpen(!isServicesOpen);
   };
-
   const closeMenu = () => {
     setIsMenuOpen(false);
     setIsServicesOpen(false);
   };
 
   return (
-    <div className="absolute left-6 top-5 w-10">
+    <div className="fixed left-4 top-6 w-10 h-10 z-50 lg:hidden">
       {/* Botón para abrir el menú */}
       <button
         className="text-2xl focus:outline-none w-full"
         aria-label="Abrir menú"
         onClick={toggleMenu}
-      >
-        <span
+      >        <span
           dangerouslySetInnerHTML={{
-            __html: Icons.hamburger.replace(/<svg /, '<svg fill="#634AE2" width=100% height=100%'),
+            __html: Icons.hamburger.replace(
+              /<svg([^>]*)>/,
+              '<svg$1 fill="#634AE2" width="100%" height="100%">'
+            ),
           }}
         />
       </button>
@@ -55,12 +56,11 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
             className="p-2 text-2xl focus:outline-none"
             aria-label="Cerrar menú"
             onClick={closeMenu}
-          >
-            <span
+          >            <span
               dangerouslySetInnerHTML={{
                 __html: Icons.arrow.replace(
-                  /<svg /,
-                  '<svg fill="#634AE2" stroke="#634AE2" stroke-width="2" '
+                  /<svg([^>]*)>/,
+                  '<svg$1 fill="#634AE2" stroke="#634AE2" stroke-width="2">'
                 ),
               }}
               className="inline-block transform rotate-90"
@@ -70,9 +70,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
               }}
             />
           </button>
-        </div>
-
-        {/* Cuerpo del menú */}
+        </div>        {/* Cuerpo del menú */}
         <div className="flex-1 p-4">
           <div className="grid">
             {navItems.map((navItem, idx) => (

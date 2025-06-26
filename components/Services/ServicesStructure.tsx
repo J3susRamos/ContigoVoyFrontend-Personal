@@ -13,14 +13,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ServicesStructure({
   services,
 }: {
   services: ServicesStructureProps[];
 }) {
-
   const [isSticky, setIsSticky] = useState(true);
 
   return (
