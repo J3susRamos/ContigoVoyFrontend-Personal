@@ -7,21 +7,21 @@ export const metadata: Metadata = {
   description: "Recupera la armonía con terapia familiar online. Mejora la comunicación, resuelve conflictos y fortalece los vínculos entre los miembros de tu familia.Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea.",
 };
 
-const NinosTerapias:ServicesStructureProps[] =[{
-
-  title: "Terapia para niños",
+const NinosTerapias: ServicesStructureProps[] = [
+  {
+    title: "Terapia para niños",
     edad: "De 3 a 12 años de edad",
     motto:
       "¿Por qué no darle a tu pequeño la oportunidad de crecer emocionalmente con la ayuda de un profesional?",
     background: "/Services/niños/terapia-psicologica-para-ninos.webp",
-    bgdown:"/Services/niños/ayuda-emocional-para-ninos-madre-tablet.webp",
-    bgup:"/Services/ninos/bgupinfante.webp",
+    bgdown: "/Services/niños/ayuda-emocional-para-ninos-madre-tablet.webp",
+    bgup: "/Services/ninos/bgupinfante.webp",
 
     description:
       "  Ayuda a tu hijo a superar sus desafíos emocionales con nuestra terapia infantil. Apoyamos a los niños a comprender y manejar sus emociones, mejorando su bienestar de manera accesible y con la participación activa de los padres en cada sesión online.  ",
     tittleIcon:
       "En Contigo Voy, puedes encontrar a un psicólogo infantil online para ayudar a tu hijo a enfrentar una variedad de temas.",
-      
+
     iconos: [
       {
         id: 1,
@@ -80,13 +80,34 @@ const NinosTerapias:ServicesStructureProps[] =[{
     textfooter:
       "¿Tu pequeño enfrenta desafíos como falta de atención?<br/>¿Tiene una conducta agresiva?",
 
-      textfootermobile:
+    textfootermobile:
       "¿Tu pequeño enfrenta desafíos como falta de atención?<br/> ¿Tiene una conducta agresiva?",
-    
-  }
-
-
-]
+    promotionCards: [
+      {
+        id: 1,
+        title: "Terapia para niños",
+        preciounit: "s/69",
+        cents: ".00",
+        regularprice: "Precio regular: s/90.00",
+        list: [
+          {
+            id: 1,
+            text: "Sesiones online de 40 a 50 minutos.",
+          },
+          {
+            id: 2,
+            text: "Evaluación de habilidades cognitivas.",
+          },
+          {
+            id: 3,
+            text: "Juegos terapéuticos adaptados para niños.",
+          },
+          { id: 4, text: "Psicólogos expertos en desarrollo infantil." },
+        ],
+      },
+    ],
+  },
+];
 
 export default function Ninos() {
 

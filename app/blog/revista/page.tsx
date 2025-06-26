@@ -6,13 +6,13 @@ import { Suspense } from "react";
 
 function RevistaContent() {
   const searchParams = useSearchParams();
-  const blogId = searchParams.get('id');
+  const blogId = searchParams.get("id");
   const [blogData, setBlogData] = useState<BlogPreviewData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!blogId) return;
-
+    
     const fetchData = async () => {
       try {
         const response = await fetch(
@@ -27,7 +27,7 @@ function RevistaContent() {
       }
     };
 
-    fetchData().catch(error => {
+    fetchData().catch((error) => {
       console.error("Error in fetchData:", error);
     });
   }, [blogId]);

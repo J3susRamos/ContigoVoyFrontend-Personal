@@ -20,37 +20,41 @@ export default function RootLayout({
     const pathParts = pathname.split("/");
     return `/${pathParts[1]}`;
   };
-  
+
   return (
     <html lang="en" suppressHydrationWarning>
-    <head>
-      <meta charSet="utf-8"/>
-      <meta httpEquiv="Content-Language" content="es" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="author" content="Contigo Voy" />
-      <meta name="google-site-verification" content="E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY" />
-    </head>
+      <head>
+        <meta charSet="utf-8" />
+        <meta httpEquiv="Content-Language" content="es" />
+ 
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="Contigo Voy" />
+
+        <meta
+          name="google-site-verification"
+          content="E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY"
+        />
+      </head>
       <body className={`${lexend.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem    
+          enableSystem
           disableTransitionOnChange
         >
           {getBaseRoute() !== "/user" && getBaseRoute() !== "/admin" && (
             <Navbar />
           )}
           <div
-            className={`${
-              getBaseRoute() !== "/user" ? " min-h-[90vh]" : ""
-            }`}
+            className={`${getBaseRoute() !== "/user" ? " min-h-[90vh]" : ""}`}
           >
             {children}
           </div>
           {getBaseRoute() !== "/user" && getBaseRoute() !== "/admin" && (
             <Footer />
           )}
-        </ThemeProvider >
+        </ThemeProvider>
         <ToastContainer />
       </body>
     </html>

@@ -8,7 +8,7 @@ import { Citas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import HeaderUser from "@/components/User/HeaderUser";
-import { FormCita } from "@/components/User/Citas/form_cita_modal";
+import EmptyTable, { GenericFilters } from "@/components/ui/EmptyTable";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "codigo",
@@ -19,7 +19,7 @@ const INITIAL_VISIBLE_COLUMNS = [
   "duracion",
 ];
 
-export interface Filters {
+export interface Filters extends GenericFilters {
   genero: string[];
   estado: string[];
   edad: string[];
@@ -44,7 +44,7 @@ const columns = [
 
 export default function App() {
   const router = useRouter();
-  const cookies = parseCookies();
+  const cookies = useMemo(() => parseCookies(), []);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   const [filterValue, setFilterValue] = useState("");
@@ -57,7 +57,6 @@ export default function App() {
   const [citas, setCitas] = useState<Citas[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>(FiltersInitialState);
-  const [showFormCita, setShowFormCita] = useState(false);
 
   const handleGetCitas = useCallback(async () => {
     try {
@@ -80,7 +79,6 @@ export default function App() {
         return;
       }
       const data = await response.json();
-      console.log(data);
 
       if (Array.isArray(data.result)) {
         const formattedCitas = data.result.map((cita: Citas) => ({
@@ -108,87 +106,62 @@ export default function App() {
   }, [cookies]);
 
   useEffect(() => {
-    if (isAuthorized) {
-      handleGetCitas();
-    }
-  }, [isAuthorized]);
-
-  const [sortDescriptor] = useState({
-    column: "fecha_inicio",
-    direction: "ascending",
-  });
-
-  useEffect(() => {
-    const cookies = parseCookies();
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
 
-    const isAuth = userData.rol === "PSICOLOGO" || cookies["rol"] !== "admin";
-    setIsAuthorized(isAuth);
-
-    if (!isAuth) {
+    if (userData.rol !== "PSICOLOGO") {
       router.push("/unauthorized");
+    } else {
+      setIsAuthorized(true);
     }
   }, [router]);
 
-  const hasSearchFilter = Boolean(filterValue);
+  useEffect(() => {
+    handleGetCitas();
+  }, [handleGetCitas]);
 
   const filteredItems = useMemo(() => {
-    let filteredCitas = [...citas];
+    if (!citas?.length) return [];
 
-    // ✅ FILTRO POR GENERO
-    if (filters.genero.length > 0) {
-      filteredCitas = filteredCitas.filter((cita) =>
-        filters.genero.includes(cita.genero)
-      );
-    }
+    return citas.filter((cita) => {
+      if (filters.genero.length > 0 && !filters.genero.includes(cita.genero)) {
+        return false;
+      }
 
-    // Filtrar por edad si hay valores
-    if (filters.edad.length > 0) {
-      filteredCitas = filteredCitas.filter((p) => {
-        return filters.edad.some((rango) => {
+      if (
+        filters.edad.length > 0 &&
+        !filters.edad.some((rango) => {
           const [min, max] = rango.split(" - ").map(Number);
-          return p.edad >= min && p.edad <= max;
-        });
-      });
-    }
+          return cita.edad >= min && cita.edad <= max;
+        })
+      ) {
+        return false;
+      }
 
-    // ✅ FILTRO POR ESTADO
-    if (filters.estado.length > 0) {
-      filteredCitas = filteredCitas.filter((cita) =>
-        filters.estado.includes(cita.estado)
-      );
-    }
+      if (filters.estado.length > 0 && !filters.estado.includes(cita.estado)) {
+        return false;
+      }
 
-    // ✅ FILTRO POR FECHA DE INICIO
-    if (filters.fechaInicio.length === 2) {
-      const [from, to] = filters.fechaInicio;
-      const fromDate = new Date(from + "T00:00:00");
-      const toDate = new Date(to + "T23:59:59");
-
-      filteredCitas = filteredCitas.filter((cita) => {
+      if (filters.fechaInicio.length === 2) {
+        const [from, to] = filters.fechaInicio;
         const citaDate = new Date(cita.fecha_inicio);
-        return citaDate >= fromDate && citaDate <= toDate;
-      });
-    }
+        const fromDate = new Date(from + "T00:00:00");
+        const toDate = new Date(to + "T23:59:59");
 
-    // 🔍 FILTRO POR TEXTO EN PACIENTE
-    if (hasSearchFilter) {
-      filteredCitas = filteredCitas.filter((cita) =>
-        cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
+        if (citaDate < fromDate || citaDate > toDate) {
+          return false;
+        }
+      }
 
-    return filteredCitas;
-  }, [citas, filterValue, hasSearchFilter, filters]);
+      if (
+        filterValue &&
+        !cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
+      ) {
+        return false;
+      }
 
-  const sortedItems = useMemo(() => {
-    return [...filteredItems].sort((a, b) => {
-      const first = a[sortDescriptor.column as keyof typeof a] as string;
-      const second = b[sortDescriptor.column as keyof typeof b] as string;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      return true;
     });
-  }, [sortDescriptor, filteredItems]);
+  }, [citas, filterValue, filters]);
 
   const headerColumns = useMemo(() => {
     return columns.filter((column) =>
@@ -204,10 +177,6 @@ export default function App() {
     setFilterValue("");
   }, []);
 
-  const handleAddNew = () => {
-    setShowFormCita(true);
-  };
-
   if (isAuthorized === null) return null;
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
@@ -221,7 +190,7 @@ export default function App() {
         visibleColumns={visibleColumns}
         setVisibleColumns={setVisibleColumns}
         columns={columns}
-        onAddNew={handleAddNew}
+        onAddNew={() => {}}
         menuOpen={menuAbierto}
         setMenuOpen={setMenuAbierto}
       />
@@ -233,9 +202,9 @@ export default function App() {
         </div>
       ) : (
         <>
-          {sortedItems.length > 0 ? (
+          {filteredItems.length > 0 ? (
             <TableCitas
-              users={sortedItems}
+              users={filteredItems}
               headerColumns={headerColumns}
               selectedKeys={selectedKeys}
               menuOpen={menuAbierto}
@@ -249,90 +218,20 @@ export default function App() {
               }}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center py-16 px-4">
-              <div className="bg-white dark:bg-card rounded-lg shadow-sm border border-gray-200 dark:border-border p-8 max-w-md w-full text-center">
-                {/* Icono dinámico basado en si hay filtros activos */}
-                <div className="mx-auto w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
-                  {filterValue ||
-                  Object.values(filters).some(
-                    (filter) => filter && filter.length > 0
-                  ) ? (
-                    // Icono de búsqueda/filtro cuando hay filtros activos
-                    <svg
-                      className="w-8 h-8 text-primary dark:text-primary-foreground"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  ) : (
-                    // Icono de calendario cuando no hay filtros (sin citas)
-                    <svg
-                      className="w-8 h-8 text-primary dark:text-primary-foreground"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                      <line
-                        x1="15"
-                        y1="9"
-                        x2="9"
-                        y2="15"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <line
-                        x1="9"
-                        y1="9"
-                        x2="15"
-                        y2="15"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  )}
-                </div>
-
-                {/* Título dinámico */}
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground mb-2">
-                  {filterValue ||
-                  Object.values(filters).some(
-                    (filter) => filter && filter.length > 0
-                  )
-                    ? "No se encontraron resultados"
-                    : "No hay citas registradas"}
-                </h3>
-
-                {/* Descripción dinámica */}
-                <p className="text-gray-600 dark:text-muted-foreground">
-                  {filterValue ||
-                  Object.values(filters).some(
-                    (filter) => filter && filter.length > 0
-                  )
-                    ? "No hay citas que coincidan con los filtros aplicados. Intenta ajustar tus criterios de búsqueda."
-                    : "Aún no se han programado citas médicas en el sistema."}
-                </p>
-              </div>
-            </div>
+            <EmptyTable
+              filters={filters}
+              filterValue={filterValue}
+              messages={{
+                emptyTitle: "No hay citas registradas",
+                noResultsDescription:
+                  "No hay citas que coincidan con los filtros aplicados. Intenta ajustar tus criterios de búsqueda.",
+                emptyDescription:
+                  "Aún no se han programado citas médicas en el sistema.",
+              }}
+            />
           )}
         </>
       )}
-      <FormCita
-        isOpen={showFormCita}
-        onCloseAction={() => setShowFormCita(false)}
-        onCitaCreatedAction={() => {
-          setShowFormCita(false);
-          handleGetCitas();
-        }}
-      />
     </div>
   );
 }

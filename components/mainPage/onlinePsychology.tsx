@@ -167,7 +167,7 @@ export default function ChooseUs() {
                     <div className="flex-1">
                         <div className="flex flex-col items-center justify-center p-6">
                           <div className="flex flex-col items-center justify-center w-28 h-28 rounded-full bg-[#9494F3] backdrop-blur-sm transition-all duration-300">
-                            <div className="bg-transparent rounded-full  transition-colors duration-300 w-14">
+                            <div className="bg-transparent rounded-full transition-colors duration-300 w-14">
                               {feature.icon}
                             </div>
                           </div>
