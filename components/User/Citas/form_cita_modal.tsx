@@ -59,7 +59,6 @@ export const FormCita: React.FC<FormCitaProps> = ({
     try {
       const cookies = parseCookies();
       const token = cookies["session"];
-      // General Pacientes API endpoint
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes`, {
         headers: {
           "Authorization": `Bearer ${token}`,
