@@ -1,7 +1,7 @@
 "use client";
 
 import { Autocomplete, AutocompleteItem, Button, Input } from "@heroui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Listarblog } from "./listarblog";
 import Tiptap from "./textEdit";
 import { BlogApi, Categoria, UsuarioLocalStorage } from "@/interface";
@@ -66,6 +66,7 @@ export default function BlogUsuarioCrear() {
     null
   );
   const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 useEffect(() => {
   let isMounted = true;
@@ -109,7 +110,7 @@ useEffect(() => {
     fetchUser();
   }, []);
 
-  const handleImageUpload = async (
+  const handleImageUpload = useCallback(async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
@@ -127,32 +128,47 @@ useEffect(() => {
       console.error("Error processing image:", error);
       showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
     }
-  };
+  }, []);
 
   const postNewCategoria = async () => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/categorias`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ nombre: value }),
-        }
-      );
-      const info = await response.json();
-      setSelectedKey(info.result.idCategoria);
-      return info.result.idCategoria;
-    } catch (error) {
-      console.error("Error:", error);
+  const cookies = parseCookies();
+  const token = cookies["session"];
+  
+  if (!token) {
+    console.error("No authentication token found");
+    showToast("error", "Error al crear la categoría");
+    return null;
+  }
+  
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/categorias`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ nombre: value }),
+      }
+    );
+    
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      showToast("error", "Error al crear la categoría");
       return null;
     }
-  };
+
+    const info = await response.json();
+    setSelectedKey(info.result.idCategoria);
+    return info.result.idCategoria;
+  } catch (error) {
+    console.error("Error creating category:", error);
+    showToast("error", "Error al crear la categoría");
+    return null;
+  }
+};
 
 // Add proper validation
 const getUserId = () => {
@@ -160,13 +176,38 @@ const getUserId = () => {
   return user.idpsicologo || user.id;
 };
 
+const validateForm = (): boolean => {
+  if (!tema.trim()) {
+    showToast("error", "El título es requerido.");
+    return false;
+  }
+  if (!contenido.trim()) {
+    showToast("error", "El contenido es requerido.");
+    return false;
+  }
+  if (!selectedKey && !value.trim()) {
+    showToast("error", "La categoría es requerida.");
+    return false;
+  }
+  if (!base64Image && !url.trim()) {
+    showToast("error", "Se requiere una imagen o URL.");
+    return false;
+  }
+  return true;
+};
+
 const handleSubmit = async () => {
+  if (!validateForm()) return;
+  
+  try {
+    setIsSubmitting(true); // Add loading state
+
   const userId = getUserId();
   if (!userId) {
     showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
     return;
   }
-  try {
+  
     // Validate required fields
     if (!user?.id) {
       showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
@@ -254,15 +295,24 @@ const handleSubmit = async () => {
           ? "Publicación actualizada correctamente"
           : "Publicación creada correctamente"
       );
-      await new Promise((resolve) => setTimeout(resolve, 2600));
-      window.location.reload();
+      
+      // Instead of reloading the page, reset the form and switch to the blog list view
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      if (!editingBlogId) {
+        resetForm(); // Reset form only for new blogs
+      }
+      
+      setView(" blogs"); // Switch to the blog list view
     } else {
       console.error("Server error:", data);
       showToast("error", data.status_message || "Error desconocido");
     }
   } catch (error) {
-    console.error("Client error:", error);
-    showToast("error", "Error de conexión. Intenta nuevamente.");
+    console.error("Submission error:", error);
+    showToast("error", "Error inesperado. Por favor intenta nuevamente.");
+  } finally {
+    setIsSubmitting(false);
   }
 };
 
@@ -286,6 +336,17 @@ const handleEdit = async (id: number) => {
   }
 };
 
+const resetForm = useCallback(() => {
+  setTema("");
+  setUrl("");
+  setContenido("");
+  setSelectedKey(null);
+  setValue("");
+  setBase64Image(null);
+  setEditingBlogId(null);
+  setOriginalIdPsicologo(null);
+}, []);
+
   return (
     <div>
       <div className="w-full h-16 bg-[#6364F4] items-center justify-start flex">
@@ -296,8 +357,7 @@ const handleEdit = async (id: number) => {
             className="bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold"
             onPress={() => {
               setView("crear");
-              setEditingBlogId(null);
-              setOriginalIdPsicologo(null);
+              resetForm();
             }}
           >
             Crear Blog
@@ -434,8 +494,9 @@ const handleEdit = async (id: number) => {
                   onPress={handleSubmit}
                   radius="full"
                   className="text-white bg-[#634AE2] w-full max-w-32 font-normal text-sm"
+                  disabled={isSubmitting}
                 >
-                  {editingBlogId ? "Actualizar" : "Enviar"}
+                  {isSubmitting ? "Procesando..." : (editingBlogId ? "Actualizar" : "Enviar")}
                 </Button>
               </div>
             </div>
