@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { useEffect, } from "react";
+import { useEffect } from "react";
 
 const enterprises = [
   {
