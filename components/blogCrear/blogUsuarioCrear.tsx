@@ -170,30 +170,39 @@ useEffect(() => {
   }
 };
 
-// Add proper validation
-const getUserId = () => {
-  if (!user) return null;
-  return user.idpsicologo || user.id;
-};
-
 const validateForm = (): boolean => {
   if (!tema.trim()) {
     showToast("error", "El título es requerido.");
     return false;
   }
+  
+  // Update content validation to match server requirements
   if (!contenido.trim()) {
     showToast("error", "El contenido es requerido.");
     return false;
   }
+  
+  if (contenido.trim().length < 10) {
+    showToast("error", "El contenido debe tener al menos 10 caracteres.");
+    return false;
+  }
+  
   if (!selectedKey && !value.trim()) {
     showToast("error", "La categoría es requerida.");
     return false;
   }
+  
   if (!base64Image && !url.trim()) {
     showToast("error", "Se requiere una imagen o URL.");
     return false;
   }
+  
   return true;
+};
+
+const getUserId = () => {
+  if (!user) return null;
+  return user.idpsicologo || user.id;
 };
 
 const handleSubmit = async () => {
@@ -296,17 +305,22 @@ const handleSubmit = async () => {
           : "Publicación creada correctamente"
       );
       
-      // Instead of reloading the page, reset the form and switch to the blog list view
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
       if (!editingBlogId) {
-        resetForm(); // Reset form only for new blogs
+        resetForm();
       }
       
-      setView(" blogs"); // Switch to the blog list view
+      setView(" blogs");
     } else {
       console.error("Server error:", data);
-      showToast("error", data.status_message || "Error desconocido");
+      
+      // Handle specific server validation messages
+      if (data.message) {
+        showToast("error", data.message);
+      } else {
+        showToast("error", data.status_message || "Error desconocido");
+      }
     }
   } catch (error) {
     console.error("Submission error:", error);
