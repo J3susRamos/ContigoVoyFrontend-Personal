@@ -83,7 +83,9 @@ useEffect(() => {
     }
   };
   
-  fetchCategoria();
+  fetchCategoria().catch((error) => {
+    console.error('Error fetching categories:', error);
+  });
   
   return () => {
     isMounted = false;
