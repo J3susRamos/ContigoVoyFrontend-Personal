@@ -154,7 +154,18 @@ useEffect(() => {
     }
   };
 
+// Add proper validation
+const getUserId = () => {
+  if (!user) return null;
+  return user.idpsicologo || user.id;
+};
+
 const handleSubmit = async () => {
+  const userId = getUserId();
+  if (!userId) {
+    showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
+    return;
+  }
   try {
     // Validate required fields
     if (!user?.id) {
@@ -181,7 +192,7 @@ const handleSubmit = async () => {
       categoriaId = await postNewCategoria();
     }
 
-    // Use idpsicologo instead of user id for blog operations
+    // Use id psicologo instead of user id for blog operations
     const finalIdPsicologo = user.idpsicologo || user.id;
     
     console.log("Final ID Psicologo to use:", finalIdPsicologo);
