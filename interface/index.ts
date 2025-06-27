@@ -329,6 +329,7 @@ export interface FormPaciente {
   apellidoMaterno: string;
   DNI: string;
   email: string;
+  imagen: string;
   celular: string;
   fecha_nacimiento: string;
   genero: string;
