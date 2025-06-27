@@ -1,21 +1,17 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Icons } from "@/icons";
 import { Input } from "@heroui/react";
-import { Filters } from "@/app/user/citas/page";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterButton from "@/components/ui/Filters/FilterButton";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
 import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
+import { FiltersCitas } from "@/app/user/citas/page";
 
 interface NavbarProps {
   filterValue: string;
-  filters: Filters;
-  setFilters: Dispatch<SetStateAction<Filters>>;
+  filters: FiltersCitas;
+  setFilters: Dispatch<SetStateAction<FiltersCitas>>;
   onSearchChange: (value?: string) => void;
-  onClear: () => void;
-  visibleColumns: Set<string>;
-  setVisibleColumns: (columns: Set<string>) => void;
-  columns: { name: string; uid: string; sortable?: boolean }[];
   onAddNew: () => void;
   menuOpen: boolean;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
@@ -33,7 +29,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   filters,
   setFilters,
   onSearchChange,
-  onClear,
   onAddNew,
   menuOpen,
   setMenuOpen
@@ -59,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <div className="flex w-full z-40">
-      <div className="bg-[#6265f4] dark:bg-primary w-full h-[8vh] flex justify-start items-center px-4">
+      <div className="bg-[#6265f4] w-full h-[8vh] flex justify-start items-center px-4">
         <div className="flex gap-4 w-full items-center pl-12">
           <FilterButton menuOpen={menuOpen} setMenuOpen={setMenuOpen}>
             <FilterMenu
@@ -254,19 +249,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 "placeholder:text-accent-foreground dark:placeholder:text-accent-foreground",
             }}
             value={filterValue}
-            onClear={onClear}
             onValueChange={onSearchChange}
           />
 
           {/* Grupo de icono de agregar y botón */}
           <div className="ml-auto flex items-center gap-4 mr-12">
             <span
-              className="text-primary dark:text-primary transition-colors"
+              className="text-primary transition-colors"
               dangerouslySetInnerHTML={{
                 __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
               }}
               style={{
-                background: "hsl(var(--card))",
+                background: "white",
                 borderRadius: "9999px",
                 borderColor: "hsl(var(--primary))",
               }}
@@ -274,7 +268,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Botón de agregar nueva cita */}
             <button
-              className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
+              className="text-primary-foreground font-light text-xl border-1 dark:border-white rounded-full px-4"
               onClick={onAddNew}
             >
               Agregar nueva cita
