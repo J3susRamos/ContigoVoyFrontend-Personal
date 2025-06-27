@@ -89,7 +89,7 @@ export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
         </div>        {/* Footer con cerrar sesión */}
         <div className="p-4 border-t border-gray-300 dark:border-gray-600">
           <div onClick={closeMenu}>
-            <CerrarSesion isMobile={true} />
+            <CerrarSesion />
           </div>
         </div>
       </div>

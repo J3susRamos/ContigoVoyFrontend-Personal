@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -30,19 +30,66 @@ body {
   min-width: 0;
 }
 
-.background_faq{
+.background_faq {
   background-size: contain;
 }
 
+.circle-checkbox {
+  width: 20px;
 
+  height: 20px;
 
-@media (max-width: 640px) { /* sm */
+  border-radius: 50%;
+
+  border: 2px solid #634ae2;
+
+  accent-color: #634ae2;
+
+  appearance: none;
+
+  outline: none;
+
+  cursor: pointer;
+
+  position: relative;
+
+  background: #fff;
+}
+
+.circle-checkbox:checked {
+  background-color: #634ae2;
+}
+
+.circle-checkbox:after {
+  display: block;
+
+  width: 12px;
+
+  height: 12px;
+
+  margin: 2px auto;
+
+  border-radius: 50%;
+
+  background: white;
+
+  opacity: 0;
+
+  transition: opacity 0.2s;
+}
+
+.circle-checkbox:checked:after {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  /* sm */
   .responsive-bg {
-    background-position: 70% 120%; 
+    background-position: 70% 120%;
     background-size: 200%;
   }
   .background_faq {
-    background-position: 70% 100%; 
+    background-position: 70% 100%;
     background-size: 180%;
   }
 }
@@ -56,7 +103,7 @@ body {
   justify-content: center;
   flex-direction: column;
   color: white;
-} 
+}
 
 /*redes sociales */
 .wrapper {
@@ -311,25 +358,37 @@ body {
   .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #BABAFF;
+    background: #babaff;
     border-radius: 10px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #BABAFF;
+    background: #babaff;
   }
 }
 
 .mask-horizontal-fade {
-  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -337,68 +396,42 @@ body {
 }
 
 .mask-all-fade {
-  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black 40%,
+    transparent 90%
+  );
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
   -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% 100%;  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
 
-/* Estilos para corregir el autocompletado del navegador */
-/* Chrome, Safari, Edge, Opera */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px white inset !important;
-  -webkit-text-fill-color: #333333 !important;
-  background-color: white !important;
-  color: #333333 !important;
-}
-
-/* Modo oscuro para autocompletado */
-[data-theme="dark"] input:-webkit-autofill,
-[data-theme="dark"] input:-webkit-autofill:hover,
-[data-theme="dark"] input:-webkit-autofill:focus,
-[data-theme="dark"] input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #1f2937 inset !important;
+/* Estilos para autocompletado de Google en modo oscuro */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
   -webkit-text-fill-color: #634AE2 !important;
-  background-color: #1f2937 !important;
-  color: #634AE2 !important;
+  font-weight: 700 !important;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
 }
 
-/* Para Firefox */
-input:-moz-autofill {
-  background-color: white !important;
-  color: #333333 !important;
-}
-
-[data-theme="dark"] input:-moz-autofill {
-  background-color: #1f2937 !important;
-  color: #634AE2 !important;
-}
-
-/* Estilos específicos para los inputs del login */
-.login-input:-webkit-autofill,
-.login-input:-webkit-autofill:hover,
-.login-input:-webkit-autofill:focus,
-.login-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px white inset !important;
-  -webkit-text-fill-color: #333333 !important;
-  background-color: transparent !important;
-  color: #333333 !important;
-  transition: background-color 5000s ease-in-out 0s;
-}
-
-/* Modo oscuro para inputs del login */
-[data-theme="dark"] .login-input:-webkit-autofill,
-[data-theme="dark"] .login-input:-webkit-autofill:hover,
-[data-theme="dark"] .login-input:-webkit-autofill:focus,
-[data-theme="dark"] .login-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+/* Estilos adicionales para campos de contraseña autocompletados */
+.dark input[type="password"]:-webkit-autofill,
+.dark input[type="password"]:-webkit-autofill:hover,
+.dark input[type="password"]:-webkit-autofill:focus,
+.dark input[type="password"]:-webkit-autofill:active {
   -webkit-text-fill-color: #634AE2 !important;
+  font-weight: 700 !important;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Para navegadores basados en Chromium con modo oscuro */
+.dark input:-internal-autofill-selected {
   background-color: transparent !important;
   color: #634AE2 !important;
-  transition: background-color 5000s ease-in-out 0s;
+  font-weight: 700 !important;
 }

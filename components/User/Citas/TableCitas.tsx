@@ -95,5 +95,6 @@ export const TableCitas: React.FC<TableProps> = ({
         </>
       )}
     />
+
   );
 };

@@ -15,7 +15,6 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
     localStorage.setItem("idPaciente", String(idPaciente));
     window.location.href = "/user/pacientes/DetallePaciente";
   };
-
   return (
     <DataTable
       headers={headers}
