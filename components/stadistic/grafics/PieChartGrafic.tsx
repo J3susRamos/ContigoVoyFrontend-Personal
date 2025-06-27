@@ -37,28 +37,33 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
   if (genero.length === 0) return null;
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart>
-        <Pie
-          dataKey="Total"
-          data={genero}
-          cx="50%"
-          cy="50%"
-          innerRadius={50}
-          outerRadius={100}
-          fill="#8884d8"
-          label={renderCustomizedLabel}
-          labelLine={false}
-          isAnimationActive={true}
-          animationDuration={1200}
-        >
-          {genero.map((_, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip content={<CustomTooltip />} />
-      </PieChart>
-    </ResponsiveContainer>
+    <div className="w-full h-[200px] sm:h-[300px] md:h-[400px]">
+      <ResponsiveContainer width="100%" height="100%">
+        <PieChart>
+          <Pie
+            dataKey="Total"
+            data={genero}
+            cx="50%"
+            cy="50%"
+            innerRadius={50}
+            outerRadius={100}
+            fill="#8884d8"
+            label={renderCustomizedLabel}
+            labelLine={false}
+            isAnimationActive={true}
+            animationDuration={1200}
+          >
+            {genero.map((_, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 
