@@ -403,8 +403,7 @@ body {
   );
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
   -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% 100%;  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
 
@@ -436,4 +435,3 @@ body {
   color: #634AE2 !important;
   font-weight: 700 !important;
 }
-

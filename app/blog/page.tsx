@@ -19,7 +19,7 @@ export default  function BlogPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "Consulta Psicológica Online | Reserva tu Cita ";
+    document.title = "Blog | Centro Psicológico Contigo Voy";
 
     const metaDescription = document.querySelector("meta[name='description']");
 
@@ -27,7 +27,7 @@ export default  function BlogPage() {
       metaDescription.setAttribute(
         "content",
 
-        "Agenda tu terapia psicológica en minutos. Psicólogos online disponibles para ti. Conecta desde donde estés. Tu primera sesión es gratuita."
+        " En el Blog de Contigo Voy encontrarás inspiración para transformar tu vida. Desde como sanar emocionalmente hasta artículos que te harán vivir con conciencia."
       );
     } else {
       const meta = document.createElement("meta");
@@ -35,7 +35,7 @@ export default  function BlogPage() {
       meta.name = "description";
 
       meta.content =
-        "Agenda tu terapia psicológica en minutos. Psicólogos online disponibles para ti. Conecta desde donde estés. Tu primera sesión es gratuita.";
+        " En el Blog de Contigo Voy encontrarás inspiración para transformar tu vida. Desde como sanar emocionalmente hasta artículos que te harán vivir con conciencia.";
 
       document.head.appendChild(meta);
     }

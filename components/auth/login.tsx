@@ -84,91 +84,96 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await login(credentials.email, credentials.password);
-  };  return (
-    <>
+  };
+  return (
+    <div className="flex items-center justify-center mx-scv3">
       <div
-        className="rounded-[34px] md:rounded-3xl mr-10 md:mx-auto h-[600px] md:w-96 w-80 bg-[#FFFFFF] flex flex-col items-center md:items-end"
+        className="rounded-[34px] sm:rounded-3xl h-[600px] sm:w-96 w-72 bg-small-gradient flex flex-col items-end"
         style={{
           backgroundImage: `url(/newlog.webp)`,
           backgroundPosition: "center left",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
+          boxShadow:
+            "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 20px rgba(0,0,0,0.45)",
         }}
       >
-        <h1 className="font-semibold pt-10 lg:text-3xl text-2xl text-[#634AE2] md:mr-5">
+        <h1 className="font-semibold pt-10 text-2xl sm:text-3xl  text-[#634AE2] mr-5">
           Iniciar
-          <br className="lg:hidden" /> Sesión
+          <br className="sm:hidden" /> Sesión
         </h1>
-        <div className="md:transform md:translate-x-1/2 mt-10">
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white min-h-72 h-auto md:w-80 ml-32 w-72 py-10 px-6 rounded-3xl md:mr-20"
-          >
-            <div className="flex flex-col gap-y-5 ">
-              <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
-                Usuario
-              </label>{" "}              <Input
-                name="email"
-                type="email"
-                autoComplete="email"
-                radius="full"
-                variant="bordered"
-                classNames={{
-                  inputWrapper: "border-1 !border-[#634AE2]",
-                  input:
-                    "w-full dark:text-[#634AE2] text-[#333333] placeholder:text-gray-400 login-input",
-                }}
-                value={credentials.email}
-                onChange={handleChange}
-                isRequired
-              />
-              <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
-                Contraseña
-              </label>{" "}
-              <Input
-                name="password"
-                isRequired
-                autoComplete="current-password"                classNames={{
-                  inputWrapper: "border-1 !border-[#634AE2]",
-                  input:
-                    "w-full dark:text-[#634AE2] text-[#333333] placeholder:text-gray-400 login-input",
-                }}
-                radius="full"
-                value={credentials.password}
-                onChange={handleChange}
-                endContent={
-                  <button
-                    aria-label="toggle password visibility"
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={toggleVisibility}
-                  >
-                    {isVisible ? (
-                      <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    ) : (
-                      <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-                    )}
-                  </button>
-                }
-                type={isVisible ? "text" : "password"}
-                variant="bordered"
-              />
-              <Button
-                disabled={loading}
-                type="submit"
-                className={`w-1/2 rounded-full bg-[#634AE2] text-white py-2 hover:bg-[#5339d2] transition-colors mx-auto ${
-                  loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                {loading ? "Cargando..." : "Ingresar"}
-              </Button>
-              {error && (
-                <div className="mt-4 text-red-500 text-center">{error}</div>
-              )}
-            </div>
-          </form>
-        </div>
       </div>
-    </>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white min-h-72 max-w-scv13 -mt-scv5 sm:max-w-scv14 py-10 px-6 rounded-3xl flex-1 h-fit -ml-scv11 sm:-ml-scv12 w-[418px] sm:-mt-scv8"
+        style={{
+          boxShadow:
+            "0px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+        }}
+      >
+        <div className="flex flex-col gap-y-5 ">
+          <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
+            Usuario
+          </label>
+          <Input
+            name="email"
+            type="email"
+            autoComplete="email"
+            radius="full"
+            variant="bordered"
+            classNames={{
+              inputWrapper: "border-1 !border-[#634AE2]",
+              input: "w-full dark:text-[#634AE2]",
+            }}
+            value={credentials.email}
+            onChange={handleChange}
+            isRequired
+          />
+          <label className="text-[16px] leading-[20px] text-title dark:text-[#634AE2]">
+            Contraseña
+          </label>
+          <Input
+            name="password"
+            isRequired
+            autoComplete="current-password"
+            classNames={{
+              inputWrapper: "border-1 !border-[#634AE2]",
+              input: "w-full dark:text-[#634AE2]",
+            }}
+            radius="full"
+            value={credentials.password}
+            onChange={handleChange}
+            endContent={
+              <button
+                aria-label="toggle password visibility"
+                className="focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
+                {isVisible ? (
+                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                ) : (
+                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                )}
+              </button>
+            }
+            type={isVisible ? "text" : "password"}
+            variant="bordered"
+          />
+          <Button
+            disabled={loading}
+            type="submit"
+            className={`w-1/2 rounded-full bg-[#634AE2] mt-scv6 text-white py-2 hover:bg-[#5339d2] transition-colors mx-auto ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Cargando..." : "Ingresar"}
+          </Button>
+          {error && (
+            <div className="mt-4 text-red-500 text-center">{error}</div>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }
