@@ -37,12 +37,13 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
     { name: "Terapia Empresarial", link: "/servicios/terapia/empresarial" },
   ];  return (
     <>
-      <div className="lg:hidden ">
-        <MobileNav navItems={navItems}  />
+      <div className="2xl:hidden ">
+        <MobileNav navItems={navItems} />
       </div>
-      <motion.div        onMouseLeave={() => setHovered(null)}
+      <motion.div
+        onMouseLeave={() => setHovered(null)}
         className={cn(
-          "relative z-[60] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full px-4 py-2 lg:flex",
+          "relative z-[60] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full px-4 py-2 2xl:flex ",
           "inset-x-0 h-16"
         )}
       >
@@ -84,8 +85,14 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
                       }`}
                       href="#"
                     >
-                      <span className="relative z-20 text-base ">Servicios</span>
-                      <ChevronDown className={`transition-transform duration-300 ${hovered === idx ? "rotate-180": ""}`}/>
+                      <span className="relative z-20 text-base ">
+                        Servicios
+                      </span>
+                      <ChevronDown
+                        className={`transition-transform duration-300 ${
+                          hovered === idx ? "rotate-180" : ""
+                        }`}
+                      />
                     </Link>
 
                     {dropdownVisible && (
@@ -126,9 +133,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
                     href={navItem.link}
                   >
                     {hovered === idx && (
-                      <motion.div
-                        className="absolute inset-0 h-full w-full rounded-full bg-[#634AE2]"
-                      />
+                      <motion.div className="absolute inset-0 h-full w-full rounded-full bg-[#634AE2]" />
                     )}
                     <span className="relative z-20 text-base">
                       {navItem.name}
@@ -140,8 +145,6 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
             <ThemeToggle />
           </div>
         </div>
-
-        
       </motion.div>
     </>
   );

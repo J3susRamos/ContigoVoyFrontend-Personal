@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@heroui/react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface SliderSection {
   phrase: string;
@@ -73,16 +74,23 @@ export default function MainSlider() {
           {sections.map((item, index) => (
             <div className="relative embla__slide overflow-hidden" key={index}>
               <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
-              <div className=" mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right -right-scv7" style={{
-                  backgroundImage: `url(${item.background})`,
-                }}>
+              <div className=" mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right -right-scv7">
+                <div key={index} className="h-full flex-1 relative ">
+                  <Image
+                    src={item.background}
+                    alt={""}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </div>
-              <div
-                className="mx-auto relative max-w-scv18 w-full  z-10 lg:min-h-[650px]  min-h-[340px]  md:pt-0 bg-cover flex items-center vg-left pl-[30px]"
-              >
+              <div className="mx-auto relative max-w-scv18 w-full  z-10 lg:min-h-[650px]  min-h-[340px]  md:pt-0 bg-cover flex items-center vg-left pl-[30px]">
                 <div className="my-scv6">
                   <div
-                    style={{textShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}}
+                    style={{
+                      textShadow:
+                        "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                    }}
                     className="mr-scv6 max-w-scv13 lg:max-w-scv14 text-cv8 lg:text-cv9 leading-10 lg:leading-[60px] font-bold text-white mt-13"
                     dangerouslySetInnerHTML={{
                       __html: item.phrase,
@@ -99,20 +107,28 @@ export default function MainSlider() {
                         exit={{ opacity: 0 }}
                       >
                         <div
-                          style={{textShadow: '4px 5px 16px rgba(0,0,0,0.55), 2px 2px 3px rgba(0,0,0,0.85)'}}
+                          style={{
+                            textShadow:
+                              "4px 5px 16px rgba(0,0,0,0.55), 2px 2px 3px rgba(0,0,0,0.85)",
+                          }}
                           className="mr-scv6 max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
                           dangerouslySetInnerHTML={{
                             __html: item.smallPhrase,
                           }}
                         />
-                        
                       </motion.div>
                     )}
                   </AnimatePresence>
-                  
+
                   <div className="relative block">
                     <Link href="/ReservarCita">
-                      <Button style={{boxShadow: '4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)'}} className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-cv6">
+                      <Button
+                        style={{
+                          boxShadow:
+                            "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                        }}
+                        className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-cv6"
+                      >
                         Reservar Cita
                       </Button>
                     </Link>
