@@ -41,15 +41,18 @@ export default function App() {
     antecedentesMedicos: "",
     medicamentosPrescritos: "",
   });
+
   // Corrige el tipo de currentState y currentCity en el formData
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
     try {
       // Convertir la imagen a WebP
       const webpImage = await convertImageToWebP(file);
+
       // Convertir la imagen WebP a Base64
       const base64 = await convertToBase64(webpImage);
       setBase64Image(base64);

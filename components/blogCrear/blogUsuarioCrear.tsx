@@ -67,23 +67,41 @@ export default function BlogUsuarioCrear() {
   );
   const [base64Image, setBase64Image] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchCategoria = () => {
-      CategoriaGet()
-        .then(data => setCategoria(data))
-        .catch(error => console.error("Failed to fetch categories:", error));
-    };
-    fetchCategoria();
-  }, []);
+useEffect(() => {
+  let isMounted = true;
+  
+  const fetchCategoria = async () => {
+    try {
+      const data = await CategoriaGet();
+      if (isMounted) {
+        setCategoria(data);
+      }
+    } catch (error) {
+      if (isMounted) {
+        console.error("Failed to fetch categories:", error);
+      }
+    }
+  };
+  
+  fetchCategoria();
+  
+  return () => {
+    isMounted = false;
+  };
+}, []);
 
   useEffect(() => {
     const fetchUser = () => {
-      const storedUser = localStorage.getItem("user");
-      console.log("Stored user from localStorage:", storedUser);
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        console.log("Parsed user:", parsedUser);
-        setUser(parsedUser);
+      try {
+        if (typeof window !== 'undefined') {
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
       }
     };
     fetchUser();
