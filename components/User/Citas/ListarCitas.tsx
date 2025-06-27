@@ -16,6 +16,7 @@ import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import EmptyTable from "@/components/ui/EmptyTable";
 import { TableCitas } from "./TableCitas";
 import { FormCita } from "./form_cita_modal";
+import Pagination from "@/components/ui/Pagination";
 
 interface Props {
   filters: FiltersCitas;
@@ -36,13 +37,66 @@ const ListarCitas = ({
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const cookies = useMemo(() => parseCookies(), []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleGetCitas = useCallback(
-    async (showToast = true) => {
+    async ({
+      showToast = true,
+      paginate = true,
+      perPage = 5,
+      page = 1,
+      filters = {},
+      paciente = ""
+    }: {
+      showToast?: boolean;
+      paginate?: boolean;
+      perPage?: number;
+      page?: number;
+      filters?: {
+        genero?: string[];
+        edad?: string[];
+        estado?: string[];
+        fechaInicio?: string[];
+      };
+      paciente?: string;
+    } = {}) => {
       try {
         setError(null);
         const token = cookies["session"];
-        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
+
+        const queryParams = new URLSearchParams();
+        if (paginate) {
+          queryParams.append("paginate", "true");
+          queryParams.append("per_page", perPage.toString());
+          queryParams.append("page", page.toString());
+        }
+
+        if (filters.genero?.length) {
+          queryParams.append("genero", filters.genero.join(","));
+        }
+
+        if (filters.estado?.length) {
+          queryParams.append("estado", filters.estado.join(","));
+        }
+
+        if (filters.edad?.length) {
+          queryParams.append("edad", filters.edad.join(","));
+        }
+
+        if (filters.fechaInicio?.length === 2) {
+          queryParams.append("fecha_inicio", filters.fechaInicio[0]);
+          queryParams.append("fecha_fin", filters.fechaInicio[1]);
+        }
+
+        if (paciente) {
+          queryParams.append("nombre", paciente);
+        }
+
+        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas${
+          queryParams.toString() ? `?${queryParams.toString()}` : ""
+        }`;
+
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -58,25 +112,35 @@ const ListarCitas = ({
           showToastFunction("error", "Error al obtener las citas");
           return;
         }
-        const citasData = await response.json();
 
-        if (Array.isArray(citasData.result)) {
-          const formattedCitas = citasData.result.map((cita: Citas) => ({
-            codigo: cita.codigo,
+        const citasData = await response.json();
+        const citasRaw = paginate ? citasData.result.data : citasData.result;
+
+        if (Array.isArray(citasRaw)) {
+          const formattedCitas = citasRaw.map((cita: Citas) => ({
+            idCita: cita.idCita,
+            idPaciente: cita.idPaciente,
+            idPsicologo: cita.idPsicologo,
             paciente: cita.paciente,
+            codigo: cita.codigo,
             fecha_inicio: cita.fecha_inicio,
             motivo: cita.motivo,
             estado: cita.estado,
             duracion: cita.duracion,
-            idCita: cita.idCita,
             genero: cita.genero,
             edad: cita.edad,
+            fecha_nacimiento: cita.fecha_nacimiento,
           }));
           if (showToast && !toastShownRef.current) {
             showToastFunction("success", "Citas obtenidas correctamente");
             toastShownRef.current = true;
           }
           setCitas(formattedCitas);
+
+          if (paginate && citasData.result.pagination) {
+            setCurrentPage(citasData.result.pagination.current_page);
+            setTotalPages(citasData.result.pagination.last_page);
+          }
         } else {
           setError("Formato de respuesta inválido");
           showToastFunction("error", "Formato de respuesta inválido");
@@ -90,49 +154,6 @@ const ListarCitas = ({
     [cookies]
   );
 
-  const filteredCitas = useMemo(() => {
-    if (!citas?.length) return [];
-
-    return citas.filter((cita) => {
-      if (filters.genero.length > 0 && !filters.genero.includes(cita.genero)) {
-        return false;
-      }
-
-      if (
-        filters.edad.length > 0 &&
-        !filters.edad.some((rango) => {
-          const [min, max] = rango.split(" - ").map(Number);
-          return cita.edad >= min && cita.edad <= max;
-        })
-      ) {
-        return false;
-      }
-
-      if (filters.estado.length > 0 && !filters.estado.includes(cita.estado)) {
-        return false;
-      }
-
-      if (filters.fechaInicio.length === 2) {
-        const [from, to] = filters.fechaInicio;
-        const citaDate = new Date(cita.fecha_inicio);
-        const fromDate = new Date(from + "T00:00:00");
-        const toDate = new Date(to + "T23:59:59");
-
-        if (citaDate < fromDate || citaDate > toDate) {
-          return false;
-        }
-      }
-
-      if (
-        filterValue &&
-        !cita.paciente.toLowerCase().includes(filterValue.toLowerCase())
-      ) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [citas, filterValue, filters]);
 
   const handleDelete = async (idCita: number) => {
     setIsDeleting(true);
@@ -152,7 +173,7 @@ const ListarCitas = ({
 
       if (citaData.state === 2) {
         showToastFunction("success", "Paciente eliminado correctamente");
-        await handleGetCitas(false);
+        await handleGetCitas({ showToast: false });
         return true;
       } else {
         const errorMessage =
@@ -172,8 +193,8 @@ const ListarCitas = ({
   };
 
   useEffect(() => {
-    handleGetCitas();
-  }, [handleGetCitas]);
+    handleGetCitas({filters: filters, paciente: filterValue});
+  }, [handleGetCitas, filterValue, filters]);
 
   if (error) {
     return (
@@ -192,14 +213,22 @@ const ListarCitas = ({
         onCloseAction={() => setShowFormCita(false)}
         onCitaCreatedAction={() => {
           setShowFormCita(false);
-          handleGetCitas(false);
+          handleGetCitas({ showToast: false });
         }}
       />
-      {filteredCitas.length > 0 ? (
-        <TableCitas
-          filteredCitas={filteredCitas}
-          onDeleteInit={(id) => setDeleteId(id)}
-        />
+      {citas.length > 0 ? (
+        <>
+          <TableCitas
+            filteredCitas={citas}
+            onDeleteInit={(id) => setDeleteId(id)}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onNext={() => handleGetCitas({ page: currentPage + 1 })}
+            onPrevious={() => handleGetCitas({ page: currentPage - 1 })}
+          />
+        </>
       ) : (
         <EmptyTable
           filters={

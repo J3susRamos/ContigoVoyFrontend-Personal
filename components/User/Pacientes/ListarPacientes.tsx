@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useMemo,
   useCallback,
   useRef,
   useEffect,
@@ -14,27 +13,28 @@ import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import EmptyTable from "@/components/ui/EmptyTable";
 import { FiltersPaciente } from "@/app/user/pacientes/page";
+import Pagination from "@/components/ui/Pagination";
 
-interface Props{
+interface Props {
   filters: FiltersPaciente;
   filterValue: string;
 }
 
-export default function ListarPacientes({filters, filterValue }: Props) {
-
+export default function ListarPacientes({ filters, filterValue }: Props) {
   const [paciente, setPaciente] = useState<Paciente[]>([]);
   const toastShownRef = useRef(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handleGetPacientes = useCallback(
-    async (showToast = true) => {
+    async (showToast = true, page = 1) => {
       try {
-        const pacientsData = await pacientesGet();
-        console.log(pacientsData);
+        const pacientsData = await pacientesGet(page, 5, true, filters, filterValue); 
 
         const status = pacientsData.state;
-        let data = pacientsData.result;
+        const data = pacientsData.result;
 
         switch (status) {
           case 0:
@@ -50,7 +50,11 @@ export default function ListarPacientes({filters, filterValue }: Props) {
             );
             break;
           case 2:
-            if (Array.isArray(data)) {
+            if (Array.isArray(data.data)) {
+              setPaciente(data.data);
+              setCurrentPage(data.pagination.current_page);
+              setTotalPages(data.pagination.last_page);
+
               if (showToast && !toastShownRef.current) {
                 showToastFunction(
                   "success",
@@ -59,61 +63,19 @@ export default function ListarPacientes({filters, filterValue }: Props) {
                 toastShownRef.current = true;
               }
             } else {
-              console.error("La propiedad 'result' no es un array:", data);
+              console.error("La propiedad 'data' no es un array:", data);
               showToastFunction("error", "Formato de respuesta inválido");
-              data = [];
+              setPaciente([]);
             }
             break;
         }
-
-        setPaciente(data);
       } catch (error) {
         console.error("Error en handleGetPacientes:", error);
         showToastFunction("error", "Error inesperado al obtener pacientes");
       }
     },
-    [setPaciente]
+    [setPaciente, filterValue, filters]
   );
-
-  const pacientesFiltrados = useMemo(() => {
-    if (!paciente?.length) return [];
-
-    const searchTerm = filterValue?.toLowerCase() || "";
-
-    return paciente.filter((p) => {
-      if (filters.genero.length > 0 && !filters.genero.includes(p.genero)) {
-        return false;
-      }
-
-      if (
-        filters.edad.length > 0 &&
-        !filters.edad.some((rango) => {
-          const [min, max] = rango.split(" - ").map(Number);
-          return p.edad >= min && p.edad <= max;
-        })
-      ) {
-        return false;
-      }
-
-      if (filters.fechaUltimaCita.length === 2) {
-        const [from, to] = filters.fechaUltimaCita;
-        const fechaPaciente = new Date(p.ultima_cita_fecha).getTime();
-        const fromDate = new Date(from + "T00:00:00").getTime();
-        const toDate = new Date(to + "T23:59:59").getTime();
-
-        if (fechaPaciente < fromDate || fechaPaciente > toDate) {
-          return false;
-        }
-      }
-
-      if (searchTerm && !p.nombre.toLowerCase().includes(searchTerm)) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [paciente, filters, filterValue]);
-
 
   const handleDelete = async (idPaciente: number) => {
     setIsDeleting(true);
@@ -144,20 +106,29 @@ export default function ListarPacientes({filters, filterValue }: Props) {
 
   useEffect(() => {
     handleGetPacientes();
-  }, [handleGetPacientes]);
+  }, [handleGetPacientes, filters, filterValue]);
 
   return (
     <>
-      {pacientesFiltrados.length > 0 ? (
-        <TablePacientes
-          filteredPacientes={pacientesFiltrados}
-          onDeleteInit={(id) => setDeleteId(id)}
-        />
+      {paciente.length > 0 ? (
+        <>
+          <TablePacientes
+            filteredPacientes={paciente}
+            onDeleteInit={(id) => setDeleteId(id)}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onNext={() => handleGetPacientes(true, currentPage + 1)}
+            onPrevious={() => handleGetPacientes(true, currentPage - 1)}
+          />
+        </>
       ) : (
         <EmptyTable
-          filters={!!filterValue ||
-            Object.values(filters).some(
-              (filter) => filter && filter.length > 0)}
+          filters={
+            !!filterValue ||
+            Object.values(filters).some((filter) => filter && filter.length > 0)
+          }
           messages={{
             emptyTitle: "No hay pacientes registrados",
             noResultsDescription:

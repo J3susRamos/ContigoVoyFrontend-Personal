@@ -205,7 +205,6 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                 "placeholder:text-accent-foreground dark:placeholder:text-accent-foreground",
             }}
             value={filterValue}
-            // onClear={onClear}
             onValueChange={onSearchChange}
           />
 
