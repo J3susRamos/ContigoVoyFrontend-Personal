@@ -50,10 +50,6 @@ export default function CalendarioMain({ citas }: CalProps) {
     setVistaActual(vista);
   };
 
-  const handleViewChange = (newView: View) => {
-    setView(newView);
-  };
-
   const cambiarVistaGlobal =(vistaActual: string, nuevaVista: View) => {
     setVistaActual(vistaActual);
     setView(nuevaVista);

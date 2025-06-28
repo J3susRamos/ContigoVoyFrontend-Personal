@@ -1,3 +1,4 @@
+import { GenericFilters } from "@/components/ui/EmptyTable";
 import { DateValue } from "@heroui/react";
 import React from "react";
 
@@ -523,3 +524,23 @@ export interface GeneroEstadisticaApiResponse {
   result: GeneroEstadisticaResult;
   errorBag: never[];
 }
+
+export interface FiltersPaciente extends GenericFilters {
+  genero: string[];
+  edad: string[];
+  fechaUltimaCita: string[];
+}
+
+export const FiltersInitialState: FiltersPaciente = {
+  genero: [],
+  edad: [],
+  fechaUltimaCita: [],
+};
+
+export interface FiltersCitas extends GenericFilters {
+  genero: string[];
+  estado: string[];
+  edad: string[];
+  fechaInicio: string[];
+}
+

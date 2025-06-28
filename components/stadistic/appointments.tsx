@@ -68,36 +68,55 @@ export default function Appointments() {
         nuevos_pacientes: result?.nuevos_pacientes ?? 0,
         citas_confirmadas: result?.citas_confirmadas ?? 0,
       });
-      setLoading(false);
-    };
+      setLoading(false);    };
     loadData();
   }, []);
 console.log(citasMensuales)
   return (
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 max-w-5xl mx-auto w-full p-4">
-        {/* Header */}
-        <div className="col-span-2 flex flex-col md:flex-row items-center justify-between w-full mb-4 font-normal gap-4">
-          <div className="flex flex-col md:flex-row items-center text-base gap-4 md:gap-6 w-full">
-            <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-3 items-center w-full md:w-auto">
-              <span dangerouslySetInnerHTML={{ __html: Icons.calendario }} />
-              <span>{citasPsicologo["citas_confirmadas"]} citas reservadas</span>
-            </div>
-            <div className="bg-card dark:bg-card h-fit px-3 py-2 rounded-xl flex gap-3 items-center w-full md:w-auto">
-              <span dangerouslySetInnerHTML={{ __html: Icons.estadisticas }} />
-              <span>
-              {citasPsicologo["total_minutos_reservados"]} min. ocupados
-            </span>
-            </div>
+    <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+      
+      {/* Información de citas - Cards responsivos */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-6 lg:mb-8">
+        <div className="flex-1 bg-card dark:bg-card rounded-xl p-4 flex items-center gap-3">
+          <div className="flex-shrink-0">
+            <span
+              className="w-6 h-6 block"
+              dangerouslySetInnerHTML={{
+                __html: Icons.calendario,
+              }}
+            />
           </div>
+          <span className="text-sm md:text-base font-medium text-card-foreground dark:text-card-foreground">
+            {citasPsicologo["citas_confirmadas"]} citas reservadas
+          </span>
         </div>
-  <div className="max-xl:flex max-xl:flex-col max-xl:gap-8 flex gap-10 max-sm:max-w-[300px]">
-        {/* LineChart */}
-        <div className="w-full min-h-[400px] bg-card dark:bg-card rounded-2xl flex flex-col min-w-[480px] ">
-          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center mr-0 sm:mr-10 text-lg sm:text-xl">
-              Citas totales <br /> del período:
+        
+        <div className="flex-1 bg-card dark:bg-card rounded-xl p-4 flex items-center gap-3">
+          <div className="flex-shrink-0">
+            <span
+              className="w-6 h-6 block"
+              dangerouslySetInnerHTML={{
+                __html: Icons.estadisticas,
+              }}
+            />
+          </div>
+          <span className="text-sm md:text-base font-medium text-card-foreground dark:text-card-foreground">
+            {citasPsicologo["total_minutos_reservados"]} min. ocupados
+          </span>
+        </div>
+      </div>
+
+      {/* Gráficos - Layout responsivo */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        
+        {/* LineChart - Citas del período */}
+        <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col">
+          <div className="rounded-r-full w-full max-w-[300px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
+              Citas totales del período
             </p>
           </div>
+          
           {/* Gráfico para las citas totales del periodo */}
          {loading? <div className="flex-1 flex items-center justify-center">
           <div className="w-full h-[80%] flex flex-col justify-center px-6">
@@ -112,38 +131,40 @@ console.log(citasMensuales)
           </div>: <LineChartGrafic datastadistics={citasMensuales}/>}
         </div>
         
-        {/* PieChart */}
-        <div className="w-full h-fit bg-card dark:bg-card rounded-2xl min-w-[480px] flex flex-col min-h-[400px] max-sm:max-w-[300px]">
-          <div className="rounded-r-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-0 sm:mr-10 text-lg sm:text-xl">
-              Estado de <br /> cita:
+        {/* PieChart - Estado de citas */}
+        <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col">
+          <div className="rounded-r-full w-full max-w-[300px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
+              Estado de citas
             </p>
           </div>
-          <div className="w-full h-[180px] sm:h-[240px] flex items-center justify-center">
+          
+          <div className="w-full h-[250px] md:h-[300px] lg:h-[350px] flex items-center justify-center">
             {loading ? (
-                <div className="w-[120px] sm:w-[200px] h-[120px] sm:h-[200px] rounded-full bg-muted animate-pulse relative">
+                <div className="w-[150px] md:w-[200px] h-[150px] md:h-[200px] rounded-full bg-muted animate-pulse relative">
                   <div className="absolute top-0 left-0 w-full h-full border-[4px] border-primary/20 rounded-full animate-spin-slow"></div>
-                  <div className="absolute top-[25%] left-[25%] w-[50px] sm:w-[100px] h-[50px] sm:h-[100px] bg-background rounded-full"></div>
+                  <div className="absolute top-[25%] left-[25%] w-[75px] md:w-[100px] h-[75px] md:h-[100px] bg-background rounded-full"></div>
                 </div>
             ) : (
                 <PieChartGrafic data={citasPsicologo} />
             )}
           </div>
-          <div className="grid grid-cols-2 m-auto gap-x-3 h-[80px]">
+            {/* Leyenda */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
             {genero.map((entry, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div
-                      className="w-3 h-3 rounded-full"
+                      className="w-3 h-3 rounded-full flex-shrink-0"
                       style={{ backgroundColor: COLORS[index] }}
                   ></div>
-                  <span className="text-primary dark:text-primary-foreground font-normal text-base">
-                {entry.name}
-              </span>
+                  <span className="text-primary dark:text-primary-foreground font-normal text-xs md:text-sm truncate">
+                    {entry.name}
+                  </span>
                 </div>
             ))}
           </div>
-          </div>
         </div>
       </div>
+    </div>
   );
 }
