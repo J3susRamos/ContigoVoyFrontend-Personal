@@ -8,7 +8,9 @@ import {
   PsicologoPreviewData,
   DashboardApiResponse,
   GeneroEstadisticaApiResponse,
-  CitasApiResponse
+  CitasApiResponse,
+  CitaMensualResponse,
+  CitaMensual
 } from "@/interface";
 import {parseCookies} from "nookies";
 
@@ -177,6 +179,27 @@ export async function GetPacientesEstadisticasEdad(): Promise<GeneroEstadisticaA
 export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener las citas del psicologo");
+  }
+
+  return await res.json();
+}
+
+//Traer citas totales por fecha
+export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]>{
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
     {
       method: "GET",
       headers: {

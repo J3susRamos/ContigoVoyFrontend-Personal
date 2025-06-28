@@ -498,6 +498,14 @@ export interface DashboardApiResponse {
   result: DashboardResult;
 }
 
+export interface CitaMensual {
+  fecha: string,
+  total: number
+}
+export interface CitaMensualResponse {
+  result: CitaMensual;
+}
+
 export interface GeneroEstadisticaDetalle {
   cantidad: number;
   porcentaje: number;
