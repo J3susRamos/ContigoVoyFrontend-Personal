@@ -4,17 +4,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/User/Citas/NavbarCitas";
 import HeaderUser from "@/components/User/HeaderUser";
-import { GenericFilters } from "@/components/ui/EmptyTable";
 import ListarCitas from "@/components/User/Citas/ListarCitas";
+import { FiltersCitas } from "@/interface";
 
-export interface FiltersCitas extends GenericFilters {
-  genero: string[];
-  estado: string[];
-  edad: string[];
-  fechaInicio: string[];
-}
-
-const FiltersInitialState: FiltersCitas = {
+const FiltersCitasInitialState: FiltersCitas = {
   genero: [],
   estado: [],
   edad: [],
@@ -26,7 +19,7 @@ export default function App() {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [filterValue, setFilterValue] = useState("");
   const [menuAbierto, setMenuAbierto] = useState(false);
-  const [filters, setFilters] = useState<FiltersCitas>(FiltersInitialState);
+  const [filters, setFilters] = useState<FiltersCitas>(FiltersCitasInitialState);
   const [showFormCita, setShowFormCita] = useState(false);
 
   useEffect(() => {

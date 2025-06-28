@@ -5,19 +5,9 @@ import { useRouter } from "next/navigation";
 import ListarPacientes from "@/components/User/Pacientes/ListarPacientes";
 import HeaderUser from "@/components/User/HeaderUser";
 import { NavbarPacientes } from "@/components/User/Pacientes/NavbarPacientesComponent";
-import { GenericFilters } from "@/components/ui/EmptyTable";
+import { FiltersInitialState, FiltersPaciente } from "@/interface";
 
-export interface FiltersPaciente extends GenericFilters {
-  genero: string[];
-  edad: string[];
-  fechaUltimaCita: string[];
-}
 
-export const FiltersInitialState: FiltersPaciente = {
-  genero: [],
-  edad: [],
-  fechaUltimaCita: [],
-};
 
 export default function Pacientes() {
   const router = useRouter();
