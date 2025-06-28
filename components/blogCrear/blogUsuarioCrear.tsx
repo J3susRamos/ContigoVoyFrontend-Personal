@@ -171,27 +171,43 @@ useEffect(() => {
 };
 
 const validateForm = (): boolean => {
+  // Validate title - server requires at least 20 characters
   if (!tema.trim()) {
     showToast("error", "El título es requerido.");
     return false;
   }
   
-  // Update content validation to match server requirements
+  if (tema.trim().length < 20) {
+    showToast("error", "El título debe tener al menos 20 caracteres.");
+    return false;
+  }
+  
+  // Validate content - server requires at least 10 characters
   if (!contenido.trim()) {
     showToast("error", "El contenido es requerido.");
     return false;
   }
   
-  if (contenido.trim().length < 10) {
+  // Get actual text content without HTML tags
+  const getTextContent = (html: string) => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    return tempDiv.textContent || tempDiv.innerText || '';
+  };
+  
+  const textContent = getTextContent(contenido).trim();
+  if (textContent.length < 10) {
     showToast("error", "El contenido debe tener al menos 10 caracteres.");
     return false;
   }
   
+  // Validate category
   if (!selectedKey && !value.trim()) {
     showToast("error", "La categoría es requerida.");
     return false;
   }
   
+  // Validate image
   if (!base64Image && !url.trim()) {
     showToast("error", "Se requiere una imagen o URL.");
     return false;
