@@ -5,7 +5,7 @@ import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterButton from "@/components/ui/Filters/FilterButton";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
 import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
-import { FiltersCitas } from "@/app/user/citas/page";
+import { FiltersCitas } from "@/interface";
 
 interface NavbarProps {
   filterValue: string;

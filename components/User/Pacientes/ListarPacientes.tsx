@@ -4,7 +4,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { Paciente } from "@/interface";
+import { FiltersPaciente, Paciente } from "@/interface";
 
 import TablePacientes from "./TablePacientes";
 import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
@@ -12,7 +12,6 @@ import showToastFunction from "../../ToastStyle";
 import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import EmptyTable from "@/components/ui/EmptyTable";
-import { FiltersPaciente } from "@/app/user/pacientes/page";
 import Pagination from "@/components/ui/Pagination";
 
 interface Props {

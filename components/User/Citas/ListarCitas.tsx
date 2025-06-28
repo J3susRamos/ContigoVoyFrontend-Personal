@@ -8,8 +8,7 @@ import React, {
   useState,
 } from "react";
 import showToastFunction from "../../ToastStyle";
-import { Citas } from "@/interface";
-import { FiltersCitas } from "@/app/user/citas/page";
+import { Citas, FiltersCitas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";

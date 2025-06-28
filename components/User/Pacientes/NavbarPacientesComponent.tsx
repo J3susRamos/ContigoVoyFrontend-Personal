@@ -6,7 +6,7 @@ import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
 import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
 import { useRouter } from "next/navigation";
-import { FiltersPaciente } from "@/app/user/pacientes/page";
+import { FiltersPaciente } from "@/interface";
 
 
 interface NavbarProps {
