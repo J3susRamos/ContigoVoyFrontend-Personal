@@ -5,9 +5,20 @@ export const convertImageToWebP = (file: File): Promise<Blob> => {
       const ctx = canvas.getContext("2d");
 
       img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx?.drawImage(img, 0, 0);
+        // Calculate new dimensions if image is too large
+        let { width, height } = img;
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 800;
+        
+        if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+          const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        ctx?.drawImage(img, 0, 0, width, height);
 
        
         canvas.toBlob(
@@ -19,7 +30,7 @@ export const convertImageToWebP = (file: File): Promise<Blob> => {
             }
           },
           "image/webp",
-          0.8
+          0.7 // Reduced quality for smaller file size
         );
       };
 
