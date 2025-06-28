@@ -206,10 +206,8 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
             }}
             value={filterValue}
             onValueChange={onSearchChange}
-          />
-
-          {/* Grupo de icono de agregar y botón */}
-          <div className="ml-auto flex items-center gap-4 mr-12">
+          />          {/* Grupo de icono de agregar y botón - Desktop */}
+          <div className="ml-auto hidden md:flex items-center gap-4 mr-12">
             <span
               className="text-primary transition-colors"
               dangerouslySetInnerHTML={{
@@ -222,12 +220,25 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
               }}
             />
 
-            {/* Botón de agregar nuevo paciente */}
+            {/* Botón de agregar nuevo paciente - Desktop */}
             <button
               className="text-primary-foreground dark:border-white font-light text-xl border-1 rounded-full px-4"
               onClick={handleAddNew}
             >
               Agregar nuevo paciente
+            </button>
+          </div>          {/* Botón de agregar para móviles/tablets */}
+          <div className="ml-auto md:hidden flex items-center mr-8">
+            <button
+              className="bg-card dark:bg-card text-primary dark:text-primary p-3 rounded-full border-2 border-primary dark:border-primary hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200"
+              onClick={handleAddNew}
+              title="Agregar nuevo paciente"
+            >
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor" width="20" height="20"'),
+                }}
+              />
             </button>
           </div>
         </div>
