@@ -6,7 +6,7 @@ import {
   ModalBody,
   ModalContent,
   ModalFooter,
-  Textarea,
+  Textarea
 } from "@heroui/react";
 
 interface ModalCitaExampleProps {

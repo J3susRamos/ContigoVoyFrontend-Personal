@@ -403,8 +403,35 @@ body {
   );
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
   -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% 100%;  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
 
+/* Estilos para autocompletado de Google en modo oscuro */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+  -webkit-text-fill-color: #634AE2 !important;
+  font-weight: 700 !important;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Estilos adicionales para campos de contraseña autocompletados */
+.dark input[type="password"]:-webkit-autofill,
+.dark input[type="password"]:-webkit-autofill:hover,
+.dark input[type="password"]:-webkit-autofill:focus,
+.dark input[type="password"]:-webkit-autofill:active {
+  -webkit-text-fill-color: #634AE2 !important;
+  font-weight: 700 !important;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Para navegadores basados en Chromium con modo oscuro */
+.dark input:-internal-autofill-selected {
+  background-color: transparent !important;
+  color: #634AE2 !important;
+  font-weight: 700 !important;
+}

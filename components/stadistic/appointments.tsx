@@ -69,10 +69,11 @@ export default function Appointments() {
         nuevos_pacientes: result?.nuevos_pacientes ?? 0,
         citas_confirmadas: result?.citas_confirmadas ?? 0,
       });
-      setLoading(false);
-    };
+      setLoading(false);    };
     loadData();
-  }, []);  return (
+  }, []);
+
+  return (
     <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
       
       {/* Información de citas - Cards responsivos */}
@@ -182,11 +183,11 @@ export default function Appointments() {
                 <PieChartGrafic data={citasPsicologo} />
             )}
           </div>
-          
-          {/* Leyenda */}
+            {/* Leyenda */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
             {genero.map((entry, index) => (
-                <div key={index} className="flex items-center gap-2">                  <div
+                <div key={index} className="flex items-center gap-2">
+                  <div
                       className="w-3 h-3 rounded-full flex-shrink-0"
                       style={{ backgroundColor: COLORS[index] }}
                   ></div>

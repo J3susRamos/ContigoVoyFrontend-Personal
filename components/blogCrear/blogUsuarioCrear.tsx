@@ -88,21 +88,42 @@ export default function BlogUsuarioCrear() {
     };
     fetchUser();
   }, []);
-
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("error", "La imagen es demasiado grande. Máximo 5MB.");
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      showToast("error", "Por favor selecciona un archivo de imagen válido.");
+      return;
+    }
+
     try {
-      // Convertir la imagen a WebP
-      const webpImage = await convertImageToWebP(file);
+      showToast("info", "Procesando imagen...");
+        // Convertir la imagen a WebP con compresión
+      const webpImage = await convertImageToWebP(file); // La función ya tiene 80% quality por defecto
 
       // Convertir la imagen WebP a Base64
       const base64 = await convertToBase64(webpImage);
+      
+      // Check final base64 size
+      if (base64.length > 400000) { // 400KB limit for base64
+        showToast("error", "La imagen procesada sigue siendo muy grande. Intenta con una imagen más pequeña.");
+        return;
+      }
+      
       setBase64Image(base64);
       setUrl(""); // Clear URL input when uploading an image
+      showToast("success", "Imagen cargada correctamente.");
+      
     } catch (error) {
       console.error("Error processing image:", error);
       showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
@@ -141,9 +162,53 @@ const handleSubmit = async () => {
       showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
       return;
     }
-    // Validate image size
-    if (base64Image && base64Image.length > 1000000) { // 1MB limit
-      showToast("error", "La imagen es demasiado grande. Por favor selecciona una imagen más pequeña.");
+
+    // Validate tema length
+    if (!tema || tema.trim().length < 5) {
+      showToast("error", "El título debe tener al menos 5 caracteres.");
+      return;
+    }
+
+    if (tema.length > 200) {
+      showToast("error", "El título no puede exceder 200 caracteres.");
+      return;
+    }
+
+    // Validate contenido length
+    if (!contenido || contenido.replace(/<[^>]*>/g, '').trim().length < 50) {
+      showToast("error", "El contenido debe tener al menos 50 caracteres de texto.");
+      return;
+    }
+
+    if (contenido.length > 50000) {
+      showToast("error", "El contenido es demasiado largo. Máximo 50,000 caracteres.");
+      return;
+    }
+
+    // Validate image
+    if (!base64Image && !url) {
+      showToast("error", "Debes agregar una imagen (subir archivo o URL).");
+      return;
+    }
+
+    // Validate image size more strictly
+    if (base64Image) {
+      // Check if base64 is too large (reduce limit)
+      if (base64Image.length > 500000) { // 500KB limit for base64
+        showToast("error", "La imagen es demasiado grande. Por favor selecciona una imagen más pequeña (máx. 500KB).");
+        return;
+      }
+      
+      // Validate base64 format
+      if (!base64Image.startsWith('data:image/')) {
+        showToast("error", "Formato de imagen inválido. Por favor selecciona una imagen válida.");
+        return;
+      }
+    }
+
+    // Validate URL format if using URL
+    if (url && !url.startsWith('http')) {
+      showToast("error", "La URL de la imagen debe comenzar con http:// o https://");
       return;
     }
 
@@ -161,30 +226,38 @@ const handleSubmit = async () => {
       categoriaId = await postNewCategoria();
     }
 
+    if (!categoriaId) {
+      showToast("error", "Error al procesar la categoría. Intenta nuevamente.");
+      return;
+    }
+
     // Use idpsicologo instead of user id for blog operations
     const finalIdPsicologo = user.idpsicologo || user.id;
     
     console.log("Final ID Psicologo to use:", finalIdPsicologo);
 
+    // Sanitize contenido to prevent SQL injection
+    const sanitizedContenido = contenido
+      .replace(/'/g, "''") // Escape single quotes
+      .replace(/\\/g, "\\\\"); // Escape backslashes
+
     // Create a dataApi object here, after all variables are declared
     const dataToSend: BlogApi = {
       idCategoria: categoriaId,
-      tema: tema,
-      contenido: contenido,
+      tema: tema.trim(),
+      contenido: sanitizedContenido,
       imagen: base64Image || url,
       idPsicologo: finalIdPsicologo,
     };
 
-    console.log("Final data to send:", dataToSend);
+    console.log("Final data to send:", {
+      ...dataToSend,
+      imagen: dataToSend.imagen.substring(0, 100) + "..." // Log only first 100 chars of image
+    });
 
     // Add validation for required fields
     if (!dataToSend.idPsicologo) {
       showToast("error", "Error: ID de psicólogo no válido.");
-      return;
-    }
-
-    if (!dataToSend.tema || !dataToSend.contenido) {
-      showToast("error", "Por favor completa todos los campos requeridos.");
       return;
     }
 
@@ -194,15 +267,18 @@ const handleSubmit = async () => {
     if (!token) {
       showToast("error", "Sesión expirada. Por favor inicia sesión nuevamente.");
       return;
-    }
-
-    const apiUrl = editingBlogId
+    }    const apiUrl = editingBlogId
       ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${editingBlogId}`
       : `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
 
     const method = editingBlogId ? "PUT" : "POST";
 
-    console.log("Sending data:", dataToSend);
+    console.log("Sending request to:", apiUrl);
+    console.log("Method:", method);
+    console.log("Data size:", JSON.stringify(dataToSend).length, "characters");
+
+    // Show loading toast
+    showToast("info", "Enviando datos...");
 
     const response = await fetch(apiUrl, {
       method,
@@ -214,7 +290,17 @@ const handleSubmit = async () => {
       body: JSON.stringify(dataToSend),
     });
 
-    const data = await response.json();
+    console.log("Response status:", response.status);
+    console.log("Response ok:", response.ok);
+
+    let data;
+    try {
+      data = await response.json();
+      console.log("Response data:", data);
+    } catch (parseError) {
+      console.error("Error parsing response JSON:", parseError);
+      throw new Error("Error al procesar la respuesta del servidor");
+    }
 
     if (response.ok) {
       showToast(
@@ -223,15 +309,59 @@ const handleSubmit = async () => {
           ? "Publicación actualizada correctamente"
           : "Publicación creada correctamente"
       );
-      await new Promise((resolve) => setTimeout(resolve, 2600));
-      window.location.reload();
+      
+      // Reset form
+      setTema("");
+      setContenido("");
+      setBase64Image(null);
+      setUrl("");
+      setSelectedKey(null);
+      
+      // Optional: reload after success
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } else {
-      console.error("Server error:", data);
-      showToast("error", data.status_message || "Error desconocido");
+      // Enhanced error handling
+      let errorMessage = "Error desconocido";
+      
+      if (data?.status_message) {
+        errorMessage = data.status_message;
+      } else if (data?.message) {
+        errorMessage = data.message;
+      } else if (data?.description) {
+        errorMessage = data.description;
+      }
+
+      // Specific error cases
+      if (response.status === 413) {
+        errorMessage = "El archivo es demasiado grande. Reduce el tamaño de la imagen.";
+      } else if (response.status === 422) {
+        errorMessage = "Datos inválidos. Verifica que todos los campos estén correctos.";
+      } else if (response.status === 500) {
+        errorMessage = "Error interno del servidor. Intenta con una imagen más pequeña o verifica el contenido.";
+      }
+
+      console.error("Server error details:", {
+        status: response.status,
+        statusText: response.statusText,
+        data: data
+      });
+      
+      showToast("error", errorMessage);
     }
   } catch (error) {
     console.error("Client error:", error);
-    showToast("error", "Error de conexión. Intenta nuevamente.");
+    
+    let errorMessage = "Error de conexión. Intenta nuevamente.";
+    
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      errorMessage = "Error de conexión con el servidor. Verifica tu conexión a internet.";
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
+    showToast("error", errorMessage);
   }
 };
 
