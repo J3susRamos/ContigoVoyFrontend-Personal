@@ -83,9 +83,9 @@ export default function BlogPageComponent({
       <div className="container mx-auto px-4 py-6 lg:py-8">
         {/* Header Section */}
         <div className="mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div className="text-center lg:text-left">
-              <h1 className="text-4xl lg:text-6xl font-bold text-[#634AE2] dark:text-primary mb-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] bg-clip-text text-transparent">
+              <h1 className="text-4xl lg:text-6xl font-bold text-[#634AE2] dark:text-primary pb-1 lg:pb-2 mb-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] bg-clip-text text-transparent">
                 Blog
               </h1>
               <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl">

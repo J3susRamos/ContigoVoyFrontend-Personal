@@ -33,6 +33,7 @@ export default function Footer() {
           >
             <Image
               src="/LogoBlanco.webp"
+              title="Contigo Voy - Terapia Psicológica Centro Psicológico"
               alt="Confidencialidad Contigo Voy Terapia Psicológica Online"
               width={150}
               height={60}
@@ -109,6 +110,7 @@ export default function Footer() {
                         <span className="text-white text-[10px]">Perú</span>
                         <Image
                           src="/WSP.webp"
+                          title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
                           alt="WhatsApp Terapia Peru Psicológica Online"
                           width={14}
                           height={14}
@@ -126,9 +128,12 @@ export default function Footer() {
                         rel="noopener noreferrer"
                         className="flex items-center space-x-1 border border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors"
                       >
-                        <span className="text-white text-[10px]">Argentina</span>
+                        <span className="text-white text-[10px]">
+                          Argentina
+                        </span>
                         <Image
                           src="/WSP.webp"
+                          title="Whatsapp Terapia Psicológica Argentina Online Contigo Voy"
                           alt="WhatsApp Terapia Argentina Psicológica Online"
                           width={14}
                           height={14}

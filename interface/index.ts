@@ -65,12 +65,14 @@ export interface ServicesStructureProps {
   tittleIcon: string;
   iconos: {
     id: number;
+    title?: string;
     text: string;
     iconImage: string;
   }[];
   tittlecards: string;
   cards: {
     id: number;
+    title?: string;
     text: string;
     icon: string;
   }[];

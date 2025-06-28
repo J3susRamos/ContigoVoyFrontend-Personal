@@ -2,30 +2,37 @@
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect } from "react";
+import { title } from "process";
 
 const enterprises = [
   {
     icon: "/Companies/LogoTAMI.webp",
+    title: "TAMI empresa",
     alt: "TAMI empresa confía en la Orientación Psicológica Online Contigo Voy",
   },
   {
     icon: "/Companies/YUNTASLogo.webp",
+    title: "Yuntas Empresa",
     alt: "Yuntas Empresa confía en la Orientación Psicológica Online Contigo Voy",
   },
   {
     icon: "/Companies/ASDEN.webp",
+    title: "ASDEN Empresa",
     alt: "ASDEN Empresa confía en la Orientación Psicológica Online Contigo Voy",
   },
   {
     icon: "/Companies/LOGONLS.webp",
+    title: "NEON LED PUBLICIDAD Empresa",
     alt: "NEON LED PUBLICIDAD Empresa confía en la Orientación Psicológica Online Contigo Voy",
   },
   {
     icon: "/Companies/DigiLogo.webp",
+    title: "Digi Media Empresa",
     alt: "Digi Media Empresa confía en la Orientación Psicológica Online Contigo Voy",
   },
   {
     icon: "/Companies/NHLLOGO.webp",
+    title: "NHL Decoraciones Empresa",
     alt: "NHL Decoraciones Empresa confía en la Orientación Psicológica Online Contigo Voy",
   },
 ];
@@ -74,6 +81,7 @@ export default function RealiableCompanies() {
           {enterprises.map((company, index) => (
             <div key={index} className="h-full flex-1 relative ">
               <Image
+                title={company.title}
                 src={company.icon}
                 alt={company.alt}
                 fill
@@ -92,6 +100,7 @@ export default function RealiableCompanies() {
               <div className="slide h-full" key={index}>
                 <div className="flex flex-col items-center justify-center p-6 relative h-full ">
                   <Image
+                    title={company.title}
                     src={company.icon}
                     alt={company.alt}
                     fill

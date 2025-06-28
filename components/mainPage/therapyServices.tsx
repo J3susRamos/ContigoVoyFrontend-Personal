@@ -11,36 +11,42 @@ export default function TherapyServices() {
       id: "/terapia/infantes",
       icon: "/imagesTherapy/childTherapy.webp",
       alt: "Servicio Terapia Psicológica para Niños Contigo Voy Online",
+      name: "Terapia psicológica para Niños",
       title: "Terapia para niños",
     },
     {
       id: "/terapia/adolescentes",
       icon: "/imagesTherapy/TeenTherapy.webp",
       alt: "Servicio Terapia Psicológica para Adolescentes Contigo Voy Online",
+      name: "Terapia psicológica para Adolescentes",
       title: "Terapia para adolescentes",
     },
     {
       id: "/terapia/parejas",
       icon: "/imagesTherapy/coupleTherapy.webp",
       alt: "Servicio Terapia Psicológica para Pareja Contigo Voy Online",
+      name: "Terapia psicológica para Parejas",
       title: "Terapia de parejas",
     },
     {
       id: "/terapia/adultos",
       icon: "/imagesTherapy/adultTherapy.webp",
       alt: "Servicio Terapia Psicológica para Adultos Contigo Voy Online",
+      name: "Terapia Psicológica Adultos",
       title: "Terapia para adultos",
     },
     {
       id: "/terapia/familia",
       icon: "/imagesTherapy/familyTherapy.webp",
       alt: "Servicio Terapia Psicológica Para Familias Contigo Voy Online",
+      name: "Terapia Psicológica Familiar",
       title: "Terapia familiar",
     },
     {
       id: "/terapia/familia",
       icon: "/imagesTherapy/familyTherapy.webp",
       alt: "Servicio Terapia Psicológica para Empresas Contigo Voy Online",
+      name: "Terapia Psicología Empresarial",
       title: "Terapia empresarial",
     },
   ];
@@ -75,6 +81,7 @@ export default function TherapyServices() {
                       <Image
                         src={service.icon}
                         alt={service.alt}
+                        title={service.name}
                         width={63}
                         height={63}
                       />
@@ -85,7 +92,7 @@ export default function TherapyServices() {
                       dangerouslySetInnerHTML={{ __html: service.title }}
                     />
                   </div>
-                  
+
                   <div className="flex flex-col items-end mt-auto mb-5">
                     <button
                       onClick={() => router.push(`/servicios${service.id}`)}
@@ -95,25 +102,26 @@ export default function TherapyServices() {
                         Ver más
                         <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full duration-500"></span>
                       </span>
-                      <ArrowRight strokeWidth={4} className="w-10 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight
+                        strokeWidth={4}
+                        className="w-10 group-hover:translate-x-1 transition-transform"
+                      />
                     </button>
                   </div>
-
                 </motion.div>
               ))}
             </div>
-
           </div>
           <div className=" justify-center hidden  items-start mt-6 ">
             <Image
               src="/FOTOACEPTADA1.webp"
               alt="Servicio Terapia Psicológica Contigo Voy Online"
+              title="Terapeuta Ana Vizcarra Centro Psicológico Contigo Voy"
               width={500}
               height={400}
             />
           </div>
         </div>
-
       </div>
     </>
   );

@@ -102,6 +102,7 @@ export default function ServicesStructure({
                                 <div className="w-full md:w-[370px] h-[220px] md:h-[236px] flex flex-col rounded-lg p-4">
                                   <div className="flex justify-center items-center mt-scv4">
                                     <Image
+                                      title={card.title}
                                       src={card.icon}
                                       alt={card.text}
                                       width={183}
@@ -151,6 +152,7 @@ export default function ServicesStructure({
                     <div className="w-[360px] min-h-[236px] py-scv6 px-scv6 flex flex-col gap-scv4 justify-between rounded-lg p-4">
                       <div className="flex-1 relative">
                         <Image
+                          title={card.title}
                           src={card.icon}
                           alt={card.text}
                           fill
@@ -185,6 +187,7 @@ export default function ServicesStructure({
                     <div className=" rounded-full w-32 h-32 p-scv6 bg-[#634AE2] flex items-center justify-center">
                       <div className="relative w-full h-full ">
                         <Image
+                          title={icono.title}
                           src={icono.iconImage}
                           alt={icono.text}
                           fill
@@ -240,6 +243,7 @@ export default function ServicesStructure({
                           <div className="rounded-full bg-[#9494F3] p-6">
                             <div className="w-32 h-32 flex items-center justify-center">
                               <Image
+                                title={icono.title}
                                 src={icono.iconImage}
                                 alt={icono.text}
                                 width={80}

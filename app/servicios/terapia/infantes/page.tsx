@@ -25,26 +25,31 @@ const NinosTerapias: ServicesStructureProps[] = [
     iconos: [
       {
         id: 1,
+        title: "Terapia de lenguaje en niños Contigo Voy Psicología Online",
         text: "Dificultades en el desarrollo del lenguaje",
         iconImage: "/Services/ninos/lenguaje.webp",
       },
       {
         id: 2,
+        title: "Terapia social infantil Contigo Voy Psicología Online",
         text: "Habilidades sociales",
         iconImage: "/Services/ninos/sociales.webp",
       },
       {
         id: 3,
+        title: "Terapia en frustración infantil Contigo Voy Psicología Online",
         text: "Manejo de la fustración",
         iconImage: "/Services/ninos/frustracion.webp",
       },
       {
         id: 4,
+        title: "Apego emocional infantil Contigo Voy Psicología Online",
         text: "Vinculo de apego",
         iconImage: "/Services/ninos/apego.webp",
       },
       {
         id: 5,
+        title: "Estrés académico infantil Contigo Voy PSicología Online",
         text: "Dificultades académicas",
         iconImage: "/Services/ninos/academicas.webp",
       },
@@ -53,26 +58,31 @@ const NinosTerapias: ServicesStructureProps[] = [
     cards: [
       {
         id: 1,
+        title: "Salud Mental Infantil Contigo Voy Psicología Online",
         text: "Detecta y modifica patrones que afectan su desarrollo, promoviendo un crecimiento equilibrado.",
         icon: "/Services/ninos/therapy/cerebro.webp",
       },
       {
         id: 2,
+        title: "Relaciones Interpersonales en Infantes Contigo Voy Psicología Online",
         text: "Mejora la interacción, promoviendo respeto, colaboración y relaciones positivas.",
         icon: "/Services/ninos/therapy/charla.webp",
       },
       {
         id: 3,
+        title: "Ayuda emocional infantil Contigo Voy Psicología Online",
         text: "Ayuda a los niños a desarrollar una imagen positiva, promoviendo su felicidad y confianza.",
         icon: "/Services/ninos/therapy/positiva.webp",
       },
       {
         id: 4,
+        title: "Manejo de emociones en niños Contigo Voy Psicología Online",
         text: "Enseña a los niños a manejar sus emociones y enfrentar desafíos con resiliencia.",
         icon: "/Services/ninos/therapy/rompe.webp",
       },
       {
         id: 5,
+        title: "Herramientas para niños Contigo Voy Psicología Online",
         text: "Proporciona herramientas personalizadas para enfrentar dificultades y adaptarse asertivamente.",
         icon: "/Services/ninos/therapy/herramientas.webp",
       },

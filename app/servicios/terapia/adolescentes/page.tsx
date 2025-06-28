@@ -27,26 +27,31 @@ const TeenTerapias: ServicesStructureProps[] = [
     iconos: [
       {
         id: 1,
+        title: "Ayuda con manejo de emociones en Adolescentes Contigo Voy Psicología Online",
         text: "Manejo de emociones",
         iconImage: "/Services/teen/emociones.webp",
       },
       {
         id: 2,
+        title: "Ayuda en el control de estrés en adolescentes  Contigo Voy Psicología Online",
         text: "Estrés académico",
         iconImage: "/Services/teen/estres.webp",
       },
       {
         id: 3,
+        title: "Autoestima en Adolescentes Contigo Voy Psicología Online",
         text: "Fortalecimiento del autoestima",
         iconImage: "/Services/teen/autoestima.webp",
       },
       {
         id: 4,
+        title:"Creando habilidades sociales en adolescentes Contigo Voy Psicología Online",
         text: "Habilidades sociales",
         iconImage: "/Services/teen/sociales.webp",
       },
       {
         id: 5,
+        title: "Orientación Vocacional para Adolescentes Secundaria Contigo Voy Psicología Online",
         text: "Orientación vocacional",
         iconImage: "/Services/teen/vocacional.webp",
       },
@@ -55,26 +60,31 @@ const TeenTerapias: ServicesStructureProps[] = [
     cards: [
       {
         id: 1,
+        title: "Frustraciones en adolescentes Contigo Voy Psicología Online",
         text: "Ayuda a manejar la frustración y transformar emociones difíciles en acciones positivas.",
         icon: "/Services/teen/therapy/frustraciones.webp",
       },
       {
         id: 2,
+        title: "Terapia para el equilibrio saludable en adolescentes Contigo Voy Psicología Online",
         text: "Fomenta un equilibrio saludable entre sus responsabilidades y su bienestar emocional",
         icon: "/Services/teen/therapy/equilibrio.webp",
       },
       {
         id: 3,
+        title: "Terapia en adolescentes para comunicación efectiva Contigo Voy Psicología Online",
         text: "Mejora las habilidades para comunicarse y relacionarse con los demás.",
         icon: "/Services/teen/therapy/comunicacion.webp",
       },
       {
         id: 4,
+        title: "Seguridad en adolescentes Contigo Voy Psicología Online",
         text: "Les brinda herramientas para enfrentar decisiones importantes con seguridad.",
         icon: "/Services/teen/therapy/seguridad.webp",
       },
       {
         id: 5,
+        title: "Construye el autoestima de tu adolescente Contigo Voy Psicología Online",
         text: "Impulsa su autoestima,ayudándoles a construir una imagen positiva de sí mismos.",
         icon: "/Services/teen/therapy/construir.webp",
       },
