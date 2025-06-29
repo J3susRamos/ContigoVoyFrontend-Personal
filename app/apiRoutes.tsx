@@ -9,7 +9,6 @@ import {
   DashboardApiResponse,
   GeneroEstadisticaApiResponse,
   CitasApiResponse,
-  CitaMensualResponse,
   CitaMensual
 } from "@/interface";
 import {parseCookies} from "nookies";
@@ -84,7 +83,6 @@ export async function GetPsicologosById(
       },
     }
   );
-
   if (!res.ok) {
     throw new Error("Error al obtener el psicologo");
   }
@@ -107,7 +105,6 @@ export async function UpdatePsicologo(
       body: JSON.stringify(data),
     }
   );
-
   if (!res.ok) {
     throw new Error("Error al actualizar el psicologo");
   }
@@ -133,8 +130,8 @@ export async function GetCitasPendientes(
   return await res.json();
 }
 
-/*Informacion de citas totales, citas completadas, citas pendientes, citas canceladas, 
-total minutos reservados, total pacientes y nuevos pacientes */
+/* Información de citas totales, citas completadas, citas pendientes, citas canceladas,
+total de minutos reservados, total de pacientes y nuevos pacientes */
 export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/dashboard/psicologo`,
@@ -147,11 +144,9 @@ export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
       },
     }
   );
-
   if (!res.ok) {
     throw new Error("Error al obtener los datos del dashboard");
   }
-
   return await res.json();
 }
 
@@ -167,11 +162,9 @@ export async function GetPacientesEstadisticasEdad(): Promise<GeneroEstadisticaA
         },
       }
   );
-
   if (!res.ok) {
     throw new Error("Error al obtener los datos de estadisticas de genero");
   }
-
   return await res.json();
 }
 
@@ -188,11 +181,9 @@ export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
       },
     }
   );
-
   if (!res.ok) {
     throw new Error("Error al obtener las citas del psicologo");
   }
-
   return await res.json();
 }
 
@@ -209,10 +200,8 @@ export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]>{
       },
     }
   );
-
   if (!res.ok) {
     throw new Error("Error al obtener las citas del psicologo");
   }
-
   return await res.json();
 }

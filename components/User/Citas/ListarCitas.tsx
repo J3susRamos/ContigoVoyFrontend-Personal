@@ -24,6 +24,43 @@ interface Props {
   setShowFormCita: Dispatch<SetStateAction<boolean>>;
 }
 
+interface ApiCitaResponse {
+  idCita?: number;
+  id?: number;
+  idPaciente?: number;
+  idPsicologo?: number;
+  paciente?: string;
+  codigo?: string;
+  fecha_inicio?: string;
+  motivo?: string;
+  estado?: string;
+  duracion?: string;
+  genero?: string;
+  edad?: number;
+  fecha_nacimiento?: string;
+}
+
+interface ApiPaginationResponse {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+}
+
+interface ApiResponse {
+  result?: {
+    data?: ApiCitaResponse[];
+    pagination?: ApiPaginationResponse;
+  } | ApiCitaResponse[];
+  message?: string;
+}
+
+interface UserData {
+  idpsicologo?: number;
+  id?: number;
+  rol?: string;
+}
+
 const ListarCitas = ({
   filters,
   filterValue,
@@ -35,6 +72,7 @@ const ListarCitas = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const cookies = useMemo(() => parseCookies(), []);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -61,10 +99,18 @@ const ListarCitas = ({
       paciente?: string;
     } = {}) => {
       try {
+        setLoading(true);
         setError(null);
         const token = cookies["session"];
 
+        if (!token) {
+          setError("No hay sesión activa");
+          showToastFunction("error", "Por favor inicia sesión nuevamente");
+          return;
+        }
+
         const queryParams = new URLSearchParams();
+        
         if (paginate) {
           queryParams.append("paginate", "true");
           queryParams.append("per_page", perPage.toString());
@@ -92,9 +138,24 @@ const ListarCitas = ({
           queryParams.append("nombre", paciente);
         }
 
-        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas${
-          queryParams.toString() ? `?${queryParams.toString()}` : ""
-        }`;
+        // Get user data to determine psychologist ID
+        let psychologistId: number | null = null;
+        try {
+          const userData: UserData = JSON.parse(localStorage.getItem("user") || "{}");
+          psychologistId = userData.idpsicologo || userData.id || null;
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+        }
+
+        if (!psychologistId) {
+          setError("No se pudo identificar el psicólogo");
+          showToastFunction("error", "Error de autenticación");
+          return;
+        }
+
+        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/lista?${queryParams.toString()}`;
+
+        console.log("Fetching citas from URL:", url);
 
         const response = await fetch(url, {
           method: "GET",
@@ -105,56 +166,92 @@ const ListarCitas = ({
           },
         });
 
+        console.log("Response status:", response.status);
+
         if (!response.ok) {
-          console.error(`Error: ${response.status} ${response.statusText}`);
-          setError("Error al obtener las citas");
-          showToastFunction("error", "Error al obtener las citas");
+          const errorText = await response.text();
+          console.error(`Error: ${response.status} ${response.statusText}`, errorText);
+          
+          if (response.status === 404) {
+            setError("Endpoint no disponible. Se requiere configuración del backend.");
+            showToastFunction("error", "Error: Endpoint para listar citas no está configurado en el backend");
+          } else if (response.status === 401) {
+            setError("Sesión expirada");
+            showToastFunction("error", "Sesión expirada. Por favor inicia sesión nuevamente.");
+          } else if (response.status === 403) {
+            setError("No autorizado");
+            showToastFunction("error", "No tienes permisos para ver las citas");
+          } else {
+            setError("Error al obtener las citas");
+            showToastFunction("error", "Error al obtener las citas");
+          }
           return;
         }
 
-        const citasData = await response.json();
-        const citasRaw = paginate ? citasData.result.data : citasData.result;
+        const citasData: ApiResponse = await response.json();
+        console.log("Citas data received:", citasData);
+
+        let citasRaw: ApiCitaResponse[] = [];
+
+        if (paginate) {
+          // Handle paginated response
+          if (citasData.result && 'data' in citasData.result && Array.isArray(citasData.result.data)) {
+            citasRaw = citasData.result.data;
+          }
+        } else {
+          // Handle non-paginated response
+          if (Array.isArray(citasData.result)) {
+            citasRaw = citasData.result;
+          }
+        }
 
         if (Array.isArray(citasRaw)) {
-          const formattedCitas = citasRaw.map((cita: Citas) => ({
-            idCita: cita.idCita,
-            idPaciente: cita.idPaciente,
-            idPsicologo: cita.idPsicologo,
-            paciente: cita.paciente,
-            codigo: cita.codigo,
-            fecha_inicio: cita.fecha_inicio,
-            motivo: cita.motivo,
-            estado: cita.estado,
-            duracion: cita.duracion,
-            genero: cita.genero,
-            edad: cita.edad,
-            fecha_nacimiento: cita.fecha_nacimiento,
+          const formattedCitas: Citas[] = citasRaw.map((cita: ApiCitaResponse) => ({
+            idCita: (cita.idCita?.toString() || cita.id?.toString()) ?? "",
+            idPaciente: cita.idPaciente?.toString() ?? "",
+            idPsicologo: cita.idPsicologo?.toString() ?? "",
+            paciente: cita.paciente ?? "",
+            codigo: cita.codigo ?? "",
+            fecha_inicio: cita.fecha_inicio ?? "",
+            motivo: cita.motivo ?? "",
+            estado: cita.estado ?? "",
+            duracion: cita.duracion ?? "",
+            genero: cita.genero ?? "",
+            edad: cita.edad ?? 0,
+            fecha_nacimiento: cita.fecha_nacimiento ?? "",
           }));
-          if (showToast && !toastShownRef.current) {
+
+          console.log("Formatted citas:", formattedCitas);
+
+          if (showToast && !toastShownRef.current && formattedCitas.length > 0) {
             showToastFunction("success", "Citas obtenidas correctamente");
             toastShownRef.current = true;
           }
+          
           setCitas(formattedCitas);
 
-          if (paginate && citasData.result.pagination) {
+          if (paginate && citasData.result && 'pagination' in citasData.result && citasData.result.pagination) {
             setCurrentPage(citasData.result.pagination.current_page);
             setTotalPages(citasData.result.pagination.last_page);
           }
         } else {
+          console.error("Invalid response format:", citasData);
           setError("Formato de respuesta inválido");
-          showToastFunction("error", "Formato de respuesta inválido");
+          showToastFunction("error", "No se encontraron citas");
+          setCitas([]);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Fetch error:", error);
         setError("Error al obtener las citas");
         showToastFunction("error", "Error de conexión. Intenta nuevamente.");
+      } finally {
+        setLoading(false);
       }
     },
     [cookies]
   );
 
-
-  const handleDelete = async (idCita: number) => {
+  const handleDelete = async (idCita: number): Promise<boolean> => {
     setIsDeleting(true);
     try {
       const cookies = parseCookies();
@@ -168,39 +265,67 @@ const ListarCitas = ({
           Authorization: `Bearer ${token}`,
         },
       });
-      const citaData = await response.json();
-
-      if (citaData.state === 2) {
-        showToastFunction("success", "Paciente eliminado correctamente");
+      
+      if (response.ok) {
+        showToastFunction("success", "Cita eliminada correctamente");
         await handleGetCitas({ showToast: false });
         return true;
       } else {
-        const errorMessage =
-          citaData.state === 1
-            ? citaData.result.status_message ||
-              "Error de conexión. Intenta nuevamente."
-            : "Error de conexión. Intenta nuevamente.";
-        showToastFunction("error", errorMessage);
+        const errorData = await response.json();
+        showToastFunction("error", errorData.message || "Error al eliminar la cita");
         return false;
       }
     } catch (error) {
       console.error(error);
       showToast("error", "Error de conexión. Intenta nuevamente");
+      return false;
     } finally {
       setIsDeleting(false);
     }
   };
 
+  // Handle async calls properly
+  const handleAsyncCitasCall = useCallback(
+    (params: Parameters<typeof handleGetCitas>[0] = {}) => {
+      handleGetCitas(params).catch((error) => {
+        console.error("Error in handleGetCitas:", error);
+        setError("Error al obtener las citas");
+        showToastFunction("error", "Error de conexión. Intenta nuevamente.");
+      });
+    },
+    [handleGetCitas]
+  );
+
   useEffect(() => {
-    handleGetCitas({filters: filters, paciente: filterValue});
-  }, [handleGetCitas, filterValue, filters]);
+    console.log("useEffect triggered with filters:", filters, "filterValue:", filterValue);
+    handleAsyncCitasCall({ filters: filters, paciente: filterValue });
+  }, [handleAsyncCitasCall, filterValue, filters]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg font-medium">
+          Cargando citas...
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg font-medium text-destructive dark:text-destructive">
+      <div className="flex flex-col justify-center items-center h-64 gap-4">
+        <div className="text-lg font-medium text-destructive dark:text-destructive text-center">
           {error}
         </div>
+        <button 
+          onClick={() => {
+            setError(null);
+            handleAsyncCitasCall();
+          }}
+          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
@@ -212,20 +337,20 @@ const ListarCitas = ({
         onCloseAction={() => setShowFormCita(false)}
         onCitaCreatedAction={() => {
           setShowFormCita(false);
-          handleGetCitas({ showToast: false });
+          handleAsyncCitasCall({ showToast: false });
         }}
       />
       {citas.length > 0 ? (
         <>
           <TableCitas
             filteredCitas={citas}
-            onDeleteInit={(id) => setDeleteId(id)}
+            onDeleteInitAction={(id: number) => setDeleteId(id)}
           />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onNext={() => handleGetCitas({ page: currentPage + 1 })}
-            onPrevious={() => handleGetCitas({ page: currentPage - 1 })}
+            onNext={() => handleAsyncCitasCall({ page: currentPage + 1 })}
+            onPrevious={() => handleAsyncCitasCall({ page: currentPage - 1 })}
           />
         </>
       ) : (

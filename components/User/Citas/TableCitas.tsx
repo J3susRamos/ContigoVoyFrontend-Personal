@@ -6,12 +6,12 @@ import { Icons } from "@/icons";
 
 interface TableProps {
   filteredCitas: Citas[];
-  onDeleteInit: (id: number) => void;
+  onDeleteInitAction: (id: number) => void; // Renamed to end with "Action"
 }
 
 export const TableCitas: React.FC<TableProps> = ({
   filteredCitas,
-  onDeleteInit,
+  onDeleteInitAction, // Updated parameter name
 }) => {
   const headers = [
     "Paciente",
@@ -62,7 +62,7 @@ export const TableCitas: React.FC<TableProps> = ({
 
                 {/* Eliminar */}
                 <button
-                  onClick={() => onDeleteInit(Number(cita.idCita))}
+                  onClick={() => onDeleteInitAction(Number(cita.idCita))} // Updated function call
                   className="flex flex-col items-center"
                 >
                   <svg
@@ -95,6 +95,5 @@ export const TableCitas: React.FC<TableProps> = ({
         </>
       )}
     />
-
   );
 };
