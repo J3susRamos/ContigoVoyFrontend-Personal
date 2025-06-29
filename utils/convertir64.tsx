@@ -5,7 +5,7 @@ export const convertImageToWebP = (file: File): Promise<Blob> => {
       const ctx = canvas.getContext("2d");
 
       img.onload = () => {
-        // Calculate new dimensions if the image is too large
+        // Calculate new dimensions if image is too large
         let { width, height } = img;
         const MAX_WIDTH = 1200;
         const MAX_HEIGHT = 800;

@@ -100,7 +100,7 @@ export default function CalendarioMain({ citas }: CalProps) {
           </span>
           <Button
             radius="full"
-            className={`text-[16px] leading-[20px] border-4 font-bold bg-transparent border border-background text-background dark:text-primary-foreground font-light`}
+            className={`text-[16px] leading-[20px] border-4 font-bold bg-transparent border-background text-background dark:text-primary-foreground`}
             onPress={goToToday}
           >
             Hoy
