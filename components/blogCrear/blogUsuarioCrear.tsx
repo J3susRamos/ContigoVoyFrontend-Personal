@@ -135,7 +135,7 @@ useEffect(() => {
       // Convertir la imagen WebP a Base64
       const base64 = await convertToBase64(webpImage);
 
-      // Check final base64 size
+      // Check the final base64 size
       if (base64.length > 400000) { // 400KB limit for base64
         showToast("error", "La imagen procesada sigue siendo muy grande. Intenta con una imagen más pequeña.");
         return;
@@ -396,7 +396,8 @@ const handleSubmit = async () => {
       console.log("Response data:", data);
     } catch (parseError) {
       console.error("Error parsing response JSON:", parseError);
-      throw new Error("Error al procesar la respuesta del servidor");
+      showToast("error", "Error al procesar la respuesta del servidor");
+      return; // Exit the function early
     }
 
     if (response.ok) {
