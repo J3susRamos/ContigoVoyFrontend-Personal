@@ -24,16 +24,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Terapia Psicológica Online | Contigo Voy</title>
         <meta charSet="utf-8" />
         <meta httpEquiv="Content-Language" content="es" />
+
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="author" content="Contigo Voy" />
+
         <meta
           name="google-site-verification"
           content="E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY"
         />
-        <meta name="description" content="Conecta con tu bienestar. Psicólogos online, comienza tu terapia hoy. Contigo Voy te acompaña desde el primer paso. Agenda tu cita, la primera es gratis." />
       </head>
       <body className={`${lexend.className} antialiased`}>
         <ThemeProvider
