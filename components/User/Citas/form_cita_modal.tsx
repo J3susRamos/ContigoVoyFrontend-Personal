@@ -24,7 +24,7 @@ interface FormCitaProps {
 
 interface Paciente {
   idPaciente: number;
-  nombre: string; // This now contains the full name from the backend
+  nombre: string;
   codigo: string;
 }
 
