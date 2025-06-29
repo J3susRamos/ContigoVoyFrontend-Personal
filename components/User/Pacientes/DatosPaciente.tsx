@@ -1,9 +1,9 @@
 "use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { DatosPacienteProps, Paciente } from "@/interface";
 import { getPaciente } from "@/components/User/Pacientes/getPacienteData";
+import { useRouter } from "next/navigation";
 
 const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
   const [paciente, setPaciente] = useState<Paciente | null>(null);
@@ -21,6 +21,11 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
       });
     }
   }, [idPaciente]);
+   const router = useRouter();
+
+  const handleAddNew = useCallback(() => {
+      router.push(`/user/pacientes/EditarPaciente?id=${idPaciente}`);
+    }, [router, idPaciente]);
 
   return (
       <div>
@@ -83,14 +88,14 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
             </div>
 
             <div className="mt-2">
-              <Link
-                  href={`/user/pacientes/editar/${idPaciente}`}
+              <button
+                  onClick={handleAddNew}
                   className={cn(
                       "bg-transparent text-primary dark:text-primary border-primary dark:border-primary border rounded-full py-2 px-4 mt-4 hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground transition-colors duration-200"
                   )}
               >
                 Editar
-              </Link>
+              </button >
             </div>
           </div>
         </div>

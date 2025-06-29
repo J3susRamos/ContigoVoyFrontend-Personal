@@ -60,7 +60,7 @@ const navItemsBase = [
   },
   {
     name: "Politicas y Privacidad",
-    link: "/",
+    link: "/user/politicas",
     icono: Icons.politicasyPriv,
   },
 ];
@@ -117,7 +117,7 @@ const NavbarUser = () => {
   }, []);  return (
     <div className="flex flex-row bg-[#f8f8ff] dark:bg-background">
       {/* Mobile Navbar - Menú hamburguesa para pantallas menores a 1024px */}
-      <div className="lg:hidden bg-[#f8f8ff] dark:bg-background">
+      <div className="lg:hidden bg-[#f8f8ff] dark:bg-background flex-1">
         <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
           <div className="w-full p-6 flex items-center justify-between">
             <Link href="/" className="ml-[60px] z-0">

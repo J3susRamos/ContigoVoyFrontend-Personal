@@ -32,81 +32,84 @@ const COLORS = ["#B158FF", "#7D7DFF", "#58A6FF"];
 
 export default function Performance() {
   return (
-    <div className="flex flex-col">
-      <div className="grid xl:grid-cols-2 lg:grid-cols-1 m-5 gap-5 xl:w-[950px] w-[350px] mx-auto bg-card dark:bg-card rounded-2xl">
-        {/*Rendimiento del equipo PieChart*/}
+    <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+      
+      {/* Gráficos principales */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 bg-card dark:bg-card rounded-2xl p-4 lg:p-6 mb-6 lg:mb-8">
+        
+        {/* Rendimiento del equipo - LineChart */}
         <div className="flex flex-col">
-          <div className="rounded-r-full w-[301px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-start mr-10 text-xl">
-              Rendimiento del <br /> equipo:
-            </p>
-          </div>
-          <div className="h-full flex items-center justify-center mt-4">
-            <div className="w-full h-[350px]">
-              <ResponsiveContainer width="100%" height="70%">
-                <LineChart
-                  data={data}
-                  margin={{ top: 30, right: 30, left: 20, bottom: 12 }}
-                >
-                  <XAxis
-                    dataKey="name"
-                    tickLine={{ stroke: "hsl(var(--primary))" }}
-                    axisLine={{ stroke: "hsl(var(--primary))" }}
-                    tick={({ x, y, payload }) => {
-                      return (
-                        <text
-                          x={x}
-                          y={y + 15}
-                          fill="hsl(var(--primary))"
-                          textAnchor="middle"
-                          fontSize={12}
-                          fontWeight="500"
-                        >
-                          <tspan x={x} dy="0">
-                            feb,
-                          </tspan>{" "}
-                          <tspan x={x} dy="15">
-                            {payload.value}
-                          </tspan>
-                        </text>
-                      );
-                    }}
-                  />
-                  <YAxis
-                    tickFormatter={(value: number) => (value / 1250).toString()}
-                    tick={{ fill: "hsl(var(--primary))" }}
-                    axisLine={{ stroke: "hsl(var(--primary))" }}
-                    tickLine={{ stroke: "hsl(var(--primary))" }}
-                  />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Line
-                    type="monotone"
-                    dataKey="uv"
-                    stroke="hsl(var(--primary))"
-                    activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="pv"
-                    stroke="#58A6FF"
-                    activeDot={{ r: 8, fill: "hsl(var(--primary))" }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        {/* Rounded PieChart */}
-        <div className="flex flex-col items-center">
-          {/* Header for PieChart */}
-          <div className="rounded-full w-[247px] h-[60px] bg-primary dark:bg-primary mt-6 flex items-center justify-center">
-            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center text-xl">
-              Citas atendidas
+          <div className="rounded-r-full w-full max-w-[350px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
+              Rendimiento del equipo
             </p>
           </div>
           
-          <div className="w-full h-[200px] flex items-center justify-center mt-4">
+          <div className="w-full h-[300px] md:h-[350px] lg:h-[400px] flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={data}
+                margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
+              >
+                <XAxis
+                  dataKey="name"
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
+                  tick={({ x, y, payload }) => {
+                    return (
+                      <text
+                        x={x}
+                        y={y + 15}
+                        fill="hsl(var(--primary))"
+                        textAnchor="middle"
+                        fontSize={10}
+                        fontWeight="500"
+                      >
+                        <tspan x={x} dy="0">
+                          feb,
+                        </tspan>{" "}
+                        <tspan x={x} dy="12">
+                          {payload.value}
+                        </tspan>
+                      </text>
+                    );
+                  }}
+                />
+                <YAxis
+                  tickFormatter={(value: number) => Math.round(value / 1250).toString()}
+                  tick={{ fill: "hsl(var(--primary))", fontSize: 10 }}
+                  axisLine={{ stroke: "hsl(var(--primary))" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Line
+                  type="monotone"
+                  dataKey="uv"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={2}
+                  activeDot={{ r: 6, fill: "hsl(var(--primary))" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="pv"
+                  stroke="#58A6FF"
+                  strokeWidth={2}
+                  activeDot={{ r: 6, fill: "#58A6FF" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Citas atendidas - PieChart */}
+        <div className="flex flex-col items-center">
+          <div className="rounded-full w-full max-w-[300px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
+            <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
+              Citas atendidas por psicólogo
+            </p>
+          </div>
+          
+          <div className="w-full h-[250px] md:h-[300px] lg:h-[350px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -114,8 +117,8 @@ export default function Performance() {
                   data={genero}
                   cx="50%"
                   cy="50%"
-                  innerRadius={50}
-                  outerRadius={100}
+                  innerRadius="30%"
+                  outerRadius="70%"
                   fill="#8884d8"
                   label={renderCustomizedLabel}
                   labelLine={false}
@@ -133,14 +136,14 @@ export default function Performance() {
           </div>
 
           {/* Leyenda del PieChart */}
-          <div className="grid grid-cols-2 gap-4 w-full max-w-[300px] mx-auto mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full mt-4">
             {genero.map((entry, index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div key={index} className="flex items-center gap-2 justify-center lg:justify-start">
                 <div
-                  className="w-3 h-3 rounded-full"
+                  className="w-3 h-3 rounded-full flex-shrink-0"
                   style={{ backgroundColor: COLORS[index] }}
                 ></div>
-                <span className="text-primary dark:text-primary-foreground font-normal text-base">
+                <span className="text-primary dark:text-primary-foreground font-normal text-xs md:text-sm truncate">
                   {entry.name}
                 </span>
               </div>
@@ -149,14 +152,16 @@ export default function Performance() {
         </div>
       </div>
 
-      {/* Table for PieChart */}
-      <div className="m-5 xl:w-[950px] w-[350px] mx-auto bg-card dark:bg-card rounded-2xl mb-10">
-        <div className="w-full bg-primary dark:bg-primary h-[60px] rounded-t-2xl flex items-center">
-          <div className="w-1/2 text-primary-foreground dark:text-primary-foreground font-medium text-center text-xl">
-            Profesional
-          </div>
-          <div className="w-1/2 text-primary-foreground dark:text-primary-foreground font-medium text-center text-xl">
-            Citas atendidas
+      {/* Tabla de Rendimiento Detallado */}
+      <div className="w-full bg-card dark:bg-card rounded-2xl overflow-hidden">
+        <div className="w-full bg-primary dark:bg-primary p-4">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-sm md:text-lg lg:text-xl">
+              Profesional
+            </div>
+            <div className="text-primary-foreground dark:text-primary-foreground font-medium text-sm md:text-lg lg:text-xl">
+              Citas Atendidas
+            </div>
           </div>
         </div>
         
@@ -164,18 +169,25 @@ export default function Performance() {
           {genero.map((item, index) => (
             <div 
               key={index} 
-              className={`flex items-center h-14 ${
+              className={`grid grid-cols-2 gap-4 items-center p-4 hover:bg-muted/50 transition-colors ${
                 index !== genero.length - 1 ? "border-b border-muted" : ""
               }`}
             >
-              <div className="w-1/2 text-primary dark:text-primary-foreground font-medium text-center">
+              <div className="text-primary dark:text-primary-foreground font-medium text-center text-sm md:text-base">
                 {item.name}
               </div>
-              <div className="w-1/2 text-primary dark:text-primary-foreground font-medium text-center">
+              <div className="text-primary dark:text-primary-foreground font-medium text-center text-sm md:text-base">
                 {item.Total}
               </div>
             </div>
           ))}
+        </div>
+        
+        {/* Footer con estadísticas adicionales */}
+        <div className="bg-muted/30 dark:bg-muted/30 p-4">
+          <div className="text-center text-muted-foreground text-xs md:text-sm">
+            Total de citas atendidas: {genero.reduce((sum, item) => sum + item.Total, 0)}
+          </div>
         </div>
       </div>
     </div>
