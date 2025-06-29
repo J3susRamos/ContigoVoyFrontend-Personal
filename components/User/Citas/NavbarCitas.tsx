@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ]}
             />
 
-            {/* Submenú de genero */}
+            {/* Submenú de género */}
             <FilterSubMenu
               titulo="Género"
               isOpen={submenus.genero}
