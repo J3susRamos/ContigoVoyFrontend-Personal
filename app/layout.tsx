@@ -35,6 +35,7 @@ export default function RootLayout({
           name="google-site-verification"
           content="E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY"
         />
+        <title></title>
       </head>
       <body className={`${lexend.className} antialiased`}>
         <ThemeProvider
