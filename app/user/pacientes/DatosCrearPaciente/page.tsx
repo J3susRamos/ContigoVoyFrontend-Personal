@@ -139,7 +139,10 @@ export default function App() {
         genero: formData.genero,
         ocupacion: formData.ocupacion,
         estadoCivil: formData.estadoCivil,
-        direccion: `${formData.direccion}, ${formData.pais}, ${formData.provincia}, ${formData.departamento}`,
+        direccion: formData.direccion, 
+        pais: formData.pais, 
+        provincia: formData.provincia, 
+        departamento: formData.departamento,
       };
 
       const cookies = parseCookies();

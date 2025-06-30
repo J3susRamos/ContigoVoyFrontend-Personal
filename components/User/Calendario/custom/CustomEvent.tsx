@@ -1,5 +1,5 @@
-import { CustomEventProps } from "./types/calendar.types";
-import './styles/hide-label.css'
+import { CustomEventProps } from "../types/calendar.types";
+import '../styles/hide-label.css'
 
 export default function CustomEvent({ event }: CustomEventProps) {
   return (

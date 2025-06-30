@@ -58,26 +58,31 @@ const AdultoTerapias: ServicesStructureProps[] = [
         id: 1,
         text: "Aprenderás a manejar el estrés y la ansiedad para recuperar tu equilibrio emocional.",
         icon: "/Services/adult/therapy/manejar.webp",
+        title: "Manejo del estrés y la ansiedad",
       },
       {
         id: 2,
         text: "Comprenderás y gestionarás tus emociones, tomando decisiones más conscientes.",
         icon: "/Services/adult/therapy/comprender.webp",
+        title: "Comprensión emocional",
       },
       {
         id: 3,
         text: "Fortalecerás tu confianza al trabajar en tus habilidades y superar límites.",
         icon: "/Services/adult/therapy/fortalecer.webp",
+        title: "Fortaleza emocional",
       },
       {
         id: 4,
         text: "Te enseñaremos cómo enfrentar los desafíos de la vida diaria de manera saludable y resiliente.",
         icon: "/Services/adult/therapy/enfrentar.webp",
+        title: "Manejo de desafíos",
       },
       {
         id: 5,
         text: "Te ayudará a gestionar conflictos emocionales y mejorar tus relaciones personales y laborales.",
         icon: "/Services/adult/therapy/gestion.webp",
+        title: "Gestión de conflictos",
       },
     ],
     textfooter:
