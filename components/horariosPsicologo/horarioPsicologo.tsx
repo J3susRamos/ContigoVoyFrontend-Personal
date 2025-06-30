@@ -3,7 +3,7 @@ import ZonaHorariaSelect from "./zonaHorariaSelect";
 import { Horarios, BotonHorarioProps, CitasPendientesApiResponse } from "@/interface";
 import { GetCitasPendientes } from "@/app/apiRoutes";
 
-const convertirHoraZona = (fechaISO: string, hora: string, zonaOrigen: string, zonaDestino: string): string => {
+const convertirHoraZona = (fechaISO: string, hora: string, zonaDestino: string): string => {
   const fecha = new Date(`${fechaISO}T${hora}:00`);
   return fecha.toLocaleTimeString("es-ES", {
     timeZone: zonaDestino,
@@ -68,7 +68,9 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
     };
 
     if (idPsicologo) {
-      fetchCitasPendientes();
+      fetchCitasPendientes().catch((error) => {
+        console.error("Error in fetchCitasPendientes:", error);
+      });
     }
   }, [idPsicologo]);
 
@@ -146,7 +148,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
 
               const citasConvertidas = citasPendientes?.result?.map((cita) => ({
                 fecha: cita.fecha,
-                hora: convertirHoraZona(cita.fecha, cita.hora, "America/Lima", zonaHoraria),
+                hora: convertirHoraZona(cita.fecha, cita.hora, zonaHoraria),
               })) || [];
 
               return (

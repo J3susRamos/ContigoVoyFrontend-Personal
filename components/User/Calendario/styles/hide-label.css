@@ -12,11 +12,7 @@
 
 .rbc-header {
   font-size: 1.25rem !important;
-  /* Aumenta el tamaño, ajusta a tu gusto */
   font-weight: 700 !important;
-  /* Opcional: más negrita */
-  letter-spacing: 0.5px;
-  /* Opcional: más espacio entre letras */
+  letter-spacing: 1px;
   color: #7c3aed !important;
-  /* Opcional: color lila */
 }

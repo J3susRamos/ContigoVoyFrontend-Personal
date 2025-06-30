@@ -103,9 +103,20 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
     }
   };
 
+  // Wrapper function to handle the Promise properly
+  const handleAsyncGetPacientes = useCallback(
+    (showToast = true, page = 1) => {
+      handleGetPacientes(showToast, page).catch((error) => {
+        console.error("Error in handleGetPacientes:", error);
+        showToastFunction("error", "Error inesperado al obtener pacientes");
+      });
+    },
+    [handleGetPacientes]
+  );
+
   useEffect(() => {
-    handleGetPacientes();
-  }, [handleGetPacientes, filters, filterValue]);
+    handleAsyncGetPacientes();
+  }, [handleAsyncGetPacientes, filters, filterValue]);
 
   return (
     <>
@@ -118,8 +129,8 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onNext={() => handleGetPacientes(true, currentPage + 1)}
-            onPrevious={() => handleGetPacientes(true, currentPage - 1)}
+            onNext={() => handleAsyncGetPacientes(true, currentPage + 1)}
+            onPrevious={() => handleAsyncGetPacientes(true, currentPage - 1)}
           />
         </>
       ) : (

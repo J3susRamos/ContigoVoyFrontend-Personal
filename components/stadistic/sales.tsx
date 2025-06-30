@@ -47,7 +47,8 @@ export default function Sales() {
       ];
 
   useEffect(() => {
-      const loadData = async () => {
+    const loadData = async () => {
+      try {
         const response = await GetPsicologoDashboard();
         const result = response.result;
         setCitasPsicologo({
@@ -60,10 +61,19 @@ export default function Sales() {
           nuevos_pacientes: result?.nuevos_pacientes ?? 0,
           citas_confirmadas: result?.citas_confirmadas ?? 0,
         });
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
+        // You might want to show an error toast here
+      } finally {
         setLoading(false);
-      };
-      loadData();
-    }, []);
+      }
+    };
+
+    loadData().catch((error) => {
+      console.error("Error in loadData:", error);
+      setLoading(false);
+    });
+  }, []);
 
   return (
     <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
