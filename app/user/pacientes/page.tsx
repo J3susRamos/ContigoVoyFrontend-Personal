@@ -7,8 +7,6 @@ import HeaderUser from "@/components/User/HeaderUser";
 import { NavbarPacientes } from "@/components/User/Pacientes/NavbarPacientesComponent";
 import { FiltersInitialState, FiltersPaciente } from "@/interface";
 
-
-
 export default function Pacientes() {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
