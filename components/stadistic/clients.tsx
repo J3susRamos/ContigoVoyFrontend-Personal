@@ -39,8 +39,8 @@ const fetchEstadisticasEdad = async () => {
 
 // --- NUEVO: función para lugares usando localStorage ---
 const fetchEstadisticasLugar = async () => {
-  const token = localStorage.getItem('auth_token');
-  if (!token) throw new Error("No autenticado");
+  const cookies = parseCookies();
+  const token = cookies.session;
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes/estadisticas/lugar`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -64,13 +64,7 @@ export default function Clients() {
     { name: "45 - 54", Total: 0 },
   ]);
   // --- NUEVO: estado para lugares ---
-  const [lugar, setLugar] = useState([
-    { name: "Surco", Total: 0 },
-    { name: "Jesús María", Total: 0 },
-    { name: "Surquillo", Total: 0 },
-    { name: "Barranco", Total: 0 },
-    { name: "San Borja", Total: 0 },
-  ]);
+  const [lugar, setLugar] = useState<{ name: string; Total: number }[]>([]);
 
   useEffect(() => {
     fetchPorcentajeGenero().then((result) => {
@@ -97,19 +91,15 @@ export default function Clients() {
 
   // --- NUEVO: useEffect para lugares ---
   useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
-      // Puedes mostrar un mensaje o redirigir si no hay token
-      return;
-    }
     fetchEstadisticasLugar().then((result) => {
-      setLugar([
-        { name: "Surco", Total: result["Surco"] ?? 0 },
-        { name: "Jesús María", Total: result["Jesús María"] ?? 0 },
-        { name: "Surquillo", Total: result["Surquillo"] ?? 0 },
-        { name: "Barranco", Total: result["Barranco"] ?? 0 },
-        { name: "San Borja", Total: result["San Borja"] ?? 0 },
-      ]);
+      const lugares = Object.entries(result)
+        .map(([key, value]) => ({
+          name: key,
+          Total: typeof value === "number" ? value : Number(value) || 0,
+        }))
+        .sort((a, b) => b.Total - a.Total); // Orden descendente por Total
+
+      setLugar(lugares);
     });
   }, []);
 

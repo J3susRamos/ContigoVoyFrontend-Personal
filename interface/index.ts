@@ -323,6 +323,9 @@ export interface Paciente2 {
   ocupacion: string,
   estadoCivil: string,
   direccion: string,
+  pais: string | null,
+  provincia: string | null,
+  departamento: string | null,
 }
 
 export interface FormPaciente {
