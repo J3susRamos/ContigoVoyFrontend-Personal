@@ -1,6 +1,5 @@
 "use client";
 import BlogAside from "./blogaside";
-import { ScrollShadow } from "@heroui/react";
 import BlogPreview from "./blogpreview";
 import { Authors, BlogPreviewData, Categoria } from "@/interface";
 import { useState } from "react";

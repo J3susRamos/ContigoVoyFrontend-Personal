@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import CerrarSesion from "@/components/CerrarSesion";
-import { ArrowLeft, Mail, Send, Image } from "lucide-react";
+import { ArrowLeft, Mail, Send, Image as ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type EmailBlock =
     | { type: "divider" }
@@ -136,7 +137,7 @@ const DetalleCampania = () => {
         <aside className="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 shadow-xl border border-gray-300 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-6">
             <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                <Image className="h-4 w-4 text-white" />
+                <ImageIcon className="h-4 w-4 text-white" />
             </div>
             <h3 className="text-lg font-semibold text-purple-600 dark:text-purple-400">Vista previa</h3>
             </div>
@@ -147,11 +148,16 @@ const DetalleCampania = () => {
                 <div key={idx} className="mb-4">
                     {block.type === "divider" && <hr className="my-4 border-gray-300 dark:border-gray-600" />}
                     {block.type === "image" && block.imageUrl && (
-                    <img
+                    <div className="relative w-full max-h-36 mb-4">
+                      <Image
                         src={block.imageUrl}
-                        className="rounded-lg max-h-36 w-full object-cover mb-4"
-                        alt="Imagen"
-                    />
+                        alt="Imagen del email"
+                        width={400}
+                        height={144}
+                        className="rounded-lg w-full h-full object-cover"
+                        priority={false}
+                      />
+                    </div>
                     )}
                     {block.type !== "divider" && block.type !== "image" && (
                     <p
