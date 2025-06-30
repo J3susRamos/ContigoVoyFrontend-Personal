@@ -1,4 +1,4 @@
-import { GenericFilters } from "@/components/ui/EmptyTable";
+import { GenericFilters } from "@/components/ui/Table/EmptyTable";
 import { DateValue } from "@heroui/react";
 import React from "react";
 

@@ -8,7 +8,7 @@ interface Props {
 const HeaderUser = ({title}: Props) => {
   return (
     <header className="pt-10 pb-6 z-30 px-10">
-      <div className="flex items-start justify-between w-[calc(95vw-270px)]">
+      <div className="flex items-start justify-between ">
         <h1 className="text-2xl md:text-4xl font-bold text-[#634be3] dark:text-primary-foreground">
           {title}
         </h1>
