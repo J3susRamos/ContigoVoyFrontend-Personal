@@ -171,7 +171,7 @@ export async function GetPacientesEstadisticasEdad(): Promise<GeneroEstadisticaA
 //Traer citas del psicologo por mes
 export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse> {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/citas/`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/citas/lista`,
         {
             method: "GET",
             headers: {
