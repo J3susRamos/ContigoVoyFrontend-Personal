@@ -38,7 +38,7 @@ export default function Appointments() {
       const response = await GetPsicologoDashboard();
       return response.result;
     } catch (error) {
-      console.error("Error al cargar el dashboard", error);
+      console.error(error);
     }
   };
   const fetchCitas = async (): Promise<CitaMensual[] | undefined> => {
@@ -46,7 +46,7 @@ export default function Appointments() {
     const response = await GetCitasTotalesConFecha();
     return response;
   } catch (error) {
-    console.log("Error al cargar las citas con fecha");
+    console.log(error);
   }
 };
   useEffect(() => {
