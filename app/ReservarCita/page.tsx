@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import ReservarComponents from "@/components/ReservarComponents";
+import ReservarComponents from "@/components/reservarCita/ReservarComponents";
 import { GetPsicologos } from "../apiRoutes";
 import { PsicologoApiResponse } from "@/interface";
 
@@ -41,7 +41,7 @@ export default function BlogPage() {
         console.error(error);
       }
     }
-    
+
     fetchData().catch((error) => {
       console.error("Error in fetchData:", error);
     });

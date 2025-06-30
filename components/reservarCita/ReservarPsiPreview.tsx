@@ -10,8 +10,9 @@ import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
 import { PrePaciente, PsicologoPreviewData } from "@/interface";
 import React, { useState } from "react";
-import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
+import HorarioPsicologo from "../horariosPsicologo/horarioPsicologo";
 import Image from "next/image";
+import { CalendarSearch, Eye, Mars, Venus, GraduationCap } from "lucide-react";
 
 export default function ReservarPsiPreview({
   psicologo,
@@ -141,61 +142,80 @@ export default function ReservarPsiPreview({
 
   return (
     <>
-      <Card className="flex flex-col w-full bg-background py-4 px-6 rounded-3xl border-[#9494F3] min-h-[255px]">
-        <div>
-          <div className="w-full flex gap-10">
-            <div className="col-span-1 flex sm:justify-start">
-              <div className="flex items-center relative">
-                <Avatar className="w-24 h-24">
-                  <AvatarImage src={psicologo.imagen} />
-                </Avatar>
-                <div className="absolute -bottom-[2px] -right-2 w-8 h-8 sm:w-10 sm:h-10">
-                  <ReactCountryFlag
-                    svg
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      borderRadius: "100%",
-                    }}
-                    countryCode={psicologo.pais}
-                  />
+      <article className="group transition-all duration-500 hover:scale-[1.03]">
+        <Card className="flex flex-col w-fullpy-4 px-3 md:px-7 py-7 rounded-3xl min-h-[255px] bg-transparent gap-y-scv1 justify-between">
+          <div>
+            <div className="w-full flex gap-10">
+              <div className="col-span-1 flex sm:justify-start">
+                <div className="flex items-center relative">
+                  <Avatar className="w-24 h-24 ring-2 ring-[#634AE2]/20">
+                    <AvatarImage src={psicologo.imagen} />
+                  </Avatar>
+                  <div className="absolute -bottom-[2px] -right-2 w-8 h-8 sm:w-10 sm:h-10">
+                    <ReactCountryFlag
+                      svg
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "100%",
+                      }}
+                      countryCode={psicologo.pais}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="col-span-2 text-[#634AE2] flex flex-col justify-center">
-              <CardDescription className="text-[#634AE2] font-light">
+              <div className="col-span-2 text-[#634AE2] flex flex-col justify-end">
+                <div className="px-2 py-1 bg-gradient-to-r from-[#634AE2]/10 to-[#8b7cf6]/10 w-fit rounded-full border border-[#634AE2]/20">
+                  {psicologo.genero === "masculino" ? (
+                    <Mars className="text-blue-600 w-5" />
+                  ) : (
+                    <Venus className="text-pink-600 w-5" />
+                  )}
+                </div>
+                <CardTitle className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                  {psicologo.nombre} <br />
+                  {psicologo.apellido}
+                </CardTitle>
+              </div>
+            </div>
+          </div>
+
+          {psicologo.titulo && (
+            <div className="flex items-center gap-2 mt-5 mb-2">
+              <GraduationCap className="w-4 h-4 text-[#634AE2]" />
+              <span className="inline-block px-2 py-1 text-sm font-medium bg-gradient-to-r from-[#634AE2]/10 to-[#8b7cf6]/10 text-[#634AE2] dark:text-[#8b7cf6] rounded-full border border-[#634AE2]/20">
                 {psicologo.titulo}
-              </CardDescription>
-              <CardTitle className="text-[#634AE2] text-xl sm:text-2xl">
-                {psicologo.nombre} <br />
-                {psicologo.apellido}
-              </CardTitle>
+              </span>
             </div>
-          </div>
-          <hr className="my-2.5 border-t border-[#9494F3] w-[100%]" />
-          </div>
-     
-        <p className="text-[#634AE2] pb-3 text-sm sm:text-base">
-          {psicologo.introduccion.slice(0, 50)}...
-        </p>
+          )}
 
-        <CardFooter className="flex justify-center gap-2 sm:flex sm:space-x-8 text-xs p-3 pb-0 mt-auto">
-          <Button
-            onPress={() => setIsScheduleOpen(true)}
-            className="rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light h-8 text-[16px]"
-          >
-            Agendar
-          </Button>
-          <Button
-            onPress={() => setIsProfileOpen(true)}
-            className="rounded-3xl bg-[#fff] px-6 sm:px-8 py-1 sm:py-0 border-[#634AE2] font-light border-1 text-[#634AE2] h-8 text-[16px]"
-          >
-            Ver perfil
-          </Button>
-        </CardFooter>
-      </Card>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3 text-medium text-ellipsis text-nowrap overflow-hidden">
+            {psicologo.introduccion}
+          </p>
+
+          <CardFooter className="flex  gap-3 sm:flex justify-end text-xs pb-0 px-0 mt-5">
+            <Button
+              onPress={() => setIsScheduleOpen(true)}
+              className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-[#634AE2]/25 transition-all duration-300 group/btn"
+            >
+              Agendar
+              <CalendarSearch />
+            </Button>
+            <Button
+              onPress={() => setIsProfileOpen(true)}
+              className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-[#634AE2]/25 transition-all duration-300 group/btn"
+            >
+              Ver perfil
+              <Eye />
+            </Button>
+          </CardFooter>
+          
+        </Card>
+
+        
+      </article>
 
       {/*modal de profile */}
       <Modal

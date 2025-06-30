@@ -84,7 +84,7 @@ export default function BlogPageComponent({
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left">
               <h1 className="text-4xl lg:text-6xl font-bold text-[#634AE2] dark:text-primary pb-1 lg:pb-2 mb-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] bg-clip-text text-transparent">
                 Blog
               </h1>

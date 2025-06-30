@@ -17,9 +17,9 @@ export const metadata: Metadata = {
      bgdown: "/Services/family/terapia-para-mejorar-relaciones-familiares.webp",
      bgup: "/Services/family/bgupfamily.webp",
      description:
-       "Estamos aquí para ayudarte a sanar y fortalecer los lazos entre ustedes. En la terapia familiar,encontrarás un espacio para comunicarse, comprenderse mejor y resolver las dificultades que afectan a tu familia. Juntos podemos restaurar el equilibrio y la armonía.",
+       "Estamos aquí para ayudarte a sanar y fortalecer los lazos entre ustedes. En la terapia familiar, encontrarás un espacio para comunicarse, comprenderse mejor y resolver las dificultades que afectan a tu familia. Juntos podemos restaurar el equilibrio y la armonía.",
      tittleIcon:
-       "¡Recupera la armonía en tu hogar! A través de la terapia familiar,te ayudamos a enfrentar juntos los desafíos.",
+       "¡Recupera la armonía en tu hogar! A través de la terapia familiar, te ayudamos a enfrentar juntos los desafíos.",
      iconos: [
        {
          id: 1,

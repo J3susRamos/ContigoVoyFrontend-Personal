@@ -85,7 +85,7 @@ const TeenTerapias: ServicesStructureProps[] = [
       {
         id: 5,
         title: "Construye el autoestima de tu adolescente Contigo Voy Psicología Online",
-        text: "Impulsa su autoestima,ayudándoles a construir una imagen positiva de sí mismos.",
+        text: "Impulsa su autoestima, ayudándoles a construir una imagen positiva de sí mismos.",
         icon: "/Services/teen/therapy/construir.webp",
       },
     ],
