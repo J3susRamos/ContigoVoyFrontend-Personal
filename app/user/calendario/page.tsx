@@ -25,8 +25,6 @@ export default function Calendario() {
   }
 
   return (
-    <div className="h-screen w-full max-w-screen-2xl mx-auto px-2 sm:px-4 md:px-8">
-      <CalendarioMain citas={citas} />
-    </div>
+    <CalendarioMain citas={citas} />
   );
 }

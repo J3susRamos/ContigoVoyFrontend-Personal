@@ -63,7 +63,7 @@ export default function CalendarioMain({ citas }: CalProps) {
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
       {/* Header principal */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full max-w-7xl xl:max-w-7xl mx-auto mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-0 gap-4 md:gap-0">
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
         {/* Título y botón juntos */}
         <div className="flex flex-col md:flex-row items-center gap-4">
           <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-primary dark:text-primary-foreground text-center md:text-left">
