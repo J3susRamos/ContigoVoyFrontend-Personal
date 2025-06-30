@@ -23,7 +23,7 @@ const EmptyTable = ({
 }: Props) => {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="bg-white dark:bg-card rounded-lg shadow-sm border border-gray-200 dark:border-border p-8 max-w-md w-full text-center">
+      <div className="bg-white dark:bg-[#272726] rounded-lg shadow-sm border border-gray-200 dark:border-border p-8 max-w-md w-full text-center">
         <div className="mx-auto w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
           {filters ? (
             <svg
