@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 export const useAuthRoutes = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ export const useAuthRoutes = () => {
     const session = cookies.session;
 
     if (!session) {
-      router.push("/login");
+      redirect('/auth/login');
     } else {
       setIsLoading(false);
     }

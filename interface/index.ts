@@ -73,6 +73,7 @@ export interface ServicesStructureProps {
     id: number;
     text: string;
     icon: string;
+    title: string;
   }[];
   textfooter: string;
   textfootermobile:string;
@@ -322,6 +323,9 @@ export interface Paciente2 {
   ocupacion: string,
   estadoCivil: string,
   direccion: string,
+  pais: string | null,
+  provincia: string | null,
+  departamento: string | null,
 }
 
 export interface FormPaciente {
@@ -497,6 +501,14 @@ export interface DashboardApiResponse {
   description: string;
   errorBag: never[];
   result: DashboardResult;
+}
+
+export interface CitaMensual {
+  fecha: string,
+  total: number
+}
+export interface CitaMensualResponse {
+  result: CitaMensual;
 }
 
 export interface GeneroEstadisticaDetalle {

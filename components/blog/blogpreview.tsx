@@ -98,7 +98,8 @@ export default function BlogPreview({
           <div className="relative aspect-[4/3] lg:aspect-[3/4] overflow-hidden rounded-2xl group-hover:shadow-2xl transition-all duration-500 border border-[#634AE2]/10">
             <Image
               src={Data.imagen}
-              alt={Data.tema}
+              alt={`Imagen de ${Data.tema}`}
+              title={Data.tema}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               width={400}
               height={300}

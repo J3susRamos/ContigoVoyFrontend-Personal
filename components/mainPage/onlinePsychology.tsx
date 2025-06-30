@@ -12,6 +12,7 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/terapiaonline.webp"}
         alt="Psicología online Beneficios Terapia en casa"
+        title="Recibe terapia en casa"
         width={70}
         height={60}
         className="w-[50px] mw:w-[70px]"
@@ -28,6 +29,7 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/listapsicologo.webp"}
         alt="Psicología online Beneficios Elige a tu Psicologo"
+        title="Elige a tu psicólogo"
         width={70}
         height={60}
         className="w-[50px] mw:w-[70px]"
@@ -45,6 +47,7 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/terapiaencasa.webp"}
         alt="Psicología online Beneficios tu terapia en línea"
+        title="Inicia tu terapia en línea"
         width={70}
         height={60}
         className="w-[50px] mw:w-[70px]"
@@ -61,6 +64,7 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/agendahorario.webp"}
         alt="Psicología online Beneficios elige tu horario ideal"
+        title="Agenda tu horario ideal"
         width={70}
         height={60}
         className="w-[50px] mw:w-[70px]"
@@ -184,6 +188,7 @@ export default function ChooseUs() {
                       <Image
                         src={feature.background}
                         alt={feature.description}
+                        title={feature.title}
                         fill
                         className="mask-all-fade object-contain"
                       />
