@@ -124,16 +124,25 @@ export function Listarblog({
             <tr key={blog.idBlog} style={{clipPath: 'xywh(0 0 100% 100% round 24px)'}} className="border-b bg-white hover:bg-gray-100 rounded-[36px] ">
               <td className="px-4 py-2">{blog.idBlog}</td>
               <td className="px-4 py-2 ">{blog.tema}</td>
-              <td className="px-4 py-2">{blog.categoria}</td>
-              <td className="px-4 py-2 flex justify-center items-center">
-                <Image
-                  isZoomed
-                  width={120}
-                  height={70}
-                  radius="none"
-                  src={blog.imagen}
-                  alt="Imagen de blog"
-                />
+              <td className="px-4 py-2">{blog.categoria}</td>              <td className="px-4 py-2 flex justify-center items-center">
+                {/* Mostrar solo la primera imagen con indicador de cantidad */}
+                <div className="relative">
+                  <Image
+                    isZoomed
+                    width={120}
+                    height={70}
+                    radius="none"
+                    src={blog.imagenes?.[0] || blog.imagen}
+                    alt="Imagen principal del blog"
+                    className="object-cover"
+                  />
+                  {/* Indicador de múltiples imágenes */}
+                  {blog.imagenes && blog.imagenes.length > 1 && (
+                    <div className="absolute top-1 right-1 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded-full">
+                      +{blog.imagenes.length - 1}
+                    </div>
+                  )}
+                </div>
               </td>
               <td className="px-4 py-2 rounded-r-[34px]">
                 <div className="flex flex-row items-center justify-center gap-x-4">

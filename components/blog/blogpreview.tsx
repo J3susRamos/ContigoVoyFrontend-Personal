@@ -91,13 +91,12 @@ export default function BlogPreview({
               <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
             </button>
           </div>
-        </div>
-
-        {/* Image Section */}
+        </div>        {/* Image Section */}
         <div className="lg:col-span-1">
           <div className="relative aspect-[4/3] lg:aspect-[3/4] overflow-hidden rounded-2xl group-hover:shadow-2xl transition-all duration-500 border border-[#634AE2]/10">
+            {/* Solo mostrar la primera imagen como portada */}
             <Image
-              src={Data.imagen}
+              src={Data.imagenes?.[0] || Data.imagen}
               alt={`Imagen de ${Data.tema}`}
               title={Data.tema}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
@@ -105,6 +104,14 @@ export default function BlogPreview({
               height={300}
               radius="none"
             />
+            
+            {/* Indicador de múltiples imágenes */}
+            {Data.imagenes && Data.imagenes.length > 1 && (
+              <div className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                +{Data.imagenes.length - 1} fotos
+              </div>
+            )}
+            
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             
             {/* Overlay Content */}
