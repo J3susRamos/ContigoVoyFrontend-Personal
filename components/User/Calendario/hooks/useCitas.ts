@@ -49,7 +49,7 @@ export function useCitas() {
             setIsLoading(true);
             setError(null);
 
-            const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
+            const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/lista`;
 
             const response = await fetch(url, {
                 method: "GET",
@@ -99,7 +99,7 @@ export function useCitas() {
         } finally {
             setIsLoading(false);
         }
-    }, [isAuthorized, sessionToken]); // Solo dependencias estables
+    }, [isAuthorized, sessionToken]);
 
     // Efecto para verificar autorización al montar el componente
     useEffect(() => {
