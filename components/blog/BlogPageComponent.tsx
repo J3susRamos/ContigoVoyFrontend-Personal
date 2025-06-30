@@ -211,7 +211,8 @@ export default function BlogPageComponent({
               <div className="relative h-64 lg:h-96 overflow-hidden">
                 <Image
                   src={selectedBlog.imagen}
-                  alt={selectedBlog.tema}
+                  alt={`Imagen de ${selectedBlog.tema}`}
+                  title={selectedBlog.tema}
                   fill
                   className="object-cover"
                 />
