@@ -77,7 +77,7 @@ console.log(citasMensuales)
       
       {/* Información de citas - Cards responsivos */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6 lg:mb-8">
-        <div className="flex-1 bg-card dark:bg-card rounded-xl p-4 flex items-center gap-3">
+        <div className="flex-1 bg-card dark:bg-card rounded-xl p-4 flex items-center gap-6">
           <div className="flex-shrink-0">
             <span
               className="w-6 h-6 block"
@@ -86,12 +86,12 @@ console.log(citasMensuales)
               }}
             />
           </div>
-          <span className="text-sm md:text-base font-medium text-card-foreground dark:text-card-foreground">
+          <span className="text-sm md:text-base font-medium text-card-foreground dark:text-card-foreground ">
             {citasPsicologo["citas_confirmadas"]} citas reservadas
           </span>
         </div>
         
-        <div className="flex-1 bg-card dark:bg-card rounded-xl p-4 flex items-center gap-3">
+        <div className="flex-1 bg-card dark:bg-card rounded-xl p-4 flex items-center gap-6">
           <div className="flex-shrink-0">
             <span
               className="w-6 h-6 block"
@@ -150,7 +150,7 @@ console.log(citasMensuales)
             )}
           </div>
             {/* Leyenda */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 place-items-center">
             {genero.map((entry, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div
