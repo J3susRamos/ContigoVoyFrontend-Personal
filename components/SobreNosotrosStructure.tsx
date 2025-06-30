@@ -89,6 +89,7 @@ export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
             <Image
               src='/AboutUs/nosotros-centro-psicologico-contigovoy-Manos-apoyándose.webp'
               alt="nosotros-centro-psicologico-contigovoy-Manos-apoyándose"
+              title="Manos apoyándose"
               fill
               className="mix-blend-soft-light object-cover object-center mask-horizontal-fade "    
             />
@@ -136,6 +137,7 @@ export default function SobreNosotrosStructure({ qs }: { qs: QuienesSomos[] }) {
             <Image
               src='/AboutUs/terapeutas-especializados-familia-feliz.webp'
               alt="terapeutas-especializados-familia-feliz"
+              title="Familia feliz"
               fill
               className="mix-blend-soft-light object-cover object-center  mask-horizontal-fade"    
             />

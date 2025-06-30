@@ -45,6 +45,7 @@ export default function ServicesStructure({
                 <Image
                   src={item.background}
                   alt={item.title + item.motto}
+                  title={item.title}
                   fill
                   className="mix-blend-multiply bg-cover mask-horizontal-fade "
                 />
@@ -65,6 +66,7 @@ export default function ServicesStructure({
             <Image
               src={item.bgup}
               alt={item.description}
+              title={item.title}
               fill
               className="object-cover object-center mask-all-fade"
             />
@@ -105,6 +107,7 @@ export default function ServicesStructure({
                                       title={card.title}
                                       src={card.icon}
                                       alt={card.text}
+                                      title={card.title}
                                       width={183}
                                       height={88}
                                       className="w-[140px] md:w-[183.27px] h-[68px] md:h-[88px] object-contain"
@@ -155,6 +158,7 @@ export default function ServicesStructure({
                           title={card.title}
                           src={card.icon}
                           alt={card.text}
+                          title={card.title}
                           fill
                           className="w-[130px] object-contain"
                         />
@@ -190,6 +194,7 @@ export default function ServicesStructure({
                           title={icono.title}
                           src={icono.iconImage}
                           alt={icono.text}
+                          title={icono.text}
                           fill
                           className="object-contain"
                         />
@@ -206,6 +211,7 @@ export default function ServicesStructure({
               <Image
                 fill
                 alt={item.tittleIcon}
+                title={item.title}
                 src={item.bgdown}
                 className="object-cover object-right mask-horizontal-fade"
               />
@@ -246,6 +252,7 @@ export default function ServicesStructure({
                                 title={icono.title}
                                 src={icono.iconImage}
                                 alt={icono.text}
+                                title={icono.text}
                                 width={80}
                                 height={80}
                                 className="w-20 h-20 object-contain"

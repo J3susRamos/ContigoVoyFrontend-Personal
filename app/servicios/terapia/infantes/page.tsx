@@ -61,30 +61,35 @@ const NinosTerapias: ServicesStructureProps[] = [
         title: "Salud Mental Infantil Contigo Voy Psicología Online",
         text: "Detecta y modifica patrones que afectan su desarrollo, promoviendo un crecimiento equilibrado.",
         icon: "/Services/ninos/therapy/cerebro.webp",
+        title: "Desarrollo emocional del infante",
       },
       {
         id: 2,
         title: "Relaciones Interpersonales en Infantes Contigo Voy Psicología Online",
         text: "Mejora la interacción, promoviendo respeto, colaboración y relaciones positivas.",
         icon: "/Services/ninos/therapy/charla.webp",
+        title: "Interacción con el infante",
       },
       {
         id: 3,
         title: "Ayuda emocional infantil Contigo Voy Psicología Online",
         text: "Ayuda a los niños a desarrollar una imagen positiva, promoviendo su felicidad y confianza.",
         icon: "/Services/ninos/therapy/positiva.webp",
+        title: "Imagen positiva del infante",
       },
       {
         id: 4,
         title: "Manejo de emociones en niños Contigo Voy Psicología Online",
         text: "Enseña a los niños a manejar sus emociones y enfrentar desafíos con resiliencia.",
         icon: "/Services/ninos/therapy/rompe.webp",
+        title: "Manejo de desafíos del infante",
       },
       {
         id: 5,
         title: "Herramientas para niños Contigo Voy Psicología Online",
         text: "Proporciona herramientas personalizadas para enfrentar dificultades y adaptarse asertivamente.",
         icon: "/Services/ninos/therapy/herramientas.webp",
+        title: "Herramientas del infante",
       },
     ],
     textfooter:
@@ -124,4 +129,4 @@ export default function Ninos() {
 
   return <ServicesStructure services={NinosTerapias} />
 
-  }
+}
