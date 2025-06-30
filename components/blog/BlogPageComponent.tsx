@@ -1,11 +1,11 @@
 "use client";
 import BlogAside from "./blogaside";
-import { ScrollShadow } from "@heroui/react";
 import BlogPreview from "./blogpreview";
 import { Authors, BlogPreviewData, Categoria } from "@/interface";
 import { useState } from "react";
 import { ArrowLeft, Search, Filter } from "lucide-react";
 import Image from "next/image";
+import "./styles/blogStyles.css";
 
 export default function BlogPageComponent({
   Datos,
@@ -221,7 +221,7 @@ export default function BlogPageComponent({
               {/* Article Content */}
               <div className="p-8 lg:p-12">
                 <div 
-                  className="prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
+                  className="blog-preview prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: selectedBlog.contenido }}
                 />
               </div>
