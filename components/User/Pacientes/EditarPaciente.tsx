@@ -17,9 +17,10 @@ import Image from "next/image";
 import { Plus } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function EditarPaciente({ id }: { id: string | null }) {
-
+  const router = useRouter();
  const [base64Image, setBase64Image] = useState<string | null>(null);
   const [country, setCountry] = useState<Country | null>(null);
   const [currentState, setCurrentState] = useState<City | null>(null);
@@ -160,26 +161,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
 
       if (response.ok) {
         showToast("success", "Paciente actualizado correctamente");
-        setFormData({
-          nombre: "",
-          apellidoPaterno: "",
-          apellidoMaterno: "",
-          DNI: "",
-          email: "",
-          imagen: "",
-          celular: "",
-          fecha_nacimiento: "",
-          genero: "",
-          estadoCivil: "",
-          ocupacion: "",
-          direccion: "",
-          departamento: "",
-          provincia: "",
-          pais: "",
-          antecedentesMedicos: "",
-          medicamentosPrescritos: "",
-        });
-        setBase64Image(null);
+        router.push('/user/pacientes/DetallePaciente/');
       } else {
         showToast("error", data.message || "Error al actualizar el paciente");
       }
