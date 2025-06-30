@@ -30,7 +30,6 @@ export default function ReservarComponents({
     // Filtro por nombre (search term)
     const fullName = `${psicologo.nombre} ${psicologo.apellido}`.toLowerCase();
     const pasaBusqueda = fullName.includes(searchTerm.toLowerCase());
-    console.log(Psicologos)
     // Solo incluir psicólogos que pasan ambos filtros
     return pasaFiltros && pasaBusqueda;
   });
