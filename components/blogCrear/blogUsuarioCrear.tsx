@@ -55,7 +55,7 @@ export const BlogById = async (id: number) => {
 export default function BlogUsuarioCrear() {
     const [categoria, setCategoria] = useState<Categoria[]>([]);
     const [tema, setTema] = useState("");
-    const [urls, setUrls] = useState<string[]>([]); // Array de URLs
+    const [urls, setUrls] = useState<string[]>([]); // Array de URL
     const [view, setView] = useState("crear");
     const [contenido, setContenido] = useState("");
     const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
@@ -109,6 +109,7 @@ export default function BlogUsuarioCrear() {
         };
         fetchUser();
     }, []);
+
     const handleImageUpload = useCallback(async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -116,81 +117,81 @@ export default function BlogUsuarioCrear() {
         if (!files || files.length === 0) return;
 
         // Verificar que no exceda el límite de 6 imágenes
-    const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
-    const newImageCount = currentImageCount + files.length;
+        const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+        const newImageCount = currentImageCount + files.length;
 
-    if (newImageCount > 6) {
-      showToast("error", `No puede agregar más de 6 imágenes. Actualmente tiene ${currentImageCount} imágenes.`);
-      return;
-    }
-
-    const newBase64Images: string[] = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-
-      //Validate file size (5MB limit)
-        if (file.size > 5 * 1024 * 1024) {
-            showToast("error", `La imagen ${file.name} es demasiado grande. Máximo 5MB.`);
-            continue;
+        if (newImageCount > 6) {
+            showToast("error", `No puede agregar más de 6 imágenes. Actualmente tiene ${currentImageCount} imágenes.`);
+            return;
         }
 
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            showToast("error", `${file.name} no es un archivo de imagen válido.`);
-            continue;
+        const newBase64Images: string[] = [];
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            //Validate file size (5MB limit)
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("error", `La imagen ${file.name} es demasiado grande. Máximo 5MB.`);
+                continue;
+            }
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showToast("error", `${file.name} no es un archivo de imagen válido.`);
+                continue;
+            }
+
+            try {
+                showToast("info", `Procesando imagen ${i + 1}/${files.length}...`);
+                // Convertir la imagen a WebP con compresión
+                const webpImage = await convertImageToWebP(file);
+
+                // Convertir la imagen WebP a Base64
+                const base64 = await convertToBase64(webpImage);
+
+                // Check the final base64 size
+                if (base64.length > 400000) {
+                    showToast("error", `La imagen ${file.name} procesada sigue siendo muy grande. Intenta con una imagen más pequeña.`);
+                    continue;
+                }
+
+                newBase64Images.push(base64);
+
+            } catch (error) {
+                console.error(`Error processing image ${file.name}:`, error);
+                showToast("error", `Error al procesar ${file.name}. Intenta nuevamente.`);
+            }
         }
 
-        try {
-            showToast("info", `Procesando imagen ${i + 1}/${files.length}...`);
-            // Convertir la imagen a WebP con compresión
-            const webpImage = await convertImageToWebP(file);
+        if (newBase64Images.length > 0) {
+            setBase64Images(prev => [...prev, ...newBase64Images]);
+            showToast("success", `${newBase64Images.length} imagen(es) cargada(s) correctamente.`);
+        }
+    }, [base64Images, urls]);
 
-        // Convertir la imagen WebP a Base64
-        const base64 = await convertToBase64(webpImage);
+    const removeImage = (index: number, type: 'base64' | 'url') => {
+        if (type === 'base64') {
+            setBase64Images(prev => prev.filter((_, i) => i !== index));
+        } else {
+            setUrls(prev => prev.filter((_, i) => i !== index));
+        }
+    };
 
-        // Check final base64 size
-        if (base64.length > 400000) {
-          showToast("error", `La imagen ${file.name} procesada sigue siendo muy grande. Intenta con una imagen más pequeña.`);
-          continue;
+    const addUrlImage = () => {
+        const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+
+        if (currentImageCount >= 6) {
+            showToast("error", "No puede agregar más de 6 imágenes.");
+            return;
         }
 
-        newBase64Images.push(base64);
+        setUrls(prev => [...prev, ""]);
+    };
 
-      } catch (error) {
-        console.error(`Error processing image ${file.name}:`, error);
-        showToast("error", `Error al procesar ${file.name}. Intenta nuevamente.`);
-      }
-    }
-
-    if (newBase64Images.length > 0) {
-      setBase64Images(prev => [...prev, ...newBase64Images]);
-      showToast("success", `${newBase64Images.length} imagen(es) cargada(s) correctamente.`);
-    }
-  };
-
-  const removeImage = (index: number, type: 'base64' | 'url') => {
-    if (type === 'base64') {
-      setBase64Images(prev => prev.filter((_, i) => i !== index));
-    } else {
-      setUrls(prev => prev.filter((_, i) => i !== index));
-    }
-  };
-
-  const addUrlImage = () => {
-    const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
-
-    if (currentImageCount >= 6) {
-      showToast("error", "No puede agregar más de 6 imágenes.");
-      return;
-    }
-
-    setUrls(prev => [...prev, ""]);
-  };
-
-  const updateUrlImage = (index: number, value: string) => {
-    setUrls(prev => prev.map((url, i) => i === index ? value : url));
-  };
+    const updateUrlImage = (index: number, value: string) => {
+        setUrls(prev => prev.map((url, i) => i === index ? value : url));
+    };
 
     const postNewCategoria = async () => {
         const cookies = parseCookies();
@@ -269,9 +270,11 @@ export default function BlogUsuarioCrear() {
             return false;
         }
 
-        // Validate image
-        if (!base64Image && !url.trim()) {
-            showToast("error", "Se requiere una imagen o URL.");
+        // Validate image - check if we have at least one image
+        const validUrls = urls.filter(url => url.trim() !== '' && url.startsWith('http'));
+        const totalImages = base64Images.length + validUrls.length;
+        if (totalImages === 0) {
+            showToast("error", "Se requiere al menos una imagen.");
             return false;
         }
 
@@ -323,16 +326,16 @@ export default function BlogUsuarioCrear() {
                 return;
             }
 
-            // Validate images - minimum 3, maximum 6
+            // Validate images - minimum 1, maximum 6
             const validUrls = urls.filter(url => url.trim() !== '' && url.startsWith('http'));
-    const totalImages = base64Images.length + validUrls.length;
-      if (totalImages < 1) {
+            const totalImages = base64Images.length + validUrls.length;
+            if (totalImages < 1) {
                 showToast("error", "Debe agregar al menos 1 imagen para crear el blog.");
-      return;
-    }
+                return;
+            }
 
-    if (totalImages > 6) {
-      showToast("error", "No puede agregar más de 6 imágenes.");
+            if (totalImages > 6) {
+                showToast("error", "No puede agregar más de 6 imágenes.");
                 return;
             }
 
@@ -343,7 +346,6 @@ export default function BlogUsuarioCrear() {
                     return;
                 }
 
-
                 if (!base64Images[i].startsWith('data:image/')) {
                     showToast("error", `Formato de imagen ${i + 1} inválido. Por favor selecciona una imagen válida.`);
                     return;
@@ -351,14 +353,15 @@ export default function BlogUsuarioCrear() {
             }
 
             // Validate URL format if using URLs
-    for (let i = 0; i < validUrls.length; i++) {
-            if (!validUrls[i].startsWith('http')) {
-                showToast("error", `La URL de la imagen ${i + 1} debe comenzar con http:// o https://`);
-                return;
-            }}
+            for (let i = 0; i < validUrls.length; i++) {
+                if (!validUrls[i].startsWith('http')) {
+                    showToast("error", `La URL de la imagen ${i + 1} debe comenzar con http:// o https://`);
+                    return;
+                }
+            }
 
-    // Combine all images
-    const allImages = [...base64Images, ...validUrls];
+            // Combine all images
+            const allImages = [...base64Images, ...validUrls];
 
             // Debug logging
             console.log("Current user:", user);
@@ -366,7 +369,7 @@ export default function BlogUsuarioCrear() {
             console.log("User idpsicologo:", user.idpsicologo);
             console.log("Original ID Psicologo from blog:", originalIdPsicologo);
             console.log("Editing blog ID:", editingBlogId);
-    console.log("Total images:", allImages.length);
+            console.log("Total images:", allImages.length);
 
             let categoriaId: number | null;
             if (selectedKey !== null) {
@@ -401,7 +404,7 @@ export default function BlogUsuarioCrear() {
 
             console.log("Final data to send:", {
                 ...dataToSend,
-                imagenes: `Array of ${allImages.length} images` // Log only count for brevity
+                imagenes: `Array of ${allImages.length} images` // Log only counts for brevity
             });
 
             // Add validation for required fields
@@ -498,7 +501,6 @@ export default function BlogUsuarioCrear() {
                     data: data
                 });
 
-
                 // Handle specific server validation messages
                 if (data.message) {
                     showToast("error", data.message);
@@ -533,26 +535,26 @@ export default function BlogUsuarioCrear() {
 
             setTema(blog.tema);
             // Handle multiple images
-    if (blog.imagenes && Array.isArray(blog.imagenes)) {
-      // Separate base64 images from URLs
-      const base64Imgs = blog.imagenes.filter((img: string) => img.startsWith('data:image/'));
-      const urlImgs = blog.imagenes.filter((img: string) => img.startsWith('http'));
+            if (blog.imagenes && Array.isArray(blog.imagenes)) {
+                // Separate base64 images from URLs
+                const base64Imgs = blog.imagenes.filter((img: string) => img.startsWith('data:image/'));
+                const urlImgs = blog.imagenes.filter((img: string) => img.startsWith('http'));
 
-      setBase64Images(base64Imgs);
-      setUrls(urlImgs);
-    } else if (blog.imagen) {
-            // Backwards compatibility for single image
-      if (blog.imagen.startsWith('data:image/')) {
-        setBase64Images([blog.imagen]);
-        setUrls([]);
-      } else {
-        setBase64Images([]);
-        setUrls([blog.imagen]);
-      }
-    } else {
-      setBase64Images([]);
-      setUrls([]);
-    }
+                setBase64Images(base64Imgs);
+                setUrls(urlImgs);
+            } else if (blog.imagen) {
+                // Backward compatibility for a single image
+                if (blog.imagen.startsWith('data:image/')) {
+                    setBase64Images([blog.imagen]);
+                    setUrls([]);
+                } else {
+                    setBase64Images([]);
+                    setUrls([blog.imagen]);
+                }
+            } else {
+                setBase64Images([]);
+                setUrls([]);
+            }
             setContenido(blog.contenido);
             setSelectedKey(blog.idCategoria.toString());
             setEditingBlogId(blog.id);
@@ -564,11 +566,11 @@ export default function BlogUsuarioCrear() {
 
     const resetForm = useCallback(() => {
         setTema("");
-        setUrl("");
         setContenido("");
         setSelectedKey(null);
         setValue("");
-        setBase64Image(null);
+        setBase64Images([]);
+        setUrls([]);
         setEditingBlogId(null);
         setOriginalIdPsicologo(null);
     }, []);
@@ -584,12 +586,12 @@ export default function BlogUsuarioCrear() {
                         onPress={() => {
                             setView("crear");
                             resetForm();
-              // Reset form
-              setTema("");
-              setContenido("");
-              setBase64Images([]);
-              setUrls([]);
-              setSelectedKey(null);
+                            // Reset form
+                            setTema("");
+                            setContenido("");
+                            setBase64Images([]);
+                            setUrls([]);
+                            setSelectedKey(null);
                         }}
                     >
                         Crear Blog
@@ -659,106 +661,109 @@ export default function BlogUsuarioCrear() {
                         </h1>
 
                         {/* Contador de imágenes */}
-            <div className="w-full text-center">              <span className={`text-sm font-medium ${
-                (base64Images.length + urls.filter(url => url.trim() !== '').length) >= 1 
-                  ? 'text-green-600' 
-                  : 'text-red-600'
-              }`}>
-                Imágenes agregadas: {base64Images.length + urls.filter(url => url.trim() !== '').length}/6
-              </span>
-            </div>
+                        <div className="w-full text-center">
+                            <span className={`text-sm font-medium ${
+                                (base64Images.length + urls.filter(url => url.trim() !== '').length) >= 1
+                                    ? 'text-green-600'
+                                    : 'text-red-600'
+                            }`}>
+                                Imágenes agregadas: {base64Images.length + urls.filter(url => url.trim() !== '').length}/6
+                            </span>
+                        </div>
 
-            {/* Sección de subida de múltiples imágenes */}
+                        {/* Sección de subida de múltiples imágenes */}
                         <div className="w-full flex flex-col gap-2">
                             {/* Boton de subir múltiples imágenes */}
                             <div
                                 className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
 
-                                    <div className="flex flex-col items-center">
-                                        <Plus width={40} height={40} strokeWidth={2} className="text-[#634AE2]"/>
-                                        <span className="text-[#634AE2] text-sm mt-2">Subir imágenes (máximo {6 - base64Images.length - urls.filter(url => url.trim() !== '').length})</span>
-                                    </div>
-
+                                <div className="flex flex-col items-center">
+                                    <Plus width={40} height={40} strokeWidth={2} className="text-[#634AE2]"/>
+                                    <span
+                                        className="text-[#634AE2] text-sm mt-2">Subir imágenes (máximo {6 - base64Images.length - urls.filter(url => url.trim() !== '').length})</span>
+                                </div>
 
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    multipleonChange={handleImageUpload}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"disabled={base64Images.length + urls.filter(url => url.trim() !== '').length >= 6}
+                                    multiple
+                                    onChange={handleImageUpload}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    disabled={base64Images.length + urls.filter(url => url.trim() !== '').length >= 6}
                                 />
                             </div>
 
                             {/* Mostrar imágenes base64 cargadas */}
-              {base64Images.length > 0 && (
-                <div className="grid grid-cols-2 gap-2">
-                  {base64Images.map((img, index) => (
-                            <div key={index} className="relative">
-                      <Image
-                        src={img}
-                        alt={`Imagen ${index + 1}`}
-                        width={150}
-                        height={100}
-                        className="w-full h-24 object-cover rounded-lg"
-                      />
-                      <button
-                        onClick={() => removeImage(index, 'base64')}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
-                      >
-                        ×
-                      </button>
-                                </div>
-                  ))}
-                            </div>)}
+                            {base64Images.length > 0 && (
+                                <div className="grid grid-cols-2 gap-2">
+                                    {base64Images.map((img, index) => (
+                                        <div key={index} className="relative">
+                                            <Image
+                                                src={img}
+                                                alt={`Imagen ${index + 1}`}
+                                                width={150}
+                                                height={100}
+                                                className="w-full h-24 object-cover rounded-lg"
+                                            />
+                                            <button
+                                                onClick={() => removeImage(index, 'base64')}
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>)}
 
                             {/* Botón para agregar URL */}
-              {(base64Images.length + urls.filter(url => url.trim() !== '').length) < 6 && (
-                <Button
-                  onPress={addUrlImage}
-                  className="bg-[#634AE2] text-white"
-                  size="sm"
-                >
-                  Agregar imagen por URL
-                </Button>
-              )}
+                            {(base64Images.length + urls.filter(url => url.trim() !== '').length) < 6 && (
+                                <Button
+                                    onPress={addUrlImage}
+                                    className="bg-[#634AE2] text-white"
+                                    size="sm"
+                                >
+                                    Agregar imagen por URL
+                                </Button>
+                            )}
 
-              {/* Inputs de URL */}
-              {urls.map((url, index) => (
-                <div key={index} className="flex gap-2 items-center">
-                            <Input
-                                placeholder={`URL de imagen ${index + 1}`}
-                                classNames={{
-                                    input: "!text-[#634AE2]",
-                                }}
-                                radius="full"
-                                height={43}
-                                value={url}
-                                onChange={(e) => updateUrlImage(index, e.target.value)}
+                            {/* Inputs de URL */}
+                            {urls.map((url, index) => (
+                                <div key={index} className="flex gap-2 items-center">
+                                    <Input
+                                        placeholder={`URL de imagen ${index + 1}`}
+                                        classNames={{
+                                            input: "!text-[#634AE2]",
+                                        }}
+                                        radius="full"
+                                        height={43}
+                                        value={url}
+                                        onChange={(e) => updateUrlImage(index, e.target.value)}
                                     />
-                  <button
-                    onClick={() => removeImage(index, 'url')}
-                    className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
+                                    <button
+                                        onClick={() => removeImage(index, 'url')}
+                                        className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
 
-              {/* Mostrar preview de URLs válidas */}
-              {urls.filter(url => url.trim() !== '' && url.startsWith('http')).length > 0 && (
-                <div className="grid grid-cols-2 gap-2">
-                  {urls.filter(url => url.trim() !== '' && url.startsWith('http')).map((url, index) => (
-                    <div key={index} className="relative">
-                      <Image
-                        src={url}
-                        alt={`URL Imagen ${index + 1}`}
-                        width={150}
-                        height={100}
-                        className="w-full h-24 object-cover rounded-lg"
-                        onError={() => showToast("error", `Error cargando imagen ${index + 1} desde URL`)}
-                                />
-                    </div>
-                  ))}
-                </div>
+                            {/* Mostrar preview de URLs válidas */}
+                            {urls.filter(url => url.trim() !== '' && url.startsWith('http')).length > 0 && (
+                                <div className="grid grid-cols-2 gap-2">
+                                    {urls.filter(url => url.trim() !== '' && url.startsWith('http')).map((url, index) => (
+                                        <div key={index} className="relative">
+                                            <Image
+                                                src={url}
+                                                alt={`URL Imagen ${index + 1}`}
+                                                width={150}
+                                                height={100}
+                                                className="w-full h-24 object-cover rounded-lg"
+                                                onError={() => showToast("error", `Error cargando imagen ${index + 1} desde URL`)}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
                             )}
                         </div>
                     </div>
