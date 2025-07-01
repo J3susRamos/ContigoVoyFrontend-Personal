@@ -153,7 +153,6 @@ const ListarCitas = ({
     [cookies]
   );
 
-
   const handleDelete = async (idCita: number) => {
     setIsDeleting(true);
     try {
@@ -190,9 +189,23 @@ const ListarCitas = ({
       setIsDeleting(false);
     }
   };
-
+  
   useEffect(() => {
-    handleGetCitas({filters: filters, paciente: filterValue});
+    const loadCitas = async () => {
+      try {
+        await handleGetCitas({ filters: filters, paciente: filterValue });
+      } catch (error) {
+        console.error("Error loading citas:", error);
+        setError("Error al cargar las citas");
+        showToastFunction("error", "Error al cargar las citas");
+      }
+    };
+
+    loadCitas().catch((error) => {
+      console.error("Unhandled error in loadCitas:", error);
+      setError("Error inesperado al cargar las citas");
+      showToastFunction("error", "Error inesperado al cargar las citas");
+    });
   }, [handleGetCitas, filterValue, filters]);
 
   if (error) {
@@ -212,20 +225,36 @@ const ListarCitas = ({
         onCloseAction={() => setShowFormCita(false)}
         onCitaCreatedAction={() => {
           setShowFormCita(false);
-          handleGetCitas({ showToast: false });
+          // Fix: properly handle the promise
+          handleGetCitas({ showToast: false }).catch((error) => {
+            console.error("Error refreshing citas after creation:", error);
+            showToastFunction("error", "Error al actualizar la lista de citas");
+          });
         }}
       />
       {citas.length > 0 ? (
         <>
           <TableCitas
             filteredCitas={citas}
-            onDeleteInit={(id) => setDeleteId(id)}
+            action={(id) => setDeleteId(id)}
           />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onNext={() => handleGetCitas({ page: currentPage + 1 })}
-            onPrevious={() => handleGetCitas({ page: currentPage - 1 })}
+            onNext={() => {
+              // Fix: properly handle the promise
+              handleGetCitas({ page: currentPage + 1 }).catch((error) => {
+                console.error("Error loading next page:", error);
+                showToastFunction("error", "Error al cargar la siguiente página");
+              });
+            }}
+            onPrevious={() => {
+              // Fix: properly handle the promise
+              handleGetCitas({ page: currentPage - 1 }).catch((error) => {
+                console.error("Error loading previous page:", error);
+                showToastFunction("error", "Error al cargar la página anterior");
+              });
+            }}
           />
         </>
       ) : (
@@ -249,6 +278,9 @@ const ListarCitas = ({
           if (deleteId) {
             handleDelete(deleteId).then((success) => {
               if (success) setDeleteId(null);
+            }).catch((error) => {
+              console.error("Error deleting cita:", error);
+              showToastFunction("error", "Error al eliminar la cita");
             });
           }
         }}

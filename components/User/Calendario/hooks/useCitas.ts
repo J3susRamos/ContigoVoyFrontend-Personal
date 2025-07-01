@@ -77,7 +77,9 @@ export function useCitas() {
                 setCitas(formattedCitas);
                 showToast("success", "Citas obtenidas correctamente");
             } else {
-                throw new Error("Formato de respuesta inválido");
+                console.error("Invalid response format:", data);
+                setError("Formato de respuesta inválido");
+                showToast("error", "Error al procesar los datos recibidos.");
             }
         } catch (error) {
             console.error(error);
@@ -96,7 +98,11 @@ export function useCitas() {
 
     useEffect(() => {
         if (isAuthorized === true) {
-            fetchCitas();
+            fetchCitas().catch((error) => {
+                console.error("Error in fetchCitas useEffect:", error);
+                setError("Error al cargar las citas");
+                showToast("error", "Error al cargar las citas");
+            });
         }
     }, [isAuthorized, fetchCitas]);
 
