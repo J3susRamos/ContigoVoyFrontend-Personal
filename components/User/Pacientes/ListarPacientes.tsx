@@ -11,7 +11,7 @@ import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
 import showToastFunction from "../../ToastStyle";
 import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
-import EmptyTable from "@/components/ui/EmptyTable";
+import EmptyTable from "@/components/ui/Table/EmptyTable";
 import Pagination from "@/components/ui/Pagination";
 
 interface Props {

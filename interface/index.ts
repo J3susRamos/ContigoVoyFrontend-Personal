@@ -1,4 +1,4 @@
-import { GenericFilters } from "@/components/ui/EmptyTable";
+import { GenericFilters } from "@/components/ui/Table/EmptyTable";
 import { DateValue } from "@heroui/react";
 import React from "react";
 
@@ -135,13 +135,11 @@ export interface Contact {
 }
 
 export interface BlogApi {
-
   idCategoria: number | null,
   tema: string,
   contenido: string,
-  imagen: string,
+  imagenes: string[], // Array de imágenes
   idPsicologo: number | null;
-
 }
 
 export interface BlogApiGEt {
@@ -149,7 +147,8 @@ export interface BlogApiGEt {
   categoria: string,
   tema: string,
   contenido: string,
-  imagen: string,
+  imagen: string, // Mantener para compatibilidad
+  imagenes?: string[], // Nuevo campo opcional
   idPsicologo: number,
 }
 //BLogs Preview Data
@@ -157,7 +156,8 @@ export interface BlogPreviewData {
   idBlog: number,
   tema: string,
   contenido: string,
-  imagen: string,
+  imagen: string, // Mantener para compatibilidad
+  imagenes?: string[], // Nuevo campo opcional
   psicologo: string,
   psicologApellido: string,
   psicologoImagenId: string,
