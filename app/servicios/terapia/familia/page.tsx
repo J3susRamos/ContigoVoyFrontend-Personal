@@ -53,26 +53,26 @@ const FamilyTerapias: ServicesStructureProps[] = [
                 id: 1,
                 text: "Fomenta una comunicación más abierta y respetuosa.",
                 icon: "/Services/family/therapy/respeto.webp",
-            },
+            title: "Mejora de la comunicación",},
             {
                 id: 2,
                 text: "Ayuda a resolver conflictos de manera constructiva.",
-                icon: "/Services/family/therapy/resolver.webp",
+                icon: "/Services/family/therapy/resolver.webp",title: "Resolución de conflictos",
             },
             {
                 id: 3,
                 text: "Fortalece los lazos afectivos entre los miembros de la familia.",
                 icon: "/Services/family/therapy/lazos.webp",
-            },
+            title: "Fortalecimiento de lazos",},
             {
                 id: 4,
                 text: "Promueve un ambiente emocionalmente seguro y saludable.",
-                icon: "/Services/family/therapy/ambiente.webp",
+                icon: "/Services/family/therapy/ambiente.webp",title: "Ambiente saludable familiar",
             },
             {
                 id: 5,
                 text: "Facilita la adaptación a cambios importantes en la vida familiar.",
-                icon: "/Services/family/therapy/adaptacion.webp",
+                icon: "/Services/family/therapy/adaptacion.webp",title: "Adaptación a cambios",
             },
         ],
         textfooter:

@@ -47,8 +47,8 @@ const fetchEstadisticasEdad = async () => {
 
 // --- NUEVO: función para lugares usando localStorage ---
 const fetchEstadisticasLugar = async () => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) throw new Error("No autenticado");
+    const cookies = parseCookies();
+    const token = cookies.session;
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes/estadisticas/lugar`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -72,12 +72,8 @@ export default function Clients() {
         {name: "45 - 54", Total: 0},
     ]);
     // --- NUEVO: estado para lugares ---
-    const [lugar, setLugar] = useState([
-        {name: "Surco", Total: 0},
-        {name: "Jesús María", Total: 0},
-        {name: "Surquillo", Total: 0},
-        {name: "Barranco", Total: 0},
-        {name: "San Borja", Total: 0},
+    const [lugar, setLugar] = useState<
+        {name: string; Total: number }[]>([
     ]);
 
     useEffect(() => {
@@ -103,21 +99,22 @@ export default function Clients() {
         });
     }, []);
 
-    useEffect(() => {
-        const token = localStorage.getItem('auth_token');
-        if (!token) {
-            return;
-        }
-        fetchEstadisticasLugar().then((result) => {
-            setLugar([
-                {name: "Surco", Total: result["Surco"] ?? 0},
-                {name: LOCATION_KEYS.JESUS_MARIA, Total: result[LOCATION_KEYS.JESUS_MARIA] ?? 0},
-                {name: "Surquillo", Total: result["Surquillo"] ?? 0},
-                {name: "Barranco", Total: result["Barranco"] ?? 0},
-                {name: "San Borja", Total: result["San Borja"] ?? 0},
-            ]);
-        });
-    }, []);
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      return;
+    }
+    fetchEstadisticasLugar().then((result) => {
+      const lugares = Object.entries(result)
+        .map(([key, value]) => ({
+          name: key,
+          Total: typeof value === "number" ? value : Number(value) || 0,
+        }))
+        .sort((a, b) => b.Total - a.Total); // Orden descendente por Total
+
+      setLugar(lugares);
+    });
+  }, []);
 
     const COLORS = ["#7777FF", "#66A3FF", "#B3B3FF"];
 

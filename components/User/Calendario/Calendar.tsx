@@ -10,9 +10,12 @@ import CalendarModal from "./modal/CalendarModal";
 import {useCalendarModal} from "./hooks/useCalendarModal";
 import {CalendarioProps} from "./types/calendar.types";
 import {eventStyleGetter} from "./utils/calendar.utils";
-import CustomEvent from "./CustomEvent";
+import CustomEvent from "./custom/CustomEvent";
 import {CALENDAR_CONFIG, CALENDAR_MESSAGES} from "./config/calendar.config";
 import {useCalendarEvents} from "./hooks/useCalendarEvents";
+import CustomMonthHeader from "./custom/CustomMonthHeader";
+import CustomWeekHeader from "./custom/CustomWeekHeader";
+import CustomDayHeader from "./custom/CustomDayHeader";
 
 export default function Calendario({citasPorDia, vista, date}: CalendarioProps) {
     const {selectedCita, isModalOpen, handleEventClick, closeModal} = useCalendarModal();
@@ -22,17 +25,12 @@ export default function Calendario({citasPorDia, vista, date}: CalendarioProps) 
 
     return (
         <>
-            <div className="mx-auto mt-3" style={{height: "90vh", width: "80vw"}}>
+            <div className=" mt-3" style={{height: "90vh", width: "100%"}}>
                 {vista === "day" && (
-                    <div className="text-center text-2xl font-bold mb-2 text-primary">
-                        {date.toLocaleDateString("es-ES", {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                        })}
-                    </div>
-                )}
+                    <CustomDayHeader date=
+                        {date} />
+                            )}
+
                 <Calendar
                     messages={CALENDAR_MESSAGES}
                     className="calendar-component bg-background dark:bg-background text-primary dark:text-primary-foreground"
@@ -42,7 +40,13 @@ export default function Calendario({citasPorDia, vista, date}: CalendarioProps) 
                     endAccessor="end"
                     titleAccessor="title"
                     components={{
-                        event: CustomEvent
+                        event: CustomEvent,
+            month: {
+              header: CustomMonthHeader,
+            },
+            week: {
+              header: CustomWeekHeader,
+            },
                     }}
                     eventPropGetter={eventStyleGetter}
                     onSelectEvent={handleEventClick}

@@ -9,14 +9,14 @@ export const metadata: Metadata = {
 };
 
 
- const FamilyTerapias:ServicesStructureProps[] =[{
+const FamilyTerapias: ServicesStructureProps[] = [{
   title: "Terapia empresarial",
   edad: "",
   motto:
     "¿Tu empresa enfrenta altos niveles de estrés y conflictos internos? Impulsa el bienestar de tu equipo con nuestra terapia empresarial",
   background: "/Services/business/buisness.webp",
-  bgdown:"/Services/business/bg2.webp",
-  bgup:"/Services/business/bgtiny.webp",
+  bgdown: "/Services/business/bg2.webp",
+  bgup: "/Services/business/bgtiny.webp",
   description:
     "Ayudamos a equipos y líderes a gestionar el estrés, mejorar la comunicación y fortalecer un ambiente laboral saludable. A través de sesiones económicas y personalizadas, promovemos un entorno más equilibrado y productivo para todos.",
   tittleIcon:
@@ -54,33 +54,38 @@ export const metadata: Metadata = {
       id: 1,
       text: "Colaboradores con menos índices de estrés",
       icon: "/Services/business/colaboradores.webp",
+      title: "Menos estrés laboral",
     },
     {
       id: 2,
       text: "Incremento en la productividad",
       icon: "/Services/business/incremento.webp",
+      title: "Mayor productividad",
     },
     {
       id: 3,
       text: "Mejora en el clima laboral",
       icon: "/Services/business/clima.webp",
+      title: "Clima laboral positivo",
     },
     {
       id: 4,
       text: "Colaboradores con mayor gestión emocional",
       icon: "/Services/business/mayor.webp",
+      title: "Mejor gestión emocional",
     },
     {
       id: 5,
       text: "Disminución de la rotación de personal",
       icon: "/Services/business/disminucion.webp",
+      title: "Mayor estabilidad personal",
     },
   ],
   textfooter:
     "¿Te atreves a revolucionar tu ambiente laboral y motivar a tu equipo como nunca antes?",
-    textfootermobile:
+  textfootermobile:
     "¿Te atreves a revolucionar tu ambiente laboral y motivar a tu equipo como <br/>nunca antes?",
-  }
+}
 
 ]
 
@@ -89,4 +94,4 @@ export default function Home() {
 
   return <ServicesStructure services={FamilyTerapias} />
 
-  }
+}

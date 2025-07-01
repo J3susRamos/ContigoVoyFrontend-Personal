@@ -58,7 +58,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
 
 
     return (
-        <div className="flex w-full z-40">
+        <div className="flex w-full">
             <div className="bg-[#6265f4] w-full h-[8vh] flex flex-row justify-start items-center px-4">
                 <div className="flex flex-row gap-4 w-full items-center pl-12">
                     {/* Icono de filtro */}

@@ -4,7 +4,6 @@ import {useState} from "react";
 import CerrarSesion from "@/components/CerrarSesion";
 import {View} from "react-big-calendar";
 import {Button, useDisclosure} from "@heroui/react";
-import {getLocalTimeZone, today} from "@internationalized/date";
 import Week from "./SelectorDate";
 import Calendario from "./Calendar";
 import {Citas} from "@/interface";
@@ -35,13 +34,13 @@ export default function CalendarioMain({citas}: CalProps) {
         else setCurrentDate(addDays(currentDate, 1));
     };
 
-    const Fecha = today(getLocalTimeZone());
 
-    const nombreMes = new Date(Fecha.year, Fecha.month - 1).toLocaleString(
+
+    const nombreMes = currentDate.toLocaleString(
         "es-ES",
         {
-            month: "long",
-        }
+            month: "long"});
+        const anio = currentDate.getFullYear(
     );
 
     const cambiarVista = (vista: string) => {
@@ -67,22 +66,53 @@ export default function CalendarioMain({citas}: CalProps) {
 
     return (
         <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
-            <div className="flex justify-between w-full mt-10 mb-6">
-                <div className="flex flex-col md:flex-row justify-evenly space-x-5">
-                    <h1 className="flex items-center font-bold text-[32px] leading-[40px] ml-11 text-primary dark:text-primary-foreground">
+            {/* Header principal */}
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
+        {/* Título y botón juntos */}
+                <div className="flex flex-col md:flex-row items-center gap-4">
+                    <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-primary dark:text-primary-foreground text-center md:text-left">
                         Calendario de citas
-                    </h1>
+                    </h1><div className="">
                     <Button
                         onPress={onOpen}
-                        className="bg-primary dark:bg-primary text-primary-foreground rounded-full px-4 font-light"
+                        className="bg-primary dark:bg-primary text-primary-foreground rounded-full px-6 font-light mt-2 md:mt-0"
                     >
                         Nueva cita
                     </Button>
-                </div>
+                </div></div>
+        {/* Otros controles a la derecha */}
+        <div className="flex items-center gap-4 justify-center md:justify-end">
+          {/* Aquí puedes poner el switch de tema, avatar, etc */}
                 <CerrarSesion/>
             </div>
-            <div className="w-full h-16 bg-primary dark:bg-primary items-center justify-start flex px-8">
-                <div className="flex gap-2 items-center w-full max-w-[530px]">
+            </div>
+      {/* Barra de navegación */}
+      <div className="w-full h-auto md:h-16 bg-primary dark:bg-primary items-center justify-start flex flex-col md:flex-row px-2 md:px-8 py-4 md:py-0 gap-2 md:gap-0">
+        {/* Título y navegación en mobile */}
+                <div className="flex w-full items-center justify-center md:hidden mb-2">
+          <Button
+            isIconOnly
+            size="sm"
+            className="bg-transparent hover:bg-primary-foreground"
+            onPress={goToPrev}
+          >
+            <ChevronLeft className="w-6 h-6 text-white" />
+          </Button>
+          <span className="flex-1 text-center text-primary-foreground font-semibold text-lg">
+            {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {anio}
+          </span>
+          <Button
+            isIconOnly
+            size="sm"
+            className="bg-transparent hover:bg-primary-foreground"
+            onPress={goToNext}
+          >
+            <ChevronRight className="w-6 h-6 text-white" />
+          </Button>
+        </div>
+        <div className="flex ">
+          {/* Navegación en desktop */}
+          <div className="hidden md:flex gap-2 items-center w-full max-w-full md:max-w-[230px] justify-center md:justify-start">
           <span
               className="w-10 h-10 p-0 shadow-lg border-0 flex items-center justify-center"
               onClick={goToPrev}
@@ -96,16 +126,19 @@ export default function CalendarioMain({citas}: CalProps) {
                     >
             <ChevronRight className="w-5 h-5 text-white"/>
           </span>
-                    <Button
+                    </div>
+          {/* Botones de navegación de vista */}
+          <div className="flex gap-2 items-center w-full max-w-full md:max-w-[730px] justify-center md:justify-start mt-2 md:mt-0">
+            <Button
                         radius="full"
-                        className={`text-[16px] leading-[20px] border-4 font-bold bg-transparent border-background text-background dark:text-primary-foreground`}
+                        className="text-[15px] md:text-[16px] leading-[20px] border-4 font-bold bg-transparent border border-background text-background dark:text-primary-foreground font-light"
                         onPress={goToToday}
                     >
                         Hoy
                     </Button>
                     <Button
                         radius="full"
-                        className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario"
+                        className={`hidden text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario"
                             ? "text-primary dark:text-primary bg-background dark:bg-background"
                             : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
                         }`}
@@ -115,7 +148,7 @@ export default function CalendarioMain({citas}: CalProps) {
                     </Button>
                     <Button
                         radius="full"
-                        className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "horarios"
+                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "horarios"
                             ? "text-primary dark:text-primary bg-background dark:bg-background"
                             : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
                         }`}
@@ -124,13 +157,15 @@ export default function CalendarioMain({citas}: CalProps) {
                         Mis Horarios
                     </Button>
                 </div>
-                <div className="text-primary-foreground font-semibold text-2xl hidden md:block mx-auto">
-                    {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {Fecha.year}
                 </div>
-                <div className="flex gap-2 items-center w-full max-w-[530px] justify-end">
+        {/* Título en desktop */}
+        <div className="text-primary-foreground font-semibold text-lg md:text-2xl mx-auto hidden md:block">
+                    {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {currentDate.getFullYear()}
+                </div>{/* Botones de cambio de vista */}
+                <div className="flex gap-2 items-center w-full max-w-full md:max-w-[530px] justify-center md:justify-end mt-2 md:mt-0">
                     <Button
                         radius="full"
-                        className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "month"
+                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "month"
                             ? "text-primary dark:text-primary bg-background dark:bg-background"
                             : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
                         }`}
@@ -140,7 +175,7 @@ export default function CalendarioMain({citas}: CalProps) {
                     </Button>
                     <Button
                         radius="full"
-                        className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "week"
+                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "week"
                             ? "text-primary dark:text-primary bg-background dark:bg-background"
                             : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
                         }`}
@@ -150,7 +185,7 @@ export default function CalendarioMain({citas}: CalProps) {
                     </Button>
                     <Button
                         radius="full"
-                        className={`text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "day"
+                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "day"
                             ? "text-primary dark:text-primary bg-background dark:bg-background"
                             : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
                         }`}
@@ -161,8 +196,10 @@ export default function CalendarioMain({citas}: CalProps) {
                 </div>
             </div>
 
-            <div className="bg-[#f8f8ff] dark:bg-background">
-                {vistaActual === "horarios" ? <Week/> :
+            <div className="bg-[#f8f8ff] dark:bg-background ">
+                {vistaActual === "horarios"
+          ? <Week/>
+          :
                     <Calendario vista={view} citasPorDia={citasPorDia} date={currentDate}/>}
             </div>
 

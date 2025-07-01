@@ -2,9 +2,10 @@
 import BlogAside from "./blogaside";
 import BlogPreview from "./blogpreview";
 import {Authors, BlogPreviewData, Categoria} from "@/interface";
-import {useState} from "react";
-import {ArrowLeft, Search, Filter} from "lucide-react";
+import {useState, useEffect, useCallback} from "react";
+import {ArrowLeft, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import "./styles/blogStyles.css";
 
 export default function BlogPageComponent({
                                               Datos,
@@ -20,7 +21,90 @@ export default function BlogPageComponent({
     const [activeAuthor, setActiveAuthor] = useState<number | null>(null);
     const [selectedBlog, setSelectedBlog] = useState<BlogPreviewData | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [showFilters, setShowFilters] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);// Estados para el carrusel
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isCarouselPlaying, setIsCarouselPlaying] = useState(true);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [modalImageIndex, setModalImageIndex] = useState(0);
+  // Carrusel automático
+  useEffect(() => {
+    if (!selectedBlog?.imagenes || selectedBlog.imagenes.length <= 1 || !isCarouselPlaying) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) =>
+        prev === selectedBlog.imagenes!.length - 1 ? 0 : prev + 1
+      );
+    }, 4000); // Cambia cada 4 segundos
+
+    return () => clearInterval(interval);
+  }, [selectedBlog, isCarouselPlaying]);  // Manejo de teclado para el modal
+  useEffect(() => {
+    if (!showImageModal) return;
+
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowImageModal(false);
+        setIsCarouselPlaying(true);
+      } else if (e.key === 'ArrowLeft' && selectedBlog?.imagenes) {
+        setModalImageIndex((prev) =>
+          prev === 0 ? selectedBlog.imagenes!.length - 1 : prev - 1
+        );
+      } else if (e.key === 'ArrowRight' && selectedBlog?.imagenes) {
+        setModalImageIndex((prev) =>
+          prev === selectedBlog.imagenes!.length - 1 ? 0 : prev + 1
+        );
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [showImageModal, selectedBlog]);
+
+  // Funciones del carrusel
+  const nextImage = () => {
+    if (!selectedBlog?.imagenes) return;
+    setCurrentImageIndex((prev) =>
+      prev === selectedBlog.imagenes!.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevImage = () => {
+    if (!selectedBlog?.imagenes) return;
+    setCurrentImageIndex((prev) =>
+      prev === 0 ? selectedBlog.imagenes!.length - 1 : prev - 1
+    );
+  };
+
+  const goToImage = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+  const toggleCarousel = () => {
+    setIsCarouselPlaying(!isCarouselPlaying);
+  };  // Funciones del modal con useCallback para optimización
+  const openImageModal = (index: number) => {
+    setModalImageIndex(index);
+    setShowImageModal(true);
+    setIsCarouselPlaying(false); // Pausar carrusel cuando se abre modal
+  };
+
+  const closeImageModal = useCallback(() => {
+    setShowImageModal(false);
+    setIsCarouselPlaying(true); // Reanudar carrusel cuando se cierra modal
+  }, []);
+
+  const nextModalImage = useCallback(() => {
+    if (!selectedBlog?.imagenes) return;
+    setModalImageIndex((prev) =>
+      prev === selectedBlog.imagenes!.length - 1 ? 0 : prev + 1
+    );
+  }, [selectedBlog?.imagenes]);
+
+  const prevModalImage = useCallback(() => {
+    if (!selectedBlog?.imagenes) return;
+    setModalImageIndex((prev) =>
+      prev === 0 ? selectedBlog.imagenes!.length - 1 : prev - 1
+    );
+  }, [selectedBlog?.imagenes]);
 
     // Función para aplicar filtros
     const applyFilters = (search = searchTerm, categoryId = activeCategory, authorId = activeAuthor) => {
@@ -75,7 +159,8 @@ export default function BlogPageComponent({
     };
 
     const handleSelectBlog = (blog: BlogPreviewData) => {
-        setSelectedBlog(blog);
+        setSelectedBlog(blog);setCurrentImageIndex(0); // Resetear carrusel al seleccionar nuevo blog
+    setIsCarouselPlaying(true); // Activar carrusel automático
     };
     return (
         <div
@@ -214,23 +299,121 @@ export default function BlogPageComponent({
                                 <h1 className="text-2xl lg:text-5xl font-bold leading-tight">
                                     {selectedBlog.tema}
                                 </h1>
-                            </div>
+                            </div>              {/* Article Image(s) - Carrusel */}
+              <div className="relative overflow-hidden">
+                {selectedBlog.imagenes && selectedBlog.imagenes.length > 1 ? (
+                  // Carrusel de múltiples imágenes
+                  <div className="relative h-80 lg:h-[500px] overflow-hidden">
+                    {/* Imagen actual */}
+                    <div className="relative h-full">
+                      <Image
+                        src={selectedBlog.imagenes[currentImageIndex]}
+                        alt={`Imagen ${currentImageIndex + 1} de ${selectedBlog.tema}`}
+                        title={selectedBlog.tema}
+                        fill
+                        className="object-contain bg-gray-100 dark:bg-gray-800 transition-opacity duration-500"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                        priority={currentImageIndex === 0}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+                    </div>
 
-                            {/* Article Image */}
-                            <div className="relative h-64 lg:h-96 overflow-hidden">
+                    {/* Controles del carrusel */}
+                    <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                      {/* Botón anterior */}
+                      <button
+                        onClick={prevImage}
+                        className="bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-110"
+                      >
+                        <ChevronLeft className="w-7 h-7" />
+                      </button>
+
+                      {/* Botón siguiente */}
+                      <button
+                        onClick={nextImage}
+                        className="bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-110"
+                      >
+                        <ChevronRight className="w-7 h-7" />
+                      </button>
+                    </div>
+
+                            {/* Indicadores de página */}
+                    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
+                      {selectedBlog.imagenes.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => goToImage(index)}
+                          className={`transition-all duration-300 ${
+                            index === currentImageIndex 
+                              ? 'w-4 h-4 bg-white scale-110 shadow-lg' 
+                              : 'w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105'
+                          } rounded-full backdrop-blur-sm`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Control de play/pause */}
+                    <div className="absolute top-6 right-6">
+                      <button
+                        onClick={toggleCarousel}
+                        className="bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-110"
+                        title={isCarouselPlaying ? 'Pausar carrusel' : 'Reproducir carrusel'}
+                      >
+                        {isCarouselPlaying ? (
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <div className="w-1.5 h-4 bg-white mr-1"></div>
+                            <div className="w-1.5 h-4 bg-white"></div>
+                          </div>
+                        ) : (
+                          <div className="w-5 h-5 flex items-center justify-center">
+                            <div className="w-0 h-0 border-l-[8px] border-l-white border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
+                          </div>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Contador de imágenes */}
+                    <div className="absolute top-6 left-6 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm shadow-lg">
+                      {currentImageIndex + 1} de {selectedBlog.imagenes.length}
+                    </div>                    {/* Botón para ver imagen completa */}
+                    <div className="absolute bottom-6 right-6">
+                      <button
+                        onClick={() => openImageModal(currentImageIndex)}
+                        className="bg-black/60 hover:bg-black/80 text-white rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl"
+                      >
+                        Ver completa
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  // Imagen única (compatibilidad hacia atrás)
+                            <div className="relative h-80 lg:h-[500px] overflow-hidden">
                                 <Image
-                                    src={selectedBlog.imagen}
-                                    alt={selectedBlog.tema}
+                                    src={selectedBlog.imagenes?.[0] ||selectedBlog.imagen}
+                                    alt={`Imagen de ${selectedBlog.tema}`}
+                      title={selectedBlog.tema}
                                     fill
-                                    className="object-cover"
+                                    className="object-contain bg-gray-100 dark:bg-gray-800"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+                      priority
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"/>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"/>{/* Botón para ver imagen completa */}
+                    <div className="absolute bottom-6 right-6">
+                      <button
+                        onClick={() => openImageModal(0)}
+                        className="bg-black/60 hover:bg-black/80 text-white rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl"
+                      >
+                        Ver completa
+                      </button>
+                    </div>
+                  </div>
+                )}
                             </div>
 
                             {/* Article Content */}
                             <div className="p-8 lg:p-12">
                                 <div
-                                    className="prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
+                                    className="blog-preview prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
                                     dangerouslySetInnerHTML={{__html: selectedBlog.contenido}}
                                 />
                             </div>
@@ -288,9 +471,90 @@ export default function BlogPageComponent({
                                 </div>
                             )}
                         </div>
-                    </div>
-                )}
+                    </div>)}
+                </div>
+
+      {/* Modal para ver imagen completa */}
+      {showImageModal && selectedBlog?.imagenes && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+          {/* Contenido del modal */}
+          <div className="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
+            {/* Imagen */}
+            <div className="relative w-full h-full flex items-center justify-center">
+              <Image
+                src={selectedBlog.imagenes[modalImageIndex]}
+                alt={`Imagen ${modalImageIndex + 1} de ${selectedBlog.tema}`}
+                fill
+                className="object-contain"
+                sizes="100vw"
+                priority
+              />
             </div>
+
+            {/* Botón cerrar */}
+            <button
+              onClick={closeImageModal}
+              className="absolute top-6 right-6 bg-black/60 hover:bg-red-600/80 text-white rounded-full p-3 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl z-10"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Controles del modal (solo si hay múltiples imágenes) */}
+            {selectedBlog.imagenes.length > 1 && (
+              <>
+                {/* Botón anterior */}
+                <button
+                  onClick={prevModalImage}
+                  className="absolute left-6 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-4 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl z-10"
+                >
+                  <ChevronLeft className="w-8 h-8" />
+                </button>
+
+                {/* Botón siguiente */}
+                <button
+                  onClick={nextModalImage}
+                  className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white rounded-full p-4 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl z-10"
+                >
+                  <ChevronRight className="w-8 h-8" />
+                </button>
+
+                {/* Contador */}
+                <div className="absolute top-6 left-6 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm shadow-lg z-10">
+                  {modalImageIndex + 1} de {selectedBlog.imagenes.length}
+                </div>
+
+                {/* Indicadores de página */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
+                  {selectedBlog.imagenes.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setModalImageIndex(index)}
+                      className={`transition-all duration-300 ${
+                        index === modalImageIndex 
+                          ? 'w-4 h-4 bg-white scale-110 shadow-lg' 
+                          : 'w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105'
+                      } rounded-full backdrop-blur-sm`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Información de la imagen */}
+            <div className="absolute bottom-6 right-6 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm shadow-lg z-10">
+              Clic fuera para cerrar
+            </div>
+          </div>
+
+          {/* Overlay para cerrar */}
+          <div
+            className="absolute inset-0 -z-10"
+            onClick={closeImageModal}
+          />
+        </div>
+      )}
         </div>
     );
 }

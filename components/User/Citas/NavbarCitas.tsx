@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, [filters, menuOpen]);
 
   return (
-    <div className="flex w-full z-40">
+    <div className="flex w-full">
       <div className="bg-[#6265f4] w-full h-[8vh] flex justify-start items-center px-4">
         <div className="flex gap-4 w-full items-center pl-12">
           <FilterButton menuOpen={menuOpen} setMenuOpen={setMenuOpen}>

@@ -55,7 +55,7 @@ export const BlogById = async (id: number) => {
 export default function BlogUsuarioCrear() {
     const [categoria, setCategoria] = useState<Categoria[]>([]);
     const [tema, setTema] = useState("");
-    const [url, setUrl] = useState("");
+    const [urls, setUrls] = useState<string[]>([]); // Array de URLs
     const [view, setView] = useState("crear");
     const [contenido, setContenido] = useState("");
     const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
@@ -65,7 +65,7 @@ export default function BlogUsuarioCrear() {
     const [originalIdPsicologo, setOriginalIdPsicologo] = useState<number | null>(
         null
     );
-    const [base64Image, setBase64Image] = useState<string | null>(null);
+    const [base64Images, setBase64Images] = useState<string[]>([]); // Array de imágenes base64
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -112,44 +112,85 @@ export default function BlogUsuarioCrear() {
     const handleImageUpload = useCallback(async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
 
-        // Validate file size (5MB limit)
+        // Verificar que no exceda el límite de 6 imágenes
+    const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+    const newImageCount = currentImageCount + files.length;
+
+    if (newImageCount > 6) {
+      showToast("error", `No puede agregar más de 6 imágenes. Actualmente tiene ${currentImageCount} imágenes.`);
+      return;
+    }
+
+    const newBase64Images: string[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      //Validate file size (5MB limit)
         if (file.size > 5 * 1024 * 1024) {
-            showToast("error", "La imagen es demasiado grande. Máximo 5MB.");
-            return;
+            showToast("error", `La imagen ${file.name} es demasiado grande. Máximo 5MB.`);
+            continue;
         }
 
         // Validate file type
         if (!file.type.startsWith('image/')) {
-            showToast("error", "Por favor selecciona un archivo de imagen válido.");
-            return;
+            showToast("error", `${file.name} no es un archivo de imagen válido.`);
+            continue;
         }
 
         try {
-            showToast("info", "Procesando imagen...");
+            showToast("info", `Procesando imagen ${i + 1}/${files.length}...`);
             // Convertir la imagen a WebP con compresión
-            const webpImage = await convertImageToWebP(file); // La función ya tiene 80% quality por defecto
+            const webpImage = await convertImageToWebP(file);
 
-            // Convertir la imagen WebP a Base64
-            const base64 = await convertToBase64(webpImage);
+        // Convertir la imagen WebP a Base64
+        const base64 = await convertToBase64(webpImage);
 
-            // Check the final base64 size
-            if (base64.length > 400000) { // 400KB limit for base64
-                showToast("error", "La imagen procesada sigue siendo muy grande. Intenta con una imagen más pequeña.");
-                return;
-            }
-
-            setBase64Image(base64);
-            setUrl(""); // Clear URL input when uploading an image
-            showToast("success", "Imagen cargada correctamente.");
-
-        } catch (error) {
-            console.error("Error processing image:", error);
-            showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
+        // Check final base64 size
+        if (base64.length > 400000) {
+          showToast("error", `La imagen ${file.name} procesada sigue siendo muy grande. Intenta con una imagen más pequeña.`);
+          continue;
         }
-    }, []);
+
+        newBase64Images.push(base64);
+
+      } catch (error) {
+        console.error(`Error processing image ${file.name}:`, error);
+        showToast("error", `Error al procesar ${file.name}. Intenta nuevamente.`);
+      }
+    }
+
+    if (newBase64Images.length > 0) {
+      setBase64Images(prev => [...prev, ...newBase64Images]);
+      showToast("success", `${newBase64Images.length} imagen(es) cargada(s) correctamente.`);
+    }
+  };
+
+  const removeImage = (index: number, type: 'base64' | 'url') => {
+    if (type === 'base64') {
+      setBase64Images(prev => prev.filter((_, i) => i !== index));
+    } else {
+      setUrls(prev => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const addUrlImage = () => {
+    const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+
+    if (currentImageCount >= 6) {
+      showToast("error", "No puede agregar más de 6 imágenes.");
+      return;
+    }
+
+    setUrls(prev => [...prev, ""]);
+  };
+
+  const updateUrlImage = (index: number, value: string) => {
+    setUrls(prev => prev.map((url, i) => i === index ? value : url));
+  };
 
     const postNewCategoria = async () => {
         const cookies = parseCookies();
@@ -282,32 +323,42 @@ export default function BlogUsuarioCrear() {
                 return;
             }
 
-            // Validate image
-            if (!base64Image && !url) {
-                showToast("error", "Debes agregar una imagen (subir archivo o URL).");
+            // Validate images - minimum 3, maximum 6
+            const validUrls = urls.filter(url => url.trim() !== '' && url.startsWith('http'));
+    const totalImages = base64Images.length + validUrls.length;
+      if (totalImages < 1) {
+                showToast("error", "Debe agregar al menos 1 imagen para crear el blog.");
+      return;
+    }
+
+    if (totalImages > 6) {
+      showToast("error", "No puede agregar más de 6 imágenes.");
                 return;
             }
 
-            // Validate image size more strictly
-            if (base64Image) {
-                // Check if base64 is too large (reduce limit)
-                if (base64Image.length > 500000) { // 500KB limit for base64
-                    showToast("error", "La imagen es demasiado grande. Por favor selecciona una imagen más pequeña (máx. 500KB).");
+            // Validate base64 images size
+            for (let i = 0; i < base64Images.length; i++) {
+                if (base64Images[i].length > 500000) {
+                    showToast("error", `La imagen ${i + 1} es demasiado grande. Por favor selecciona una imagen más pequeña (máx. 500KB).`);
                     return;
                 }
 
-                // Validate base64 format
-                if (!base64Image.startsWith('data:image/')) {
-                    showToast("error", "Formato de imagen inválido. Por favor selecciona una imagen válida.");
+
+                if (!base64Images[i].startsWith('data:image/')) {
+                    showToast("error", `Formato de imagen ${i + 1} inválido. Por favor selecciona una imagen válida.`);
                     return;
                 }
             }
 
-            // Validate URL format if using URL
-            if (url && !url.startsWith('http')) {
-                showToast("error", "La URL de la imagen debe comenzar con http:// o https://");
+            // Validate URL format if using URLs
+    for (let i = 0; i < validUrls.length; i++) {
+            if (!validUrls[i].startsWith('http')) {
+                showToast("error", `La URL de la imagen ${i + 1} debe comenzar con http:// o https://`);
                 return;
-            }
+            }}
+
+    // Combine all images
+    const allImages = [...base64Images, ...validUrls];
 
             // Debug logging
             console.log("Current user:", user);
@@ -315,6 +366,7 @@ export default function BlogUsuarioCrear() {
             console.log("User idpsicologo:", user.idpsicologo);
             console.log("Original ID Psicologo from blog:", originalIdPsicologo);
             console.log("Editing blog ID:", editingBlogId);
+    console.log("Total images:", allImages.length);
 
             let categoriaId: number | null;
             if (selectedKey !== null) {
@@ -343,13 +395,13 @@ export default function BlogUsuarioCrear() {
                 idCategoria: categoriaId,
                 tema: tema.trim(),
                 contenido: sanitizedContenido,
-                imagen: base64Image || url,
+                imagenes: allImages, // Enviar array de imágenes
                 idPsicologo: finalIdPsicologo,
             };
 
             console.log("Final data to send:", {
                 ...dataToSend,
-                imagen: dataToSend.imagen.substring(0, 100) + "..." // Log only first 100 chars of image
+                imagenes: `Array of ${allImages.length} images` // Log only count for brevity
             });
 
             // Add validation for required fields
@@ -413,8 +465,8 @@ export default function BlogUsuarioCrear() {
                 if (!editingBlogId) {
                     setTema("");
                     setContenido("");
-                    setBase64Image(null);
-                    setUrl("");
+                    setBase64Images([]);
+                    setUrls([]);
                     setSelectedKey(null);
                 }
 
@@ -480,8 +532,27 @@ export default function BlogUsuarioCrear() {
             console.log("Current user can edit?", blog.idPsicologo === user?.id || !blog.idPsicologo);
 
             setTema(blog.tema);
-            setUrl(blog.imagen);
-            setBase64Image(null); // Reset base64 image when editing
+            // Handle multiple images
+    if (blog.imagenes && Array.isArray(blog.imagenes)) {
+      // Separate base64 images from URLs
+      const base64Imgs = blog.imagenes.filter((img: string) => img.startsWith('data:image/'));
+      const urlImgs = blog.imagenes.filter((img: string) => img.startsWith('http'));
+
+      setBase64Images(base64Imgs);
+      setUrls(urlImgs);
+    } else if (blog.imagen) {
+            // Backwards compatibility for single image
+      if (blog.imagen.startsWith('data:image/')) {
+        setBase64Images([blog.imagen]);
+        setUrls([]);
+      } else {
+        setBase64Images([]);
+        setUrls([blog.imagen]);
+      }
+    } else {
+      setBase64Images([]);
+      setUrls([]);
+    }
             setContenido(blog.contenido);
             setSelectedKey(blog.idCategoria.toString());
             setEditingBlogId(blog.id);
@@ -513,6 +584,12 @@ export default function BlogUsuarioCrear() {
                         onPress={() => {
                             setView("crear");
                             resetForm();
+              // Reset form
+              setTema("");
+              setContenido("");
+              setBase64Images([]);
+              setUrls([]);
+              setSelectedKey(null);
                         }}
                     >
                         Crear Blog
@@ -578,64 +655,111 @@ export default function BlogUsuarioCrear() {
 
                         {/* Imagen */}
                         <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
-                            Imagen
+                            Imágenes (Mínimo 1, Máximo 6)
                         </h1>
 
-                        {/* Seccion de subida de imagen */}
+                        {/* Contador de imágenes */}
+            <div className="w-full text-center">              <span className={`text-sm font-medium ${
+                (base64Images.length + urls.filter(url => url.trim() !== '').length) >= 1 
+                  ? 'text-green-600' 
+                  : 'text-red-600'
+              }`}>
+                Imágenes agregadas: {base64Images.length + urls.filter(url => url.trim() !== '').length}/6
+              </span>
+            </div>
+
+            {/* Sección de subida de múltiples imágenes */}
                         <div className="w-full flex flex-col gap-2">
-                            {/* Boton de subir imagen */}
+                            {/* Boton de subir múltiples imágenes */}
                             <div
                                 className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
-                                {base64Image ? (
-                                    <Image
-                                        src={base64Image}
-                                        alt="Imagen seleccionada"
-                                        width={300}
-                                        height={128}
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : url ? (
-                                    <Image
-                                        src={url}
-                                        alt="Imagen desde URL"
-                                        width={300}
-                                        height={128}
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
+
                                     <div className="flex flex-col items-center">
                                         <Plus width={40} height={40} strokeWidth={2} className="text-[#634AE2]"/>
-                                        <span className="text-[#634AE2] text-sm mt-2">Subir imagen</span>
+                                        <span className="text-[#634AE2] text-sm mt-2">Subir imágenes (máximo {6 - base64Images.length - urls.filter(url => url.trim() !== '').length})</span>
                                     </div>
-                                )}
+
 
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    multipleonChange={handleImageUpload}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"disabled={base64Images.length + urls.filter(url => url.trim() !== '').length >= 6}
                                 />
                             </div>
 
-                            {/* OR separator */}
-                            <div className="flex items-center justify-center my-2">
-                                <span className="text-[#634AE2] text-sm">Tambien puedes colocar el URL</span>
-                            </div>
+                            {/* Mostrar imágenes base64 cargadas */}
+              {base64Images.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {base64Images.map((img, index) => (
+                            <div key={index} className="relative">
+                      <Image
+                        src={img}
+                        alt={`Imagen ${index + 1}`}
+                        width={150}
+                        height={100}
+                        className="w-full h-24 object-cover rounded-lg"
+                      />
+                      <button
+                        onClick={() => removeImage(index, 'base64')}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                      >
+                        ×
+                      </button>
+                                </div>
+                  ))}
+                            </div>)}
 
-                            {/* URL Input */}
+                            {/* Botón para agregar URL */}
+              {(base64Images.length + urls.filter(url => url.trim() !== '').length) < 6 && (
+                <Button
+                  onPress={addUrlImage}
+                  className="bg-[#634AE2] text-white"
+                  size="sm"
+                >
+                  Agregar imagen por URL
+                </Button>
+              )}
+
+              {/* Inputs de URL */}
+              {urls.map((url, index) => (
+                <div key={index} className="flex gap-2 items-center">
                             <Input
-                                placeholder="Url de imagen"
+                                placeholder={`URL de imagen ${index + 1}`}
                                 classNames={{
                                     input: "!text-[#634AE2]",
                                 }}
                                 radius="full"
                                 height={43}
                                 value={url}
-                                onChange={(e) => {
-                                    setUrl(e.target.value);
-                                    setBase64Image(null); // Clear uploaded image when typing URL
-                                }}
-                            />
+                                onChange={(e) => updateUrlImage(index, e.target.value)}
+                                    />
+                  <button
+                    onClick={() => removeImage(index, 'url')}
+                    className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+
+              {/* Mostrar preview de URLs válidas */}
+              {urls.filter(url => url.trim() !== '' && url.startsWith('http')).length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {urls.filter(url => url.trim() !== '' && url.startsWith('http')).map((url, index) => (
+                    <div key={index} className="relative">
+                      <Image
+                        src={url}
+                        alt={`URL Imagen ${index + 1}`}
+                        width={150}
+                        height={100}
+                        className="w-full h-24 object-cover rounded-lg"
+                        onError={() => showToast("error", `Error cargando imagen ${index + 1} desde URL`)}
+                                />
+                    </div>
+                  ))}
+                </div>
+                            )}
                         </div>
                     </div>
 
