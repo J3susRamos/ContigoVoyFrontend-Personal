@@ -12,7 +12,7 @@ import { Citas, FiltersCitas } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
-import EmptyTable from "@/components/ui/EmptyTable";
+import EmptyTable from "@/components/ui/Table/EmptyTable";
 import { TableCitas } from "./TableCitas";
 import { FormCita } from "./form_cita_modal";
 import Pagination from "@/components/ui/Pagination";
