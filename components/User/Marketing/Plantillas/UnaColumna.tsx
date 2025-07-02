@@ -161,8 +161,22 @@ const EmailMarketingEditor = () => {
       return;
     }
   
-    localStorage.setItem("emailBlocks", JSON.stringify(emailBlocks));
-    router.push("/user/marketing/detalle");
+    const emailBlocksString = JSON.stringify(emailBlocks);
+    const emailBlocksSizeBytes = new Blob([emailBlocksString]).size;
+    const maxSizeBytes = 5000 * 1024; 
+  
+    if (emailBlocksSizeBytes > maxSizeBytes) {
+      showAlert("¡Has excedido el límite de almacenamiento local! Reduce el tamaño de tu contenido o usa imagenes menos pesadas antes de continuar.");
+      return;
+    }
+  
+    try {
+      localStorage.setItem("emailBlocks", emailBlocksString);
+      router.push("/user/marketing/detalle");
+    } catch (error) {
+      console.error("Error guardando en localStorage:", error);
+      showAlert("¡Error al guardar! Es posible que hayas superado el límite del navegador.");
+    }
   };
 
   if (!user) return <div className="text-gray-600">Cargando...</div>;

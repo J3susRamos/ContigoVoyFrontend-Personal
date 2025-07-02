@@ -499,3 +499,25 @@ export interface GeneroEstadisticaApiResponse {
   result: GeneroEstadisticaResult;
   errorBag: never[];
 }
+
+export interface EmailBlock {
+  id: string;
+  type: "divider" | "image" | "header" | "text" | "columns";
+  imageUrl?: string;
+  imageUrls?: string[];
+  content?: string;
+  styles?: { color?: string; bold?: boolean; italic?: boolean };
+}
+
+export interface Plantilla {
+  id: number;
+  nombre: string;
+  asunto: string;
+  remitente: string;
+  destinatarios: string;
+  bloques: EmailBlock[];
+}
+
+export interface MarketingApiResponse {
+  result: Plantilla[];
+}

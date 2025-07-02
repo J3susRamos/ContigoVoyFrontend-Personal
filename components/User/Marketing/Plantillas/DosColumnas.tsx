@@ -177,9 +177,28 @@ const EmailMarketingEditor = () => {
       return;
     }
   
-    localStorage.setItem("emailBlocks", JSON.stringify(emailBlocks));
-    router.push("/user/marketing/detalle");
+    const emailBlocksString = JSON.stringify(emailBlocks);
+    const emailBlocksSizeBytes = new Blob([emailBlocksString]).size;
+    const emailBlocksSizeKB = (emailBlocksSizeBytes / 1024).toFixed(2);  // En KB, con 2 decimales
+  
+    const maxSizeBytes = 5000 * 1024;  
+  
+    if (emailBlocksSizeBytes > maxSizeBytes) {
+      showAlert(`¡Excediste el límite! Estás intentando guardar ${emailBlocksSizeKB} KB (Máximo permitido: ${maxSizeBytes / 1024} KB)`);
+      return;
+    }
+  
+    try {
+      localStorage.setItem("emailBlocks", emailBlocksString);
+      router.push("/user/marketing/detalle");
+    } catch (error) {
+      console.error("Error guardando en localStorage:", error);
+      showAlert("¡Error al guardar! Tal vez superaste el límite de almacenamiento del navegador.");
+    }
   };
+  
+  
+  
 
   if (!user) return <div className="text-gray-600">Cargando...</div>;
 
@@ -248,8 +267,8 @@ const EmailMarketingEditor = () => {
                 />
                 )  : block.type === 'columns' ? (
                   <div className="grid grid-cols-2 gap-4">
-                    {block.imageUrls?.map((url, index) => (
-                    url ? (
+                    {block.imageUrls && block.imageUrls.length > 0 ? (
+                    block.imageUrls.map((url, index) => (
                       <div key={index} className="flex flex-col gap-2">
                         <img
                           src={url}
@@ -257,13 +276,12 @@ const EmailMarketingEditor = () => {
                           className="w-full h-48 object-cover rounded"
                         />
                       </div>
-                    ) : null
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-sm">No hay imágenes en las columnas</p>
+                  )}
+
                   </div>
-                
-                
-                
-                
                 ) : (
                   <p
                     className={`leading-relaxed ${
@@ -363,89 +381,89 @@ const EmailMarketingEditor = () => {
                         className="bg-gray-600 text-white p-2 rounded w-full"
                       />
                       <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      const base64 = reader.result as string;
-                      setEmailBlocks(prev =>
-                        prev.map(b =>
-                          b.id === block.id
-                            ? {
-                                ...b,
-                                imageUrls: b.imageUrls?.map((u, i) =>
-                                  i === index ? base64 : u
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              const base64 = reader.result as string;
+                              setEmailBlocks(prev =>
+                                prev.map(b =>
+                                  b.id === block.id
+                                    ? {
+                                        ...b,
+                                        imageUrls: b.imageUrls?.map((u, i) =>
+                                          i === index ? base64 : u
+                                        )
+                                      }
+                                    : b
                                 )
-                              }
-                            : b
-                        )
-                      );
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}
-                className="bg-gray-600 text-white p-2 rounded w-full"
-              />
-
-                      {url && (
-                        <img
-                        src={url}
-                        alt={`Columna ${index + 1}`}
-                        className="w-full h-48 object-cover rounded"
-                      />                                    
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  <textarea
-                    value={block.content}
-                    onChange={(e) => updateBlockContent(block.id, e.target.value)}
-                    className="bg-gray-600 text-white p-2 rounded w-full resize-none"
-                    placeholder={block.type === 'header' ? 'Escribe un encabezado' : 'Escribe tu texto'}
-                    rows={block.type === 'header' ? 2 : 3}
-                  />
-                  {selectedBlock === block.id && (
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => updateBlockStyle(block.id, 'bold', !block.styles.bold)}
-                        className={`px-2 py-1 rounded text-white ${block.styles.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
-                      >
-                        <Bold className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => updateBlockStyle(block.id, 'italic', !block.styles.italic)}
-                        className={`px-2 py-1 rounded text-white ${block.styles.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
-                      >
-                        <Italic className="w-4 h-4" />
-                      </button>
-                      <input
-                        type="color"
-                        value={block.styles.color}
-                        onChange={(e) => updateBlockStyle(block.id, 'color', e.target.value)}
-                        className="w-8 h-8 p-0 border-none cursor-pointer"
-                        title="Color del texto"
-                      />
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteBlock(block.id);
+                              );
+                            };
+                            reader.readAsDataURL(file);
+                          }
                         }}
-                        className="ml-auto text-red-400 hover:text-red-300"
-                        title="Eliminar bloque"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-          </div>
-        ))}
+                        className="bg-gray-600 text-white p-2 rounded w-full"
+                      />
+
+                              {url && (
+                                <img
+                                src={url}
+                                alt={`Columna ${index + 1}`}
+                                className="w-full h-48 object-cover rounded"
+                              />                                    
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-2">
+                          <textarea
+                            value={block.content}
+                            onChange={(e) => updateBlockContent(block.id, e.target.value)}
+                            className="bg-gray-600 text-white p-2 rounded w-full resize-none"
+                            placeholder={block.type === 'header' ? 'Escribe un encabezado' : 'Escribe tu texto'}
+                            rows={block.type === 'header' ? 2 : 3}
+                          />
+                          {selectedBlock === block.id && (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => updateBlockStyle(block.id, 'bold', !block.styles.bold)}
+                                className={`px-2 py-1 rounded text-white ${block.styles.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
+                              >
+                                <Bold className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => updateBlockStyle(block.id, 'italic', !block.styles.italic)}
+                                className={`px-2 py-1 rounded text-white ${block.styles.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
+                              >
+                                <Italic className="w-4 h-4" />
+                              </button>
+                              <input
+                                type="color"
+                                value={block.styles.color}
+                                onChange={(e) => updateBlockStyle(block.id, 'color', e.target.value)}
+                                className="w-8 h-8 p-0 border-none cursor-pointer"
+                                title="Color del texto"
+                              />
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteBlock(block.id);
+                                }}
+                                className="ml-auto text-red-400 hover:text-red-300"
+                                title="Eliminar bloque"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                  </div>
+                ))}
                       </div>
                     )}
                   </div>
@@ -464,7 +482,6 @@ const EmailMarketingEditor = () => {
               <Type className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
               <span className="text-sm">Texto</span>
             </button>
-
             <button
               onClick={addHeaderBlock}
               disabled={emailBlocks.some(b => b.type === 'header') || emailBlocks.length >= MAX_BLOCKS}
@@ -475,7 +492,6 @@ const EmailMarketingEditor = () => {
               <Hash className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
               <span className="text-sm">Encabezado</span>
             </button>
-
             {featureButtons.map(({ icon: Icon, label, action }, index) => (
           <button
             key={index}
@@ -486,9 +502,7 @@ const EmailMarketingEditor = () => {
             <span className="text-sm">{label}</span>
           </button>
         ))}
-
           </div>
-
           {/* Propiedades del bloque seleccionado */}
           {selectedBlock && (
             <div className="bg-white dark:bg-gray-700 rounded-lg p-4 mb-4 border">
@@ -507,7 +521,6 @@ const EmailMarketingEditor = () => {
               </div>
             </div>
           )}
-
             <div className="flex justify-center">
               <button
                 onClick={handleContinuar}

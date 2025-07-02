@@ -1,38 +1,37 @@
 "use client";
+import { GetPlantillas } from "@/app/apiRoutes";
 import CerrarSesion from "@/components/CerrarSesion";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-interface EmailBlock {
-  type: "divider" | "image" | "header" | "text";
-  imageUrl?: string;
-  content?: string;
-  styles?: { color?: string; bold?: boolean; italic?: boolean };
-}
-
-interface Plantilla {
-  id: number;
-  nombre: string;
-  asunto: string;
-  remitente: string;
-  destinatarios: string;
-  fecha: string;
-  bloques: EmailBlock[];
-}
+import { Plantilla} from "@/interface";
 
 interface Props {
   onBack: () => void;
 }
 
-const PlantillasEnviadas: React.FC<Props> = ({ onBack }) => {
+const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
   const router = useRouter();
   const [plantillas, setPlantillas] = useState<Plantilla[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const data = localStorage.getItem("plantillas");
-    if (data) {
-      setPlantillas(JSON.parse(data));
-    }
+    const fetchPlantillas = async () => {
+      try {
+        const result = await GetPlantillas();
+        console.log("Plantillas obtenidas:", result);
+
+        if (result.result && Array.isArray(result.result)) {
+          setPlantillas(result.result);
+        } else {
+          console.warn("Formato de respuesta inesperado:", result);
+        }
+      } catch (error) {
+        console.error("Error al obtener plantillas guardadas:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlantillas();
   }, []);
 
   return (
@@ -47,45 +46,45 @@ const PlantillasEnviadas: React.FC<Props> = ({ onBack }) => {
 
       {/* Título principal */}
       <div className="text-center py-6">
-        <h2 className="text-3xl font-bold text-purple-400">
-          Plantillas enviadas
-        </h2>
+        <h2 className="text-3xl font-bold text-purple-400">Plantillas guardadas</h2>
       </div>
 
       {/* Navbar secundario */}
       <div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
-        <div className="ml-10 flex justify-between items-center w-full max-w-[400px]">
+        <div className="ml-10 flex justify-between items-center w-full max-w-[600px]">
           <button
             onClick={() => router.push("/user/marketing/crear")}
-            className="inline-flex items-center justify-center gap-2 h-9 bg-primary text-white hover:text-purple-300 rounded-full px-9 py-2"
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-primary dark:bg-primary text-white dark:text-white hover:text-purple-300 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors"
           >
-            Plantillas
+            Crear Plantilla
           </button>
-          <button className="inline-flex items-center justify-center gap-2 h-9 bg-white text-primary rounded-full px-9 py-2 font-bold">
-            Plantillas enviadas
+          <button
+            onClick={() => router.refresh()}
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors"
+          >
+            Plantillas guardadas
           </button>
         </div>
       </div>
 
-      {/* Lista de plantillas */}
+      {/* Lista de plantillas guardadas */}
       <div className="max-w-6xl mx-auto p-6">
-        {plantillas.length === 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-500 dark:text-gray-400">Cargando...</p>
+        ) : plantillas.length === 0 ? (
           <p className="text-center text-gray-500 dark:text-gray-400">
-            No hay plantillas enviadas.
+            No tienes plantillas guardadas.
           </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            {plantillas.map((p) => (
+            {plantillas.map((p, index) => (
               <div
-                key={p.id}
+                key={`plantilla-${p.id ?? `sin-id-${index}`}`}
                 className="bg-white dark:bg-gray-800 p-4 rounded shadow border border-gray-200 dark:border-gray-700"
               >
                 <h3 className="text-lg font-bold text-purple-500">{p.nombre}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
                   <strong>Asunto:</strong> {p.asunto}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
-                  <strong>Fecha:</strong> {p.fecha}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-300 mb-3">
                   <strong>Destinatarios:</strong> {p.destinatarios}
@@ -96,7 +95,7 @@ const PlantillasEnviadas: React.FC<Props> = ({ onBack }) => {
                     <p className="text-xs text-gray-400">Sin contenido.</p>
                   ) : (
                     p.bloques.map((block, idx) => (
-                      <div key={idx} className="mb-3">
+                      <div key={`bloque-${block.id ?? `sin-id-${idx}`}`} className="mb-3">
                         {block.type === "divider" && (
                           <hr className="border-gray-300 dark:border-gray-600" />
                         )}
@@ -107,13 +106,23 @@ const PlantillasEnviadas: React.FC<Props> = ({ onBack }) => {
                             className="rounded-lg w-full max-h-32 object-cover"
                           />
                         )}
+                        {block.type === "columns" && Array.isArray(block.imageUrls) && (
+                          <div className="grid grid-cols-2 gap-2">
+                            {block.imageUrls.map((url, columnIndex) => (
+                              <img
+                                key={`${block.id}-col-${columnIndex}`}
+                                src={url}
+                                alt={`Imagen columna ${columnIndex + 1}`}
+                                className="rounded-lg w-full h-24 object-cover"
+                              />
+                            ))}
+                          </div>
+                        )}
                         {(block.type === "header" || block.type === "text") &&
                           block.content && (
                             <p
                               className={`${
-                                block.type === "header"
-                                  ? "text-md font-bold"
-                                  : "text-sm"
+                                block.type === "header" ? "text-md font-bold" : "text-sm"
                               } text-gray-700 dark:text-gray-200`}
                               style={{
                                 color: block.styles?.color || undefined,
@@ -146,4 +155,4 @@ const PlantillasEnviadas: React.FC<Props> = ({ onBack }) => {
   );
 };
 
-export default PlantillasEnviadas;
+export default PlantillasGuardadas;
