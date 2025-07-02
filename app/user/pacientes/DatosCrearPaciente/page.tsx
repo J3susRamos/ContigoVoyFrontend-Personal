@@ -185,7 +185,11 @@ export default function App() {
           </nav>
         </div>
       </div>
-
+      <div>
+        <div className="pl-0 md:pl-12 text-3xl md:text-4xl font-bold text-primary dark:text-primary mb-6 text-center md:text-left">
+          <h1>Datos del Paciente</h1>
+        </div>
+      </div>
       <div className="flex flex-col lg:flex-row gap-6 text-primary dark:text-primary font-bold text-normal">
         {/* Primera columna */}
         <div className="flex-1 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl">
