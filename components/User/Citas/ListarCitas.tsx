@@ -92,7 +92,7 @@ const ListarCitas = ({
           queryParams.append("nombre", paciente);
         }
 
-        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas${
+        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/lista${
           queryParams.toString() ? `?${queryParams.toString()}` : ""
         }`;
 
