@@ -7,6 +7,7 @@ import { ListaAtencion } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import { useRouter } from "next/navigation";
+import HeaderUser from "@/components/User/HeaderUser";
 
 const columns = [
   { name: "Código", uid: "codigo", sortable: true },
@@ -38,7 +39,7 @@ export default function App() {
       setIsAuthorized(true);
     } else {
       setIsAuthorized(false);
-      router.push("/unauthorized"); 
+      router.push("/unauthorized");
     }
   }, [router]);
 
@@ -154,7 +155,7 @@ export default function App() {
         await handleGetCitas();
       }
     };
-    
+
     fetchAtenciones().catch((error) => {
       console.error('Error fetching atenciones:', error);
       showToast("error", "Error al cargar las atenciones");
@@ -169,36 +170,25 @@ export default function App() {
   }
 
   return (
-    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="mt-4 z-30 px-4">
-        <div className="flex items-start justify-between w-[calc(95vw-270px)] mx-auto">
-          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-            Historial de pacientes
-          </h1>
-          <div className="flex gap-x-5 mt-2">
-            <CerrarSesion />
-          </div>
-        </div>
-      </header>
-
-      <div>
-        <Navbar
-          filterValue={filterValue}
-          onSearchChange={onSearchChange}
-          onClear={onClear}
-          visibleColumns={visibleColumns}
-          setVisibleColumns={setVisibleColumns}
-          columns={columns}
-          onSortByDate={handleSortByDate}
-          onSortByName={handleSortByName}
-        />
+    <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
+      <HeaderUser title="Historial de pacientes" />
+      <Navbar
+        filterValue={filterValue}
+        onSearchChange={onSearchChange}
+        onClear={onClear}
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        columns={columns}
+        onSortByDate={handleSortByDate}
+        onSortByName={handleSortByName}
+      />
+      <section className={`"opacitiy-50"`}>
         <TableComponent
           atencion={sortedItems}
           headerColumns={headerColumns}
           renderCellAction={renderCell}
         />
-      </div>
+      </section>
     </div>
   );
 }
