@@ -2,7 +2,6 @@ import DataCard from "@/components/ui/DataCard";
 import DataTable from "@/components/ui/Table/DataTable";
 import Row from "@/components/ui/Table/Row";
 import { Paciente } from "@/interface";
-import Link from "next/link";
 import React from "react";
 
 interface Props {
@@ -13,14 +12,17 @@ interface Props {
 const headers = ["Paciente", "Código", "DNI", "Correo", "Celular", "Más"];
 
 const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
+
   const redirectToPaciente = (idPaciente: number) => {
     localStorage.setItem("idPaciente", String(idPaciente));
     window.location.href = "/user/pacientes/DetallePaciente";
   };
+
   const redirectToEdit = (idPaciente: number) => {
     localStorage.setItem("idPaciente", String(idPaciente));
     window.location.href = "/user/pacientes/DetallePaciente";
   };
+  
   return (
     <DataTable
       headers={headers}
@@ -32,7 +34,7 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
           onDelete={() => onDeleteInit(p.idPaciente)}
           onEdit={() => redirectToEdit(p.idPaciente)}
         >
-          <FamiliaButton />
+          <FamiliaButton idPaciente={p.idPaciente}/>
         </Row>
       )}
       renderCard={(p) => (
@@ -47,7 +49,7 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
           onDelete={() => onDeleteInit(p.idPaciente)}
           onEdit={() => redirectToPaciente(p.idPaciente)}
         >
-          <FamiliaButton />
+          <FamiliaButton idPaciente={p.idPaciente}/>
         </DataCard>
       )}
     />
@@ -56,10 +58,16 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
 
 export default TablePacientes;
 
-const FamiliaButton = () => {
+const FamiliaButton = ({ idPaciente }: { idPaciente: number }) => {
+
+  const redirectToFamily = (idPaciente: number) => {
+    localStorage.setItem("idPaciente", String(idPaciente));
+    window.location.href = `/user/pacientes/RegistroFamiliar?id=${idPaciente}`;
+  }
+
   return (
-    <Link
-      href="/user/pacientes/RegistroFamiliar"
+    <button
+      onClick={() => redirectToFamily(idPaciente)}
       className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-muted transition-colors"
     >
       <svg
@@ -81,6 +89,6 @@ const FamiliaButton = () => {
         />
       </svg>
       <span className="text-xs text-blue-400 mt-1">Registro Familiar</span>
-    </Link>
+    </button>
   );
 };

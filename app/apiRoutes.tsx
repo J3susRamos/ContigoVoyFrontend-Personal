@@ -9,7 +9,6 @@ import {
   DashboardApiResponse,
   GeneroEstadisticaApiResponse,
   CitasApiResponse,
-  CitaMensualResponse,
   CitaMensual
 } from "@/interface";
 import {parseCookies} from "nookies";

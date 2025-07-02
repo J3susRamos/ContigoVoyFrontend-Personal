@@ -91,7 +91,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
               filterKey="genero"
             >
               <div className="flex flex-col text-sm pl-10">
-                {["Masculino", "Femenino", "Otros"].map((opcion) => (
+                {["Masculino", "Femenino", "Otro"].map((opcion) => (
                   <label
                     key={opcion}
                     className="text-[#634AE2] text-lg flex items-center gap-4"
