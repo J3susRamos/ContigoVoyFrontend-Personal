@@ -1,14 +1,14 @@
 "use client";
 
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
     Button,
     Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
     Select,
     SelectItem,
     Textarea
@@ -25,28 +25,42 @@ interface FormCitaProps {
 interface Paciente {
     idPaciente: number;
     nombre: string;
-    apellido: string;
     codigo: string;
 }
 
-export const FormCita: React.FC<FormCitaProps> = ({
-                                                      isOpen,
-                                                      onCloseAction,
-                                                      onCitaCreatedAction
-                                                  }) => {
-    const [formData, setFormData] = useState({
-        idPaciente: "",
-        fecha_cita: "",
-        hora_cita: "",
-        duracion: "60",
-        motivo_Consulta: "",
-        estado_Cita: "Pendiente"
-    });
-    const [pacientes, setPacientes] = useState<Paciente[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState<Record<string, string>>({});
+interface FormData {
+    idPaciente: string;
+    fecha_cita: string;
+    hora_cita: string;
+    duracion: string;
+    motivo_Consulta: string;
+    estado_Cita: string;
+}
 
-    // Fetch pacientes when modal opens
+// Constants
+const INITIAL_FORM_DATA: FormData = {
+    idPaciente: "",
+    fecha_cita: "",
+    hora_cita: "",
+    duracion: "60",
+    motivo_Consulta: "",
+    estado_Cita: "Pendiente"
+};
+
+const APPOINTMENT_STATES = [
+    {key: "Pendiente", label: "Pendiente"},
+    {key: "Confirmada", label: "Confirmada"}
+];
+
+const DURATION_LIMITS = {
+    MIN: 1,
+    MAX: 480
+};
+
+// Custom hooks
+const usePacientes = (isOpen: boolean) => {
+    const [pacientes, setPacientes] = useState<Paciente[]>([]);
+
     useEffect(() => {
         if (isOpen) {
             fetchPacientes().catch((error) => {
@@ -66,7 +80,6 @@ export const FormCita: React.FC<FormCitaProps> = ({
                     "Content-Type": "application/json",
                 },
             });
-
             if (response.ok) {
                 const data = await response.json();
                 setPacientes(data.result || []);
@@ -80,7 +93,13 @@ export const FormCita: React.FC<FormCitaProps> = ({
         }
     };
 
-    const validateForm = () => {
+    return pacientes;
+};
+
+const useFormValidation = () => {
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const validateForm = (formData: FormData) => {
         const newErrors: Record<string, string> = {};
 
         if (!formData.idPaciente) {
@@ -109,39 +128,80 @@ export const FormCita: React.FC<FormCitaProps> = ({
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!validateForm()) {
-            return;
+    const clearFieldError = (field: string) => {
+        if (errors[field]) {
+            setErrors(prev => ({...prev, [field]: ""}));
         }
+    };
 
+    const clearAllErrors = () => setErrors({});
+
+    return {errors, validateForm, clearFieldError, clearAllErrors};
+};
+
+const useApiRequest = () => {
+    const [loading, setLoading] = useState(false);
+
+    const makeRequest = async (url: string, options: RequestInit) => {
         setLoading(true);
-
         try {
             const cookies = parseCookies();
             const token = cookies["session"];
 
-            // Convert the time format from HH:MM to HH:MM:SS for the API
-            const timeWithSeconds = formData.hora_cita.includes(':') && formData.hora_cita.split(':').length === 2
-                ? `${formData.hora_cita}:00`
-                : formData.hora_cita;
-
-            const requestBody = {
-                ...formData,
-                idPaciente: parseInt(formData.idPaciente),
-                duracion: parseInt(formData.duracion),
-                hora_cita: timeWithSeconds
-            };
-
-            console.log("Sending request body:", requestBody);
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/citas`, {
-                method: "POST",
+            return await fetch(url, {
+                ...options,
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
+                    ...options.headers,
                 },
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return {loading, makeRequest};
+};
+
+// Utility functions
+const formatTimeForApi = (time: string): string => {
+    return time.includes(':') && time.split(':').length === 2 ? `${time}:00` : time;
+};
+
+const getTodayDate = (): string => {
+    return new Date().toISOString().split('T')[0];
+};
+
+const prepareRequestData = (formData: FormData) => ({
+    ...formData,
+    idPaciente: parseInt(formData.idPaciente),
+    duracion: parseInt(formData.duracion),
+    hora_cita: formatTimeForApi(formData.hora_cita)
+});
+
+export const FormCita: React.FC<FormCitaProps> = ({
+                                                      isOpen,
+                                                      onCloseAction,
+                                                      onCitaCreatedAction
+                                                  }) => {
+    const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+    const pacientes = usePacientes(isOpen);
+    const {errors, validateForm, clearFieldError, clearAllErrors} = useFormValidation();
+    const {loading, makeRequest} = useApiRequest();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!validateForm(formData)) {
+            return;
+        }
+
+        try {
+            const requestBody = prepareRequestData(formData);
+            console.log("Sending request body:", requestBody);
+
+            const response = await makeRequest(`${process.env.NEXT_PUBLIC_API_URL}api/citas`, {
+                method: "POST",
                 body: JSON.stringify(requestBody),
             });
 
@@ -157,33 +217,19 @@ export const FormCita: React.FC<FormCitaProps> = ({
         } catch (error) {
             console.error("Error creating cita:", error);
             showToast("error", "Error al crear la cita");
-        } finally {
-            setLoading(false);
         }
     };
 
     const handleClose = () => {
-        setFormData({
-            idPaciente: "",
-            fecha_cita: "",
-            hora_cita: "",
-            duracion: "60",
-            motivo_Consulta: "",
-            estado_Cita: "Pendiente"
-        });
-        setErrors({});
+        setFormData(INITIAL_FORM_DATA);
+        clearAllErrors();
         onCloseAction();
     };
 
     const handleInputChange = (field: string, value: string) => {
         setFormData(prev => ({...prev, [field]: value}));
-        if (errors[field]) {
-            setErrors(prev => ({...prev, [field]: ""}));
-        }
+        clearFieldError(field);
     };
-
-    // Get today's date in YYYY-MM-DD format for min date
-    const today = new Date().toISOString().split('T')[0];
 
     return (
         <Modal
@@ -222,11 +268,10 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                             <SelectItem
                                                 key={paciente.idPaciente.toString()}
                                             >
-                                                {`${paciente.nombre} ${paciente.apellido} (${paciente.codigo})`}
+                                                {`${paciente.nombre} (${paciente.codigo})`}
                                             </SelectItem>
                                         ))}
                                     </Select>
-
                                     <div className="flex gap-4">
                                         <Input
                                             type="date"
@@ -236,7 +281,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                             isInvalid={!!errors.fecha_cita}
                                             errorMessage={errors.fecha_cita}
                                             className="flex-1"
-                                            min={today}
+                                            min={getTodayDate()}
                                         />
                                         <Input
                                             type="time"
@@ -248,7 +293,6 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                             className="flex-1"
                                         />
                                     </div>
-
                                     <Input
                                         type="number"
                                         label="Duración (minutos)"
@@ -256,10 +300,9 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                         onChange={(e) => handleInputChange("duracion", e.target.value)}
                                         isInvalid={!!errors.duracion}
                                         errorMessage={errors.duracion}
-                                        min="1"
-                                        max="480"
+                                        min={DURATION_LIMITS.MIN.toString()}
+                                        max={DURATION_LIMITS.MAX.toString()}
                                     />
-
                                     <Select
                                         label="Estado"
                                         selectedKeys={[formData.estado_Cita]}
@@ -268,14 +311,12 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                             handleInputChange("estado_Cita", selectedKey);
                                         }}
                                     >
-                                        <SelectItem key="Pendiente">
-                                            Pendiente
-                                        </SelectItem>
-                                        <SelectItem key="Confirmada">
-                                            Confirmada
-                                        </SelectItem>
+                                        {APPOINTMENT_STATES.map((state) => (
+                                            <SelectItem key={state.key}>
+                                                {state.label}
+                                            </SelectItem>
+                                        ))}
                                     </Select>
-
                                     <Textarea
                                         label="Motivo de consulta"
                                         placeholder="Describa el motivo de la consulta"
