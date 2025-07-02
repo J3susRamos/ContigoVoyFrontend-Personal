@@ -1,3 +1,4 @@
+import { GenericFilters } from "@/components/ui/Table/EmptyTable";
 import { DateValue } from "@heroui/react";
 import React from "react";
 
@@ -72,6 +73,7 @@ export interface ServicesStructureProps {
     id: number;
     text: string;
     icon: string;
+    title: string;
   }[];
   textfooter: string;
   textfootermobile:string;
@@ -131,13 +133,11 @@ export interface Contact {
 }
 
 export interface BlogApi {
-
   idCategoria: number | null,
   tema: string,
   contenido: string,
-  imagen: string,
+  imagenes: string[], // Array de imágenes
   idPsicologo: number | null;
-
 }
 
 export interface BlogApiGEt {
@@ -145,7 +145,8 @@ export interface BlogApiGEt {
   categoria: string,
   tema: string,
   contenido: string,
-  imagen: string,
+  imagen: string, // Mantener para compatibilidad
+  imagenes?: string[], // Nuevo campo opcional
   idPsicologo: number,
 }
 //BLogs Preview Data
@@ -153,7 +154,8 @@ export interface BlogPreviewData {
   idBlog: number,
   tema: string,
   contenido: string,
-  imagen: string,
+  imagen: string, // Mantener para compatibilidad
+  imagenes?: string[], // Nuevo campo opcional
   psicologo: string,
   psicologApellido: string,
   psicologoImagenId: string,
@@ -321,6 +323,9 @@ export interface Paciente2 {
   ocupacion: string,
   estadoCivil: string,
   direccion: string,
+  pais: string | null,
+  provincia: string | null,
+  departamento: string | null,
 }
 
 export interface FormPaciente {
@@ -498,6 +503,14 @@ export interface DashboardApiResponse {
   result: DashboardResult;
 }
 
+export interface CitaMensual {
+  fecha: string,
+  total: number
+}
+export interface CitaMensualResponse {
+  result: CitaMensual;
+}
+
 export interface GeneroEstadisticaDetalle {
   cantidad: number;
   porcentaje: number;
@@ -515,3 +528,23 @@ export interface GeneroEstadisticaApiResponse {
   result: GeneroEstadisticaResult;
   errorBag: never[];
 }
+
+export interface FiltersPaciente extends GenericFilters {
+  genero: string[];
+  edad: string[];
+  fechaUltimaCita: string[];
+}
+
+export const FiltersInitialState: FiltersPaciente = {
+  genero: [],
+  edad: [],
+  fechaUltimaCita: [],
+};
+
+export interface FiltersCitas extends GenericFilters {
+  genero: string[];
+  estado: string[];
+  edad: string[];
+  fechaInicio: string[];
+}
+

@@ -1,29 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-} from "recharts";
-import {  CustomTooltip } from "./CustomTooltipComponent";
-import { GetPsicologoDashboard } from "@/app/apiRoutes";
+
+import { GetCitasTotalesConFecha, GetPsicologoDashboard } from "@/app/apiRoutes";
 import { Icons } from "@/icons";
-import { DashboardResult } from "@/interface";
+import { CitaMensual, DashboardResult } from "@/interface";
 import PieChartGrafic from "./grafics/PieChartGrafic";
+import LineChartGrafic from "./grafics/LineChartGrafic";
 
 const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
 
 // Datos para el LineChart
-const data = [
-  { name: "01", uv: 4000, pv: 2400 },
-  { name: "02", uv: 3000, pv: 1398 },
-  { name: "03", uv: 2000, pv: 9800 },
-  { name: "04", uv: 2780, pv: 3908 },
-  { name: "05", uv: 1890, pv: 4800 },
-  { name: "06", uv: 2390, pv: 3800 },
-];
+
 
 export default function Appointments() {
   const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
@@ -36,6 +22,8 @@ export default function Appointments() {
     nuevos_pacientes: 0,
     citas_confirmadas: 0,
   });
+
+  const [citasMensuales, setCitasMensuales] = useState<CitaMensual[]>([]);
   //Estado de carga para
   const [loading, setLoading] = useState<boolean>(true);
   // Datos para el gráfico de pastel
@@ -53,9 +41,20 @@ export default function Appointments() {
       console.error("Error al cargar el dashboard", error);
     }
   };
-
+  const fetchCitas = async (): Promise<CitaMensual[] | undefined> => {
+  try {
+    const response = await GetCitasTotalesConFecha();
+    return response;
+  } catch (error) {
+    console.log("Error al cargar las citas con fecha");
+  }
+};
   useEffect(() => {
     const loadData = async () => {
+
+      const citasResult = await fetchCitas();
+      setCitasMensuales(citasResult ?? [])
+      
       const result = await fetchDashboard();
       if (!result) return;
 
@@ -69,10 +68,11 @@ export default function Appointments() {
         nuevos_pacientes: result?.nuevos_pacientes ?? 0,
         citas_confirmadas: result?.citas_confirmadas ?? 0,
       });
-      setLoading(false);
-    };
+      setLoading(false);    };
     loadData();
-  }, []);  return (
+  }, []);
+console.log(citasMensuales)
+  return (
     <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
       
       {/* Información de citas - Cards responsivos */}
@@ -117,51 +117,18 @@ export default function Appointments() {
             </p>
           </div>
           
-          <div className="w-full h-[300px] md:h-[350px] lg:h-[400px] flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                  data={data}
-                  margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
-              >
-                <XAxis
-                    dataKey="name"
-                    tickLine={{ stroke: "hsl(var(--primary))" }}
-                    axisLine={{ stroke: "hsl(var(--primary))" }}
-                    tick={({ x, y, payload }) => (
-                        <text
-                            x={x}
-                            y={y + 15}
-                            fill="hsl(var(--primary))"
-                            textAnchor="middle"
-                            fontSize={10}
-                            fontWeight="500"
-                        >
-                          <tspan x={x} dy="0">
-                            feb,
-                          </tspan>
-                          <tspan x={x} dy="12">
-                            {payload.value}
-                          </tspan>
-                        </text>
-                    )}
-                />
-                <YAxis
-                    tickFormatter={(value: number) => `${Math.round(value / 1250)}`}
-                    tick={{ fill: "hsl(var(--primary))", fontSize: 10 }}
-                    axisLine={{ stroke: "hsl(var(--primary))" }}
-                    tickLine={{ stroke: "hsl(var(--primary))" }}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Line
-                    type="monotone"
-                    dataKey="pv"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    activeDot={{ r: 6, fill: "hsl(var(--primary))" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Gráfico para las citas totales del periodo */}
+         {loading? <div className="flex-1 flex items-center justify-center">
+          <div className="w-full h-[80%] flex flex-col justify-center px-6">
+            <div className="h-4 w-24 bg-muted rounded mb-2 animate-pulse" />
+            <div className="flex-1 w-full bg-muted/30 rounded animate-pulse" />
+            <div className="flex justify-between mt-4">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="w-6 h-4 bg-muted rounded animate-pulse" />
+              ))}
+              </div>
+            </div>
+          </div>: <LineChartGrafic datastadistics={citasMensuales}/>}
         </div>
         
         {/* PieChart - Estado de citas */}
@@ -182,11 +149,11 @@ export default function Appointments() {
                 <PieChartGrafic data={citasPsicologo} />
             )}
           </div>
-          
-          {/* Leyenda */}
+            {/* Leyenda */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
             {genero.map((entry, index) => (
-                <div key={index} className="flex items-center gap-2">                  <div
+                <div key={index} className="flex items-center gap-2">
+                  <div
                       className="w-3 h-3 rounded-full flex-shrink-0"
                       style={{ backgroundColor: COLORS[index] }}
                   ></div>

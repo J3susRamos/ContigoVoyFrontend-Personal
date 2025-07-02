@@ -55,7 +55,7 @@ export const BlogById = async (id: number) => {
 export default function BlogUsuarioCrear() {
   const [categoria, setCategoria] = useState<Categoria[]>([]);
   const [tema, setTema] = useState("");
-  const [url, setUrl] = useState("");
+  const [urls, setUrls] = useState<string[]>([]); // Array de URLs
   const [view, setView] = useState("crear");
   const [contenido, setContenido] = useState("");
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
@@ -65,7 +65,7 @@ export default function BlogUsuarioCrear() {
   const [originalIdPsicologo, setOriginalIdPsicologo] = useState<number | null>(
     null
   );
-  const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [base64Images, setBase64Images] = useState<string[]>([]); // Array de imágenes base64
 
   useEffect(() => {
     const fetchCategoria = () => {
@@ -87,26 +87,88 @@ export default function BlogUsuarioCrear() {
       }
     };
     fetchUser();
-  }, []);
-
-  const handleImageUpload = async (
+  }, []);  const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
 
-    try {
-      // Convertir la imagen a WebP
-      const webpImage = await convertImageToWebP(file);
-
-      // Convertir la imagen WebP a Base64
-      const base64 = await convertToBase64(webpImage);
-      setBase64Image(base64);
-      setUrl(""); // Clear URL input when uploading an image
-    } catch (error) {
-      console.error("Error processing image:", error);
-      showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
+    // Verificar que no exceda el límite de 6 imágenes
+    const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+    const newImageCount = currentImageCount + files.length;
+    
+    if (newImageCount > 6) {
+      showToast("error", `No puede agregar más de 6 imágenes. Actualmente tiene ${currentImageCount} imágenes.`);
+      return;
     }
+
+    const newBase64Images: string[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast("error", `La imagen ${file.name} es demasiado grande. Máximo 5MB.`);
+        continue;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        showToast("error", `${file.name} no es un archivo de imagen válido.`);
+        continue;
+      }
+
+      try {
+        showToast("info", `Procesando imagen ${i + 1}/${files.length}...`);
+        
+        // Convertir la imagen a WebP con compresión
+        const webpImage = await convertImageToWebP(file);
+
+        // Convertir la imagen WebP a Base64
+        const base64 = await convertToBase64(webpImage);
+        
+        // Check final base64 size
+        if (base64.length > 400000) {
+          showToast("error", `La imagen ${file.name} procesada sigue siendo muy grande. Intenta con una imagen más pequeña.`);
+          continue;
+        }
+        
+        newBase64Images.push(base64);
+        
+      } catch (error) {
+        console.error(`Error processing image ${file.name}:`, error);
+        showToast("error", `Error al procesar ${file.name}. Intenta nuevamente.`);
+      }
+    }
+
+    if (newBase64Images.length > 0) {
+      setBase64Images(prev => [...prev, ...newBase64Images]);
+      showToast("success", `${newBase64Images.length} imagen(es) cargada(s) correctamente.`);
+    }
+  };
+
+  const removeImage = (index: number, type: 'base64' | 'url') => {
+    if (type === 'base64') {
+      setBase64Images(prev => prev.filter((_, i) => i !== index));
+    } else {
+      setUrls(prev => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const addUrlImage = () => {
+    const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+    
+    if (currentImageCount >= 6) {
+      showToast("error", "No puede agregar más de 6 imágenes.");
+      return;
+    }
+    
+    setUrls(prev => [...prev, ""]);
+  };
+
+  const updateUrlImage = (index: number, value: string) => {
+    setUrls(prev => prev.map((url, i) => i === index ? value : url));
   };
 
   const postNewCategoria = async () => {
@@ -141,11 +203,65 @@ const handleSubmit = async () => {
       showToast("error", "Usuario no identificado. Por favor inicia sesión nuevamente.");
       return;
     }
-    // Validate image size
-    if (base64Image && base64Image.length > 1000000) { // 1MB limit
-      showToast("error", "La imagen es demasiado grande. Por favor selecciona una imagen más pequeña.");
+
+    // Validate tema length
+    if (!tema || tema.trim().length < 5) {
+      showToast("error", "El título debe tener al menos 5 caracteres.");
       return;
     }
+
+    if (tema.length > 200) {
+      showToast("error", "El título no puede exceder 200 caracteres.");
+      return;
+    }
+
+    // Validate contenido length
+    if (!contenido || contenido.replace(/<[^>]*>/g, '').trim().length < 50) {
+      showToast("error", "El contenido debe tener al menos 50 caracteres de texto.");
+      return;
+    }
+
+    if (contenido.length > 50000) {
+      showToast("error", "El contenido es demasiado largo. Máximo 50,000 caracteres.");
+      return;
+    }
+
+    // Validate images - minimum 3, maximum 6
+    const validUrls = urls.filter(url => url.trim() !== '' && url.startsWith('http'));
+    const totalImages = base64Images.length + validUrls.length;
+      if (totalImages < 1) {
+      showToast("error", "Debe agregar al menos 1 imagen para crear el blog.");
+      return;
+    }
+
+    if (totalImages > 6) {
+      showToast("error", "No puede agregar más de 6 imágenes.");
+      return;
+    }
+
+    // Validate base64 images size
+    for (let i = 0; i < base64Images.length; i++) {
+      if (base64Images[i].length > 500000) {
+        showToast("error", `La imagen ${i + 1} es demasiado grande. Por favor selecciona una imagen más pequeña (máx. 500KB).`);
+        return;
+      }
+      
+      if (!base64Images[i].startsWith('data:image/')) {
+        showToast("error", `Formato de imagen ${i + 1} inválido. Por favor selecciona una imagen válida.`);
+        return;
+      }
+    }
+
+    // Validate URL format if using URLs
+    for (let i = 0; i < validUrls.length; i++) {
+      if (!validUrls[i].startsWith('http')) {
+        showToast("error", `La URL de la imagen ${i + 1} debe comenzar con http:// o https://`);
+        return;
+      }
+    }
+
+    // Combine all images
+    const allImages = [...base64Images, ...validUrls];
 
     // Debug logging
     console.log("Current user:", user);
@@ -153,6 +269,7 @@ const handleSubmit = async () => {
     console.log("User idpsicologo:", user.idpsicologo);
     console.log("Original ID Psicologo from blog:", originalIdPsicologo);
     console.log("Editing blog ID:", editingBlogId);
+    console.log("Total images:", allImages.length);
 
     let categoriaId: number | null;
     if (selectedKey !== null) {
@@ -161,30 +278,36 @@ const handleSubmit = async () => {
       categoriaId = await postNewCategoria();
     }
 
+    if (!categoriaId) {
+      showToast("error", "Error al procesar la categoría. Intenta nuevamente.");
+      return;
+    }
+
     // Use idpsicologo instead of user id for blog operations
     const finalIdPsicologo = user.idpsicologo || user.id;
     
     console.log("Final ID Psicologo to use:", finalIdPsicologo);
 
-    // Create a dataApi object here, after all variables are declared
+    // Sanitize contenido to prevent SQL injection
+    const sanitizedContenido = contenido
+      .replace(/'/g, "''") // Escape single quotes
+      .replace(/\\/g, "\\\\"); // Escape backslashes    // Create a dataApi object here, after all variables are declared
     const dataToSend: BlogApi = {
       idCategoria: categoriaId,
-      tema: tema,
-      contenido: contenido,
-      imagen: base64Image || url,
+      tema: tema.trim(),
+      contenido: sanitizedContenido,
+      imagenes: allImages, // Enviar array de imágenes
       idPsicologo: finalIdPsicologo,
     };
 
-    console.log("Final data to send:", dataToSend);
+    console.log("Final data to send:", {
+      ...dataToSend,
+      imagenes: `Array of ${allImages.length} images` // Log only count for brevity
+    });
 
     // Add validation for required fields
     if (!dataToSend.idPsicologo) {
       showToast("error", "Error: ID de psicólogo no válido.");
-      return;
-    }
-
-    if (!dataToSend.tema || !dataToSend.contenido) {
-      showToast("error", "Por favor completa todos los campos requeridos.");
       return;
     }
 
@@ -194,15 +317,20 @@ const handleSubmit = async () => {
     if (!token) {
       showToast("error", "Sesión expirada. Por favor inicia sesión nuevamente.");
       return;
-    }
-
+    }    
+    
     const apiUrl = editingBlogId
       ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${editingBlogId}`
       : `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
 
     const method = editingBlogId ? "PUT" : "POST";
 
-    console.log("Sending data:", dataToSend);
+    console.log("Sending request to:", apiUrl);
+    console.log("Method:", method);
+    console.log("Data size:", JSON.stringify(dataToSend).length, "characters");
+
+    // Show loading toast
+    showToast("info", "Enviando datos...");
 
     const response = await fetch(apiUrl, {
       method,
@@ -214,7 +342,17 @@ const handleSubmit = async () => {
       body: JSON.stringify(dataToSend),
     });
 
-    const data = await response.json();
+    console.log("Response status:", response.status);
+    console.log("Response ok:", response.ok);
+
+    let data;
+    try {
+      data = await response.json();
+      console.log("Response data:", data);
+    } catch (parseError) {
+      console.error("Error parsing response JSON:", parseError);
+      throw new Error("Error al procesar la respuesta del servidor");
+    }
 
     if (response.ok) {
       showToast(
@@ -223,29 +361,101 @@ const handleSubmit = async () => {
           ? "Publicación actualizada correctamente"
           : "Publicación creada correctamente"
       );
-      await new Promise((resolve) => setTimeout(resolve, 2600));
-      window.location.reload();
+        // Reset form
+      setTema("");
+      setContenido("");
+      setBase64Images([]);
+      setUrls([]);
+      setSelectedKey(null);
+      
+      // Optional: reload after success
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } else {
-      console.error("Server error:", data);
-      showToast("error", data.status_message || "Error desconocido");
+      // Enhanced error handling
+      let errorMessage = "Error desconocido";
+      
+      if (data?.status_message) {
+        errorMessage = data.status_message;
+      } else if (data?.message) {
+        errorMessage = data.message;
+      } else if (data?.description) {
+        errorMessage = data.description;
+      }
+
+      // Specific error cases
+      if (response.status === 413) {
+        errorMessage = "El archivo es demasiado grande. Reduce el tamaño de la imagen.";
+      } else if (response.status === 422) {
+        errorMessage = "Datos inválidos. Verifica que todos los campos estén correctos.";
+      } else if (response.status === 500) {
+        errorMessage = "Error interno del servidor. Intenta con una imagen más pequeña o verifica el contenido.";
+      }
+
+      console.error("Server error details:", {
+        status: response.status,
+        statusText: response.statusText,
+        data: data
+      });
+      
+      showToast("error", errorMessage);
     }
   } catch (error) {
     console.error("Client error:", error);
-    showToast("error", "Error de conexión. Intenta nuevamente.");
+    
+    let errorMessage = "Error de conexión. Intenta nuevamente.";
+    
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      errorMessage = "Error de conexión con el servidor. Verifica tu conexión a internet.";
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
+    showToast("error", errorMessage);
   }
 };
 
 const handleEdit = async (id: number) => {
   const blog = await BlogById(id);
   console.log("Blog data for editing:", blog);
+  
   if (blog) {
-    // Check if the blog has a valid idPsicologo
+    // VALIDACIÓN DE PROPIEDAD: Solo el psicólogo propietario puede editar
+    const currentPsicologoId = user?.idpsicologo || user?.id;
+    
+    if (blog.idPsicologo !== currentPsicologoId) {
+      showToast("error", "No tienes permisos para editar este blog. Solo puedes editar tus propios blogs.");
+      return;
+    }
+    
     console.log("Blog idPsicologo:", blog.idPsicologo);
-    console.log("Current user can edit?", blog.idPsicologo === user?.id || !blog.idPsicologo);
+    console.log("Current user can edit?", blog.idPsicologo === currentPsicologoId);
     
     setTema(blog.tema);
-    setUrl(blog.imagen);
-    setBase64Image(null); // Reset base64 image when editing
+    
+    // Handle multiple images
+    if (blog.imagenes && Array.isArray(blog.imagenes)) {
+      // Separate base64 images from URLs
+      const base64Imgs = blog.imagenes.filter((img: string) => img.startsWith('data:image/'));
+      const urlImgs = blog.imagenes.filter((img: string) => img.startsWith('http'));
+      
+      setBase64Images(base64Imgs);
+      setUrls(urlImgs);
+    } else if (blog.imagen) {
+      // Backwards compatibility for single image
+      if (blog.imagen.startsWith('data:image/')) {
+        setBase64Images([blog.imagen]);
+        setUrls([]);
+      } else {
+        setBase64Images([]);
+        setUrls([blog.imagen]);
+      }
+    } else {
+      setBase64Images([]);
+      setUrls([]);
+    }
+    
     setContenido(blog.contenido);
     setSelectedKey(blog.idCategoria.toString());
     setEditingBlogId(blog.id);
@@ -262,19 +472,22 @@ const handleEdit = async (id: number) => {
           {/* Boton Crear Blog */}
           <Button
             radius="full"
-            className="bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold"
-            onPress={() => {
+            className="bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold"            onPress={() => {
               setView("crear");
               setEditingBlogId(null);
               setOriginalIdPsicologo(null);
+              // Reset form
+              setTema("");
+              setContenido("");
+              setBase64Images([]);
+              setUrls([]);
+              setSelectedKey(null);
             }}
           >
             Crear Blog
-          </Button>
-
-          {/* Boton Ver Blogs */}
+          </Button>          {/* Boton Ver Blogs */}
           <Button
-            onPress={() => setView(" blogs")}
+            onPress={() => setView("blogs")}
             className="text-white text-[16px] leading-[20px] bg-[#634AE2] a"
           >
             Ver Blogs
@@ -328,67 +541,113 @@ const handleEdit = async (id: number) => {
                   </AutocompleteItem>
                 )}
               </Autocomplete>
-            </div>
-
-            {/* Imagen */}
+            </div>            {/* Imagen */}
             <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
-              Imagen
+              Imágenes (Mínimo 1, Máximo 6)
             </h1>
             
-            {/* Seccion de subida de imagen */}
+            {/* Contador de imágenes */}
+            <div className="w-full text-center">              <span className={`text-sm font-medium ${
+                (base64Images.length + urls.filter(url => url.trim() !== '').length) >= 1 
+                  ? 'text-green-600' 
+                  : 'text-red-600'
+              }`}>
+                Imágenes agregadas: {base64Images.length + urls.filter(url => url.trim() !== '').length}/6
+              </span>
+            </div>
+            
+            {/* Sección de subida de múltiples imágenes */}
             <div className="w-full flex flex-col gap-2">
-              {/* Boton de subir imagen */}
+              {/* Boton de subir múltiples imágenes */}
               <div className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
-                {base64Image ? (
-                  <Image
-                    src={base64Image}
-                    alt="Imagen seleccionada"
-                    width={300}
-                    height={128}
-                    className="w-full h-full object-cover"
-                  />
-                ) : url ? (
-                  <Image
-                    src={url}
-                    alt="Imagen desde URL"
-                    width={300}
-                    height={128}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <Plus width={40} height={40} strokeWidth={2} className="text-[#634AE2]" />
-                    <span className="text-[#634AE2] text-sm mt-2">Subir imagen</span>
-                  </div>
-                )}
+                <div className="flex flex-col items-center">
+                  <Plus width={40} height={40} strokeWidth={2} className="text-[#634AE2]" />
+                  <span className="text-[#634AE2] text-sm mt-2">Subir imágenes (máximo {6 - base64Images.length - urls.filter(url => url.trim() !== '').length})</span>
+                </div>
 
                 <input
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={handleImageUpload}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={base64Images.length + urls.filter(url => url.trim() !== '').length >= 6}
                 />
               </div>
 
-              {/* OR separator */}
-              <div className="flex items-center justify-center my-2">
-                <span className="text-[#634AE2] text-sm">Tambien puedes colocar el URL</span>
-              </div>
+              {/* Mostrar imágenes base64 cargadas */}
+              {base64Images.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {base64Images.map((img, index) => (
+                    <div key={index} className="relative">
+                      <Image
+                        src={img}
+                        alt={`Imagen ${index + 1}`}
+                        width={150}
+                        height={100}
+                        className="w-full h-24 object-cover rounded-lg"
+                      />
+                      <button
+                        onClick={() => removeImage(index, 'base64')}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
-              {/* URL Input */}
-              <Input
-                placeholder="Url de imagen"
-                classNames={{
-                  input: "!text-[#634AE2]",
-                }}
-                radius="full"
-                height={43}
-                value={url}
-                onChange={(e) => {
-                  setUrl(e.target.value);
-                  setBase64Image(null); // Clear uploaded image when typing URL
-                }}
-              />
+              {/* Botón para agregar URL */}
+              {(base64Images.length + urls.filter(url => url.trim() !== '').length) < 6 && (
+                <Button
+                  onPress={addUrlImage}
+                  className="bg-[#634AE2] text-white"
+                  size="sm"
+                >
+                  Agregar imagen por URL
+                </Button>
+              )}
+
+              {/* Inputs de URL */}
+              {urls.map((url, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <Input
+                    placeholder={`URL de imagen ${index + 1}`}
+                    classNames={{
+                      input: "!text-[#634AE2]",
+                    }}
+                    radius="full"
+                    height={43}
+                    value={url}
+                    onChange={(e) => updateUrlImage(index, e.target.value)}
+                  />
+                  <button
+                    onClick={() => removeImage(index, 'url')}
+                    className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+
+              {/* Mostrar preview de URLs válidas */}
+              {urls.filter(url => url.trim() !== '' && url.startsWith('http')).length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {urls.filter(url => url.trim() !== '' && url.startsWith('http')).map((url, index) => (
+                    <div key={index} className="relative">
+                      <Image
+                        src={url}
+                        alt={`URL Imagen ${index + 1}`}
+                        width={150}
+                        height={100}
+                        className="w-full h-24 object-cover rounded-lg"
+                        onError={() => showToast("error", `Error cargando imagen ${index + 1} desde URL`)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

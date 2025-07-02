@@ -1,26 +1,23 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import { Citas } from "@/interface";
+import { redirect } from "next/navigation";
 
 export function useCitas() {
-  const router = useRouter();
   const [citas, setCitas] = useState<Citas[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
-  // Memoizar las cookies para evitar re-creación en cada render
   const { sessionToken, userRole } = useMemo(() => {
     const cookies = parseCookies();
     return {
       sessionToken: cookies["session"],
       userRole: cookies["rol"]
     };
-  }, []); // Sin dependencias - solo se ejecuta una vez
+  }, []);
 
-  // Función para verificar autorización
   const checkAuthorization = useCallback(() => {
     try {
       const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -29,19 +26,16 @@ export function useCitas() {
       setIsAuthorized(isAuth);
 
       if (!isAuth) {
-        router.push("/unauthorized");
-        return false;
+        redirect('/login');
       }
       return true;
     } catch (error) {
       console.error("Error checking authorization:", error);
       setIsAuthorized(false);
-      router.push("/unauthorized");
-      return false;
+      redirect('/login');
     }
-  }, [router, userRole]);
+  }, [userRole]);
 
-  // Función para obtener citas - sin dependencia de cookies cambiantes
   const fetchCitas = useCallback(async () => {
     if (!isAuthorized || !sessionToken) return;
 
@@ -61,7 +55,7 @@ export function useCitas() {
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
+        redirect('/login');
       }
 
       const data = await response.json();
@@ -89,17 +83,16 @@ export function useCitas() {
       const errorMessage = error instanceof Error ? error.message : "Error al obtener las citas";
       setError(errorMessage);
       showToast("error", "Error de conexión. Intenta nuevamente.");
+      redirect('/login');
     } finally {
       setIsLoading(false);
     }
-  }, [isAuthorized, sessionToken]); // Solo dependencias estables
+  }, [isAuthorized, sessionToken]);
 
-  // Efecto para verificar autorización al montar el componente
   useEffect(() => {
     checkAuthorization();
   }, [checkAuthorization]);
 
-  // Efecto para obtener citas cuando esté autorizado
   useEffect(() => {
     if (isAuthorized === true) {
       fetchCitas();

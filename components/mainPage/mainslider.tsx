@@ -12,6 +12,8 @@ interface SliderSection {
   smallPhrase: string;
   button: boolean;
   background: string;
+  alt: string;
+  title: string;
 }
 
 const sections: SliderSection[] = [
@@ -21,6 +23,8 @@ const sections: SliderSection[] = [
       "Con nuestras terapias virtuales, transformamos tu vida y te acompañamos en cada paso de tu camino hacia la sanación.",
     button: true,
     background: "/carruselImages/salud-mental-terapia-virtual.webp",
+    alt: "Imagen de salud mental y terapia virtual",
+    title: "Salud Mental y Terapia Virtual",
   },
   {
     phrase: "Apoyo a un click de distancia",
@@ -28,6 +32,8 @@ const sections: SliderSection[] = [
       "Nuestras terapias virtuales te permiten cuidar de tu bienestar desde la comodidad de tu hogar cuando más lo necesites.",
     button: true,
     background: "/carruselImages/centro-psicologico-terapia-online.webp",
+    alt: "Imagen de centro psicologico y terapia online",
+    title: "Centro Psicológico y Terapia Online",
   },
   {
     phrase: "Tu bienestar emocional inicia aqui",
@@ -35,6 +41,8 @@ const sections: SliderSection[] = [
       "Transforma tu vida con nuestras terapias diseñadas para ayudarte a sanar y crecer.",
     button: true,
     background: "/carruselImages/bienestar-mental-terapia-virtual.webp",
+    alt: "Imagen de bienestar mental y terapia virtual",
+    title: "Bienestar Mental y Terapia Virtual",
   },
   {
     phrase: "No dejemos que el silencio sea el enemigo",
@@ -42,6 +50,8 @@ const sections: SliderSection[] = [
       "8 de cada 10 peruanos no reciben la atención mental que necesitan.",
     button: true,
     background: "/carruselImages/psicologo-en-linea-ayuda-emocional.webp",
+    alt: "Imagen de psicologo en linea y ayuda emocional",
+    title: "Psicologo en Linea y Ayuda Emocional",
   },
 ];
 
@@ -78,8 +88,8 @@ export default function MainSlider() {
                 <div key={index} className="h-full flex-1 relative ">
                   <Image
                     src={item.background}
-                    alt={""}
-                    fill
+                    alt={item.alt}
+                    title={item.title}                    fill
                     className="object-cover"
                   />
                 </div>

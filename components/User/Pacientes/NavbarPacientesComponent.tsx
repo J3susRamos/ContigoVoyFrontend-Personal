@@ -4,15 +4,14 @@ import { Input } from "@heroui/react";
 import FilterButton from "@/components/ui/Filters/FilterButton";
 import { FilterMenu } from "@/components/ui/Filters/FilterMenu";
 import FilterSubMenu from "@/components/ui/Filters/FilterSubMenu";
-import { FiltersPaciente } from "@/components/User/Pacientes/ListarPacientes";
 import FilterCalendar from "@/components/ui/Filters/FilterCalendar";
 import { useRouter } from "next/navigation";
+import { FiltersPaciente } from "@/interface";
 
 
 interface NavbarProps {
   filterValue: string;
   onSearchChange: (value?: string) => void;
-  // onClear: () => void;
   visibleColumns?: Set<string>;
   setVisibleColumns?: (columns: Set<string>) => void;
   columns?: { name: string; uid: string; sortable?: boolean }[];
@@ -60,8 +59,8 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
 
 
   return (
-    <div className="flex w-full z-40">
-      <div className="bg-[#6265f4] dark:bg-primary w-full h-[8vh] flex flex-row justify-start items-center px-4">
+    <div className="flex w-full">
+      <div className="bg-[#6265f4] w-full h-[8vh] flex flex-row justify-start items-center px-4">
         <div className="flex flex-row gap-4 w-full items-center pl-12">
           {/* Icono de filtro */}
           <FilterButton menuOpen={menuAbierto} setMenuOpen={setMenuAbierto}>
@@ -206,30 +205,40 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                 "placeholder:text-accent-foreground dark:placeholder:text-accent-foreground",
             }}
             value={filterValue}
-            // onClear={onClear}
             onValueChange={onSearchChange}
-          />
-
-          {/* Grupo de icono de agregar y botón */}
-          <div className="ml-auto flex items-center gap-4 mr-12">
+          />          {/* Grupo de icono de agregar y botón - Desktop */}
+          <div className="ml-auto hidden md:flex items-center gap-4 mr-12">
             <span
-              className="text-primary dark:text-primary transition-colors"
+              className="text-primary transition-colors"
               dangerouslySetInnerHTML={{
                 __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
               }}
               style={{
-                background: "hsl(var(--card))",
+                background: "white",
                 borderRadius: "9999px",
                 borderColor: "hsl(var(--primary))",
               }}
             />
 
-            {/* Botón de agregar nuevo paciente */}
+            {/* Botón de agregar nuevo paciente - Desktop */}
             <button
-              className="text-primary-foreground dark:text-primary-foreground font-light text-xl border-1 rounded-full px-4"
+              className="text-primary-foreground dark:border-white font-light text-xl border-1 rounded-full px-4"
               onClick={handleAddNew}
             >
               Agregar nuevo paciente
+            </button>
+          </div>          {/* Botón de agregar para móviles/tablets */}
+          <div className="ml-auto md:hidden flex items-center mr-8">
+            <button
+              className="bg-card dark:bg-card text-primary dark:text-primary p-3 rounded-full border-2 border-primary dark:border-primary hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200"
+              onClick={handleAddNew}
+              title="Agregar nuevo paciente"
+            >
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor" width="20" height="20"'),
+                }}
+              />
             </button>
           </div>
         </div>

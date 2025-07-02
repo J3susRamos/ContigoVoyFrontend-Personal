@@ -3,8 +3,7 @@ import React from "react";
 export type GenericFilters = Record<string, string[]>;
 
 interface Props {
-  filterValue?: string;
-  filters: GenericFilters;
+  filters: boolean;
   messages: {
     noResultsTitle?: string;
     noResultsDescription?: string;
@@ -14,7 +13,6 @@ interface Props {
 }
 
 const EmptyTable = ({
-  filterValue,
   filters,
   messages: {
     noResultsTitle = "No se encontraron resultados.",
@@ -25,12 +23,9 @@ const EmptyTable = ({
 }: Props) => {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="bg-white dark:bg-card rounded-lg shadow-sm border border-gray-200 dark:border-border p-8 max-w-md w-full text-center">
+      <div className="bg-white dark:bg-[#272726] rounded-lg shadow-sm border border-gray-200 dark:border-border p-8 max-w-md w-full text-center">
         <div className="mx-auto w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
-          {filterValue ||
-          Object.values(filters).some(
-            (filter) => filter && filter.length > 0
-          ) ? (
+          {filters ? (
             <svg
               className="w-8 h-8 text-primary dark:text-primary-foreground"
               fill="none"
@@ -74,15 +69,13 @@ const EmptyTable = ({
         </div>
 
         <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground mb-2">
-          {filterValue ||
-          Object.values(filters).some((filter) => filter && filter.length > 0)
+          {filters
             ? noResultsTitle
             : emptyTitle}
         </h3>
 
         <p className="text-gray-600 dark:text-muted-foreground">
-          {filterValue ||
-          Object.values(filters).some((filter) => filter && filter.length > 0)
+          {filters
             ? noResultsDescription
             : emptyDescription}
         </p>

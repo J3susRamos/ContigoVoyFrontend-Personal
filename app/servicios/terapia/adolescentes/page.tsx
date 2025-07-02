@@ -57,26 +57,31 @@ const TeenTerapias: ServicesStructureProps[] = [
         id: 1,
         text: "Ayuda a manejar la frustración y transformar emociones difíciles en acciones positivas.",
         icon: "/Services/teen/therapy/frustraciones.webp",
+        title: "Manejo de emociones",
       },
       {
         id: 2,
         text: "Fomenta un equilibrio saludable entre sus responsabilidades y su bienestar emocional",
         icon: "/Services/teen/therapy/equilibrio.webp",
+        title: "Equilibrio saludable",
       },
       {
         id: 3,
         text: "Mejora las habilidades para comunicarse y relacionarse con los demás.",
         icon: "/Services/teen/therapy/comunicacion.webp",
+        title: "Comunicación efectiva",
       },
       {
         id: 4,
         text: "Les brinda herramientas para enfrentar decisiones importantes con seguridad.",
+        title: "Seguridad en la toma de decisiones",
         icon: "/Services/teen/therapy/seguridad.webp",
       },
       {
         id: 5,
         text: "Impulsa su autoestima,ayudándoles a construir una imagen positiva de sí mismos.",
         icon: "/Services/teen/therapy/construir.webp",
+        title: "Construir una imagen positiva",
       },
     ],
     textfooter:
