@@ -43,9 +43,9 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
             { label: "Correo", value: p.email },
             { label: "Celular", value: p.celular },
           ]}
+          onClick={() => redirectToPaciente(p.idPaciente)}
           onDelete={() => onDeleteInit(p.idPaciente)}
           onEdit={() => redirectToPaciente(p.idPaciente)}
-          onClick={() => redirectToPaciente(p.idPaciente)}
         >
           <FamiliaButton />
         </DataCard>
