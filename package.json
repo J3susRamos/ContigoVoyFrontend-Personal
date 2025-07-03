@@ -28,6 +28,7 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "@types/yup": "^0.29.14",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "contigovoy3": "file:",
