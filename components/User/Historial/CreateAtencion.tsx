@@ -193,16 +193,16 @@ const CreateAtencion = () => {
 
     try {
       const atencionData = {
-        MotivoConsulta: formData.MotivoConsulta,
-        FormaContacto: formData.FormaContacto,
-        Diagnostico: formData.Diagnostico,
-        Tratamiento: formData.Tratamiento,
-        Observacion: formData.Observacion,
+        motivoConsulta: formData.MotivoConsulta,
+        formaContacto: formData.FormaContacto,
+        diagnostico: formData.Diagnostico,
+        tratamiento: formData.Tratamiento,
+        observacion: formData.Observacion,
         idEnfermedad: parseInt(formData.idEnfermedad),
-        UltimosObjetivos: formData.UltimosObjetivos,
-        FechaAtencion: formData.FechaAtencion,
-        DocumentosAdicionales: "",
-        Comentario: formData.Comentario,
+        ultimosObjetivos: formData.UltimosObjetivos,
+        fechaAtencion: formData.FechaAtencion,
+        documentosAdicionales: "",
+        comentario: formData.Comentario,
         descripcion: selectedEnfermedad.nombreEnfermedad,
       };
 
@@ -246,6 +246,8 @@ const CreateAtencion = () => {
           descripcion: "",
         });
         setSelectedEnfermedad(null);
+        // redirect a /user/historial
+        router.push("/user/historial");
       } else {
         console.log(
           "Error en la respuesta:",
