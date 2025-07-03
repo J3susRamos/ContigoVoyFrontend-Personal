@@ -140,7 +140,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
         genero: formData.genero,
         ocupacion: formData.ocupacion,
         estadoCivil: formData.estadoCivil,
-        direccion: `${formData.direccion}, ${formData.pais}, ${formData.provincia}, ${formData.departamento}`,
+        direccion: `${formData.direccion}, ${formData.pais}, ${formData.departamento}`,
       };
 
       const cookies = parseCookies();
