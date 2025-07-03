@@ -356,8 +356,8 @@ export interface FormFamilia {
   estado_padre: string,
   nombre_apoderado: string,
   estado_apoderado: string,
-  cantidad_hijos: string,
-  cantidad_hermanos: string,
+  cantidad_hijos: number,
+  cantidad_hermanos: number,
   integracion_familiar: string,
   historial_familiar: string,
   paciente?: {
