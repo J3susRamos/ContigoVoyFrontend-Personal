@@ -99,8 +99,7 @@ const NavbarUser = () => {
       if (user.rol === "PSICOLOGO") {
         items = items.filter(item =>
           item.name !== "Registro de personal" &&
-          item.name !== "Psicologos" &&
-          item.name !== "Marketing" 
+          item.name !== "Psicologos"
         );
       }
       

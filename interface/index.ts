@@ -1,6 +1,6 @@
-import { GenericFilters } from "@/components/ui/Table/EmptyTable";
 import { DateValue } from "@heroui/react";
 import React from "react";
+import {GenericFilters} from "@/components/ui/Table/EmptyTable";
 
 export interface CardServicesProps {
   title: string;
@@ -40,19 +40,6 @@ export interface FAQ {
 export interface AccordionQuestProps {
   faqs: FAQ[];
 }
-
-export interface PromotionCardProps {
-  id: number;
-  title: string;
-  preciounit: string;
-  cents: string;
-  regularprice: string;
-  list: {
-    id: number;
-    text: string;
-  }[]
-}
-
 //interface Services para el componente ServicesStructure No le mueva nada caracho
 export interface ServicesStructureProps {
   title: string;
@@ -78,6 +65,18 @@ export interface ServicesStructureProps {
   textfooter: string;
   textfootermobile:string;
   promotionCards?: PromotionCardProps[];
+}
+
+export interface PromotionCardProps {
+  id: number;
+  title: string;
+  preciounit: string;
+  cents: string;
+  regularprice: string;
+  list: {
+    id: number;
+    text: string;
+  }[]
 }
 
 //Quienes Somos
@@ -133,11 +132,13 @@ export interface Contact {
 }
 
 export interface BlogApi {
+
   idCategoria: number | null,
   tema: string,
   contenido: string,
   imagenes: string[], // Array de imágenes
   idPsicologo: number | null;
+
 }
 
 export interface BlogApiGEt {
@@ -567,3 +568,24 @@ export interface FiltersCitas extends GenericFilters {
   fechaInicio: string[];
 }
 
+export interface EmailBlock {
+    id: string;
+    type: "divider" | "image" | "header" | "text" | "columns";
+    imageUrl?: string;
+    imageUrls?: string[];
+    content?: string;
+    styles?: { color?: string; bold?: boolean; italic?: boolean };
+}
+
+export interface Plantilla {
+    id: number;
+    nombre: string;
+    asunto: string;
+    remitente: string;
+    destinatarios: string;
+    bloques: EmailBlock[];
+}
+
+export interface MarketingApiResponse {
+    result: Plantilla[];
+}
