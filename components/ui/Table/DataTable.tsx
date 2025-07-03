@@ -16,9 +16,8 @@ const DataTable = <T,>({
   return (
     <>
       <div className="hidden lg:block">
-        <table
-          className={`max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8 mt-5`}
-        >          <thead>
+        <table className="max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8 mt-5">
+          <thead>
             <tr className="bg-[#6265f4] dark:bg-primary text-white dark:text-primary-foreground h-12 text-center">
               <th className="py-3 pl-9 text-2xl font-light rounded-tl-full">
                 O
