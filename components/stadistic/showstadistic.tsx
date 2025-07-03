@@ -5,11 +5,12 @@ import Clients from "./clients";
 import Appointments from "./appointments";
 import Sales from "./sales";
 import Performance from "./performance";
-
+import { DateRangeFilter } from "../ui/Filters/DateRangeFilter"
 export default function ShowStadistic() {
   const [view, setView] = useState("clientes");
   const [, setRol] = useState(""); // rol del usuario
   const [allowedViews, setAllowedViews] = useState<string[]>([]); // vistas permitidas
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -57,6 +58,7 @@ export default function ShowStadistic() {
               {btn.name}
             </Button>
           ))}
+          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
         </div>
       </div>
 
