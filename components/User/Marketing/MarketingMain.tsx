@@ -49,7 +49,7 @@ const EmailMarketingPage = () => {
                 </p>
               </section>
 
-              {/* ✅ Botón que redirige a /templateString */}
+              {/* ✅ Botón que redirige a / */}
               <button
                 onClick={() => router.push("/user/marketing/crear")}
                 className="bg-[#8a8af3] hover:bg-[#6969d8] text-white font-bold py-2 px-6 rounded-2xl transition duration-200"
