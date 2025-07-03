@@ -139,9 +139,9 @@ export default function App() {
         genero: formData.genero,
         ocupacion: formData.ocupacion,
         estadoCivil: formData.estadoCivil,
-        direccion: formData.direccion, 
-        pais: formData.pais, 
-        provincia: formData.provincia, 
+        direccion: formData.direccion,
+        pais: formData.pais,
+        provincia: formData.provincia,
         departamento: formData.departamento,
       };
 
@@ -490,46 +490,18 @@ export default function App() {
               </div>
             </div>
           </div>
-          <div className="flex pt-1">
-            <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Provincia</div>
-              <div className="relative">
-                <CitySelect
-                  countryid={country?.id ?? 0}
-                  stateid={currentState?.id ?? 0}
-                  onChange={handleCityChange}
-                  containerClassName="mt-2 [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-input [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
-                  inputClassName="appearance-none !border-none !outline-none pl-12 pr-3 text-sm h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-muted-foreground placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-foreground dark:text-foreground"
-                  placeHolder="Seleccionar"
-                />
-                <span
-                  className="text-foreground dark:text-foreground transition-colors absolute right-3 top-1/2 pt-1 transform -translate-y-1/2"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(
-                      /<svg /,
-                      '<svg fill="currentColor" '
-                    ),
-                  }}
-                  style={{
-                    width: "1.2em",
-                    height: "1.2em",
-                  }}
-                />
-              </div>
-            </div>
-            <div className="flex-1 items-center justify-items-center">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Direccion</div>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={formData.direccion}
-                  onChange={(e) =>
-                    setFormData({ ...formData, direccion: e.target.value })
-                  }
-                  className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
-                />
-              </div>
-            </div>
+          <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
+            Dirección
+          </div>
+          <div className="flex justify-center">
+            <input
+              type="text"
+              value={formData.direccion}
+              onChange={(e) =>
+                setFormData({ ...formData, direccion: e.target.value })
+              }
+              className="pl-12 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-11/12 rounded-full border border-border dark:border-border placeholder:text-muted-foreground dark:placeholder:text-muted-foreground bg-input dark:bg-input text-foreground dark:text-foreground"
+            />
           </div>
           <div className="text-center pt-1 pb-1 py-1 mt-4 text-card-foreground dark:text-card-foreground">
             Antecedentes médicos
