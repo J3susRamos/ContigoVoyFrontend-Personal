@@ -349,6 +349,25 @@ export interface FormPaciente {
   medicamentosPrescritos: string;
 }
 
+export interface FormFamilia {
+  nombre_madre: string,
+  estado_madre: string,
+  nombre_padre: string,
+  estado_padre: string,
+  nombre_apoderado: string,
+  estado_apoderado: string,
+  cantidad_hijos: number,
+  cantidad_hermanos: number,
+  integracion_familiar: string,
+  historial_familiar: string,
+  paciente?: {
+      idPaciente: string,
+      nombre: string,
+      apellido: string,
+      codigo: string,
+  } 
+}
+
 export interface DatosPacienteProps {
   idPaciente: number | null;
 }
