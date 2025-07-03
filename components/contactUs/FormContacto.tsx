@@ -1,47 +1,40 @@
 "use client";
 import { Contact } from "@/interface";
-import { Button, Form, Input } from "@heroui/react";
+import { Button, Input } from "@heroui/react";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  nombre: yup.string().required("El nombre es requerido"),
+  apellido: yup.string().required("El apellido es requerido"),
+  celular: yup.string().required("El celular es requerido"),
+  email: yup.string().email("Email inválido").required("El email es requerido"),
+  comentario: yup.string().required("El comentario es requerido"),
+});
 
 export default function FormContacto() {
   const [action, setAction] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Contact>({
-    nombre: "",
-    apellido: "",
-    celular: "",
-    email: "",
-    comentario: "",
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
+  } = useForm<Contact>({
+    resolver: yupResolver(schema),
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const formValues = watch();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
+  const onSubmit = async (data: Contact) => {
     setLoading(true);
 
-    const formDataEntries = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formDataEntries) as unknown as Contact;
-
-    // Asegúrate de que todas las propiedades necesarias estén presentes
-    if (!data.nombre || !data.apellido || !data.celular || !data.email || !data.comentario) {
-      setError("Por favor, completa todos los campos del formulario.");
-      setLoading(false);
-      return;
-    }
-
     if (data.celular) {
-      data.celular = String(data.celular); // Asegúrate de que celular sea un string
+      data.celular = String(data.celular);
     }
 
     try {
@@ -60,42 +53,30 @@ export default function FormContacto() {
       const result: { message?: string } = await response.json();
 
       if (!response.ok) {
-        setError(result.message || "Error al enviar el formulario");
-        setLoading(false);
-        return;
+        throw new Error(result.message || "Error al enviar el formulario");
       }
 
       setAction("¡Mensaje enviado! Nuestro equipo se pondrá en contacto contigo lo antes posible.");
-      setFormData({
-        nombre: "",
-        apellido: "",
-        celular: "",
-        email: "",
-        comentario: "",
-      });
+      reset();
 
       setTimeout(() => {
         setAction(null);
       }, 6000);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || "No se pudo enviar el formulario.");
-      } else {
-        setError("No se pudo enviar el formulario.");
-      }
+      console.error("Error:", err);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="w-full max-w-scv12 sm:max-w-scv13 md:mr-10 relative z-0">
       {/* Fondo con efecto glassmorphism */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/20 to-white/10 backdrop-blur-lg rounded-3xl border border-white/30 shadow-2xl"></div>
       
-      <Form
+      <form
         className="relative z-10 px-8 pt-8 pb-6 rounded-3xl"
-        validationBehavior="native"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
         {/* Header del formulario */}
         <div className="text-center mb-8">
@@ -126,17 +107,17 @@ export default function FormContacto() {
               </p>
             </div>
           </div>
-        )}        <div className="space-y-5 w-full relative">
+        )}
+
+        <div className="space-y-5 w-full relative">
           {/* Campo Nombre */}
           <div className="relative group">
             <Input
-              isRequired
               size="lg"
-              name="nombre"
               placeholder="Nombres"
               type="text"
-              value={formData.nombre}
-              onChange={handleChange}
+              value={formValues?.nombre || ""}
+              {...register("nombre")}
               startContent={
                 <div className="text-blue-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -148,19 +129,19 @@ export default function FormContacto() {
                 input: "bg-white/90 text-gray-800 placeholder:text-gray-500",
                 inputWrapper: "bg-white/90 border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]",
               }}
+              isInvalid={!!errors.nombre}
+              errorMessage={errors.nombre?.message}
             />
           </div>
 
           {/* Campo Apellido */}
           <div className="relative group">
             <Input
-              isRequired
               size="lg"
-              name="apellido"
               placeholder="Apellidos"
               type="text"
-              value={formData.apellido}
-              onChange={handleChange}
+              value={formValues?.apellido || ""}
+              {...register("apellido")}
               startContent={
                 <div className="text-indigo-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -172,19 +153,19 @@ export default function FormContacto() {
                 input: "bg-white/90 text-gray-800 placeholder:text-gray-500",
                 inputWrapper: "bg-white/90 border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]",
               }}
+              isInvalid={!!errors.apellido}
+              errorMessage={errors.apellido?.message}
             />
           </div>
 
           {/* Campo Celular */}
           <div className="relative group">
             <Input
-              isRequired
               size="lg"
-              name="celular"
               placeholder="Celular"
               type="tel"
-              value={formData.celular}
-              onChange={handleChange}
+              value={formValues?.celular || ""}
+              {...register("celular")}
               startContent={
                 <div className="text-green-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -196,19 +177,19 @@ export default function FormContacto() {
                 input: "bg-white/90 text-gray-800 placeholder:text-gray-500",
                 inputWrapper: "bg-white/90 border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]",
               }}
+              isInvalid={!!errors.celular}
+              errorMessage={errors.celular?.message}
             />
           </div>
 
           {/* Campo Email */}
           <div className="relative group">
             <Input
-              isRequired
               size="lg"
-              name="email"
               placeholder="Correo electrónico"
               type="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={formValues?.email || ""}
+              {...register("email")}
               startContent={
                 <div className="text-red-500">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -220,22 +201,25 @@ export default function FormContacto() {
                 input: "bg-white/90 text-gray-800 placeholder:text-gray-500",
                 inputWrapper: "bg-white/90 border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02]",
               }}
+              isInvalid={!!errors.email}
+              errorMessage={errors.email?.message}
             />
           </div>
 
           {/* Campo Comentario */}
           <div className="relative group">
             <Input
-              name="comentario"
               size="lg"
-              placeholder="Algun comentario o consulta?"
+              placeholder="Cuéntanos tu situación o consulta..."
               type="textarea"
-              value={formData.comentario}
-              onChange={handleChange}
+              value={formValues?.comentario || ""}
+              {...register("comentario")}
               classNames={{
                 input: "bg-white/90 text-gray-800 placeholder:text-gray-500 min-h-[120px]",
                 inputWrapper: "bg-white/90 border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-[1.01]",
               }}
+              isInvalid={!!errors.comentario}
+              errorMessage={errors.comentario?.message}
             />
           </div>
 
@@ -262,20 +246,8 @@ export default function FormContacto() {
               )}
             </Button>
           </div>
-
-          {/* Mensaje de error */}
-          {error && (
-            <div className="bg-red-500/90 backdrop-blur-sm text-white p-4 rounded-xl border border-red-400/30 shadow-lg">
-              <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="font-medium">{error}</span>
-              </div>
-            </div>
-          )}
         </div>
-      </Form>
+      </form>
     </div>
   );
 }
