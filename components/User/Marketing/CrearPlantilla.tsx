@@ -194,7 +194,7 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
         </div>
 
         <button
-          onClick={onBack}
+          onClick={() => router.push("/user/marketing")}
           className="mt-10 bg-primary dark:bg-primary hover:bg-gray-300 dark:hover:bg-gray-600 text-white dark:text-white font-bold py-2 px-6 rounded transition"
         >
           Volver atrás
