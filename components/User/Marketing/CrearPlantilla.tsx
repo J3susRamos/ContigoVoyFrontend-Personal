@@ -14,36 +14,36 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       {/* Navbar superior */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-4 md:px-6 pt-4 md:pt-6 pb-3 md:pb-4 border-b border-gray-200 dark:border-gray-700">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
           Email marketing
         </h1>
-        <div className="mt-4 md:mt-0">
+        <div className="mt-3 md:mt-0 w-full md:w-auto flex justify-end">
           <CerrarSesion />
         </div>
       </div>
 
       {/* Título principal centrado */}
-  <div className="text-center py-6">
-    <h2 className="text-3xl font-bold text-purple-400">
-      Selecciona una plantilla
-    </h2>
-  </div>
+      <div className="text-center py-4 md:py-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-purple-400">
+          Selecciona una plantilla
+        </h2>
+      </div>
 
-  {/* Navbar secundario con pestañas */}
-<div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
-  <div className="ml-10 flex justify-between items-center w-full max-w-[400px]">
-    {/* Botón activo */}
-    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors">
-      Plantillas
-    </button>
+      {/* Navbar secundario con pestañas */}
+      <div className="w-full h-auto md:h-16 bg-primary dark:bg-primary flex items-center justify-start">
+        <div className="md:ml-10 flex flex-col md:flex-row gap-2 md:gap-6 items-center w-full max-w-full md:max-w-[400px] py-2 md:py-0 mx-4 sm:my-3 my-2">
+          {/* Botón activo */}
+          <button className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+            Plantillas
+          </button>
 
-    {/* Botón inactivo con mismo estilo pero sin fondo blanco */}
-    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-primary dark:bg-primary text-white dark:text-white hover:text-purple-300 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors">
-      Plantillas enviadas
-    </button>
-  </div>
-</div>
+          {/* Botón inactivo */}
+          <button className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 bg-primary dark:bg-primary text-white dark:text-white hover:text-purple-300 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+            Plantillas enviadas
+          </button>
+        </div>
+      </div>
 
 
       {/* Contenido principal */}
@@ -108,13 +108,13 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
                   <ImageIcon className="h-6 w-6 text-gray-700 dark:text-purple-400" />
                   <span className="text-gray-700 dark:text-purple-400 text-xs">Imagen</span>
                 </div>
-                
+
                 {/* Líneas de texto */}
                 <div className="space-y-1.5">
-                <div className="h-1.5 bg-gray-400 dark:bg-gray-600 rounded w-full" />
+                  <div className="h-1.5 bg-gray-400 dark:bg-gray-600 rounded w-full" />
                   <div className="h-1.5 bg-gray-400 dark:bg-gray-600 rounded w-2/3" />
                 </div>
-                
+
                 {/* Dos columnas inferiores */}
                 <div className="flex-1 flex space-x-3">
                   <div className="flex-1 bg-gray-300 dark:bg-gray-600 rounded-lg flex flex-col items-center justify-center space-y-1">
@@ -124,7 +124,7 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
                     <ImageIcon className="h-5 w-4 text-gray-700 dark:text-purple-400" />
                   </div>
                 </div>
-                
+
                 {/* Líneas de texto finales */}
                 <div className="space-y-1.5">
                   <div className="h-1.5 bg-gray-400 dark:bg-gray-600 rounded w-full" />
@@ -149,7 +149,7 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
                   <div className="h-2 bg-gray-400 dark:bg-gray-600 rounded w-full" />
                   <div className="h-2 bg-gray-400 dark:bg-gray-600 rounded w-3/4" />
                 </div>
-                
+
                 {/* Imagen inferior */}
                 <div className="flex-1 bg-gray-300 dark:bg-gray-600 rounded-lg flex flex-col items-center justify-center space-y-1">
                   <ImageIcon className="h-6 w-6 text-gray-700 dark:text-purple-400" />
@@ -170,18 +170,18 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
                 <div className="h-1/4 bg-gray-300 dark:bg-gray-600 rounded-lg flex items-center justify-center">
                   <ImageIcon className="h-4 w-4 text-gray-700 dark:text-purple-400" />
                 </div>
-                
+
                 {/* Primera sección de texto */}
                 <div className="space-y-1">
                   <div className="h-1.5 bg-gray-400 dark:bg-gray-600 rounded w-full" />
                   <div className="h-1.5 bg-gray-400 dark:bg-gray-600 rounded w-4/5" />
                 </div>
-                
+
                 {/* Segunda imagen */}
                 <div className="h-1/4 bg-gray-300 dark:bg-gray-600 rounded-lg flex items-center justify-center">
                   <ImageIcon className="h-4 w-4 text-gray-700 dark:text-purple-400" />
                 </div>
-                
+
                 {/* Segunda sección de texto */}
                 <div className="space-y-1">
                   <div className="h-1.5 bg-gray-400 dark:bg-gray-600 rounded w-full" />
@@ -217,7 +217,7 @@ const PlantillaMockup = ({
 }) => (
   <div
     onClick={onClick}
-    className="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition bg-white dark:bg-gray-800"
+    className="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-transform duration-200 bg-white dark:bg-gray-800 transform hover:scale-105"
   >
     <div className="p-4 h-48 flex justify-center items-center bg-gray-400 dark:bg-gray-700">
       <div className="w-full h-full">{contenido}</div>
