@@ -57,8 +57,6 @@ export default function Calendario({ citasPorDia, vista, date }: CalendarioProps
           onView={() => { }}
           date={date}
           onNavigate={() => { }}
-          min={new Date(1970, 1, 1, 7, 0, 0)}   // 07:00
-          max={new Date(1970, 1, 1, 20, 0, 0)}  // 18:00
         />
       </div>
       <CalendarModal

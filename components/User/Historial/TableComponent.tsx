@@ -1,7 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ListaAtencion } from "@/interface";
-import { DatePaciente } from "./DatePaciente";
+import CardsView from "./views/CardsView";
+import EmptyState from "./views/EmptyView";
+import PatientModal from "./modal/PatientModal";
+import TableView from "./views/TableView";
 
 interface TableProps {
   atencion: ListaAtencion[];
@@ -15,101 +18,72 @@ export const TableComponent: React.FC<TableProps> = ({
   renderCellAction,
 }) => {
   const [isClient, setIsClient] = useState(false);
-  const [showCart, setShowCart] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [selectedPacienteId, setSelectedPacienteId] = useState<string | null>(null);
-  const [, setSelectedCitaId] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  const handleVerMas = (item: ListaAtencion) => {
+    if (item.idPaciente) {
+      setSelectedPacienteId(item.idPaciente);
+      setShowModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedPacienteId(null);
+  };
+
   if (!isClient) {
-    return null;
+    return (
+      <div className="w-full min-h-[400px] bg-[#f6f7f7] flex items-center justify-center">
+        <div className="animate-pulse">
+          <div className="bg-gray-300 h-8 w-48 rounded mb-4"></div>
+          <div className="space-y-3">
+            <div className="bg-gray-300 h-4 w-full rounded"></div>
+            <div className="bg-gray-300 h-4 w-5/6 rounded"></div>
+            <div className="bg-gray-300 h-4 w-4/6 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="relative max-h-[585px] overflow-auto rounded-lg pt-6 pl-8 pr-8 text-[#634AE2]">
-      <table className="w-8/12 border-separate border-spacing-y-3">
-        <thead className="sticky top-0 bg-[#6364F4] overflow-hidden">
-          <tr>
-            {headerColumns.map((column, index) => (
-              <th
-                key={column.uid}
-                className={`text-[#fff] font-normal text-lg text-center p-4 ${
-                  index === 0
-                    ? "rounded-tl-full"
-                    : index === headerColumns.length - 1
-                    ? "rounded-tr-full"
-                    : ""
-                }`}
-              >
-                {column.name}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {atencion.length > 0 ? (
-            atencion.map((atencion, index) => (
-              <tr key={index} className="bg-[#fff] pt-8">
-                {headerColumns.map((column, index) => (
-                  <td
-                    key={column.uid}
-                    className={`font-normal text-lg text-center p-6 ${
-                      index === 0 ? "rounded-l-3xl" : ""
-                    } ${
-                      index === headerColumns.length - 1 ? "rounded-r-3xl" : ""
-                    }`}
-                  >
-                    {renderCellAction(atencion, column.uid)}
-                  </td>
-                ))}
-                <td className="text-center bg-[#eaeded]">
-                  <button
-                    className={`ml-2 h-10 w-32 rounded-full font-normal text-x1 ${
-                      !atencion.idPaciente
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-[#634AE2] text-[#fff] hover:bg-[#5340D2]"
-                    }`}
-                    onClick={() => {
-                      if (atencion.idPaciente) {
-                        setSelectedPacienteId(atencion.idPaciente);
-                        setSelectedCitaId(atencion.idCita);
-                        setShowCart(true);
-                      }
-                    }}
-                    disabled={!atencion.idPaciente}
-                  >
-                    Ver más
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={headerColumns.length} className="text-center p-4">
-                No se encontraron citas
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      {showCart && selectedPacienteId && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-end pt-24 z-10 pr-28"
-          onClick={() => setShowCart(false)}
-        >
-          <div
-            className="relative bg-white p-6 rounded-3xl z-10"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <DatePaciente
-              idPaciente={Number(selectedPacienteId)}
+    <div className="w-full min-h-[600px] bg-gradient-to-br from-[#f6f7f7] to-[#e8eaed] py-8">
+      {atencion.length > 0 ? (
+        <>
+          {/* Vista de tabla para pantallas grandes (xl en adelante) */}
+          <div className="hidden xl:block">
+            <TableView
+              atencion={atencion}
+              headerColumns={headerColumns}
+              renderCellAction={renderCellAction}
+              onVerMas={handleVerMas}
             />
           </div>
-        </div>
+
+          {/* Vista de cards para pantallas medianas y pequeñas */}
+          <div className="block xl:hidden">
+            <CardsView
+              atencion={atencion}
+              onVerMas={handleVerMas}
+            />
+          </div>
+        </>
+      ) : (
+        <EmptyState />
       )}
+
+      {/* Modal para detalles del paciente */}
+      <PatientModal
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        pacienteId={selectedPacienteId || ""}
+      />
     </div>
   );
 };
