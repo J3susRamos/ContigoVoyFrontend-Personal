@@ -9,7 +9,8 @@ import {
   DashboardApiResponse,
   GeneroEstadisticaApiResponse,
   CitasApiResponse,
-  MarketingApiResponse
+  MarketingApiResponse,
+  CitaMensual
 } from "@/interface";
 import {parseCookies} from "nookies";
 
@@ -212,6 +213,27 @@ export async function GetPlantillas(): Promise<MarketingApiResponse> {
     const errorText = await res.text();
     console.error("Error al obtener las plantillas:", res.status, errorText);
     throw new Error("Error al obtener las plantillas");
+  }
+
+  return await res.json();
+}
+
+//Traer citas totales por fecha
+export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]>{
+  const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener las citas del psicologo");
   }
 
   return await res.json();
