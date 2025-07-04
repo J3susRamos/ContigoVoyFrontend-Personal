@@ -15,11 +15,13 @@ import {
 } from "@heroui/react";
 import {parseCookies} from "nookies";
 import showToast from "@/components/ToastStyle";
+import { Citas } from "@/interface";
 
 interface FormCitaProps {
     isOpen: boolean;
     onCloseAction: () => void;
     onCitaCreatedAction: () => void;
+    editingCita?: Citas | null;
 }
 
 interface Paciente {
@@ -49,7 +51,9 @@ const INITIAL_FORM_DATA: FormData = {
 
 const APPOINTMENT_STATES = [
     {key: "Pendiente", label: "Pendiente"},
-    {key: "Confirmada", label: "Confirmada"}
+    {key: "Confirmada", label: "Confirmada"},
+    {key: "Completada", label: "Completada"},
+    {key: "Cancelada", label: "Cancelada"}
 ];
 
 const DURATION_LIMITS = {
@@ -99,7 +103,7 @@ const usePacientes = (isOpen: boolean) => {
 const useFormValidation = () => {
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const validateForm = (formData: FormData) => {
+    const validateForm = (formData: FormData, isEditing: boolean = false) => {
         const newErrors: Record<string, string> = {};
 
         if (!formData.idPaciente) {
@@ -115,8 +119,9 @@ const useFormValidation = () => {
             newErrors.duracion = "La duración debe ser mayor a 0";
         }
 
-        // Validate that the appointment is not in the past
-        if (formData.fecha_cita && formData.hora_cita) {
+        // For new appointments, validate that they're not in the past
+        // For editing, we might allow past appointments to be modified
+        if (!isEditing && formData.fecha_cita && formData.hora_cita) {
             const appointmentDateTime = new Date(`${formData.fecha_cita}T${formData.hora_cita}`);
             const now = new Date();
             if (appointmentDateTime <= now) {
@@ -169,6 +174,16 @@ const formatTimeForApi = (time: string): string => {
     return time.includes(':') && time.split(':').length === 2 ? `${time}:00` : time;
 };
 
+const formatTimeForInput = (dateTimeString: string): string => {
+    const date = new Date(dateTimeString);
+    return date.toTimeString().slice(0, 5); // HH:MM format
+};
+
+const formatDateForInput = (dateTimeString: string): string => {
+    const date = new Date(dateTimeString);
+    return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+};
+
 const getTodayDate = (): string => {
     return new Date().toISOString().split('T')[0];
 };
@@ -180,19 +195,40 @@ const prepareRequestData = (formData: FormData) => ({
     hora_cita: formatTimeForApi(formData.hora_cita)
 });
 
+const mapCitaToFormData = (cita: Citas): FormData => ({
+    idPaciente: cita.idPaciente.toString(),
+    fecha_cita: formatDateForInput(cita.fecha_inicio),
+    hora_cita: formatTimeForInput(cita.fecha_inicio),
+    duracion: cita.duracion.replace(' minutos', '').replace(' min', '').trim(),
+    motivo_Consulta: cita.motivo,
+    estado_Cita: cita.estado
+});
+
 export const FormCita: React.FC<FormCitaProps> = ({
                                                       isOpen,
                                                       onCloseAction,
-                                                      onCitaCreatedAction
+                                                      onCitaCreatedAction,
+                                                      editingCita = null
                                                   }) => {
     const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
     const pacientes = usePacientes(isOpen);
     const {errors, validateForm, clearFieldError, clearAllErrors} = useFormValidation();
     const {loading, makeRequest} = useApiRequest();
+    const isEditing = !!editingCita;
+
+    // Effect to populate form when editing
+    useEffect(() => {
+        if (editingCita && isOpen) {
+            const mappedData = mapCitaToFormData(editingCita);
+            setFormData(mappedData);
+        } else if (!editingCita && isOpen) {
+            setFormData(INITIAL_FORM_DATA);
+        }
+    }, [editingCita, isOpen]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!validateForm(formData)) {
+        if (!validateForm(formData, isEditing)) {
             return;
         }
 
@@ -200,23 +236,32 @@ export const FormCita: React.FC<FormCitaProps> = ({
             const requestBody = prepareRequestData(formData);
             console.log("Sending request body:", requestBody);
 
-            const response = await makeRequest(`${process.env.NEXT_PUBLIC_API_URL}api/citas`, {
-                method: "POST",
+            const url = isEditing 
+                ? `${process.env.NEXT_PUBLIC_API_URL}api/citas/${editingCita.idCita}`
+                : `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
+            
+            const method = isEditing ? "PUT" : "POST";
+
+            const response = await makeRequest(url, {
+                method,
                 body: JSON.stringify(requestBody),
             });
 
             if (response.ok) {
-                showToast("success", "Cita creada exitosamente");
+                const successMessage = isEditing ? "Cita actualizada exitosamente" : "Cita creada exitosamente";
+                showToast("success", successMessage);
                 onCitaCreatedAction();
                 handleClose();
             } else {
                 const errorData = await response.json();
                 console.error("Error response:", errorData);
-                showToast("error", errorData.message || "Error al crear la cita");
+                const errorMessage = isEditing ? "Error al actualizar la cita" : "Error al crear la cita";
+                showToast("error", errorData.message || errorMessage);
             }
         } catch (error) {
-            console.error("Error creating cita:", error);
-            showToast("error", "Error al crear la cita");
+            console.error("Error submitting cita:", error);
+            const errorMessage = isEditing ? "Error al actualizar la cita" : "Error al crear la cita";
+            showToast("error", errorMessage);
         }
     };
 
@@ -248,7 +293,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                 {(onClose) => (
                     <>
                         <ModalHeader className="flex flex-col gap-1">
-                            Agregar Nueva Cita
+                            {isEditing ? "Editar Cita" : "Agregar Nueva Cita"}
                         </ModalHeader>
                         <form onSubmit={handleSubmit}>
                             <ModalBody>
@@ -263,6 +308,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                         }}
                                         isInvalid={!!errors.idPaciente}
                                         errorMessage={errors.idPaciente}
+                                        isDisabled={isEditing} // Disable patient selection when editing
                                     >
                                         {pacientes.map((paciente) => (
                                             <SelectItem
@@ -281,7 +327,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                             isInvalid={!!errors.fecha_cita}
                                             errorMessage={errors.fecha_cita}
                                             className="flex-1"
-                                            min={getTodayDate()}
+                                            min={!isEditing ? getTodayDate() : undefined}
                                         />
                                         <Input
                                             type="time"
@@ -337,7 +383,10 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                     isLoading={loading}
                                     disabled={loading}
                                 >
-                                    {loading ? "Creando..." : "Crear Cita"}
+                                    {loading 
+                                        ? (isEditing ? "Actualizando..." : "Creando...") 
+                                        : (isEditing ? "Actualizar Cita" : "Crear Cita")
+                                    }
                                 </Button>
                             </ModalFooter>
                         </form>

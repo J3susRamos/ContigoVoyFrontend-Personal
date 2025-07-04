@@ -1,79 +1,75 @@
 "use client";
-import {GetPsicologoDashboard} from "@/app/apiRoutes";
-import {DashboardResult} from "@/interface";
-import React, {useEffect, useState} from "react";
+import { GetPsicologoDashboard } from "@/app/apiRoutes";
+import { DashboardResult } from "@/interface";
+import React, { useEffect, useState } from "react";
 
 export default function DashboardResumen() {
-    const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
-        total_citas: 0,
-        citas_completadas: 0,
-        citas_pendientes: 0,
-        citas_canceladas: 0,
-        total_minutos_reservados: 0,
-        total_pacientes: 0,
-        nuevos_pacientes: 0,
-        citas_confirmadas: 0,
+  const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
+      total_citas: 0,
+      citas_completadas: 0,
+      citas_pendientes: 0,
+      citas_canceladas: 0,
+      total_minutos_reservados: 0,
+      total_pacientes: 0,
+      nuevos_pacientes: 0,
+      citas_confirmadas: 0,
     });
+ 
+const fetchDashboard = async () => {
+    try {
+      const response = await GetPsicologoDashboard();
+      return response.result;
+    } catch (error) {
+      console.error("Error al cargar el dashboard", error);
+    }
+  };
 
-    const fetchDashboard = async () => {
-        try {
-            const response = await GetPsicologoDashboard();
-            return response.result;
-        } catch (error) {
-            console.error("Error al cargar el dashboard", error);
-        }
+  useEffect(() => {
+    const loadData = async () => {
+      const result = await fetchDashboard();
+      if (!result) return;
+
+      setCitasPsicologo({
+        total_citas: result?.total_citas ?? 0,
+        citas_completadas: result?.citas_completadas ?? 0,
+        citas_pendientes: result?.citas_pendientes ?? 0,
+        citas_canceladas: result?.citas_canceladas ?? 0,
+        total_minutos_reservados: result?.total_minutos_reservados ?? 0,
+        total_pacientes: result?.total_pacientes ?? 0,
+        nuevos_pacientes: result?.nuevos_pacientes ?? 0,
+        citas_confirmadas: result?.citas_confirmadas ?? 0,
+      });
     };
+    loadData();
+  }, []);
 
-    useEffect(() => {
-        const loadData = async () => {
-            const result = await fetchDashboard();
-            if (!result) return;
+  return (
+    <>
+      <div className="space-y-6 md:max-w-xl w-full">
+        <div className="bg-card rounded-3xl pt-8">
+          <div className="flex rounded-r-full py-6 text-[#fff] bg-[#6364F4] justify-center font-normal text-2xl w-3/4 ">
+            Resumen
+          </div>
+          <div className="mx-10 sm:mx-14 md:mx-20 lg:mx-24">
+            <ul className="list-disc pl-7 text-[#634AE2] text-xl font-normal   p-6">
+              <li>{citasPsicologo.citas_completadas} citas completadas</li>
+              <li>{citasPsicologo.citas_pendientes} citas pendientes</li>
+              <li>{citasPsicologo.citas_canceladas} citas canceladas</li>
+              <li>{citasPsicologo.total_minutos_reservados} minutos reservados</li>
+            </ul>
+          </div>
+        </div>
 
-            setCitasPsicologo({
-                total_citas: result?.total_citas ?? 0,
-                citas_completadas: result?.citas_completadas ?? 0,
-                citas_pendientes: result?.citas_pendientes ?? 0,
-                citas_canceladas: result?.citas_canceladas ?? 0,
-                total_minutos_reservados: result?.total_minutos_reservados ?? 0,
-                total_pacientes: result?.total_pacientes ?? 0,
-                nuevos_pacientes: result?.nuevos_pacientes ?? 0,
-                citas_confirmadas: result?.citas_confirmadas ?? 0,
-            });
-        };
+        <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
+          <div className="font-normal text-xl">Total Pacientes</div>
+          <div className="font-bold text-6xl">{citasPsicologo.total_pacientes}</div>
+        </div>
 
-        loadData().catch((error) => {
-            console.error("Error loading dashboard data:", error);
-        });
-    }, []);
-
-    return (
-        <>
-            <div className="space-y-6 md:max-w-xl w-full">
-                <div className="bg-card rounded-3xl pt-8">
-                    <div
-                        className="flex rounded-r-full py-6 text-[#fff] bg-[#6364F4] justify-center font-normal text-2xl w-3/4 ">
-                        Resumen
-                    </div>
-                    <div className="mx-10 sm:mx-14 md:mx-20 lg:mx-24">
-                        <ul className="list-disc pl-7 text-[#634AE2] text-xl font-normal   p-6">
-                            <li>{citasPsicologo.citas_completadas} citas completadas</li>
-                            <li>{citasPsicologo.citas_pendientes} citas pendientes</li>
-                            <li>{citasPsicologo.citas_canceladas} citas canceladas</li>
-                            <li>{citasPsicologo.total_minutos_reservados} minutos reservados</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
-                    <div className="font-normal text-xl">Total Pacientes</div>
-                    <div className="font-bold text-6xl">{citasPsicologo.total_pacientes}</div>
-                </div>
-
-                <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
-                    <div className="font-normal text-xl">Nuevos Pacientes</div>
-                    <div className="font-bold text-6xl">{citasPsicologo.nuevos_pacientes}</div>
-                </div>
-            </div>
-        </>
-    );
+        <div className="bg-card justify-items-center p-6 rounded-3xl text-[#634AE2]">
+          <div className="font-normal text-xl">Nuevos Pacientes</div>
+          <div className="font-bold text-6xl">{citasPsicologo.nuevos_pacientes}</div>
+        </div>
+      </div>
+    </>
+  );
 }
