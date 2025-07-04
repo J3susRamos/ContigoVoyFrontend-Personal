@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import ReservarComponents from "@/components/reservarCita/ReservarComponents";
+import ReservarLoader from "@/components/reservarCita/ReservarLoader";
 import { GetPsicologos } from "../apiRoutes";
 import { PsicologoApiResponse } from "@/interface";
 
@@ -50,7 +51,7 @@ export default function BlogPage() {
   return (
     <div>
       {error && <p>{error}</p>}
-      {psicologos && <ReservarComponents Psicologos={psicologos.result} />}
+      {psicologos ? <ReservarComponents Psicologos={psicologos.result} /> : <ReservarLoader />}
     </div>
   );
 }

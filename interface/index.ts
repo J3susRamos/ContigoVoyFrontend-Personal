@@ -75,7 +75,6 @@ export interface ServicesStructureProps {
     title?: string;
     text: string;
     icon: string;
-    title: string;
   }[];
   textfooter: string;
   textfootermobile:string;

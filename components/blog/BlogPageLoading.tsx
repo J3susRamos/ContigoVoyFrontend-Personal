@@ -1,6 +1,4 @@
 import { Skeleton } from "@heroui/react";
-import { Search } from "lucide-react";
-import BlogPreview from "./blogpreview";
 
 export default function BlogPageLoading() {
   return (

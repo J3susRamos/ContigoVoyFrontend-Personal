@@ -3,189 +3,175 @@ import { Divider } from "@heroui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icons } from "@/icons";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { Authors, Categoria } from "@/interface";
+import { Avatar, Button } from "@heroui/react";
+import { Tag, Flag, GraduationCap, BookA, User } from "lucide-react";
 
 const FILTER_OPTIONS = {
   pais: [
-    { nombre: "México", valor: "MX" },
-    { nombre: "Colombia", valor: "CO" },
-    { nombre: "Argentina", valor: "AR" },
-    { nombre: "Perú", valor: "PE" },
-    { nombre: "Chile", valor: "CL" },
+    { nombre: "México", valor: "MX", id: 1 },
+    { nombre: "Colombia", valor: "CO", id: 2 },
+    { nombre: "Argentina", valor: "AR", id: 3 },
+    { nombre: "Perú", valor: "PE", id: 4 },
+    { nombre: "Chile", valor: "CL", id: 5 },
   ],
   genero: [
-    { nombre: "Femenino", valor: "femenino" },
-    { nombre: "Masculino", valor: "masculino" },
+    { nombre: "Femenino", valor: "femenino", id: 1 },
+    { nombre: "Masculino", valor: "masculino", id: 2 },
   ],
   idioma: [
-    { nombre: "Español", valor: "es" },
-    { nombre: "Ingles", valor: "en" },
+    { nombre: "Español", valor: "es", id: 1 },
+    { nombre: "Ingles", valor: "en", id: 2 },
   ],
   enfoque: [
-    { nombre: "Niños", valor: "niños" },
-    { nombre: "Adolescentes", valor: "adolescentes" },
-    { nombre: "Familiar", valor: "familiar" },
-    { nombre: "Pareja", valor: "pareja" },
-    { nombre: "Adulto", valor: "adulto" }
-  ]
+    { nombre: "Niños", valor: "niños", id: 1 },
+    { nombre: "Adolescentes", valor: "adolescentes", id: 2 },
+    { nombre: "Familiar", valor: "familiar", id: 3 },
+    { nombre: "Pareja", valor: "pareja", id: 4 },
+    { nombre: "Adulto", valor: "adulto", id: 5 },
+  ],
 };
 
-interface ReservarComponentSearchProps {
-  onSearchChange: (term: string) => void;
-  setFilters: Dispatch<
-    SetStateAction<{
-      pais: string[];
-      genero: string[];
-      idioma: string[];
-      enfoque: string[];
-    }>
-  >;
-}
-
-export default function ReservarComponentSearch({
-  onSearchChange,
-  setFilters,
-}: ReservarComponentSearchProps) {
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [localFilters, setLocalFilters] = useState({
-    pais: [] as string[],
-    genero: [] as string[],
-    idioma: [] as string[],
-    enfoque: [] as string[]
-  });
-
-  const handleCheckboxChange = (
-    filterKey: keyof typeof FILTER_OPTIONS,
-    value: string
-  ) => {
-    setLocalFilters((prev) => {
-      const currentValues = prev[filterKey];
-      const updatedValues = currentValues.includes(value)
-        ? currentValues.filter((v) => v !== value) // desmarcar
-        : [...currentValues, value]; // marcar
-
-      return {
-        ...prev,
-        [filterKey]: updatedValues,
-      };
-    });
-  };
-
-  useEffect(() => {
-    setFilters(localFilters); // Esto sí está permitido
-  }, [localFilters, setFilters]);
-
-  const toggleFilters = () => {
-    setIsFiltersOpen(!isFiltersOpen);
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-    onSearchChange(term);
-  };
-
-  const renderFilterSection = (
-    title: string,
-    filterKey: keyof typeof FILTER_OPTIONS
-  ) => (
-    <div className="border-t border-[#9494F3] mt-4">
-      <p className="pt-4 text-lg font-bold text-[#634AE2]">{title}</p>
-      {FILTER_OPTIONS[filterKey].map((item, index) => (
-        <div
-          key={`${filterKey}-${index}`}
-          className="flex items-center space-x-3 pt-2 ml-5"
-        >
-          <Checkbox
-            id={`${filterKey}-${index}`}
-            checked={localFilters[filterKey].includes(item.valor)}
-            onCheckedChange={() => handleCheckboxChange(filterKey, item.valor)}
-            className="text-xl rounded-2xl border-[#634AE2] checked:border-[#634AE2]"
-          />
-          <div className="grid">
-            <label
-              htmlFor={`${filterKey}-${index}`}
-              className="text-md font-light text-[#634AE2]"
-            >
-              {item.nombre}
-            </label>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
+export default function BlogAside({
+  onCountryClick,
+  activeCountry,
+  onGenderClick,
+  activeGender,
+  onIdiomClick,
+  activeIdiom,
+  onApproachClick,
+  activeApproach,
+}: {
+  onCountryClick: (categoryId: number) => void,
+  activeCountry: number | null,
+  onGenderClick: (genderId: number) => void,
+  activeGender: number | null,
+  onIdiomClick: (idiomId: number) => void,
+  activeIdiom: number | null,
+  onApproachClick: (approach: number) => void,
+  activeApproach: number | null
+}) {
   return (
-    <div className="w-full p-4 pb-5 md:pb-20 border-r border-[#9494F3] sm:w-[250px]">
-      <Divider orientation="vertical" />
-
-      {/* Mobile: Search and Filters button */}
-      <div className="flex flex-col gap-4 sm:hidden">
-        <div className="relative">
-          <input
-            name="nombre"
-            type="text"
-            placeholder="Nombre"
-            className="px-4 text-lg h-9 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#EAEAFF]"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          <span
-            className="text-[#634AE2] transition-colors absolute right-3 top-1/2 transform -translate-y-1/2"
-            dangerouslySetInnerHTML={{
-              __html: Icons.loup.replace(/<svg /, '<svg fill="currentColor" '),
-            }}
-            style={{
-              width: "1.2em",
-              height: "1.2em",
-            }}
-          />
+    <div className="space-y-8">
+      {/* Pais Section */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] rounded-xl">
+            <Flag className="w-5 h-5 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-[#634AE2] dark:text-primary">
+            País de tu psicólogo
+          </h3>
         </div>
 
-        <button
-          onClick={toggleFilters}
-          className="bg-[#EAEAFF] text-[#634AE2] py-2 px-4 rounded-full text-lg font-normal transition-colors w-full flex items-center justify-between gap-x-4"
-        >
-          Filtros
-          {isFiltersOpen ? (
-            <FaChevronUp className="text-[#634AE2]" />
-          ) : (
-            <FaChevronDown className="text-[#634AE2]" />
-          )}
-        </button>
-      </div>
-
-      {/* Desktop: Search only (filters always visible) */}
-      <div className="hidden sm:block">
-        <div className="relative pb-2">
-          <input
-            name="nombre"
-            type="text"
-            placeholder="Nombre"
-            className="px-4 pl-10 font-light text-lg h-9 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#EAEAFF]"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          <span
-            className="text-[#634AE2] transition-colors absolute right-3 top-1/2 transform -translate-y-1/2"
-            dangerouslySetInnerHTML={{
-              __html: Icons.loup.replace(/<svg /, '<svg fill="currentColor" '),
-            }}
-            style={{
-              width: "1.2em",
-              height: "1.2em",
-            }}
-          />
+        <div className="space-y-3">
+          {FILTER_OPTIONS.pais?.map((item) => (
+            <Button
+              key={item.id}
+              onPress={() => onCountryClick(item.id)}
+              variant={activeCountry === item.id ? "solid" : "bordered"}
+              className={`w-full justify-start text-left transition-all duration-300 hover:scale-105 ${
+                activeCountry === item.id
+                  ? "bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white shadow-lg shadow-[#634AE2]/25"
+                  : "bg-white/50 border-[#634AE2]/30 text-[#634AE2] dark:text-primary hover:bg-gradient-to-r hover:from-[#634AE2]/10 hover:to-[#8b7cf6]/10 hover:border-[#634AE2] backdrop-blur-sm"
+              }`}
+              radius="lg"
+              size="lg"
+            >
+              <span className="truncate font-medium">{item.nombre}</span>
+            </Button>
+          ))}
         </div>
       </div>
+      {/* Genero Section */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] rounded-xl">
+            <User className="w-5 h-5 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-[#634AE2] dark:text-primary">
+            Género
+          </h3>
+        </div>
 
-      {/* Filters content */}
-      <div className={`${isFiltersOpen ? "block" : "hidden"} sm:block`}>
+        <div className="space-y-3">
+          {FILTER_OPTIONS.genero?.map((item) => (
+            <Button
+              key={item.id}
+              onPress={() => onGenderClick(item.id)}
+              variant={activeGender === item.id ? "solid" : "bordered"}
+              className={`w-full justify-start text-left transition-all duration-300 hover:scale-105 ${
+                activeGender === item.id
+                  ? "bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white shadow-lg shadow-[#634AE2]/25"
+                  : "bg-white/50 border-[#634AE2]/30 text-[#634AE2] dark:text-primary hover:bg-gradient-to-r hover:from-[#634AE2]/10 hover:to-[#8b7cf6]/10 hover:border-[#634AE2] backdrop-blur-sm"
+              }`}
+              radius="lg"
+              size="lg"
+            >
+              <span className="truncate font-medium">{item.nombre}</span>
+            </Button>
+          ))}
+        </div>
+      </div>
+      {/* Idioma Section */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] rounded-xl">
+            <BookA className="w-5 h-5 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-[#634AE2] dark:text-primary">
+            Idioma
+          </h3>
+        </div>
 
-        {renderFilterSection("País de tu psicólogo", "pais")}
-        {renderFilterSection("Género", "genero")}
-        {renderFilterSection("Idioma", "idioma")}
-        {renderFilterSection("Enfoque", "enfoque")}
+        <div className="space-y-3">
+          {FILTER_OPTIONS.idioma?.map((item) => (
+            <Button
+              key={item.id}
+              onPress={() => onIdiomClick(item.id)}
+              variant={activeIdiom === item.id ? "solid" : "bordered"}
+              className={`w-full justify-start text-left transition-all duration-300 hover:scale-105 ${
+                activeIdiom === item.id
+                  ? "bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white shadow-lg shadow-[#634AE2]/25"
+                  : "bg-white/50 border-[#634AE2]/30 text-[#634AE2] dark:text-primary hover:bg-gradient-to-r hover:from-[#634AE2]/10 hover:to-[#8b7cf6]/10 hover:border-[#634AE2] backdrop-blur-sm"
+              }`}
+              radius="lg"
+              size="lg"
+            >
+              <span className="truncate font-medium">{item.nombre}</span>
+            </Button>
+          ))}
+        </div>
+      </div>
+      {/* Enfoque Section */}
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] rounded-xl">
+            <GraduationCap className="w-5 h-5 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-[#634AE2] dark:text-primary">
+            Enfoque
+          </h3>
+        </div>
+
+        <div className="space-y-3">
+          {FILTER_OPTIONS.enfoque?.map((item) => (
+            <Button
+              key={item.id}
+              variant={activeApproach === item.id ? "solid" : "bordered"}
+              onPress={() => onApproachClick(item.id)}
+              className={`w-full justify-start text-left transition-all duration-300 hover:scale-105 ${
+                activeApproach === item.id
+                  ? "bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white shadow-lg shadow-[#634AE2]/25"
+                  : "bg-white/50 border-[#634AE2]/30 text-[#634AE2] dark:text-primary hover:bg-gradient-to-r hover:from-[#634AE2]/10 hover:to-[#8b7cf6]/10 hover:border-[#634AE2] backdrop-blur-sm"
+              }`}
+              radius="lg"
+              size="lg"
+            >
+              <span className="truncate font-medium">{item.nombre}</span>
+            </Button>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -26,6 +26,7 @@ export default function BlogPageComponent({
   const [isCarouselPlaying, setIsCarouselPlaying] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
+  
   // Carrusel automático
   useEffect(() => {
     if (!selectedBlog?.imagenes || selectedBlog.imagenes.length <= 1 || !isCarouselPlaying) return;
