@@ -60,7 +60,7 @@ export const TableCitas: React.FC<TableProps> = ({
             },
             { label: "Duración", value: c.duracion },
           ]}
-          onDelete={() => onDeleteInit(Number(c.idCita))}
+          onDelete={() => action(Number(c.idCita))}
         >
           <AtencionButton idCita={Number(c.idCita)}/>
         </DataCard>
