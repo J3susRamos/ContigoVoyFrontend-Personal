@@ -99,7 +99,7 @@ export default function ReservarPsiPreview({
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/pre-pacientes/`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/pre-pacientes`,
         {
           method: "POST",
           headers: {

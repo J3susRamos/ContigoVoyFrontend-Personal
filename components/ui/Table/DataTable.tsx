@@ -18,8 +18,9 @@ const DataTable = <T,>({
       <div className="hidden lg:block">
         <table
           className={`max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8 mt-5`}
-        >          <thead>
-            <tr className="bg-[#6265f4] dark:bg-primary text-white dark:text-primary-foreground h-12 text-center">
+        >          
+        <thead>
+            <tr className="bg-[#6265f4] dark:bg-[#6364f4] text-white dark:text-primary-foreground h-12 text-center">
               <th className="py-3 pl-9 text-2xl font-light rounded-tl-full">
                 O
               </th>
@@ -39,7 +40,7 @@ const DataTable = <T,>({
             {data.map((item, index) => (
               <tr
                 key={index}
-                className="bg-white dark:bg-card text-[#634AE2] dark:text-foreground text-lg rounded-full shadow-sm hover:bg-gray-50 dark:hover:bg-muted transition-all cursor-pointer"
+                className="bg-white dark:bg-[#272726] text-[#634AE2] dark:text-foreground text-lg rounded-full shadow-sm hover:bg-gray-50 dark:hover:bg-muted transition-all cursor-pointer"
               >
                 {renderRow(item)}
               </tr>
