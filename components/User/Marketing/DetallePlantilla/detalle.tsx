@@ -79,8 +79,22 @@ const DetalleCampania = () => {
     const storedEmail = localStorage.getItem("userEmail");
     if (storedEmail) setSender(storedEmail);
 
-    const storedBlocks = localStorage.getItem("emailBlocks");
-    if (storedBlocks) setEmailBlocks(JSON.parse(storedBlocks));
+    const storedPlantilla = localStorage.getItem("emailBlocks");
+    if (storedPlantilla) {
+      try {
+        const parsed = JSON.parse(storedPlantilla);
+        // Cambia "solo-texto" por el tipo de plantilla que corresponda a este componente
+        if (Array.isArray(parsed.blocks)) {
+          setEmailBlocks(parsed.blocks);
+        } else {
+          setEmailBlocks([]); // Limpia si no coincide el tipo
+        }
+      } catch (e) {
+        setEmailBlocks([]);
+      }
+    } else {
+      setEmailBlocks([]);
+    }
 
     const fetchPacientes = async () => {
       const cookies = parseCookies();
@@ -204,7 +218,7 @@ const DetalleCampania = () => {
       <div className="flex items-center gap-3 px-6 py-6 max-w-6xl mx-auto">
         <ArrowLeft
           className="w-6 h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
-          onClick={() => router.push("/user/marketing/crear")}
+          onClick={() => router.back()}
         />
         <h2 className="text-3xl font-bold text-purple-400">Configuración de la campaña</h2>
       </div>

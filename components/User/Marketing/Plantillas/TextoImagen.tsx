@@ -18,6 +18,7 @@ interface EmailBlock {
 }
 
 const EmailMarketingEditor = () => {
+  const PLANTILLA_TYPE = "texto-imagen";
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
   const [emailBlocks, setEmailBlocks] = useState<EmailBlock[]>([ ]);
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
@@ -28,6 +29,18 @@ const EmailMarketingEditor = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
       if (storedUser) setUser(JSON.parse(storedUser));
+
+      const storedPlantilla = localStorage.getItem("emailBlocks");
+      if (storedPlantilla) {
+        try {
+          const parsed = JSON.parse(storedPlantilla);
+          if (parsed.type === PLANTILLA_TYPE && Array.isArray(parsed.blocks)) {
+            setEmailBlocks(parsed.blocks);
+          }
+        } catch (e) {
+          // Si hay error, ignora y no carga nada
+        }
+      }
     }
   }, []);
 
@@ -158,18 +171,21 @@ const EmailMarketingEditor = () => {
       showAlert("Agrega al menos un bloque para continuar.");
       return;
     }
-  
-    const emailBlocksString = JSON.stringify(emailBlocks);
-    const emailBlocksSizeBytes = new Blob([emailBlocksString]).size;
-    const maxSizeBytes = 5000 * 1024; 
-  
-    if (emailBlocksSizeBytes > maxSizeBytes) {
+
+    const plantillaData = {
+      type: PLANTILLA_TYPE,
+      blocks: emailBlocks,
+    };
+    const plantillaString = JSON.stringify(plantillaData);
+    const maxSizeBytes = 5000 * 1024;
+
+    if (new Blob([plantillaString]).size > maxSizeBytes) {
       showAlert("¡Has excedido el límite de almacenamiento local! Reduce el tamaño de tu contenido o usa imagenes menos pesadas antes de continuar.");
       return;
     }
-  
+
     try {
-      localStorage.setItem("emailBlocks", emailBlocksString);
+      localStorage.setItem("emailBlocks", plantillaString);
       router.push("/user/marketing/detalle");
     } catch (error) {
       console.error("Error guardando en localStorage:", error);
@@ -186,6 +202,12 @@ const EmailMarketingEditor = () => {
     { icon: Share2, label: "Redes", action: () => showFeatureNotAvailable("Redes") },
     { icon: Square, label: "Botones", action: () => showFeatureNotAvailable("Botones") }
   ];
+
+  const handleRetroClean = () => {
+    // limpiamos el localStorage
+    localStorage.removeItem("emailBlocks");
+    router.push("/user/marketing/crear");
+  };
   
   
   
@@ -203,7 +225,7 @@ const EmailMarketingEditor = () => {
       <div className="flex text-center py-6 items-center max-w-[600px]">
       <ArrowLeft
         className="w-6 h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
-        onClick={() => router.push("/user/marketing/crear")}
+        onClick={() => handleRetroClean()}
       />
       <h2 className="text-3xl font-bold text-purple-400">Edita el email</h2>
       </div>
