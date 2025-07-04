@@ -79,8 +79,22 @@ const DetalleCampania = () => {
     const storedEmail = localStorage.getItem("userEmail");
     if (storedEmail) setSender(storedEmail);
 
-    const storedBlocks = localStorage.getItem("emailBlocks");
-    if (storedBlocks) setEmailBlocks(JSON.parse(storedBlocks));
+    const storedPlantilla = localStorage.getItem("emailBlocks");
+    if (storedPlantilla) {
+      try {
+        const parsed = JSON.parse(storedPlantilla);
+        // Cambia "solo-texto" por el tipo de plantilla que corresponda a este componente
+        if (Array.isArray(parsed.blocks)) {
+          setEmailBlocks(parsed.blocks);
+        } else {
+          setEmailBlocks([]); // Limpia si no coincide el tipo
+        }
+      } catch (e) {
+        setEmailBlocks([]);
+      }
+    } else {
+      setEmailBlocks([]);
+    }
 
     const fetchPacientes = async () => {
       const cookies = parseCookies();
@@ -116,16 +130,16 @@ const DetalleCampania = () => {
       alert("Completa todos los campos obligatorios y selecciona al menos un destinatario.");
       return;
     }
-  
+
     const cookies = parseCookies();
     const token = cookies["session"];
     if (!token) {
       alert("No se encontró token de sesión. Por favor vuelve a iniciar sesión.");
       return;
     }
-  
+
     const bloquesParaEnviar = formatearBloquesParaEnvio();
-  
+
     // 1. Enviar email
     try {
       const responseEnvio = await fetch(`${apiUrl}api/marketing/enviar`, {
@@ -139,14 +153,14 @@ const DetalleCampania = () => {
           nombre: campaignName,
           asunto: emailSubject,
           remitente: sender,
-          destinatarios: recipients, 
+          destinatarios: recipients,
           bloques: bloquesParaEnviar,
           fecha: new Date().toISOString(),
         }),
       });
-  
+
       const dataEnvio = await responseEnvio.json();
-  
+
       if (!responseEnvio.ok) {
         console.error("❌ Error al enviar:", dataEnvio);
         alert(dataEnvio.message || "Error al enviar el correo.");
@@ -164,33 +178,33 @@ const DetalleCampania = () => {
           nombre: campaignName,
           asunto: emailSubject,
           remitente: sender,
-          destinatarios: recipients.join(","), 
+          destinatarios: recipients.join(","),
           bloques: bloquesParaEnviar,
           fecha: new Date().toISOString(),
           estado: "enviada", //opcional
         }),
       });
-  
+
       const dataGuardado = await responseGuardado.json();
-  
+
       if (!responseGuardado.ok) {
         console.error("❌ Error al guardar como enviada:", dataGuardado);
         alert("El correo fue enviado, pero hubo un error al guardar la plantilla.");
         return;
       }
-  
+
       alert("Correo enviado y plantilla guardada correctamente.");
       router.push("/user/marketing/crear/plantillasGuardadas");
-  
+
     } catch (error) {
       console.error("❌ Error general:", error);
       alert("Error al conectar con el servidor.");
     }
   };
-  
 
 
-  
+
+
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -204,7 +218,7 @@ const DetalleCampania = () => {
       <div className="flex items-center gap-3 px-6 py-6 max-w-6xl mx-auto">
         <ArrowLeft
           className="w-6 h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
-          onClick={() => router.push("/user/marketing/crear")}
+          onClick={() => router.back()}
         />
         <h2 className="text-3xl font-bold text-purple-400">Configuración de la campaña</h2>
       </div>
@@ -286,24 +300,30 @@ const DetalleCampania = () => {
                   {block.type === "divider" && <hr />}
                   {block.type === "image" && block.imageUrl && (
                     <img src={block.imageUrl} alt="Imagen" className="rounded-lg w-full max-h-40 object-cover" />
-                  )}                  
+                  )}
                   {block.type === "columns" && (
-                  <div className="grid grid-cols-2 gap-2">
-                    {block.imageUrls.map((url, columnIdx) => (
-                      url && (
-                        <img key={columnIdx} src={url} alt={`Imagen columna ${columnIdx + 1}`} className="rounded-lg w-full max-h-32 object-cover" />
-                      )
-                    ))}
-                  </div>
-                )}
+                    <div className="grid grid-cols-2 gap-2">
+                      {block.imageUrls.map((url, columnIdx) => (
+                        url && (
+                          <img key={columnIdx} src={url} alt={`Imagen columna ${columnIdx + 1}`} className="rounded-lg w-full max-h-32 object-cover" />
+                        )
+                      ))}
+                    </div>
+                  )}
                   {(block.type === "header" || block.type === "text") && (
                     <p
-                      className={`${block.type === "header" ? "text-xl font-bold" : "text-sm"}`}
-                      style={{
-                        color: block.styles?.color ?? "#000",
-                        fontWeight: block.styles?.bold ? "bold" : "normal",
-                        fontStyle: block.styles?.italic ? "italic" : "normal",
-                      }}
+                      className={`${block.type === "header" ? "text-xl font-bold text-black dark:text-white" : "text-sm text-black dark:text-white"}`}
+                      style={
+                        block.styles?.color
+                          ? {
+                            fontWeight: block.styles?.bold ? "bold" : "normal",
+                            fontStyle: block.styles?.italic ? "italic" : "normal",
+                          }
+                          : {
+                            fontWeight: block.styles?.bold ? "bold" : "normal",
+                            fontStyle: block.styles?.italic ? "italic" : "normal",
+                          }
+                      }
                     >
                       {block.content}
                     </p>

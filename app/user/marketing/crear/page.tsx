@@ -7,7 +7,7 @@ import CrearPlantilla from "@/components/User/Marketing/CrearPlantilla";
 const CrearPlantillaPage = () => {
   const router = useRouter();
 
-  return <CrearPlantilla onBack={() => router.back()} />;
+  return <CrearPlantilla onBack={() => router.push("/user/marketing")} />;
 };
 
 export default CrearPlantillaPage;
