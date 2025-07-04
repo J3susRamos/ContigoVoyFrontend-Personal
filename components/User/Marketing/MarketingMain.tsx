@@ -49,7 +49,7 @@ const EmailMarketingPage = () => {
                 </p>
               </section>
 
-              {/* ✅ Botón que redirige a /templateString */}
+              {/* ✅ Botón que redirige a / */}
               <button
                 onClick={() => router.push("/user/marketing/crear")}
                 className="bg-[#8a8af3] hover:bg-[#6969d8] text-white font-bold py-2 px-6 rounded-2xl transition duration-200"
@@ -82,7 +82,7 @@ const EmailMarketingPage = () => {
               </div>
 
               <button
-                className="absolute -bottom-6 right-0 bg-[#8a8af3] hover:bg-[#6969d8] text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center shadow-md group"
+                className="absolute -bottom-6 right-0 bg-[#8a8af3] hover:bg-[#6969d8] text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center shadow-md group" onClick={() => router.push("/user/marketing/crear")}
               >
                 Guardar y enviar
                 <svg

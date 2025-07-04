@@ -8,12 +8,12 @@ import DataCard from "@/components/ui/DataCard";
 
 interface TableProps {
   filteredCitas: Citas[];
-  onDeleteInit: (id: number) => void;
+  action: (id: number) => void;
 }
 
 export const TableCitas: React.FC<TableProps> = ({
   filteredCitas,
-  onDeleteInit,
+  action,
 }) => {
   const headers = [
     "Paciente",
@@ -39,7 +39,7 @@ export const TableCitas: React.FC<TableProps> = ({
             c.fecha_inicio,
             c.duracion,
           ]}
-          onDelete={() => onDeleteInit(Number(c.idCita))}
+          onDelete={() => action(Number(c.idCita))}
         >
          <AtencionButton idCita={Number(c.idCita)}/>
         </Row>
@@ -60,6 +60,7 @@ export const TableCitas: React.FC<TableProps> = ({
             },
             { label: "Duración", value: c.duracion },
           ]}
+          onDelete={() => onDeleteInit(Number(c.idCita))}
         >
           <AtencionButton idCita={Number(c.idCita)}/>
         </DataCard>

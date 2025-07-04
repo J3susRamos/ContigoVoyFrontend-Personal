@@ -1,7 +1,7 @@
 "use client";
 import CerrarSesion from "@/components/CerrarSesion";
 import React from "react";
-import { ImageIcon } from "lucide-react"; // o cualquier ícono que uses
+import { ImageIcon } from "lucide-react"; 
 import { useRouter } from "next/navigation";
 
 
@@ -30,20 +30,23 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
     </h2>
   </div>
 
-  {/* Navbar secundario con pestañas */}
-<div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
-  <div className="ml-10 flex justify-between items-center w-full max-w-[400px]">
-    {/* Botón activo */}
-    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors">
-      Plantillas
-    </button>
+      {/* Navbar secundario con pestañas */}
+    <div className="w-full h-16 bg-primary dark:bg-primary flex items-center justify-start">
+      <div className="ml-10 flex justify-between items-center w-full max-w-[600px]">
+        {/* Botón activo */}
+        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors">
+          Plantillas
+        </button>
 
-    {/* Botón inactivo con mismo estilo pero sin fondo blanco */}
-    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-primary dark:bg-primary text-white dark:text-white hover:text-purple-300 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors">
-      Plantillas enviadas
-    </button>
-  </div>
-</div>
+        <button
+                onClick={() => router.push("/user/marketing/crear/plantillasGuardadas")}
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-9 bg-primary dark:bg-primary text-white dark:text-white hover:text-purple-300 text-[16px] leading-[20px] font-bold rounded-full px-9 py-2 transition-colors"
+              >
+                Plantillas guardadas
+        </button>
+
+      </div>
+    </div>
 
 
       {/* Contenido principal */}

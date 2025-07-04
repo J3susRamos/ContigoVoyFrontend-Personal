@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Icons } from "@/icons";
 import { GetCitasPsicologoPorMes } from "@/app/apiRoutes";
 import { Citas } from "@/interface";
-import { differenceInYears, parseISO } from "date-fns";
+import CalendarModal from "./CitasModal";
 
 type Cita = {
   id: number;
@@ -34,8 +34,9 @@ const fechaHoy = new Date().toLocaleDateString('es-ES', {
 });
 
 export default function DashboardCitas() {
-
   const [citasDelDia, setCitasDelDia] = useState<Citas[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [citaSeleccionada, setCitaSeleccionada] = useState<Citas | null>(null);
 
   useEffect(() => {
       
@@ -75,15 +76,14 @@ export default function DashboardCitas() {
     }
   });
 
-  // Función para calcular edad
-  const calcularEdad = (fechaNacimiento?: string) => {
-    if (!fechaNacimiento) return "";
-    try {
-      const nacimiento = parseISO(fechaNacimiento);
-      return differenceInYears(new Date(), nacimiento);
-    } catch {
-      return "";
-    }
+  const handleOpenModal = (cita: Citas) => {
+    setCitaSeleccionada(cita);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setCitaSeleccionada(null);
   };
 
   return (
@@ -123,12 +123,16 @@ export default function DashboardCitas() {
                 <td className="pr-32 font-light text-lg text-[#634AE2] py-2 px-4 ">
                   {citasPorHora[item.hora] && citasPorHora[item.hora].length > 0 ? (
                     citasPorHora[item.hora].map((cita, idx) => (
-                      <div key={cita.idCita || idx} className="my-2 bg-[#E7E7FF] font-bold w-fit px-12 py-1 rounded-3xl">
+                      <div
+                        key={cita.idCita || idx}
+                        className="my-2 bg-[#E7E7FF] font-bold w-fit px-12 py-1 rounded-3xl cursor-pointer hover:bg-[#d6d6ff] transition"
+                        onClick={() => handleOpenModal(cita)}
+                      >
                         <div>
                           {new Date(cita.fecha_inicio).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} {cita.paciente}
                         </div>
                         <div>
-                          ({cita.codigo}) { calcularEdad(cita.fecha_nacimiento)} años       
+                          ({cita.codigo}) {cita.edad} años
                         </div>
                       </div>
                     ))
@@ -141,6 +145,12 @@ export default function DashboardCitas() {
           </tbody>
         </table>
       </div>
+      {/* Modal para la cita */}
+      <CalendarModal
+        cita={citaSeleccionada}
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }

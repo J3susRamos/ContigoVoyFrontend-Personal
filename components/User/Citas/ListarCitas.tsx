@@ -219,7 +219,7 @@ const ListarCitas = ({
         <>
           <TableCitas
             filteredCitas={citas}
-            onDeleteInit={(id) => setDeleteId(id)}
+            action={(id) => setDeleteId(id)}
           />
           <Pagination
             currentPage={currentPage}
