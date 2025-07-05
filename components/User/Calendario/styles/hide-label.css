@@ -11,8 +11,8 @@
 }
 
 .rbc-header {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
   letter-spacing: 0.5px;
-  color: #7c3aed;
+  color: #7c3aed !important;
 }

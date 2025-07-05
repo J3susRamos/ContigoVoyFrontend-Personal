@@ -121,11 +121,11 @@ export default function EditarPaciente({ id }: { id: string | null }) {
              genero: formData.genero,
              ocupacion: formData.ocupacion,
              estadoCivil: formData.estadoCivil,
-             direccion: formData.direccion, 
-             pais: formData.pais, 
+             direccion: formData.direccion,
+             pais: formData.pais,
              departamento: formData.departamento,
            };
-    
+
 
       const cookies = parseCookies();
       const token = cookies["session"];

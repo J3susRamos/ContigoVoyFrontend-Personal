@@ -2,6 +2,7 @@
 
 import { Accordion, AccordionItem } from "@heroui/react";
 import { AccordionQuestProps } from "@/interface";
+import React from "react";
 
 // Definición de la interfaz para los elementos de FAQ
 const AnchorIcon = () => {
