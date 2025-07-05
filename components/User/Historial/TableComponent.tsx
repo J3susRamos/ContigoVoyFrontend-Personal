@@ -51,7 +51,6 @@ export const TableComponent: React.FC<TableProps> = ({
       </div>
     );
   }
-
   return (
     <div className="w-full min-h-[600px] bg-gradient-to-br from-[#f6f7f7] to-[#e8eaed] py-8 dark:bg-gradient-to-br dark:from-[#7f7fee]/30 dark:to-[#23234a]">
       {atencion.length > 0 ? (
