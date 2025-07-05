@@ -590,3 +590,8 @@ export interface Plantilla {
 export interface MarketingApiResponse {
     result: Plantilla[];
 }
+
+export interface SelectItemI {
+  textValue: string,
+  showLabel: string,
+}
