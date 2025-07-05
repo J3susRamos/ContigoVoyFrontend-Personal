@@ -1,5 +1,4 @@
-// components/stadistic/DateRangeFilter.tsx
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Icons } from "@/icons";
 import { format } from "date-fns";
 
@@ -11,7 +10,6 @@ export function DateRangeFilter({
     setDateRange: (range: [Date | null, Date | null]) => void;
 }) {
     const [open, setOpen] = useState(false);
-    const ref = useRef<HTMLInputElement>(null);
 
     // Puedes usar cualquier Datepicker, aquí un ejemplo simple con <input type="date">
     return (

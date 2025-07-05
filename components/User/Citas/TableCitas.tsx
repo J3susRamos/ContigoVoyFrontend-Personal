@@ -9,14 +9,14 @@ import DataCard from "@/components/ui/DataCard";
 
 interface TableProps {
     filteredCitas: Citas[];
-    onDelete: (id: number) => void;
-    onEdit: (cita: Citas) => void;
+    onDeleteAction: (id: number) => void;
+    onEditAction: (cita: Citas) => void;
 }
 
 export const TableCitas: React.FC<TableProps> = ({
   filteredCitas,
-  onDelete,
-  onEdit,
+  onDeleteAction,
+  onEditAction,
 }) => {
   const headers = [
     "Paciente",
@@ -67,8 +67,8 @@ export const TableCitas: React.FC<TableProps> = ({
             c.fecha_inicio,
             c.duracion,
           ]}
-          onDelete={() => onDelete(Number(c.idCita))}
-          onEdit={() => onEdit(c)}
+          onDelete={() => onDeleteAction(Number(c.idCita))}
+          onEdit={() => onEditAction(c)}
         >
           <AtencionButton idCita={Number(c.idCita)} />
         </Row>
@@ -89,8 +89,8 @@ export const TableCitas: React.FC<TableProps> = ({
             },
             { label: "Duración", value: c.duracion },
           ]}
-          onDelete={() => onDelete(Number(c.idCita))}
-          onEdit={() => onEdit(c)}
+          onDelete={() => onDeleteAction(Number(c.idCita))}
+          onEdit={() => onEditAction(c)}
         >
           <AtencionButton idCita={Number(c.idCita)} />
         </DataCard>

@@ -13,14 +13,6 @@ import {
     YAxis,
 } from "recharts";
 
-const LOCATION_KEYS = {
-    SURCO: "Surco",
-    JESUS_MARIA: "Jesús María",
-    SURQUILLO: "Surquillo",
-    BARRANCO: "Barranco",
-    SAN_BORJA: "San Borja"
-} as const;
-
 const fetchPorcentajeGenero = async () => {
     const cookies = parseCookies();
     const token = cookies.session;
