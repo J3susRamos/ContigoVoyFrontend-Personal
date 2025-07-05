@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { AgeRangeFilter } from "@/components/ui/Filters/AgeRangeFilter";
 
 const fetchPorcentajeGenero = async () => {
   const cookies = parseCookies();
@@ -66,6 +67,17 @@ export default function Clients() {
   // --- NUEVO: estado para lugares ---
   const [lugar, setLugar] = useState<{ name: string; Total: number }[]>([]);
 
+  // Nuevo estado para el filtro de edad
+  const [ageRange, setAgeRange] = useState<[number | null, number | null]>([null, null]);
+  const [filteredEdad, setFilteredEdad] = useState([
+    { name: "0 - 12", Total: 0 },
+    { name: "13 - 17", Total: 0 },
+    { name: "18 - 24", Total: 0 },
+    { name: "25 - 34", Total: 0 },
+    { name: "35 - 44", Total: 0 },
+    { name: "45 - 54", Total: 0 },
+  ]);
+
   useEffect(() => {
     fetchPorcentajeGenero().then((result) => {
       const data = [
@@ -102,6 +114,33 @@ export default function Clients() {
       setLugar(lugares);
     });
   }, []);
+
+  // Nuevo useEffect para filtrar datos por edad
+  useEffect(() => {
+    if (ageRange[0] === null || ageRange[1] === null) {
+      // Si no hay filtro, mostrar todos los datos
+      setFilteredEdad(edad);
+      return;
+    }
+
+    const minAge = ageRange[0];
+    const maxAge = ageRange[1];
+
+    // Filtrar los datos según el rango de edad seleccionado
+    const filtered = edad.map(item => {
+      const [rangeMin, rangeMax] = item.name.split(' - ').map(num => parseInt(num));
+
+      // Verificar si el rango del grupo se solapa con el filtro seleccionado
+      const overlaps = rangeMin <= maxAge && rangeMax >= minAge;
+
+      return {
+        ...item,
+        Total: overlaps ? item.Total : 0
+      };
+    });
+
+    setFilteredEdad(filtered);
+  }, [edad, ageRange]);
 
   const COLORS = ["#7777FF", "#66A3FF", "#B3B3FF"];
 
@@ -150,6 +189,11 @@ export default function Clients() {
   };
   return (
       <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+        {/* Filtros */}
+        <div className="flex justify-end mb-4">
+          <AgeRangeFilter ageRange={ageRange} setAgeRange={setAgeRange} />
+        </div>
+
         {/* Layout responsivo - Una columna en móvil, dos en desktop */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
           
@@ -212,7 +256,7 @@ export default function Clients() {
               <div className="w-full h-[250px] md:h-[280px] flex items-center justify-center">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                      data={edad}
+                      data={filteredEdad}
                       margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
                   >
                     <XAxis
