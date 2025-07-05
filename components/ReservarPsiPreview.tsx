@@ -1,0 +1,446 @@
+"use client";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardTitle,
+} from "@/components/ui/card";
+import ReactCountryFlag from "react-country-flag";
+import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
+import { PrePaciente, PsicologoPreviewData } from "@/interface";
+import React, { useState } from "react";
+import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
+import Image from "next/image";
+
+export default function ReservarPsiPreview({
+  psicologo,
+}: {
+  psicologo: PsicologoPreviewData;
+}) {
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [horaSeleccionada, setHoraSeleccionada] = useState("");
+  const [fechaSeleccionada, setFechaSeleccionada] = useState("");
+  // Estados para los campos del formulario
+  const [error, setError] = useState<string | null>(null);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [formData, setFormData] = useState<PrePaciente>({
+    nombre: "",
+    celular: "",
+    correo: "",
+    fecha_cita: "",
+    hora_cita: "",
+    idPsicologo: psicologo.idPsicologo,
+  });
+
+  const handleSelectHorario = (hora: string, fecha: string) => {
+    setHoraSeleccionada(hora);
+    setFechaSeleccionada(fecha);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      fecha,
+      hora,
+    }));
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const formDataEntries = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formDataEntries) as unknown as PrePaciente;
+
+    data.fecha_cita = fechaSeleccionada;
+    data.hora_cita = horaSeleccionada;
+    data.idPsicologo = psicologo.idPsicologo;
+
+    if (!data.nombre || !data.celular || !data.correo) {
+      setError("Por favor, completa todos los campos del formulario.");
+      setLoading(false);
+      return;
+    }
+
+    // Validación de número
+    const telefonoRegex = /^[0-9]{9,}$/;
+    if (!telefonoRegex.test(data.celular)) {
+      setError(
+        "El número de celular debe contener solo números y tener al menos 9 dígitos."
+      );
+      setLoading(false);
+      return;
+    }
+
+    // Validación de correo electrónico
+    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!correoRegex.test(data.correo)) {
+      setError("Por favor, ingresa un correo electrónico válido.");
+      setLoading(false);
+      return;
+    }
+
+    if (data.celular) {
+      data.celular = String(data.celular);
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}api/pre-pacientes/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const result: { message?: string } = await response.json();
+      if (!response.ok) {
+        setError(result.message || "Error al enviar el formulario");
+        setLoading(false);
+        return;
+      }
+
+      // Continuar con el flujo
+      setFormData({
+        nombre: "",
+        celular: "",
+        correo: "",
+        fecha_cita: "",
+        hora_cita: "",
+        idPsicologo: psicologo.idPsicologo,
+      });
+      setIsConfirmOpen(false);
+      setIsSuccessOpen(true);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "No se pudo enviar el formulario.");
+      } else {
+        setError("No se pudo enviar el formulario.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <>      <Card className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 min-h-[320px]">
+        {/* Gradiente de fondo sutil */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-indigo-50/30 dark:from-gray-800/50 dark:via-gray-800 dark:to-gray-700/30"></div>
+        
+        {/* Elemento decorativo animado */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 rounded-full opacity-20 transform translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-700"></div>
+        
+        <div className="relative z-10 p-6">
+          {/* Header con avatar y info básica */}
+          <div className="flex items-start gap-4 mb-4">            <div className="relative">
+              <Avatar className="w-20 h-20 ring-4 ring-white dark:ring-gray-600 shadow-lg">
+                <AvatarImage src={psicologo.imagen} className="object-cover" />
+              </Avatar>
+              <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-md">
+                <ReactCountryFlag
+                  svg
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                  countryCode={psicologo.pais}
+                />
+              </div>
+            </div>            <div className="flex-1 min-w-0">              <div className="mb-1">
+                <span className="inline-block px-3 py-1 text-xs font-medium text-purple-600 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                  {psicologo.titulo}
+                </span>
+              </div><h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">
+                Dr. {psicologo.nombre} {psicologo.apellido}
+              </h3>
+            </div>
+          </div>          {/* Línea divisoria con gradiente */}
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-600 to-transparent mb-4"></div>
+
+          {/* Descripción */}
+          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3">
+            {psicologo.introduccion.slice(0, 120)}...
+          </p>
+
+          {/* Especialidades */}
+          <div className="mb-6">
+            <div className="flex flex-wrap gap-2">
+              {psicologo.especialidades.slice(0, 3).map((especialidad, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-700"
+                >
+                  {especialidad}
+                </span>
+              ))}
+              {psicologo.especialidades.length > 3 && (
+                <span className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">
+                  +{psicologo.especialidades.length - 3} más
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Botones de acción */}
+          <CardFooter className="flex gap-3 p-0 mt-auto">
+            <Button
+              onPress={() => setIsScheduleOpen(true)}
+              className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Agendar
+            </Button>            <Button
+              onPress={() => setIsProfileOpen(true)}
+              className="flex-1 bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-300 font-semibold py-3 rounded-xl border-2 border-purple-200 dark:border-purple-600 hover:border-purple-300 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Ver perfil
+            </Button>
+          </CardFooter>
+        </div>
+      </Card>
+
+      {/*modal de profile */}
+      <Modal
+        isOpen={isProfileOpen}
+        onOpenChange={setIsProfileOpen}
+        size={"2xl"}
+        backdrop="opaque"
+        classNames={{
+          body: "py-6",
+          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
+          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          header: "border-b-[1px] border-[#d8dceb]",
+          footer: "border-t-[1px] border-[#d8dceb]",
+          closeButton: "hover:bg-white/5 active:bg-white/10",
+        }}
+      >
+        <ModalContent>
+          {() => (
+            <>
+              <ModalContent className="w-[695px] h-[416px] bg-background rounded-3xl  overflow-hidden  mt-8">
+                <div className="grid grid-cols-[0.8fr_1.6fr] items-center">
+                  <div className="h-full w-full flex ">
+                    <Avatar className="w-[208px] h-[416px] rounded-2xl overflow-hidden">
+                      <AvatarImage
+                        src={psicologo.imagen}
+                        className="w-full h-full object-cover"
+                      />
+                    </Avatar>
+                  </div>
+
+                  <div className="text-[#634AE2] text-start ">
+                    <div className="space-y-1 px-1">
+                      <div className="text-[#634AE2] text-2xl font-semibold">
+                        {psicologo.nombre} {psicologo.apellido}
+                      </div>
+                    </div>
+                    <hr className="my-2.5 border-t border-[#9494F3] w-64" />
+                    <ModalBody className="py-2 px-1 gap-0.5">
+                      <p className="text-[#634AE2] font-normal text-base">
+                        Especialidades:
+                      </p>
+                      <div className="flex flex-wrap gap-2 mt-1.5 mb-1 ">
+                        {psicologo.especialidades.map((item, index) => (
+                          <span
+                            key={index}
+                            className="px-4 py-1 bg-[#E7E7FF] text-[#634AE2] rounded-full text-sm"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+
+                      <hr className="my-2.5 border-t border-[#9494F3] w-11/12" />
+                      <p className="text-[#634AE2] text-sm  leading-[22px] content-normal mr-1">
+                        {psicologo.introduccion}
+                      </p>
+                    </ModalBody>
+                  </div>
+                </div>
+              </ModalContent>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Horarios */}
+      <Modal
+        isOpen={isScheduleOpen}
+        onOpenChange={setIsScheduleOpen}
+        size={"5xl"}
+        backdrop="opaque"
+        classNames={{
+          body: "py-6",
+          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
+          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          header: "border-b-[1px] border-[#d8dceb]",
+          footer: "border-t-[1px] border-[#d8dceb]",
+          closeButton: "hover:bg-white/5 active:bg-white/10",
+        }}
+      >
+        <ModalContent>
+          <ModalBody>
+            <div className="flex flex-col items-center justify-center">
+              <h1 className="text-[#634AE2] text-2xl font-bold">
+                Agendar cita
+              </h1>
+              <HorarioPsicologo
+                idPsicologo={psicologo.idPsicologo}
+                horario={psicologo.horario}
+                onClose={() => setIsScheduleOpen(false)}
+                onOpenConfirm={() => setIsConfirmOpen(true)}
+                onSelectHorario={handleSelectHorario}
+              />
+              <div className="w-full flex justify-center">
+                <Button
+                  onPress={() => setIsScheduleOpen(false)}
+                  className="rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal de confirmación */}
+      <Modal
+        isOpen={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        size={"2xl"}
+        backdrop="opaque"
+        classNames={{
+          body: "py-6",
+          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
+          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+        }}
+      >
+        <ModalContent>
+          <ModalBody>
+            <h2 className="text-xl font-bold text-center text-[#634AE2]">
+              ¡Bríndanos tus datos para agendar la cita!
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+              <div>
+                <label className="block text-[#634AE2] text-sm mb-1">
+                  Nombres y apellidos
+                </label>
+                <input
+                  type="text"
+                  className="w-full border border-gray-300 rounded-full px-4 py-2 outline-none focus:border-[#634AE2]"
+                  placeholder="Nombres y apellidos"
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className="block text-[#634AE2] text-sm mb-1">
+                  Número de celular
+                </label>
+                <input
+                  type="text"
+                  className="w-full border border-gray-300 rounded-full px-4 py-2 outline-none focus:border-[#634AE2]"
+                  placeholder="Número de celular"
+                  name="celular"
+                  value={formData.celular}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <label className="block text-[#634AE2] text-sm mb-1">
+                  Correo electrónico
+                </label>
+                <input
+                  type="email"
+                  className="w-full border border-gray-300 rounded-full px-4 py-2 outline-none focus:border-[#634AE2]"
+                  placeholder="Correo electrónico"
+                  name="correo"
+                  value={formData.correo}
+                  onChange={handleChange}
+                />
+              </div>
+              <p className="text-sm text-center text-[#634AE2] mt-2">
+                Has seleccionado: <strong>{fechaSeleccionada}</strong> a las{" "}
+                <strong>{horaSeleccionada}</strong>
+              </p>
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+              <div className="flex justify-center mt-6">
+                <Button
+                  type="submit"
+                  className="rounded-3xl bg-[#634AE2] text-white px-6 py-1 font-light"
+                  disabled={loading}
+                >
+                  {loading ? "Enviando..." : "Reservar"}
+                </Button>
+              </div>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={isSuccessOpen}
+        onOpenChange={setIsSuccessOpen}
+        size={"2xl"}
+        backdrop="opaque"
+        classNames={{
+          body: "py-6",
+          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
+          base: "bg-[#634AE2] text-white rounded-3xl",
+          header: "border-b-[1px] border-[#d8dceb]",
+          footer: "border-t-[1px] border-[#d8dceb]",
+          closeButton: "hover:bg-white/5 active:bg-white/10",
+        }}
+      >
+        <ModalContent>
+          <ModalBody className="text-center">
+            <Image
+              src="/send-mail.svg"
+              alt="Icono de correo enviado"
+              width={128}
+              height={128}
+              className="mx-auto mb-4"
+            />
+            <h2 className="text-2xl font-semibold mb-4">
+              ¡LISTO! Tu cita ha sido reservada
+            </h2>
+            <p className="mb-6">
+              En unos minutos te enviaremos un correo de confirmación.
+            </p>
+            <div className="flex justify-center mb-4"></div>
+            <Button
+              onPress={() => setIsSuccessOpen(false)}
+              className="inline-block rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light"
+            >
+              Cerrar
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
