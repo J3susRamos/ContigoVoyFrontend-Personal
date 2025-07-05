@@ -529,9 +529,15 @@ export default function BlogUsuarioCrear() {
         const blog = await BlogById(id);
         console.log("Blog data for editing:", blog);
         if (blog) {
-            // Check if the blog has a valid idPsicologo
+            // VALIDACIÓN DE PROPIEDAD: Solo el psicólogo propietario puede editar
+    const currentPsicologoId = user?.idpsicologo || user?.id;
+
+    if (blog.idPsicologo !== currentPsicologoId) {
+      showToast("error", "No tienes permisos para editar este blog. Solo puedes editar tus propios blogs.");
+      return;
+    }
             console.log("Blog idPsicologo:", blog.idPsicologo);
-            console.log("Current user can edit?", blog.idPsicologo === user?.id || !blog.idPsicologo);
+            console.log("Current user can edit?", blog.idPsicologo === currentPsicologoId);
 
             setTema(blog.tema);
             // Handle multiple images

@@ -202,7 +202,7 @@ const ListarCitas = ({
     setShowFormCita(false);
     setEditingCita(null);
   };
-  
+
   useEffect(() => {
     const loadCitas = async () => {
       try {

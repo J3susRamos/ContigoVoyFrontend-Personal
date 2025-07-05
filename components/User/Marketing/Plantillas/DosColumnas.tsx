@@ -1,542 +1,539 @@
 "use client";
-import React, {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
-import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image as ImageIcon, AlignLeft, Bold, Italic} from "lucide-react";
-import {UsuarioLocalStorage} from "@/interface";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image, AlignLeft, Bold, Italic} from "lucide-react";
+import { UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
-import Image from "next/image";
 
 interface EmailBlock {
-    id: string;
-    type: 'text' | 'header' | 'divider' | 'image' | 'columns';
-    content: string;
-    styles: {
-        bold: boolean;
-        italic: boolean;
-        color: string;
-    };
-    imageUrl?: string;
-    imageUrls?: string[];
-    filesUrls?: string[];
+  id: string;
+  type: 'text' | 'header' | 'divider'  | 'image' | 'columns';
+  content: string;
+  styles: {
+    bold: boolean;
+    italic: boolean;
+    color: string;
+  };
+  imageUrl?: string;
+  imageUrls?: string[]; 
+  filesUrls?: string[];
 }
 
 const EmailMarketingEditor = () => {
-    const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
-    const [emailBlocks, setEmailBlocks] = useState<EmailBlock[]>([]);
-    const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
-    const [showPreview, setShowPreview] = useState(false);
-    const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
+  const [emailBlocks, setEmailBlocks] = useState<EmailBlock[]>([ ]);
+  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            const storedUser = localStorage.getItem("user");
-            if (storedUser) setUser(JSON.parse(storedUser));
-        }
-    }, []);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
-    const showAlert = (msg: string) => {
-        setAlertMessage(msg);
-        setTimeout(() => setAlertMessage(null), 3000);
+  const showAlert = (msg: string) => {
+    setAlertMessage(msg);
+    setTimeout(() => setAlertMessage(null), 3000);
+  };
+
+  const router = useRouter();
+
+  const MAX_BLOCKS = 10;
+
+  const addBlock = () => {
+    if (emailBlocks.length >= MAX_BLOCKS) {
+      showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques de texto.`);
+      return;
+    }
+    const newBlock: EmailBlock = {
+      id: Date.now().toString(),
+      type: 'text',
+      content: 'Nuevo bloque de texto',
+      styles: {
+        bold: false,
+        italic: false,
+        color: '#ffffff'
+      }
     };
+    setEmailBlocks([...emailBlocks, newBlock]);
+    setSelectedBlock(newBlock.id);
+    showAlert(`Se agregó un nuevo bloque de texto.`);
+  };
 
-    const router = useRouter();
-
-    const MAX_BLOCKS = 10;
-
-    const addBlock = () => {
-        if (emailBlocks.length >= MAX_BLOCKS) {
-            showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques de texto.`);
-            return;
-        }
-        const newBlock: EmailBlock = {
-            id: Date.now().toString(),
-            type: 'text',
-            content: 'Nuevo bloque de texto',
-            styles: {
-                bold: false,
-                italic: false,
-                color: '#ffffff'
-            }
-        };
-        setEmailBlocks([...emailBlocks, newBlock]);
-        setSelectedBlock(newBlock.id);
-        showAlert(`Se agregó un nuevo bloque de texto.`);
+  const addHeaderBlock = () => {
+    const hasHeader = emailBlocks.some(b => b.type === 'header');
+    if (hasHeader) {
+      showAlert("Solo puede haber un encabezado.");
+      return;
+    }
+    const newBlock: EmailBlock = {
+      id: Date.now().toString(),
+      type: 'header',
+      content: 'Título del encabezado',
+      styles: {
+        bold: true,
+        italic: false,
+        color: '#ffffff'
+      }
     };
+    setEmailBlocks([newBlock, ...emailBlocks]);
+    setSelectedBlock(newBlock.id);
+    showAlert(`Se agregó un nuevo encabezado.`);
+  };
 
-    const addHeaderBlock = () => {
-        const hasHeader = emailBlocks.some(b => b.type === 'header');
-        if (hasHeader) {
-            showAlert("Solo puede haber un encabezado.");
-            return;
-        }
-        const newBlock: EmailBlock = {
-            id: Date.now().toString(),
-            type: 'header',
-            content: 'Título del encabezado',
-            styles: {
-                bold: true,
-                italic: false,
-                color: '#ffffff'
-            }
-        };
-        setEmailBlocks([newBlock, ...emailBlocks]);
-        setSelectedBlock(newBlock.id);
-        showAlert(`Se agregó un nuevo encabezado.`);
+  const addDividerBlock = () => {
+    if (emailBlocks.length >= MAX_BLOCKS) {
+      showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques.`);
+      return;
+    }
+    const newBlock: EmailBlock = {
+      id: Date.now().toString(),
+      type: 'divider',
+      content: '',
+      styles: {
+        bold: false,
+        italic: false,
+        color: '#ffffff'
+      }
     };
+    setEmailBlocks([...emailBlocks, newBlock]);
+    setSelectedBlock(null);
+    showAlert(`Se agregó un bloque de espaciado.`);
+  };
 
-    const addDividerBlock = () => {
-        if (emailBlocks.length >= MAX_BLOCKS) {
-            showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques.`);
-            return;
-        }
-        const newBlock: EmailBlock = {
-            id: Date.now().toString(),
-            type: 'divider',
-            content: '',
-            styles: {
-                bold: false,
-                italic: false,
-                color: '#ffffff'
-            }
-        };
-        setEmailBlocks([...emailBlocks, newBlock]);
-        setSelectedBlock(null);
-        showAlert(`Se agregó un bloque de espaciado.`);
+  const addImageBlock = () => {
+    const hasImage = emailBlocks.some(b => b.type === 'image');
+    if (hasImage) {
+      showAlert("Solo puede haber una imagen en la parte superior.");
+      return;
+    }
+  
+    const newBlock: EmailBlock = {
+      id: Date.now().toString(),
+      type: 'image',
+      content: '',
+      styles: {
+        bold: false,
+        italic: false,
+        color: '#ffffff'
+      },
+      imageUrl: ''
     };
-
-    const addImageBlock = () => {
-        const hasImage = emailBlocks.some(b => b.type === 'image');
-        if (hasImage) {
-            showAlert("Solo puede haber una imagen en la parte superior.");
-            return;
-        }
-
-        const newBlock: EmailBlock = {
-            id: Date.now().toString(),
-            type: 'image',
-            content: '',
-            styles: {
-                bold: false,
-                italic: false,
-                color: '#ffffff'
-            },
-            imageUrl: ''
-        };
-        setEmailBlocks([newBlock, ...emailBlocks]);
-        setSelectedBlock(newBlock.id);
-        showAlert("Se agregó la imagen en la parte superior.");
+    setEmailBlocks([newBlock, ...emailBlocks]); 
+    setSelectedBlock(newBlock.id);
+    showAlert("Se agregó la imagen en la parte superior.");
+  };
+  
+  const addColumnsBlock = () => {
+    const newBlock: EmailBlock = {
+      id: Date.now().toString(),
+      type: 'columns',
+      content: '',
+      styles: {
+        bold: false,
+        italic: false,
+        color: '#ffffff'
+      },
+      imageUrls: ['', '']
     };
+  
+    setEmailBlocks([...emailBlocks, newBlock]);
+    setSelectedBlock(newBlock.id);
+    showAlert("Se agregaron dos columnas de imagen.");
+  };
+  
 
-    const addColumnsBlock = () => {
-        const newBlock: EmailBlock = {
-            id: Date.now().toString(),
-            type: 'columns',
-            content: '',
-            styles: {
-                bold: false,
-                italic: false,
-                color: '#ffffff'
-            },
-            imageUrls: ['', '']
-        };
+  const showFeatureNotAvailable = (feature: string) => {
+    showAlert(`La opción "${feature}" aún no está disponible.`);
+  };
 
-        setEmailBlocks([...emailBlocks, newBlock]);
-        setSelectedBlock(newBlock.id);
-        showAlert("Se agregaron dos columnas de imagen.");
-    };
+  const updateBlockContent = (id: string, content: string) => {
+    setEmailBlocks(blocks =>
+      blocks.map(block =>
+        block.id === id ? { ...block, content } : block
+      )
+    );
+  };
 
+  const updateBlockStyle = (id: string, style: keyof EmailBlock['styles'], value: boolean | string ) => {
+    setEmailBlocks(blocks =>
+      blocks.map(block =>
+        block.id === id ? { ...block, styles: { ...block.styles, [style]: value } } : block
+      )
+    );
+  };
 
-    const showFeatureNotAvailable = (feature: string) => {
-        showAlert(`La opción "${feature}" aún no está disponible.`);
-    };
+  const deleteBlock = (id: string) => {
+    setEmailBlocks(blocks => blocks.filter(block => block.id !== id));
+    setSelectedBlock(null);
+    showAlert(`Se eliminó el bloque con ID: ${id}`);
+  };
 
-    const updateBlockContent = (id: string, content: string) => {
-        setEmailBlocks(blocks =>
-            blocks.map(block =>
-                block.id === id ? {...block, content} : block
-            )
-        );
-    };
+  const handleContinuar = () => {
+    if (emailBlocks.length === 0) {
+      showAlert("Agrega al menos un bloque para continuar.");
+      return;
+    }
+  
+    const emailBlocksString = JSON.stringify(emailBlocks);
+    const emailBlocksSizeBytes = new Blob([emailBlocksString]).size;
+    const emailBlocksSizeKB = (emailBlocksSizeBytes / 1024).toFixed(2);  // En KB, con 2 decimales
 
-    const updateBlockStyle = (id: string, style: keyof EmailBlock['styles'], value: boolean | string) => {
-        setEmailBlocks(blocks =>
-            blocks.map(block =>
-                block.id === id ? {...block, styles: {...block.styles, [style]: value}} : block
-            )
-        );
-    };
+    const maxSizeBytes = 5000 * 1024;
 
-    const deleteBlock = (id: string) => {
-        setEmailBlocks(blocks => blocks.filter(block => block.id !== id));
-        setSelectedBlock(null);
-        showAlert(`Se eliminó el bloque con ID: ${id}`);
-    };
+    if (emailBlocksSizeBytes > maxSizeBytes) {
+      showAlert(`¡Excediste el límite! Estás intentando guardar ${emailBlocksSizeKB} KB (Máximo permitido: ${maxSizeBytes / 1024} KB)`);
+      return;
+    }
 
-    const handleContinuar = () => {
-        if (emailBlocks.length === 0) {
-            showAlert("Agrega al menos un bloque para continuar.");
-            return;
-        }
-
-        localStorage.setItem("emailBlocks", JSON.stringify(emailBlocks));
-        router.push("/user/marketing/detalle");
-    };
-
-    if (!user) return <div className="text-gray-600">Cargando...</div>;
-
-    const featureButtons = [
-        {icon: ImageIcon, label: "Imagen", action: addImageBlock}, // ✅ Renamed from Image to ImageIcon to avoid conflict
-        {icon: Columns, label: "Columnas", action: addColumnsBlock},
-        {icon: AlignLeft, label: "Espaciado", action: addDividerBlock},
-        {icon: Share2, label: "Redes", action: () => showFeatureNotAvailable("Redes")},
-        {icon: Square, label: "Botones", action: () => showFeatureNotAvailable("Botones")}
-    ];
+    try {
+      localStorage.setItem("emailBlocks", emailBlocksString);
+      router.push("/user/marketing/detalle");
+    } catch (error) {
+      console.error("Error guardando en localStorage:", error);
+      showAlert("¡Error al guardar! Tal vez superaste el límite de almacenamiento del navegador.");
+    }
+  };
 
 
-    return (
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-            <div
-                className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center space-x-3">
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-                        Email marketing
-                    </h1>
-                </div>
-                <CerrarSesion/>
-            </div>
 
-            <div className="flex text-center py-6 items-center max-w-[600px]">
-                <ArrowLeft
-                    className="w-6 h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
-                    onClick={() => router.push("/user/marketing/crear")}
+
+  if (!user) return <div className="text-gray-600">Cargando...</div>;
+
+  const featureButtons = [
+    { icon: Image, label: "Imagen", action: addImageBlock }, // ✅ Aquí corregido
+    { icon: Columns, label: "Columnas", action: addColumnsBlock },
+    { icon: AlignLeft, label: "Espaciado", action: addDividerBlock },
+    { icon: Share2, label: "Redes", action: () => showFeatureNotAvailable("Redes") },
+    { icon: Square, label: "Botones", action: () => showFeatureNotAvailable("Botones") }
+  ];
+  
+  
+  
+  return (
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center space-x-3">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
+            Email marketing
+          </h1>
+        </div>
+        <CerrarSesion />
+      </div>
+
+      <div className="flex text-center py-6 items-center max-w-[600px]">
+      <ArrowLeft
+        className="w-6 h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
+        onClick={() => router.push("/user/marketing/crear")}
+      />
+      <h2 className="text-3xl font-bold text-purple-400">Edita el email</h2>
+      </div>
+
+
+      {alertMessage && (
+        <div className="mx-6 mb-4 p-3 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
+          {alertMessage}
+        </div>
+      )}
+
+      <div className="bg-primary text-white px-6 py-4">
+        <div className="flex justify-center items-center">
+          <button
+            onClick={() => setShowPreview(!showPreview)}
+            className="flex items-center space-x-2 bg-primary px-4 py-2 rounded hover:bg-primary transition-colors"
+          >
+            <Eye className="w-4 h-4" />
+            <span>Pre visualización</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex">
+        <div className="flex-1 p-6">
+          <div className="bg-gray-800 rounded-lg min-h-[500px] p-6 relative">
+            {showPreview ? (
+              <div className="bg-white rounded-lg p-6 max-w-2xl mx-auto">
+                {emailBlocks.map(block => (
+                  <div key={block.id} className="mb-4">
+                    {block.type === 'divider' ? (
+                  <hr className="border-t border-gray-300 my-6" />
+                ) : block.type === 'image' && block.imageUrl ? (
+                  <img
+                    src={block.imageUrl}
+                    alt="Imagen de la plantilla"
+                    className="max-w-full h-auto rounded mb-4"
                 />
-                <h2 className="text-3xl font-bold text-purple-400">Edita el email</h2>
+                )  : block.type === 'columns' ? (
+                  <div className="grid grid-cols-2 gap-4">
+                    {block.imageUrls && block.imageUrls.length > 0 ? (
+                    block.imageUrls.map((url, index) => (
+                      <div key={index} className="flex flex-col gap-2">
+                        <img
+                          src={url}
+                          alt={`Columna ${index + 1}`}
+                          className="w-full h-48 object-cover rounded"
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-sm">No hay imágenes en las columnas</p>
+                  )}
+
+                  </div>
+                ) : (
+                  <p
+                    className={`leading-relaxed ${
+                      block.type === 'header' ? 'text-2xl font-bold' : 'text-base'
+                    }`}
+                    style={{
+                      fontWeight: block.styles.bold ? 'bold' : 'normal',
+                      fontStyle: block.styles.italic ? 'italic' : 'normal',
+                      color: block.styles.color
+                    }}
+                  >
+                    {block.content}
+                  </p>
+                )}
+
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {emailBlocks.map(block => (
+          <div
+            key={block.id}
+            className={`relative bg-gray-700 rounded-lg p-4 cursor-pointer transition-all ${
+              selectedBlock === block.id ? 'ring-2 ring-blue-500' : 'hover:bg-gray-600'
+            }`}
+            onClick={() => setSelectedBlock(block.id)}
+          >
+            {block.type === 'divider' ? (
+        <div className="h-6 border-t border-dashed border-gray-500 opacity-30" />
+          ) : block.type === 'image' ? (
+            <div className="flex flex-col gap-2 w-full">
+              <input
+                type="text"
+                placeholder="URL de la imagen"
+                value={block.imageUrl || ''}
+                onChange={(e) =>
+                  setEmailBlocks(prev =>
+                    prev.map(b =>
+                      b.id === block.id ? { ...b, imageUrl: e.target.value } : b
+                    )
+                  )
+                }
+                className="bg-gray-600 text-white p-2 rounded w-full"
+              />
+              <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  const base64 = reader.result as string;
+                  setEmailBlocks(prev =>
+                    prev.map(b =>
+                      b.id === block.id ? { ...b, imageUrl: base64 } : b
+                    )
+                  );
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+            className="bg-gray-600 text-white p-2 rounded w-full"
+          />
+
+              {block.imageUrl && (
+                <img
+                  src={block.imageUrl}
+                  alt="Imagen superior"
+                  className="max-w-full h-auto rounded mt-2"
+                />
+              )}
             </div>
+              ) : block.type === 'columns' ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {block.imageUrls?.map((url, index) => (
+                    <div key={index} className="flex flex-col gap-2">
+                      <input
+                        type="text"
+                        placeholder={`URL de la imagen ${index + 1}`}
+                        value={url}
+                        onChange={(e) =>
+                          setEmailBlocks(prev =>
+                            prev.map(b =>
+                              b.id === block.id
+                                ? {
+                                    ...b,
+                                    imageUrls: b.imageUrls?.map((u, i) =>
+                                      i === index ? e.target.value : u
+                                    )
+                                  }
+                                : b
+                            )
+                          )
+                        }
+                        className="bg-gray-600 text-white p-2 rounded w-full"
+                      />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              const base64 = reader.result as string;
+                              setEmailBlocks(prev =>
+                                prev.map(b =>
+                                  b.id === block.id
+                                    ? {
+                                        ...b,
+                                        imageUrls: b.imageUrls?.map((u, i) =>
+                                          i === index ? base64 : u
+                                        )
+                                      }
+                                    : b
+                                )
+                              );
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="bg-gray-600 text-white p-2 rounded w-full"
+                      />
 
-
-            {alertMessage && (
-                <div className="mx-6 mb-4 p-3 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
-                    {alertMessage}
-                </div>
-            )}
-
-            <div className="bg-primary text-white px-6 py-4">
-                <div className="flex justify-center items-center">
-                    <button
-                        onClick={() => setShowPreview(!showPreview)}
-                        className="flex items-center space-x-2 bg-primary px-4 py-2 rounded hover:bg-primary transition-colors"
-                    >
-                        <Eye className="w-4 h-4"/>
-                        <span>Pre visualización</span>
-                    </button>
-                </div>
-            </div>
-
-            <div className="flex">
-                <div className="flex-1 p-6">
-                    <div className="bg-gray-800 rounded-lg min-h-[500px] p-6 relative">
-                        {showPreview ? (
-                            <div className="bg-white rounded-lg p-6 max-w-2xl mx-auto">
-                                {emailBlocks.map(block => (
-                                    <div key={block.id} className="mb-4">
-                                        {block.type === 'divider' ? (
-                                            <hr className="border-t border-gray-300 my-6"/>
-                                        ) : block.type === 'image' && block.imageUrl ? (
-                                            <div className="relative w-full max-w-full h-auto mb-4">
-                                                <Image
-                                                    src={block.imageUrl}
-                                                    alt="Imagen"
-                                                    width={600}
-                                                    height={400}
-                                                    className="max-w-full h-auto rounded"
-                                                    style={{ width: 'auto', height: 'auto' }}
-                                                />
-                                            </div>
-                                        ) : block.type === 'columns' ? (
-                                            <div className="grid grid-cols-2 gap-4">
-                                                {block.imageUrls?.map((url, index) => (
-                                                    url ? (
-                                                        <div key={index} className="flex flex-col gap-2">
-                                                            <div className="relative w-full h-auto">
-                                                                <Image
-                                                                    src={url}
-                                                                    alt={`Columna ${index + 1}`}
-                                                                    width={300}
-                                                                    height={200}
-                                                                    className="w-full h-auto rounded"
-                                                                    style={{ width: '100%', height: 'auto' }}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    ) : null
-                                                ))}
-                                            </div>
-
-
-                                        ) : (
-                                            <p
-                                                className={`leading-relaxed ${
-                                                    block.type === 'header' ? 'text-2xl font-bold' : 'text-base'
-                                                }`}
-                                                style={{
-                                                    fontWeight: block.styles.bold ? 'bold' : 'normal',
-                                                    fontStyle: block.styles.italic ? 'italic' : 'normal',
-                                                    color: block.styles.color
-                                                }}
-                                            >
-                                                {block.content}
-                                            </p>
-                                        )}
-
-                                    </div>
-                                ))}
+                              {url && (
+                                <img
+                                src={url}
+                                alt={`Columna ${index + 1}`}
+                                className="w-full h-48 object-cover rounded"
+                              />
+                              )}
                             </div>
-                        ) : (
-                            <div className="space-y-4">
-                                {emailBlocks.map(block => (
-                                    <div
-                                        key={block.id}
-                                        className={`relative bg-gray-700 rounded-lg p-4 cursor-pointer transition-all ${
-                                            selectedBlock === block.id ? 'ring-2 ring-blue-500' : 'hover:bg-gray-600'
-                                        }`}
-                                        onClick={() => setSelectedBlock(block.id)}
-                                    >
-                                        {block.type === 'divider' ? (
-                                            <div className="h-6 border-t border-dashed border-gray-500 opacity-30"/>
-                                        ) : block.type === 'image' ? (
-                                            <div className="flex flex-col gap-2 w-full">
-                                                <input
-                                                    type="text"
-                                                    placeholder="URL de la imagen"
-                                                    value={block.imageUrl || ''}
-                                                    onChange={(e) =>
-                                                        setEmailBlocks(prev =>
-                                                            prev.map(b =>
-                                                                b.id === block.id ? {...b, imageUrl: e.target.value} : b
-                                                            )
-                                                        )
-                                                    }
-                                                    className="bg-gray-600 text-white p-2 rounded w-full"
-                                                />
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files?.[0];
-                                                        if (file) {
-                                                            const reader = new FileReader();
-                                                            reader.onloadend = () => {
-                                                                const base64 = reader.result as string;
-                                                                setEmailBlocks(prev =>
-                                                                    prev.map(b =>
-                                                                        b.id === block.id ? {...b, imageUrl: base64} : b
-                                                                    )
-                                                                );
-                                                            };
-                                                            reader.readAsDataURL(file);
-                                                        }
-                                                    }}
-                                                    className="bg-gray-600 text-white p-2 rounded w-full"
-                                                />
-
-                                                {block.imageUrl && (
-                                                    <div className="relative w-full max-w-full h-auto mt-2">
-                                                        <Image
-                                                            src={block.imageUrl}
-                                                            alt="Imagen superior"
-                                                            width={500}
-                                                            height={300}
-                                                            className="max-w-full h-auto rounded"
-                                                            style={{ width: 'auto', height: 'auto' }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ) : block.type === 'columns' ? (
-                                            <div className="grid grid-cols-2 gap-4">
-                                                {block.imageUrls?.map((url, index) => (
-                                                    <div key={index} className="flex flex-col gap-2">
-                                                        <input
-                                                            type="text"
-                                                            placeholder={`URL de la imagen ${index + 1}`}
-                                                            value={url}
-                                                            onChange={(e) =>
-                                                                setEmailBlocks(prev =>
-                                                                    prev.map(b =>
-                                                                        b.id === block.id
-                                                                            ? {
-                                                                                ...b,
-                                                                                imageUrls: b.imageUrls?.map((u, i) =>
-                                                                                    i === index ? e.target.value : u
-                                                                                )
-                                                                            }
-                                                                            : b
-                                                                    )
-                                                                )
-                                                            }
-                                                            className="bg-gray-600 text-white p-2 rounded w-full"
-                                                        />
-                                                        <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            onChange={(e) => {
-                                                                const file = e.target.files?.[0];
-                                                                if (file) {
-                                                                    const reader = new FileReader();
-                                                                    reader.onloadend = () => {
-                                                                        const base64 = reader.result as string;
-                                                                        setEmailBlocks(prev =>
-                                                                            prev.map(b =>
-                                                                                b.id === block.id
-                                                                                    ? {
-                                                                                        ...b,
-                                                                                        imageUrls: b.imageUrls?.map((u, i) =>
-                                                                                            i === index ? base64 : u
-                                                                                        )
-                                                                                    }
-                                                                                    : b
-                                                                            )
-                                                                        );
-                                                                    };
-                                                                    reader.readAsDataURL(file);
-                                                                }
-                                                            }}
-                                                            className="bg-gray-600 text-white p-2 rounded w-full"
-                                                        />
-
-                                                        {url && (
-                                                            <div className="relative w-full h-auto">
-                                                                <Image
-                                                                    src={url}
-                                                                    alt={`Columna ${index + 1}`}
-                                                                    width={250}
-                                                                    height={150}
-                                                                    className="w-full h-auto rounded"
-                                                                    style={{ width: '100%', height: 'auto' }}
-                                                                />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <div className="flex flex-col gap-2">
-                  <textarea
-                      value={block.content}
-                      onChange={(e) => updateBlockContent(block.id, e.target.value)}
-                      className="bg-gray-600 text-white p-2 rounded w-full resize-none"
-                      placeholder={block.type === 'header' ? 'Escribe un encabezado' : 'Escribe tu texto'}
-                      rows={block.type === 'header' ? 2 : 3}
-                  />
-                                                {selectedBlock === block.id && (
-                                                    <div className="flex items-center gap-2">
-                                                        <button
-                                                            onClick={() => updateBlockStyle(block.id, 'bold', !block.styles.bold)}
-                                                            className={`px-2 py-1 rounded text-white ${block.styles.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
-                                                        >
-                                                            <Bold className="w-4 h-4"/>
-                                                        </button>
-                                                        <button
-                                                            onClick={() => updateBlockStyle(block.id, 'italic', !block.styles.italic)}
-                                                            className={`px-2 py-1 rounded text-white ${block.styles.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
-                                                        >
-                                                            <Italic className="w-4 h-4"/>
-                                                        </button>
-                                                        <input
-                                                            type="color"
-                                                            value={block.styles.color}
-                                                            onChange={(e) => updateBlockStyle(block.id, 'color', e.target.value)}
-                                                            className="w-8 h-8 p-0 border-none cursor-pointer"
-                                                            title="Color del texto"
-                                                        />
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                deleteBlock(block.id);
-                                                            }}
-                                                            className="ml-auto text-red-400 hover:text-red-300"
-                                                            title="Eliminar bloque"
-                                                        >
-                                                            ×
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-2">
+                          <textarea
+                            value={block.content}
+                            onChange={(e) => updateBlockContent(block.id, e.target.value)}
+                            className="bg-gray-600 text-white p-2 rounded w-full resize-none"
+                            placeholder={block.type === 'header' ? 'Escribe un encabezado' : 'Escribe tu texto'}
+                            rows={block.type === 'header' ? 2 : 3}
+                          />
+                          {selectedBlock === block.id && (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => updateBlockStyle(block.id, 'bold', !block.styles.bold)}
+                                className={`px-2 py-1 rounded text-white ${block.styles.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
+                              >
+                                <Bold className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => updateBlockStyle(block.id, 'italic', !block.styles.italic)}
+                                className={`px-2 py-1 rounded text-white ${block.styles.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
+                              >
+                                <Italic className="w-4 h-4" />
+                              </button>
+                              <input
+                                type="color"
+                                value={block.styles.color}
+                                onChange={(e) => updateBlockStyle(block.id, 'color', e.target.value)}
+                                className="w-8 h-8 p-0 border-none cursor-pointer"
+                                title="Color del texto"
+                              />
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteBlock(block.id);
+                                }}
+                                className="ml-auto text-red-400 hover:text-red-300"
+                                title="Eliminar bloque"
+                              >
+                                ×
+                              </button>
                             </div>
-                        )}
-                    </div>
+                          )}
+                        </div>
+                      )}
+                  </div>
+                ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="w-80 bg-gray-50 dark:bg-gray-800 p-4 border-l border-gray-200 dark:border-gray-700">
-                    <div className="grid grid-cols-2 gap-3 mb-6">
-                        <button
-                            onClick={addBlock}
-                            disabled={emailBlocks.length >= MAX_BLOCKS}
-                            className={`flex flex-col items-center p-4 rounded-lg shadow border
+
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <button
+              onClick={addBlock}
+              disabled={emailBlocks.length >= MAX_BLOCKS}
+              className={`flex flex-col items-center p-4 rounded-lg shadow border
                 ${emailBlocks.length >= MAX_BLOCKS ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-700 hover:shadow-md'}
               `}
-                        >
-                            <Type className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2"/>
-                            <span className="text-sm">Texto</span>
-                        </button>
-
-                        <button
-                            onClick={addHeaderBlock}
-                            disabled={emailBlocks.some(b => b.type === 'header') || emailBlocks.length >= MAX_BLOCKS}
-                            className={`flex flex-col items-center p-4 rounded-lg shadow border
+            >
+              <Type className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
+              <span className="text-sm">Texto</span>
+            </button>
+            <button
+              onClick={addHeaderBlock}
+              disabled={emailBlocks.some(b => b.type === 'header') || emailBlocks.length >= MAX_BLOCKS}
+              className={`flex flex-col items-center p-4 rounded-lg shadow border
                 ${emailBlocks.some(b => b.type === 'header') || emailBlocks.length >= MAX_BLOCKS ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-700 hover:shadow-md'}
               `}
-                        >
-                            <Hash className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2"/>
-                            <span className="text-sm">Encabezado</span>
-                        </button>
-                        {featureButtons.map(({icon: Icon, label, action}, index) => (
-                            <button
-                                key={index}
-                                onClick={action}
-                                className="flex flex-col items-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:shadow-md border"
-                            >
-                                <Icon className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2"/>
-                                <span className="text-sm">{label}</span>
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Propiedades del bloque seleccionado */}
-                    {selectedBlock && (
-                        <div className="bg-white dark:bg-gray-700 rounded-lg p-4 mb-4 border">
-                            <h3 className="font-medium mb-3 text-gray-800 dark:text-white">Propiedades</h3>
-                            <div className="space-y-3">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo
-                                        de bloque</label>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                                        {emailBlocks.find(b => b.id === selectedBlock)?.type}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label
-                                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ID</label>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">{selectedBlock}</p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    <div className="flex justify-center">
-                        <button
-                            onClick={handleContinuar}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors font-medium"
-                        >
-                            Continuar
-                        </button>
-                    </div>
+            >
+              <Hash className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
+              <span className="text-sm">Encabezado</span>
+            </button>
+            {featureButtons.map(({ icon: Icon, label, action }, index) => (
+          <button
+            key={index}
+            onClick={action}
+            className="flex flex-col items-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:shadow-md border"
+          >
+            <Icon className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
+            <span className="text-sm">{label}</span>
+          </button>
+        ))}
+          </div>
+          {/* Propiedades del bloque seleccionado */}
+          {selectedBlock && (
+            <div className="bg-white dark:bg-gray-700 rounded-lg p-4 mb-4 border">
+              <h3 className="font-medium mb-3 text-gray-800 dark:text-white">Propiedades</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo de bloque</label>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                    {emailBlocks.find(b => b.id === selectedBlock)?.type}
+                  </p>
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ID</label>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">{selectedBlock}</p>
+                </div>
+              </div>
             </div>
+          )}
+            <div className="flex justify-center">
+              <button
+                onClick={handleContinuar}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors font-medium"
+              >
+                Continuar
+              </button>
+          </div>
         </div>
-    );
+      </div>
+    </div>   
+  );
+
 };
 
 export default EmailMarketingEditor;

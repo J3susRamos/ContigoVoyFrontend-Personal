@@ -7,7 +7,9 @@ import {
   PsicologoApiResponseAlone,
   PsicologoPreviewData,
   DashboardApiResponse,
+  GeneroEstadisticaApiResponse,
   CitasApiResponse,
+  MarketingApiResponse,
   CitaMensual
 } from "@/interface";
 import {parseCookies} from "nookies";
@@ -153,6 +155,26 @@ export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
   return await res.json();
 }
 
+export async function GetPacientesEstadisticasEdad(): Promise<GeneroEstadisticaApiResponse> {
+  const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/estadisticas/genero`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener los datos de estadisticas de genero");
+  }
+
+  return await res.json();
+}
+
 //Traer citas del psicologo por mes
 export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
   const res = await fetch(
@@ -174,10 +196,9 @@ export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
   return await res.json();
 }
 
-//Traer citas totales por fecha
-export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]>{
+export async function GetPlantillas(): Promise<MarketingApiResponse> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/marketing`,
     {
       method: "GET",
       headers: {
@@ -186,6 +207,29 @@ export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]>{
         Authorization: `Bearer ${token}`,
       },
     }
+  );
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Error al obtener las plantillas:", res.status, errorText);
+    throw new Error("Error al obtener las plantillas");
+  }
+
+  return await res.json();
+}
+
+//Traer citas totales por fecha
+export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]>{
+  const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
   );
 
   if (!res.ok) {
