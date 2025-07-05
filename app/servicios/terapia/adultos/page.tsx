@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const AdultoTerapias: ServicesStructureProps[] = [
   {
-    title: "Terapia para adultos",
+    title: "Adultos felices en Contigo Voy",
     edad: "de 19 años a más",
     motto:
       "¿Sientes que las preocupaciones del día a día están afectando tu bienestar emocional?",
@@ -20,7 +20,9 @@ const AdultoTerapias: ServicesStructureProps[] = [
       "/Services/adult/Terapia_adultos_Mujer_agarrándose_rostro_feliz.webp",
     bgdown: "/Services/adult/Terapia_adultos_Mujer_afro_feliz_tablet.webp",
     bgup: "/Services/adult/bgupadultos.webp",
-
+    bgdownAlt:
+      "Estamos aquí para ayudarte a recuperar el equilibrio. A través de la terapia para adultos, encontrarás un espacio para comprenderte mejor, gestionar las situaciones difíciles y fortalecer tu bienestar emocional.¡Es el momento de dar el primer paso hacia una vida más equilibrada y plena!",
+    bgdownTitle: "Mujer feliz gracias a psicología online en Contigo Voy",
     description:
       "Estamos aquí para ayudarte a recuperar el equilibrio. A través de la terapia para adultos, encontrarás un espacio para comprenderte mejor, gestionar las situaciones difíciles y fortalecer tu bienestar emocional.¡Es el momento de dar el primer paso hacia una vida más equilibrada y plena!",
     tittleIcon:
@@ -40,13 +42,15 @@ const AdultoTerapias: ServicesStructureProps[] = [
       },
       {
         id: 3,
-        title: "Dificultades para manejar emociones en adultos Contigo Voy Psicología Online",
+        title:
+          "Dificultades para manejar emociones en adultos Contigo Voy Psicología Online",
         text: "Dificultades emocionales",
         iconImage: "/Services/adult/dificultades.webp",
       },
       {
         id: 4,
-        title: "Acompañamiento en el duelo Adultos Contigo Voy Psicología Online",
+        title:
+          "Acompañamiento en el duelo Adultos Contigo Voy Psicología Online",
         text: "Proceso de duelo",
         iconImage: "/Services/adult/duelo.webp",
       },
@@ -67,7 +71,7 @@ const AdultoTerapias: ServicesStructureProps[] = [
       },
       {
         id: 2,
-        title:"Control de emociones en adultos Contigo Voy Psicología Online",
+        title: "Control de emociones en adultos Contigo Voy Psicología Online",
         text: "Comprenderás y gestionarás tus emociones, tomando decisiones más conscientes.",
         icon: "/Services/adult/therapy/comprender.webp",
       },

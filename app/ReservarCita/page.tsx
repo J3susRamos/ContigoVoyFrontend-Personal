@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import ReservarComponents from "@/components/reservarCita/ReservarComponents";
-import ReservarLoader from "@/components/reservarCita/ReservarLoader";
+import ReservarComponents from "@/components/ReservarComponents";
 import { GetPsicologos } from "../apiRoutes";
 import { PsicologoApiResponse } from "@/interface";
 

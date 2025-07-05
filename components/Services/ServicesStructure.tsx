@@ -65,8 +65,8 @@ export default function ServicesStructure({
           <div className="sm:hidden w-full max-w-[560px] mx-auto h-[600px] lg:h-[770px] overflow-hidden relative mt-scv3 ">
             <Image
               src={item.bgup}
-              alt={item.description}
-              title={item.title}
+              alt={item.bgdownAlt}
+              title={item.bgdownTitle}
               fill
               className="object-cover object-center mask-all-fade"
             />
@@ -207,8 +207,8 @@ export default function ServicesStructure({
             <div className="flex-1 relative">
               <Image
                 fill
-                alt={item.tittleIcon}
-                title={item.title}
+                alt={item.bgdownAlt}
+                title={item.bgdownTitle}
                 src={item.bgdown}
                 className="object-cover object-right mask-horizontal-fade"
               />
