@@ -41,7 +41,7 @@ export default function BlogPage() {
         console.error(error);
       }
     }
-    
+
     fetchData().catch((error) => {
       console.error("Error in fetchData:", error);
     });

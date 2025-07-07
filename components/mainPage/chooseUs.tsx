@@ -12,6 +12,7 @@ export default function ChooseUs() {
       icon: (
         <Image
           src={"/ChooseUsImages/especialistas.webp"}
+          title="Especialistas Contigo Voy Terapia online"
           alt="Especialistas Terapia Psicológica Online Contigo Voy"
           width={70}
           height={60}
@@ -23,6 +24,7 @@ export default function ChooseUs() {
       icon: (
         <Image
           src="/ChooseUsImages/atencionvirtual.webp"
+          title="Atención virtual Contigo Voy Terapia online"
           alt="Atención virtual Terapia Psicológica Contigo Voy Centro Psicológico"
           width={70}
           height={60}
@@ -34,6 +36,7 @@ export default function ChooseUs() {
       icon: (
         <Image
           src="/ChooseUsImages/etica.webp"
+          title="Ética y Confiabilidad Contigo Voy Centro Psicológico"
           alt="Ética y Confiabilidad Contigo Voy"
           width={70}
           height={60}
@@ -45,6 +48,7 @@ export default function ChooseUs() {
       icon: (
         <Image
           src="/ChooseUsImages/horarios.webp"
+          title="Atención virtual Contigo Voy Terapia Psicológica"
           alt="Horarios flexibles Contigo Voy Terapia Psicológica"
           width={70}
           height={60}
@@ -56,6 +60,7 @@ export default function ChooseUs() {
       icon: (
         <Image
           src="/ChooseUsImages/costos.webp"
+          title="Costos Accesibles Contigo Voy Terapia Online"
           alt="Costos Accesibles Contigo Voy Terapia Psicológica"
           width={70}
           height={60}
@@ -67,6 +72,7 @@ export default function ChooseUs() {
       icon: (
         <Image
           src="/ChooseUsImages/confidencialidad.webp"
+          title="Confidencialidad Contigo Voy Centro Psicológico"
           alt="Confidencialidad Contigo Voy Centro Psicológico"
           width={70}
           height={60}

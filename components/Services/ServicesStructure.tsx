@@ -65,8 +65,8 @@ export default function ServicesStructure({
           <div className="sm:hidden w-full max-w-[560px] mx-auto h-[600px] lg:h-[770px] overflow-hidden relative mt-scv3 ">
             <Image
               src={item.bgup}
-              alt={item.description}
-              title={item.title}
+              alt={item.bgdownAlt}
+              title={item.bgdownTitle}
               fill
               className="object-cover object-center mask-all-fade"
             />
@@ -104,9 +104,9 @@ export default function ServicesStructure({
                                 <div className="w-full md:w-[370px] h-[220px] md:h-[236px] flex flex-col rounded-lg p-4">
                                   <div className="flex justify-center items-center mt-scv4">
                                     <Image
+                                      title={card.title}
                                       src={card.icon}
                                       alt={card.text}
-                                      title={card.title}
                                       width={183}
                                       height={88}
                                       className="w-[140px] md:w-[183.27px] h-[68px] md:h-[88px] object-contain"
@@ -154,9 +154,9 @@ export default function ServicesStructure({
                     <div className="w-[360px] min-h-[236px] py-scv6 px-scv6 flex flex-col gap-scv4 justify-between rounded-lg p-4">
                       <div className="flex-1 relative">
                         <Image
+                          title={card.title}
                           src={card.icon}
                           alt={card.text}
-                          title={card.title}
                           fill
                           className="w-[130px] object-contain"
                         />
@@ -189,9 +189,9 @@ export default function ServicesStructure({
                     <div className=" rounded-full w-32 h-32 p-scv6 bg-[#634AE2] flex items-center justify-center">
                       <div className="relative w-full h-full ">
                         <Image
+                          title={icono.title}
                           src={icono.iconImage}
                           alt={icono.text}
-                          title={icono.text}
                           fill
                           className="object-contain"
                         />
@@ -207,8 +207,8 @@ export default function ServicesStructure({
             <div className="flex-1 relative">
               <Image
                 fill
-                alt={item.tittleIcon}
-                title={item.title}
+                alt={item.bgdownAlt}
+                title={item.bgdownTitle}
                 src={item.bgdown}
                 className="object-cover object-right mask-horizontal-fade"
               />
@@ -246,9 +246,9 @@ export default function ServicesStructure({
                           <div className="rounded-full bg-[#9494F3] p-6">
                             <div className="w-32 h-32 flex items-center justify-center">
                               <Image
+                                title={icono.title}
                                 src={icono.iconImage}
                                 alt={icono.text}
-                                title={icono.text}
                                 width={80}
                                 height={80}
                                 className="w-20 h-20 object-contain"
