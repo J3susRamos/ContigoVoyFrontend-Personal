@@ -574,7 +574,7 @@ export interface EmailBlock {
     imageUrl?: string;
     imageUrls?: string[];
     content?: string;
-    styles?: { color?: string; bold?: boolean; italic?: boolean };
+    styles: { color?: string; bold?: boolean; italic?: boolean };
 }
 
 export interface Plantilla {

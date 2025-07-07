@@ -2,22 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image, AlignLeft, Bold, Italic} from "lucide-react";
-import { UsuarioLocalStorage } from "@/interface";
+import { EmailBlock, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
-
-interface EmailBlock {
-  id: string;
-  type: 'text' | 'header' | 'divider'  | 'image' | 'columns';
-  content: string;
-  styles: {
-    bold: boolean;
-    italic: boolean;
-    color: string;
-  };
-  imageUrl?: string;
-  imageUrls?: string[]; 
-  filesUrls?: string[];
-}
+import { defaultDosColumnasTemplate } from "./PlantillasConfig";
 
 const EmailMarketingEditor = () => {
   const PLANTILLA_TYPE = "dos-columnas";
@@ -38,11 +25,15 @@ const EmailMarketingEditor = () => {
           const parsed = JSON.parse(storedPlantilla);
           if (parsed.type === PLANTILLA_TYPE && Array.isArray(parsed.blocks)) {
             setEmailBlocks(parsed.blocks);
+            return;
           }
         } catch (e) {
           // Si hay error, ignora y no carga nada
         }
       }
+
+      // Si no hay plantilla guardada, usar la plantilla por defecto
+      setEmailBlocks(defaultDosColumnasTemplate.blocks);
     }
   }, []);
 
@@ -308,9 +299,9 @@ const EmailMarketingEditor = () => {
                       block.type === 'header' ? 'text-2xl font-bold' : 'text-base'
                     }`}
                     style={{
-                      fontWeight: block.styles.bold ? 'bold' : 'normal',
-                      fontStyle: block.styles.italic ? 'italic' : 'normal',
-                      color: block.styles.color
+                      fontWeight: block.styles?.bold ? 'bold' : 'normal',
+                      fontStyle: block.styles?.italic ? 'italic' : 'normal',
+                      color: block.styles?.color
                     }}
                   >
                     {block.content}
@@ -450,20 +441,20 @@ const EmailMarketingEditor = () => {
                           {selectedBlock === block.id && (
                             <div className="flex items-center gap-2">
                               <button
-                                onClick={() => updateBlockStyle(block.id, 'bold', !block.styles.bold)}
-                                className={`px-2 py-1 rounded text-white ${block.styles.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
+                                onClick={() => updateBlockStyle(block.id, 'bold', !block.styles?.bold)}
+                                className={`px-2 py-1 rounded text-white ${block.styles?.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
                               >
                                 <Bold className="w-4 h-4" />
                               </button>
                               <button
-                                onClick={() => updateBlockStyle(block.id, 'italic', !block.styles.italic)}
-                                className={`px-2 py-1 rounded text-white ${block.styles.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
+                                onClick={() => updateBlockStyle(block.id, 'italic', !block.styles?.italic)}
+                                className={`px-2 py-1 rounded text-white ${block.styles?.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
                               >
                                 <Italic className="w-4 h-4" />
                               </button>
                               <input
                                 type="color"
-                                value={block.styles.color}
+                                value={block.styles?.color}
                                 onChange={(e) => updateBlockStyle(block.id, 'color', e.target.value)}
                                 className="w-8 h-8 p-0 border-none cursor-pointer"
                                 title="Color del texto"
