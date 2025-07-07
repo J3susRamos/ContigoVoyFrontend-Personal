@@ -80,26 +80,6 @@ const EmailMarketingPage = () => {
                   </p>
                 </div>
               </div>
-
-              <button
-                className="absolute -bottom-6 right-0 bg-[#8a8af3] hover:bg-[#6969d8] text-white font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center shadow-md group" onClick={() => router.push("/user/marketing/crear")}
-              >
-                Guardar y enviar
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 ml-2 transition-transform duration-200 group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </button>
             </div>
           </div>
         </div>
