@@ -315,97 +315,37 @@ export const Tiptap = ({
         onUpdate={handleUpdate}
         content={contenido}
         autofocus={true}
+        immediatelyRender={false}
       >
         <div className="prose prose-sm sm:prose lg:prose-lg mx-auto p-6 dark:prose-invert">
           <style>{`
-            .ProseMirror {
-              height: 384px; /* equivalent to h-96 */
-              overflow-y: auto;
-              outline: none;
-              color: hsl(var(--foreground));
-            }
-            .ProseMirror > * + * {
-              margin-top: 0.75em;
-            }
-            .ProseMirror ul,
-            .ProseMirror ol {
-              padding: 0 1rem;
-            }
+          .ProseMirror {
+            height: 384px; /* equivalent to h-96 */
+            overflow-y: auto;
+            outline: none;
+            color: hsl(var(--foreground));
+          }
+          .ProseMirror > * + * {
+            margin-top: 0.75em;
+          }
+          .ProseMirror ul,
+          .ProseMirror ol {
+            padding: 0 1rem;
+          }
 
-            .ProseMirror h1 {
-              font-size: 2em;
-            }
-            .ProseMirror h2 {
-              font-size: 1.5em;
-            }
-            .ProseMirror h3 {
-              font-size: 1.25em;
-            }
-            .ProseMirror mark {
-              background-color: hsl(var(--warning) / 0.2);
-              border-radius: 0.2rem;
-              padding: 0.1rem 0.3rem;
-            }
-            .ProseMirror blockquote {
-              border-left: 3px solid hsl(var(--border));
-              padding-left: 1rem;
-              margin-left: 0;
-              margin-right: 0;
-            }
-            .ProseMirror code {
-              background-color: hsl(var(--muted));
-              border-radius: 0.2rem;
-              padding: 0.2rem 0.4rem;
-              font-size: 0.875em;
-            }
-
-            /* Estilizar la barra de scroll */
-            .ProseMirror::-webkit-scrollbar {
-              width: 8px;
-            }
-            
-            .ProseMirror::-webkit-scrollbar-track {
-              background: hsl(var(--muted));
-              border-radius: 30px;
-            }
-            
-            .ProseMirror::-webkit-scrollbar-thumb {
-              background: hsl(var(--primary) / 0.5);
-              border-radius: 4px;
-            }
-            
-            .ProseMirror::-webkit-scrollbar-thumb:hover {
-              background: hsl(var(--primary) / 0.8);
-            }
-
-            .ProseMirror a {
-              color: hsl(var(--primary));
-              cursor: pointer;
-              text-decoration: underline;
-              transition: color 0.2s ease;
-            }
-
-            .ProseMirror a:hover {
-              color: hsl(var(--primary) / 0.8);
-            }
-
-            /* Dark mode specific styles */
-            @media (prefers-color-scheme: dark) {
-              .ProseMirror {
-                color: hsl(var(--foreground));
-              }
-              
-              .ProseMirror mark {
-                background-color: hsl(var(--warning) / 0.3);
-                color: hsl(var(--foreground));
-              }
-              
-              .ProseMirror code {
-                background-color: hsl(var(--muted));
-                color: hsl(var(--foreground));
-              }
-            }
-          `}</style>
+          .ProseMirror h1 {
+            font-size: 2em;
+          }
+          .ProseMirror h2 {
+            font-size: 1.5em;
+          }
+          .ProseMirror h3 {
+            font-size: 1.25em;
+          }
+          .ProseMirror mark {
+            background-color: hsl(var(--warning) / 0.2);
+          }
+        `}</style>
         </div>
       </EditorProvider>
     </div>

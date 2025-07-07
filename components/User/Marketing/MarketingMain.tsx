@@ -16,69 +16,88 @@ const EmailMarketingPage = () => {
       }
     }
   }, []);
-
-  if (!user) return <div className="p-10 text-gray-600">Cargando...</div>;
+  if (!user) return (
+    <div className="h-screen flex items-center justify-center bg-[#f8f8ff] dark:bg-background">
+      <div className="text-lg font-medium text-primary dark:text-primary-foreground">Cargando...</div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      {/* Encabezado */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4">
-        <div>
-          <h1 className="text-2xl md:text-4xl font-bold text-gray-800 dark:text-white">
+    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
+      {/* Header principal */}
+      <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-primary dark:text-primary-foreground text-center md:text-left">
             Estrategias de Marketing
           </h1>
         </div>
-        <div className="mt-4 md:mt-0">
+        <div className="flex items-center gap-4 justify-center md:justify-end">
           <CerrarSesion />
         </div>
-      </div>
-
-      {/* Contenido principal */}
-      <div className="min-h-[80vh] p-6">
-        <div className="max-w-6xl mx-auto bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 transition-colors duration-300">
-          <div className="flex flex-col lg:flex-row gap-6 h-[550px]">
+      </div>      {/* Contenido principal */}
+      <div className="flex-1 px-4 md:px-8 pb-8 flex items-center">
+        <div className="max-w-7xl mx-auto bg-background dark:bg-background rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden w-full">
+          <div className="flex flex-col lg:flex-row h-[500px] lg:h-[450px]">
             {/* Columna izquierda */}
-            <div className="w-[80%] lg:w-1/2 flex flex-col items-start justify-start">
-              <section className="mb-8 w-[80%]">
-                <h1 className="text-5xl font-semibold text-[#7f7fee] mb-3">
+            <div className="w-full lg:w-1/2 flex flex-col items-start justify-center p-8 lg:p-12">
+              <div className="w-full max-w-lg">
+                <h2 className="text-3xl lg:text-5xl font-bold text-primary dark:text-primary mb-6 leading-tight">
                   ¡Crea tu primera campaña email marketing!
-                </h1>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 text-[#8a8af3]">
+                </h2>
+                <p className="text-lg text-[#8a8af3] dark:text-[#9999ff] mb-8 leading-relaxed">
                   ¿Quieres comunicarte con tus pacientes?<br />
                   Informa sobre las novedades de tu negocio, ofertas y promociones directamente a través de Contigo Voy.
                 </p>
-              </section>
-
-              {/* ✅ Botón que redirige a / */}
-              <button
-                onClick={() => router.push("/user/marketing/crear")}
-                className="bg-[#8a8af3] hover:bg-[#6969d8] text-white font-bold py-2 px-6 rounded-2xl transition duration-200"
-              >
-                Crear mi primera campaña
-              </button>
+                <button
+                  onClick={() => router.push("/user/marketing/crear")}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Crear mi primera campaña
+                </button>
+              </div>
             </div>
 
             {/* Columna derecha */}
-            <div className="w-full lg:w-1/2 flex items-end justify-center relative">
-              <div className="bg-gray-200 dark:bg-gray-700  p-4 rounded-xl mb-6 text-gray-900 dark:text-white w-[80%] relative transition-colors duration-300">
-                <div className="mb-4 flex justify-center">
+            <div className="w-full lg:w-1/2 flex items-center justify-center relative p-8 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
+              <div className="bg-background dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md relative border border-gray-200 dark:border-gray-700">
+                <div className="mb-6 flex justify-center">
                   <img
                     src="/marketing.svg"
                     alt="Campaña Email Marketing"
-                    className="w-[380px] h-auto rounded-md"
+                    className="w-[300px] h-auto rounded-md"
                   />
                 </div>
 
-                <div className="text-center">
-                  <p className="font-bold text-[#7f7fee] text-2xl mb-2">
+                <div className="text-center space-y-4">
+                  <h3 className="font-bold text-primary dark:text-primary text-xl">
                     📢 ¡No dejes pasar esta oportunidad!
-                  </p>
-
-                  <p className="text-base mb-2">
-                    Descubre cómo este beneficio puede transformar tu experiencia. <br />
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                    Descubre cómo este beneficio puede transformar tu experiencia.<br />
                     🎯 Únete hoy y accede a nuestra oferta exclusiva.
                   </p>
                 </div>
+
+                <button
+                  className="absolute left-1/2 -translate-x-1/2 -bottom-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center shadow-xl hover:shadow-2xl transform hover:scale-105 group"
+                  onClick={() => router.push("/user/marketing/crear")}
+                >
+                  <span className="mr-2">Comenzar</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>

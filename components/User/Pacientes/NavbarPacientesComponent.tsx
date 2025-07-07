@@ -35,7 +35,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
   menuAbierto,
   setMenuAbierto
 }) => {
-  
+
   const [submenus, setSubmenus] = useState(SubmenusInitialState);
   const [edadSeleccionada, setEdadSeleccionada] = useState<string[]>([]);
   const [fechaCitaSeleccionada, setFechaCitaSeleccionada] = useState<
@@ -52,7 +52,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
     });
   }, [filters, menuAbierto]);
 
-  
+
   const handleAddNew = useCallback(() => {
     router.push("/user/pacientes/DatosCrearPaciente");
   }, [router]);
