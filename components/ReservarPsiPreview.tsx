@@ -2,9 +2,7 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
-  CardDescription,
   CardFooter,
-  CardTitle,
 } from "@/components/ui/card";
 import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
@@ -99,7 +97,7 @@ export default function ReservarPsiPreview({
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/pre-pacientes/`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/pre-pacientes`,
         {
           method: "POST",
           headers: {
