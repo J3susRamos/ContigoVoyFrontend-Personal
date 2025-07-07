@@ -16,8 +16,10 @@ import Image from "next/image";
 import { Plus, X } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function App() {
+  const router = useRouter();
   const [base64Image, setBase64Image] = useState<string | null>(null);
   const [url, setUrl] = useState("");
   const [country, setCountry] = useState<Country | null>(null);
@@ -164,6 +166,7 @@ export default function App() {
         });
         setBase64Image(null);
         setUrl("");
+        router.push('/user/pacientes/');
       } else {
         showToast("error", data.message || "Error al crear el paciente");
       }
