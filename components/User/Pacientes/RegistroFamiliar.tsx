@@ -5,14 +5,30 @@ import React, { useCallback, useEffect, useState } from "react";
 import HeaderUser from "../HeaderUser";
 import Link from "next/link";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
-import {
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import FormFieldInput from "@/components/ui/Form/FormFieldInput";
 import FormFieldTextArea from "@/components/ui/Form/FormFieldTextArea";
 import FormFieldSelect from "@/components/ui/Form/FormFieldSelect";
 
-const estadoOptions = [{label: "Vivo", value: "Vivo"}, {label: "Fallecido", value: "Fallecido"}, {label: "Desconocido", value: "Desconocido"}, {label: "Ausente", value: "Ausente"}]
+const estadoOptions = [
+  { label: "Vivo", value: "Vivo" },
+  { label: "Fallecido", value: "Fallecido" },
+  { label: "Desconocido", value: "Desconocido" },
+  { label: "Ausente", value: "Ausente" },
+];
+
+const defaultValues = {
+  nombre_madre: "",
+  estado_madre: "",
+  nombre_padre: "",
+  estado_padre: "",
+  nombre_apoderado: "",
+  estado_apoderado: "",
+  cantidad_hijos: 0,
+  cantidad_hermanos: 0,
+  integracion_familiar: "",
+  historial_familiar: "",
+};
 
 const RegistroFamiliar = ({ id }: { id: string | null }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -29,18 +45,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
     setError,
     formState: { errors },
   } = useForm<FormFamilia>({
-    defaultValues: {
-      nombre_madre: "",
-      estado_madre: "",
-      nombre_padre: "",
-      estado_padre: "",
-      nombre_apoderado: "",
-      estado_apoderado: "",
-      cantidad_hijos: 0,
-      cantidad_hermanos: 0,
-      integracion_familiar: "",
-      historial_familiar: "",
-    },
+    defaultValues,
   });
 
   const handleGetFamilia = useCallback(async () => {
@@ -119,7 +124,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
           setHasFamily(true);
         }
       } else if (!response.ok && resData?.errors) {
-        console.error("Error al actualizar:", resData);
+        console.error("Error al guardar:", resData);
         Object.entries(resData.errors).forEach(([field, messages]) => {
           setError(field as keyof FormFamilia, {
             type: "server",
@@ -127,10 +132,11 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
           });
         });
       } else {
-        showToastFunction("error", "Error al actualizar registro familiar");
+        console.log(resData);
+        showToastFunction("error", "Error al guardar registro familiar");
       }
     } catch (error) {
-      console.error("Error al actualizar el registro familiar:", error);
+      console.error("Error al guardar el registro familiar:", error);
     }
   };
 
@@ -161,7 +167,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
         setHasFamily(false);
         setShowDeleteModal(false);
         setPaciente(null);
-        reset();
+        reset(defaultValues);
       } else {
         console.error(await response.json());
       }
@@ -192,28 +198,16 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
                 {hasFamily && paciente && (
                   <div className="mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                      <div className="px-4 sm:px-8">
-                        <label className="block text-md font-semibold mb-2 text-center">
-                          Código del Paciente
-                        </label>
-                        <input
-                          type="text"
-                          value={paciente.codigo}
-                          disabled
-                          className="w-full pl-4 pr-12 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none bg-[#F3F3F3] dark:bg-[#1e1e23] placeholder:text-[#634AE2]"
-                        />
-                      </div>
-                      <div className="px-4 sm:px-8">
-                        <label className="block text-md font-semibold mb-2 text-center">
-                          Nombre del Paciente
-                        </label>
-                        <input
-                          type="text"
-                          value={`${paciente.nombre} ${paciente.apellido}`}
-                          disabled
-                          className="w-full pl-4 pr-12 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none bg-[#F3F3F3] dark:bg-[#1e1e23] placeholder:text-[#634AE2]"
-                        />
-                      </div>
+                      <FormFieldInput
+                        label="Código del Paciente"
+                        value={paciente.codigo}
+                        readOnly
+                      />
+                      <FormFieldInput
+                        label="Nombre del Paciente"
+                        value={paciente.nombre + " " + paciente.apellido}
+                        readOnly
+                      />
                     </div>
                   </div>
                 )}
@@ -232,7 +226,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
                     placeholder="Selecciona el estado de la madre"
                     options={estadoOptions}
                   />
-                    
+
                   <FormFieldInput
                     label="Nombre del padre"
                     name="nombre_padre"
@@ -326,7 +320,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
               <button
                 type="button"
                 onClick={() => setShowDeleteModal(true)}
-                className="..."
+                className="text-red-500 bg-[#fff] dark:bg-[#1e1e23] rounded-full border-2 border-red-500 dark:border-white dark:text-white w-28 sm:h-8 flex items-center justify-center max-sm:w-full max-sm:py-2"
               >
                 Borrar
               </button>
