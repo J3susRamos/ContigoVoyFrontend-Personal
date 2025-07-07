@@ -13,7 +13,7 @@ import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date"
 import "react-country-state-city/dist/react-country-state-city.css"
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -328,6 +328,14 @@ export default function EditarPaciente({ id }: { id: string | null }) {
                 onChange={handleImageUpload}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
+              <button
+              type="button"
+              className="absolute top-2 right-2 bg-white/80 dark:bg-white/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-100 transition-colors"
+              onClick={() => setBase64Image('')}
+              aria-label="Eliminar imagen"
+            >
+              <X className="w-5 h-5 text-primary dark:bg-text-primary" />
+            </button>
             </div>
           </div>
         </div>
