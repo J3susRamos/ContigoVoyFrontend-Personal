@@ -55,6 +55,7 @@ export default function Clients() {
   const [genero, setGenero] = useState([
     { name: "Masculino", Total: 0 },
     { name: "Femenino", Total: 0 },
+    { name: "Otro", Total: 0 },
   ]);
   const [edad, setEdad] = useState([
     { name: "0 - 12", Total: 0 },
@@ -62,10 +63,15 @@ export default function Clients() {
     { name: "18 - 24", Total: 0 },
     { name: "25 - 34", Total: 0 },
     { name: "35 - 44", Total: 0 },
-    { name: "45 - 54", Total: 0 },
+    { name: "45+", Total: 0 },
   ]);
   // --- NUEVO: estado para lugares ---
-  const [lugar, setLugar] = useState<{ name: string; Total: number }[]>([]);
+  const [lugar, setLugar] = useState<{ name: string; Total: number }[]>([
+    { name: "Perú", Total: 0 },
+    { name: "Argentina", Total: 0 },
+    { name: "Colombia", Total: 0 },
+    { name: "Ecuador", Total: 0 },
+  ]);
 
   // Nuevo estado para el filtro de edad
   const [ageRange, setAgeRange] = useState<[number | null, number | null]>([null, null]);
@@ -75,7 +81,7 @@ export default function Clients() {
     { name: "18 - 24", Total: 0 },
     { name: "25 - 34", Total: 0 },
     { name: "35 - 44", Total: 0 },
-    { name: "45 - 54", Total: 0 },
+    { name: "45+", Total: 0 },
   ]);
 
   useEffect(() => {
@@ -83,6 +89,7 @@ export default function Clients() {
       const data = [
         { name: "Masculino", Total: result?.Masculino?.cantidad ?? 0 },
         { name: "Femenino", Total: result?.Femenino?.cantidad ?? 0},
+
       ];
       setGenero(data);
     });
@@ -97,6 +104,8 @@ export default function Clients() {
         { name: "25 - 34", Total: result["25-34"] ?? 0 },
         { name: "35 - 44", Total: result["35-44"] ?? 0 },
         { name: "45 - 54", Total: result["45-54"] ?? 0 },
+        { name: "55 - 64", Total: result["55-64"] ?? 0 },
+        { name: "65+", Total: result["65+"] ?? result["65-99"] ?? 0 },
       ]);
     });
   }, []);
@@ -104,12 +113,36 @@ export default function Clients() {
   // --- NUEVO: useEffect para lugares ---
   useEffect(() => {
     fetchEstadisticasLugar().then((result) => {
-      const lugares = Object.entries(result)
-        .map(([key, value]) => ({
-          name: key,
-          Total: typeof value === "number" ? value : Number(value) || 0,
-        }))
-        .sort((a, b) => b.Total - a.Total); // Orden descendente por Total
+      // Países que siempre deben aparecer
+      const paisesEsperados = ["Perú", "Argentina", "Colombia", "Ecuador"];
+
+      // Crear un mapa con los países esperados
+      const lugaresMap = new Map(paisesEsperados.map(pais => [pais, 0]));
+
+      // Agregar los datos del resultado
+      Object.entries(result).forEach(([key, value]) => {
+        const pais = key.trim();
+        const cantidad = typeof value === "number" ? value : Number(value) || 0;
+
+        // Normalizar nombres de países
+        const paisNormalizado =
+          pais.toLowerCase().includes('peru') || pais.toLowerCase().includes('perú') ? 'Perú' :
+          pais.toLowerCase().includes('argentina') ? 'Argentina' :
+          pais.toLowerCase().includes('colombia') ? 'Colombia' :
+          pais.toLowerCase().includes('ecuador') ? 'Ecuador' :
+          pais;
+
+        if (lugaresMap.has(paisNormalizado)) {
+          lugaresMap.set(paisNormalizado, cantidad);
+        } else if (paisesEsperados.includes(paisNormalizado)) {
+          lugaresMap.set(paisNormalizado, cantidad);
+        }
+      });
+
+      // Convertir el mapa a array y ordenar
+      const lugares = Array.from(lugaresMap.entries())
+        .map(([name, Total]) => ({ name, Total }))
+        .sort((a, b) => b.Total - a.Total);
 
       setLugar(lugares);
     });
@@ -128,7 +161,15 @@ export default function Clients() {
 
     // Filtrar los datos según el rango de edad seleccionado
     const filtered = edad.map(item => {
-      const [rangeMin, rangeMax] = item.name.split(' - ').map(num => parseInt(num));
+      let rangeMin: number;
+      let rangeMax: number;
+
+      if (item.name === "65+") {
+        rangeMin = 65;
+        rangeMax = 100;
+      } else {
+        [rangeMin, rangeMax] = item.name.split(' - ').map(num => parseInt(num));
+      }
 
       // Verificar si el rango del grupo se solapa con el filtro seleccionado
       const overlaps = rangeMin <= maxAge && rangeMax >= minAge;
