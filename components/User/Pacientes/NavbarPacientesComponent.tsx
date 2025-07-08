@@ -209,7 +209,8 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
           />          {/* Grupo de icono de agregar y botón - Desktop */}
           <div className="ml-auto hidden md:flex items-center gap-4 mr-12">
             <span
-              className="text-primary transition-colors"
+              onClick={handleAddNew}
+              className="text-primary transition-colors cursor-pointer"
               dangerouslySetInnerHTML={{
                 __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
               }}
