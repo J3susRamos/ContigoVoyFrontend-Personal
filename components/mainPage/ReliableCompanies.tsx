@@ -2,7 +2,6 @@
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect } from "react";
-import { title } from "process";
 
 const enterprises = [
   {

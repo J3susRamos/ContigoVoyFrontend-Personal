@@ -127,11 +127,12 @@ export default function App() {
         pais: formData.pais,
         departamento: formData.departamento,
       };
-
       const cookies = parseCookies();
       const token = cookies["session"];
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       const urlApi = apiUrl ? `${apiUrl}api/pacientes` : "/api/pacientes";
+     
+      
       const response = await fetch(urlApi, {
         method: "POST",
         headers: {
@@ -141,7 +142,7 @@ export default function App() {
         },
         body: JSON.stringify(pacienteData),
       });
-
+      
       const data = await response.json();
 
       if (response.ok) {

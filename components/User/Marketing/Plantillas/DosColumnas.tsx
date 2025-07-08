@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image, AlignLeft, Bold, Italic} from "lucide-react";
+import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image as ImageIcon, AlignLeft, Bold, Italic} from "lucide-react";
 import { EmailBlock, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
 import { defaultDosColumnasTemplate } from "./PlantillasConfig";
+import Image from "next/image";
 
 const EmailMarketingEditor = () => {
   const PLANTILLA_TYPE = "dos-columnas";
@@ -28,6 +29,7 @@ const EmailMarketingEditor = () => {
             return;
           }
         } catch (e) {
+          console.error(e)
           // Si hay error, ignora y no carga nada
         }
       }
@@ -208,7 +210,7 @@ const EmailMarketingEditor = () => {
   if (!user) return <div className="text-gray-600">Cargando...</div>;
 
   const featureButtons = [
-    { icon: Image, label: "Imagen", action: addImageBlock }, // ✅ Aquí corregido
+    { icon: ImageIcon, label: "Imagen", action: addImageBlock }, // ✅ Aquí corregido
     { icon: Columns, label: "Columnas", action: addColumnsBlock },
     { icon: AlignLeft, label: "Espaciado", action: addDividerBlock },
     { icon: Share2, label: "Redes", action: () => showFeatureNotAvailable("Redes") },
@@ -271,7 +273,7 @@ const EmailMarketingEditor = () => {
                     {block.type === 'divider' ? (
                   <hr className="border-t border-gray-300 my-6" />
                 ) : block.type === 'image' && block.imageUrl ? (
-                  <img
+                  <Image
                     src={block.imageUrl}
                     alt="Imagen de la plantilla"
                     className="max-w-full h-auto rounded mb-4"
@@ -281,7 +283,7 @@ const EmailMarketingEditor = () => {
                     {block.imageUrls && block.imageUrls.length > 0 ? (
                     block.imageUrls.map((url, index) => (
                       <div key={index} className="flex flex-col gap-2">
-                        <img
+                        <Image
                           src={url}
                           alt={`Columna ${index + 1}`}
                           className="w-full h-48 object-cover rounded"
@@ -360,7 +362,7 @@ const EmailMarketingEditor = () => {
           />
 
               {block.imageUrl && (
-                <img
+                <Image
                   src={block.imageUrl}
                   alt="Imagen superior"
                   className="max-w-full h-auto rounded mt-2"
@@ -420,7 +422,7 @@ const EmailMarketingEditor = () => {
                       />
 
                               {url && (
-                                <img
+                                <Image
                                 src={url}
                                 alt={`Columna ${index + 1}`}
                                 className="w-full h-48 object-cover rounded"

@@ -13,7 +13,6 @@ import { parseCookies } from "nookies";
 import React, { useState } from "react";
 import { toast, Zoom } from "react-toastify";
 import Image from "next/image";
-import { object } from "zod";
 
 export const DataView = ({
   formData,
