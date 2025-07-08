@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // ✅ Importar useRouter
 import { UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
+import Image from "next/image";
 
 const EmailMarketingPage = () => {
   const router = useRouter(); // ✅ Instanciar el router
@@ -61,7 +62,7 @@ const EmailMarketingPage = () => {
             <div className="w-full lg:w-1/2 flex items-center justify-center relative p-8 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
               <div className="bg-background dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md relative border border-gray-200 dark:border-gray-700">
                 <div className="mb-6 flex justify-center">
-                  <img
+                  <Image
                     src="/marketing.svg"
                     alt="Campaña Email Marketing"
                     className="w-[300px] h-auto rounded-md"
