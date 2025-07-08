@@ -21,13 +21,12 @@ export default function BlogPageComponent({
   const [selectedBlog, setSelectedBlog] = useState<BlogPreviewData | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  // Estados para el carrusel
+  
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isCarouselPlaying, setIsCarouselPlaying] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
-  
-  // Carrusel automático
+
   useEffect(() => {
     if (!selectedBlog?.imagenes || selectedBlog.imagenes.length <= 1 || !isCarouselPlaying) return;
 
@@ -35,10 +34,10 @@ export default function BlogPageComponent({
       setCurrentImageIndex((prev) => 
         prev === selectedBlog.imagenes!.length - 1 ? 0 : prev + 1
       );
-    }, 4000); // Cambia cada 4 segundos
+    }, 4000); 
 
     return () => clearInterval(interval);
-  }, [selectedBlog, isCarouselPlaying]);  // Manejo de teclado para el modal
+  }, [selectedBlog, isCarouselPlaying]);  
   useEffect(() => {
     if (!showImageModal) return;
 
@@ -81,16 +80,16 @@ export default function BlogPageComponent({
   };
   const toggleCarousel = () => {
     setIsCarouselPlaying(!isCarouselPlaying);
-  };  // Funciones del modal con useCallback para optimización
+  };  
   const openImageModal = (index: number) => {
     setModalImageIndex(index);
     setShowImageModal(true);
-    setIsCarouselPlaying(false); // Pausar carrusel cuando se abre modal
+    setIsCarouselPlaying(false); 
   };
 
   const closeImageModal = useCallback(() => {
     setShowImageModal(false);
-    setIsCarouselPlaying(true); // Reanudar carrusel cuando se cierra modal
+    setIsCarouselPlaying(true); 
   }, []);
 
   const nextModalImage = useCallback(() => {
