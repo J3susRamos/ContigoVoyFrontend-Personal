@@ -4,6 +4,7 @@ import CerrarSesion from "@/components/CerrarSesion";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plantilla } from "@/interface";
+import Image from "next/image";
 
 interface Props {
   onBack: () => void;
@@ -169,7 +170,7 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
                             )}
                             {block.type === "image" && block.imageUrl && (
                               <div className="relative rounded-lg overflow-hidden">
-                                <img
+                                <Image
                                   src={block.imageUrl}
                                   alt="Preview"
                                   className="w-full h-16 object-cover transition-transform duration-300 group-hover:scale-105"
@@ -179,7 +180,7 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
                             {block.type === "columns" && Array.isArray(block.imageUrls) && (
                               <div className="grid grid-cols-2 gap-2">
                                 {block.imageUrls.slice(0, 2).map((url, columnIndex) => (
-                                  <img
+                                  <Image
                                     key={`${block.id}-col-${columnIndex}`}
                                     src={url}
                                     alt={`Columna ${columnIndex + 1}`}
