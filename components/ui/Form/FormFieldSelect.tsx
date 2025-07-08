@@ -1,55 +1,47 @@
-import { FormFamilia } from "@/interface";
 import React from "react";
-import { FieldErrors, UseFormRegister } from "react-hook-form";
+import { FieldErrors, FieldValues, Path, UseFormRegister } from "react-hook-form";
+import FormField from "./FormField";
 
 interface Option {
   label: string;
   value: string;
 }
 
-interface FormFieldSelectProps {
+interface FormFieldSelectProps<T extends FieldValues>{
   label: string;
-  name: keyof FormFamilia;
-  register: UseFormRegister<FormFamilia>;
-  errors: FieldErrors<FormFamilia>;
+  name: Path<T>;
+  register: UseFormRegister<T>;
+  errors?: FieldErrors<T>;
   options: Option[];
   placeholder?: string;
 }
 
-const FormFieldSelect = ({
+const FormFieldSelect = <T extends FieldValues>({
   label,
   name,
   register,
   errors,
   options,
   placeholder,
-}: FormFieldSelectProps) => {
+}: FormFieldSelectProps<T>) => {
   return (
-    <div className="space-y-2">
-      <label className="block text-center text-md font-semibold">{label}</label>
-      <div className="px-4 sm:px-8">
-        <select
-          {...register(name)}
-          className="w-full pl-4 pr-3 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none font-medium bg-[#F3F3F3] dark:bg-[#1e1e23] text-[#634AE2] dark:text-[#bbbafe]"
-        >
-          {placeholder && (
-            <option value="" disabled>
-              {placeholder}
-            </option>
-          )}
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        {errors[name]?.message && (
-          <span className="text-red-500 text-sm">
-            {errors[name].message}
-          </span>
+    <FormField errors={errors} name={name} label={label}>
+      <select
+        {...register(name)}
+        className="w-full pl-4 pr-3 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none font-medium bg-[#F3F3F3] dark:bg-[#1e1e23] text-[#634AE2] dark:text-[#bbbafe]"
+      >
+        {placeholder && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
         )}
-      </div>
-    </div>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </FormField>
   );
 };
 
