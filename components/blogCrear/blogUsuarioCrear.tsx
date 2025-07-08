@@ -588,11 +588,14 @@ export default function BlogUsuarioCrear() {
                     {/* Boton Crear Blog */}
                     <Button
                         radius="full"
-                        className="bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold"
+                        className={
+                            view === "crear"
+                                ? "bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold shadow"
+                                : "bg-[#634AE2] text-white text-[16px] leading-[20px]"
+                        }
                         onPress={() => {
                             setView("crear");
                             resetForm();
-                            // Reset form
                             setTema("");
                             setContenido("");
                             setBase64Images([]);
@@ -606,7 +609,11 @@ export default function BlogUsuarioCrear() {
                     {/* Boton Ver Blogs */}
                     <Button
                         onPress={() => setView(" blogs")}
-                        className="text-white text-[16px] leading-[20px] bg-[#634AE2] a"
+                        className={
+                            view === " blogs"
+                                ? "bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold shadow"
+                                : "bg-[#634AE2] text-white text-[16px] leading-[20px]"
+                        }
                     >
                         Ver Blogs
                     </Button>
