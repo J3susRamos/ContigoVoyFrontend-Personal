@@ -21,7 +21,6 @@ export default function ServicesStructure({
 }: {
   services: ServicesStructureProps[];
 }) {
-  const [isSticky, setIsSticky] = useState(true);
 
   return (
     <div className="relative ">
@@ -358,18 +357,9 @@ export default function ServicesStructure({
           </div>
 
           <div
-            className={`${
-              isSticky ? "sticky bottom-0" : "relative"
-            }   left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]`}
+            className={`sticky bottom-0 left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]`}
           >
-            <button
-              onClick={() => setIsSticky(false)}
-              className={`${
-                !isSticky ? "hidden" : ""
-              } transition-all duration-300 bg-[#DEDEFF] absolute top-0 right-0 -translate-y-[100%]  text-[#634AE2]  font-bold px-3 py-1 sm:px-10 sm:py-2 sm:text-cv4 rounded-tl-lg`}
-            >
-              X
-            </button>
+            
             <div className="flex flex-col lg:flex-row gap-y-scv3 items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 py-scv4 space-x-0">
               <p
                 className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center prx-16"
