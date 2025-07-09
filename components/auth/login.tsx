@@ -18,7 +18,9 @@ export const EyeSlashFilledIcon = (props: React.SVGProps<SVGSVGElement>) => {
       viewBox="0 0 24 24"
       width="1em"
       {...props}
-    >      <path
+    >
+      {" "}
+      <path
         d="M21.2714 9.17834C20.9814 8.71834 20.6714 8.28834 20.3514 7.88834C19.9814 7.41834 19.2814 7.37834 18.8614 7.79834L15.8614 10.7983C16.0814 11.4583 16.1214 12.2183 15.9214 13.0083C15.5714 14.4183 14.4314 15.5583 13.0214 15.9083C12.2314 16.1083 11.4714 16.0683 10.8114 15.8483C10.8114 15.8483 9.38141 17.2783 8.35141 18.3083C7.85141 18.8083 8.01141 19.6883 8.68141 19.9483C9.75141 20.3583 10.8614 20.5683 12.0014 20.5683C13.7814 20.5683 15.5114 20.0483 17.0914 19.0783C18.7014 18.0783 20.1514 16.6083 21.3214 14.7383C22.2714 13.2283 22.2214 10.6883 21.2714 9.17834Z"
         fill="currentColor"
       />
@@ -53,7 +55,9 @@ export const EyeFilledIcon = (props: React.SVGProps<SVGSVGElement>) => {
       viewBox="0 0 24 24"
       width="1em"
       {...props}
-    >      <path
+    >
+      {" "}
+      <path
         d="M21.25 9.14969C18.94 5.51969 15.56 3.42969 12 3.42969C10.22 3.42969 8.49 3.94969 6.91 4.91969C5.33 5.89969 3.91 7.32969 2.75 9.14969C1.75 10.7197 1.75 13.2697 2.75 14.8397C5.06 18.4797 8.44 20.5597 12 20.5597C13.78 20.5597 15.51 20.0397 17.09 19.0697C18.67 18.0897 20.09 16.6597 21.25 14.8397C22.25 13.2797 22.25 10.7197 21.25 9.14969ZM12 16.0397C9.76 16.0397 7.96 14.2297 7.96 11.9997C7.96 9.76969 9.76 7.95969 12 7.95969C14.24 7.95969 16.04 9.76969 16.04 11.9997C16.04 14.2297 14.24 16.0397 12 16.0397Z"
         fill="currentColor"
       />
@@ -95,12 +99,12 @@ export default function Login() {
         <div className="hidden dark:block absolute top-40 right-20 w-96 h-96 bg-purple-300 dark:bg-purple-700 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-70 animate-pulse delay-1000"></div>
         <div className="hidden dark:block absolute -bottom-32 left-1/2 transform -translate-x-1/2 w-80 h-80 bg-purple-100 dark:bg-purple-900 rounded-full mix-blend-multiply dark:mix-blend-normal filter blur-xl opacity-70 animate-pulse delay-500"></div>
       </div>
-
       {/* Toggle de tema en la esquina superior derecha */}
       <div className="fixed top-6 right-6 z-10">
         <ThemeToggle />
-      </div>      {/* Contenedor principal */}
-      <motion.div 
+      </div>{" "}
+      {/* Contenedor principal */}
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -108,11 +112,12 @@ export default function Login() {
       >
         <Card className="backdrop-blur-lg bg-white/90 dark:bg-gray-900/90 shadow-2xl border-2 border-[#c3b6e6] dark:border-[#3a2a5d] border-double rounded-3xl flex items-center justify-center w-full">
           <div className="flex flex-col lg:flex-row w-full items-center justify-center">
-            {/* Línea divisoria vertical solo en desktop */}
-            <div className="hidden lg:block absolute left-1/2 top-8 bottom-8 w-px bg-gradient-to-b from-[#d1c4e9] via-[#b39ddb] to-[#ede9fe] dark:from-[#3a2a5d] dark:via-[#634AE2] dark:to-[#9494F3] opacity-60 z-20" style={{transform: 'translateX(-50%)'}}></div>
-            {/* Sección izquierda - Imagen */}
+            <div
+              className="hidden lg:block absolute left-1/2 top-8 bottom-8 w-px bg-gradient-to-b from-[#d1c4e9] via-[#b39ddb] to-[#ede9fe] dark:from-[#3a2a5d] dark:via-[#634AE2] dark:to-[#9494F3] opacity-60 z-20"
+              style={{ transform: "translateX(-50%)" }}
+            ></div>
+
             <div className="hidden lg:flex lg:w-1/2 bg-transparent items-center justify-center p-8 lg:p-12 relative h-64 lg:h-full overflow-hidden">
-              {/* Elementos decorativos en la sección izquierda */}
               <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-10 left-10 w-32 h-32 bg-[#634AE2]/10 rounded-full blur-xl"></div>
                 <div className="absolute bottom-10 right-10 w-40 h-40 bg-[#9494F3]/10 rounded-full blur-xl"></div>
@@ -138,7 +143,7 @@ export default function Login() {
               </div>
             </div>
             {/* Sección derecha - Formulario */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
@@ -146,7 +151,7 @@ export default function Login() {
             >
               <CardHeader className="space-y-6 pb-8 px-0">
                 {/* Logo pequeño para móvil */}
-                <motion.div 
+                <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.6, duration: 0.6 }}
@@ -163,7 +168,7 @@ export default function Login() {
                 </motion.div>
 
                 <CardTitle className="text-center lg:text-left">
-                  <motion.h1 
+                  <motion.h1
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8, duration: 0.6 }}
@@ -171,7 +176,7 @@ export default function Login() {
                   >
                     Iniciar Sesión
                   </motion.h1>
-                  <motion.p 
+                  <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1.0, duration: 0.6 }}
@@ -183,7 +188,7 @@ export default function Login() {
               </CardHeader>
 
               <CardContent className="px-0">
-                <motion.form 
+                <motion.form
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.2, duration: 0.6 }}
@@ -191,7 +196,10 @@ export default function Login() {
                   className="space-y-6"
                 >
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-800 dark:text-gray-300" htmlFor="email">
+                    <label
+                      className="text-sm font-medium text-gray-800 dark:text-gray-300"
+                      htmlFor="email"
+                    >
                       Correo electrónico
                     </label>
                     <Input
@@ -203,8 +211,10 @@ export default function Login() {
                       radius="lg"
                       variant="bordered"
                       classNames={{
-                        inputWrapper: "border-gray-300 dark:border-gray-600 hover:border-[#634AE2] dark:hover:border-[#9494F3] focus-within:!border-[#634AE2] dark:focus-within:!border-[#9494F3] bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm h-12 shadow-sm",
-                        input: "text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-500",
+                        inputWrapper:
+                          "border-gray-300 dark:border-gray-600 hover:border-[#634AE2] dark:hover:border-[#9494F3] focus-within:!border-[#634AE2] dark:focus-within:!border-[#9494F3] bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm h-12 shadow-sm",
+                        input:
+                          "text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-500",
                       }}
                       value={credentials.email}
                       onChange={handleChange}
@@ -213,7 +223,10 @@ export default function Login() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-800 dark:text-gray-300" htmlFor="password">
+                    <label
+                      className="text-sm font-medium text-gray-800 dark:text-gray-300"
+                      htmlFor="password"
+                    >
                       Contraseña
                     </label>
                     <Input
@@ -223,8 +236,10 @@ export default function Login() {
                       isRequired
                       autoComplete="current-password"
                       classNames={{
-                        inputWrapper: "border-gray-300 dark:border-gray-600 hover:border-[#634AE2] dark:hover:border-[#9494F3] focus-within:!border-[#634AE2] dark:focus-within:!border-[#9494F3] bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm h-12 shadow-sm",
-                        input: "text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-500",
+                        inputWrapper:
+                          "border-gray-300 dark:border-gray-600 hover:border-[#634AE2] dark:hover:border-[#9494F3] focus-within:!border-[#634AE2] dark:focus-within:!border-[#9494F3] bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm h-12 shadow-sm",
+                        input:
+                          "text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-500",
                       }}
                       radius="lg"
                       value={credentials.password}
@@ -249,12 +264,14 @@ export default function Login() {
                   </div>
 
                   {error && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
                     >
-                      <p className="text-sm text-red-600 dark:text-red-400 text-center">{error}</p>
+                      <p className="text-sm text-red-600 dark:text-red-400 text-center">
+                        {error}
+                      </p>
                     </motion.div>
                   )}
 
@@ -276,7 +293,7 @@ export default function Login() {
                 </motion.form>
 
                 {/* Información adicional */}
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.6, duration: 0.6 }}
