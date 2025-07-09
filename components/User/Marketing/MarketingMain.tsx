@@ -63,6 +63,8 @@ const EmailMarketingPage = () => {
               <div className="bg-background dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md relative border border-gray-200 dark:border-gray-700">
                 <div className="mb-6 flex justify-center">
                   <Image
+                    width={200}
+                    height={200}
                     src="/marketing.svg"
                     alt="Campaña Email Marketing"
                     className="w-[300px] h-auto rounded-md"
