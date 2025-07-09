@@ -30,7 +30,7 @@ const DetalleCampania = () => {
   const [recipients, setRecipients] = useState<string[]>([]);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  const defaultStyles = { bold: false, italic: false, color: "#000000" };
+  const defaultStyles = { bold: false, italic: false };
 
   const formatearBloquesParaEnvio = () => {
     return emailBlocks.map((block) => {
@@ -301,13 +301,13 @@ const DetalleCampania = () => {
                 <div key={idx} className="mb-4">
                   {block.type === "divider" && <hr />}
                   {block.type === "image" && block.imageUrl && (
-                    <Image src={block.imageUrl} alt="Imagen" className="rounded-lg w-full max-h-40 object-cover" />
+                    <Image src={block.imageUrl} alt="Imagen" className="rounded-lg w-full max-h-40 object-cover" width={800} height={200} />
                   )}
                   {block.type === "columns" && (
                     <div className="grid grid-cols-2 gap-2">
                       {block.imageUrls.map((url, columnIdx) => (
                         url && (
-                          <Image key={columnIdx} src={url} alt={`Imagen columna ${columnIdx + 1}`} className="rounded-lg w-full max-h-32 object-cover" />
+                          <Image key={columnIdx} src={url} alt={`Imagen columna ${columnIdx + 1}`} className="rounded-lg w-full max-h-32 object-cover" width={800} height={200} />
                         )
                       ))}
                     </div>
