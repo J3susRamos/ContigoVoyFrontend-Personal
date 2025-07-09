@@ -1,6 +1,6 @@
 import { Authors, Categoria } from "@/interface";
 import { Avatar, Button } from "@heroui/react";
-import { Tag, Users, TrendingUp, BarChart3 } from "lucide-react";
+import { Tag, Users, TrendingUp, BarChart3, User } from "lucide-react";
 
 export default function BlogAside({
   Categories,
@@ -78,13 +78,19 @@ export default function BlogAside({
                       : "bg-white/80 border-[#634AE2]/40 text-[#634AE2] dark:bg-gray-700/80 dark:text-gray-200 dark:border-gray-500 hover:bg-gradient-to-r hover:from-[#634AE2]/20 hover:to-[#8b7cf6]/20 hover:border-[#634AE2] backdrop-blur-sm font-semibold"
                   }`}
                   onPress={() => onAuthorClick(item.id)}
-                  radius="lg"
-                  startContent={
-                    <Avatar 
-                      src={item.photo} 
-                      size="md"
-                      className="ring-2 ring-white/50"
-                    />
+                  radius="lg"                  startContent={
+                    item.photo ? (
+                      <Avatar 
+                        src={item.photo} 
+                        size="md"
+                        className="ring-2 ring-white/50"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800 flex items-center justify-center ring-2 ring-white/50">
+                        {/* Basándose en el género del autor o un icono genérico */}
+                        <User className="w-4 h-4 text-indigo-600 dark:text-indigo-300" />
+                      </div>
+                    )
                   }
                 >
                   <div className="flex flex-col items-start">
