@@ -36,7 +36,7 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 mb-6">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 pb-8">
       {/* Navbar superior */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
@@ -54,13 +54,13 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
       <div className="w-full h-auto md:h-16 bg-primary dark:bg-primary flex items-center justify-start">
         <div className="md:ml-10 flex flex-col md:flex-row gap-2 md:gap-6 items-center w-full max-w-full md:max-w-[400px] py-6 md:py-4 mx-4">
           {/* Botón activo */}
-          <button onClick={() => router.push("/user/marketing/crear")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 dark:bg-background text-primary dark:text-primary hover:bg-white text-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+          <button onClick={() => router.push("/user/marketing/crear")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 text-primary dark:text-black dark:hover:text-white hover:bg-white text-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
             Plantillas
           </button>
 
           {/* Botón inactivo */}
-          <button onClick={() => router.push("/user/marketing/crear/plantillasGuardadas")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-white whitespace-nowrap shadow h-10 md:h-9 bg-primary dark:bg-primary text-purple-700 dark:text-white  text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
-            Plantillas enviadas
+          <button onClick={() => router.push("/user/marketing/crear/plantillasGuardadas")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 bg-white dark:bg-background dark:text-white text-primary dark:text-primary dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+            Plantillas guardadas
           </button>
         </div>
       </div>
@@ -171,6 +171,8 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
                             {block.type === "image" && block.imageUrl && (
                               <div className="relative rounded-lg overflow-hidden">
                                 <Image
+                                  width={200}
+                                  height={200}
                                   src={block.imageUrl}
                                   alt="Preview"
                                   className="w-full h-16 object-cover transition-transform duration-300 group-hover:scale-105"
@@ -181,6 +183,8 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
                               <div className="grid grid-cols-2 gap-2">
                                 {block.imageUrls.slice(0, 2).map((url, columnIndex) => (
                                   <Image
+                                    width={100}
+                                    height={200}
                                     key={`${block.id}-col-${columnIndex}`}
                                     src={url}
                                     alt={`Columna ${columnIndex + 1}`}
