@@ -3,7 +3,6 @@ import { ServicesStructureProps } from "@/interface";
 import SliderPrice from "./SliderPrice";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
