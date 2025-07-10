@@ -32,9 +32,10 @@ const EmailMarketingEditor = () => {
           console.error(e)
           // Si hay error, ignora y no carga nada
         }
+      } else {
+        setEmailBlocks(defaultImagenTexto.blocks);
       }
 
-      setEmailBlocks(defaultImagenTexto.blocks);
     }
   }, []);
 

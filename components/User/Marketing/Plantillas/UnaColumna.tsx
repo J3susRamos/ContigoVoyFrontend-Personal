@@ -33,9 +33,9 @@ const EmailMarketingEditor = () => {
           console.error(e)
           // Si hay error, ignora y no carga nada
         }
+      } else {       
+        setEmailBlocks(defaultUnaColumna.blocks);
       }
-
-      setEmailBlocks(defaultUnaColumna.blocks);
     }
   }, []);
 

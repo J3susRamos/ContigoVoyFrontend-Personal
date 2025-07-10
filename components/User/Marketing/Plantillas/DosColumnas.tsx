@@ -33,10 +33,10 @@ const EmailMarketingEditor = () => {
           console.error(e)
           // Si hay error, ignora y no carga nada
         }
+      } else { 
+        // Si no hay plantilla guardada, usar la plantilla por defecto
+        setEmailBlocks(defaultDosColumnasTemplate.blocks);
       }
-
-      // Si no hay plantilla guardada, usar la plantilla por defecto
-      setEmailBlocks(defaultDosColumnasTemplate.blocks);
     }
   }, []);
 
