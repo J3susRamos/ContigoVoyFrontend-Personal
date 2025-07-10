@@ -8,6 +8,7 @@ import Image from "next/image";
 const EmailMarketingPage = () => {
   const router = useRouter(); // ✅ Instanciar el router
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -15,13 +16,27 @@ const EmailMarketingPage = () => {
       if (storedUser) {
         setUser(JSON.parse(storedUser) as UsuarioLocalStorage);
       }
+      setIsLoading(false);
     }
   }, []);
-  if (!user) return (
-    <div className="h-screen flex items-center justify-center bg-[#f8f8ff] dark:bg-background">
-      <div className="text-lg font-medium text-primary dark:text-primary-foreground">Cargando...</div>
-    </div>
-  );
+
+  // Mostrar loader mientras se hidrata el componente
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#f8f8ff] dark:bg-background">
+        <div className="text-lg font-medium text-primary dark:text-primary-foreground">Cargando...</div>
+      </div>
+    );
+  }
+
+  // Mostrar loader si no hay usuario después de la hidratación
+  if (!user) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#f8f8ff] dark:bg-background">
+        <div className="text-lg font-medium text-primary dark:text-primary-foreground">Cargando...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
@@ -60,12 +75,14 @@ const EmailMarketingPage = () => {
 
             {/* Columna derecha */}
             <div className="w-full lg:w-1/2 flex items-center justify-center relative p-8 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
-              <div className="bg-background dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md relative border border-gray-200 dark:border-gray-700">
-                <div className="mb-6 flex justify-center">
+              <div className="bg-background dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md relative border border-gray-200 dark:border-gray-700">                <div className="mb-6 flex justify-center">
                   <Image
                     src="/marketing.svg"
                     alt="Campaña Email Marketing"
+                    width={300}
+                    height={200}
                     className="w-[300px] h-auto rounded-md"
+                    priority
                   />
                 </div>
 

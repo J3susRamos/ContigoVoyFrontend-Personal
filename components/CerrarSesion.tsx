@@ -9,8 +9,10 @@ import Image from "next/image";
 export default function CerrarSesion() {
   const { logout } = useAuth();
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -19,17 +21,26 @@ export default function CerrarSesion() {
     }
   }, []);
 
+  if (!isClient) {
+    return (
+      <div className="flex-row justify-end items-center gap-x-5 mr-8 hidden md:flex">
+        <ThemeToggle />
+        <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
+        <div className="w-20 h-10 rounded-full bg-gray-300 animate-pulse"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-row justify-end items-center gap-x-5 mr-8 hidden md:flex">
-      <ThemeToggle />
-
-      {user?.imagen ? (
+      <ThemeToggle />      {user?.imagen ? (
         <Image
           src={user.imagen}
           width={40}
           height={40}
           className="rounded-full w-10 h-10 object-cover"
           alt="avatar"
+          priority
         />
       ) : (
         <svg
