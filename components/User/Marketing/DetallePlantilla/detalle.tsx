@@ -420,7 +420,7 @@ const DetalleCampania = () => {
                 switch (block.type) {
                   case "header":
                     return (
-                      <h1 key={index} className="text-2xl font-bold" style={{ color: block.styles?.color }}>
+                      <h1 key={index} className="text-2xl font-bold dark:text-white text-black">
                         {block.content}
                       </h1>
                     );
@@ -428,9 +428,8 @@ const DetalleCampania = () => {
                     return (
                       <p
                         key={index}
-                        className="text-base"
+                        className="text-base dark:text-white text-black"
                         style={{
-                          color: block.styles?.color,
                           fontWeight: block.styles?.bold ? "bold" : "normal",
                           fontStyle: block.styles?.italic ? "italic" : "normal",
                         }}
