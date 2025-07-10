@@ -11,15 +11,15 @@ interface Props<T extends FieldValues> {
 const FormField = <T extends FieldValues>({errors, name, label, children}: Props<T>) => {
   return (
     <div className="space-y-2">
-      <label className="block text-center text-md font-semibold">{label}</label>
+      <label className="block text-center text-md font-semibold dark:text-[#babbfe]">{label}</label>
       {children}
-      <div className="px-4 sm:px-8">
+
         {errors?.[name]?.message && (
-          <span className="text-red-500 text-sm">
+          <span className="text-red-500 text-sm font-semibold">
             {String(errors[name]?.message)}
           </span>
         )}
-      </div>
+ 
     </div>
   );
 };

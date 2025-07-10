@@ -138,6 +138,7 @@ export default function ChooseUs() {
             <Image
               src={"psicologaFinale.webp"}
               alt={"atención psicológica online que se adapta ti"}
+              title="Atención Psicológica Online para ti"
               fill
               className=""
             />

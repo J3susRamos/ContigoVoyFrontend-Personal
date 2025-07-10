@@ -318,7 +318,8 @@ export interface Paciente2 {
   idPaciente: number,
   DNI: string,
   nombre: string,
-  apellido:string,
+  apellidoPaterno:string,
+  apellidoMaterno:string,
   email: string,
   celular: string,
   fecha_nacimiento: string,
@@ -328,7 +329,6 @@ export interface Paciente2 {
   estadoCivil: string,
   direccion: string,
   pais: string | null,
-  provincia: string | null,
   departamento: string | null,
 }
 
@@ -346,7 +346,7 @@ export interface FormPaciente {
   ocupacion: string;
   direccion: string;
   departamento: string| null;
-  provincia: string| null;
+  // provincia?: string| null;
   pais: string| null;
   antecedentesMedicos: string;
   medicamentosPrescritos: string;

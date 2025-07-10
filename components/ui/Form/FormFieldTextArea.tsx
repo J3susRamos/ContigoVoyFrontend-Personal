@@ -21,7 +21,7 @@ const FormFieldTextArea = ({
         <textarea
         rows={rows}
           {...register(name)}
-          className="w-full p-3 text-md font-light text-[#634AE2] bg-[#F3F3F3] dark:bg-[#1e1e23] dark:text-[#bbbafe] rounded-2xl border-none outline-none focus:ring-0 placeholder:text-[#634AE2] resize-none"
+          className="w-full p-3 text-md text-[#634AE2] bg-[#F3F3F3] dark:bg-[#1e1e23] dark:text-[#bbbafe] rounded-2xl border-none outline-none focus:ring-0 placeholder:text-[#634AE2] font-semibold resize-none"
         />
     </FormField>
   );
