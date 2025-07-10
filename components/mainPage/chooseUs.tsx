@@ -187,12 +187,11 @@ export default function ChooseUs() {
       <div className="sm:block hidden w-full max-w-scv18 px-[30px]">
         <div className="flex flex-wrap justify-center gap-x-scv10 gap-y-scv8">
           {features.map((feature, index) => (
-            <motion.div
+            <div
               key={index}
-              whileHover={{ scale: 1.05 }}
               className="group w-scv11 flex flex-col items-center"
             >
-              <div className="flex flex-col items-center justify-center w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-[#634AE2] group-hover:bg-[#3f2577] group-hover:shadow-2xl transition-all duration-500 space-y-4">
+              <div className="flex flex-col items-center justify-center w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-[#634AE2]  duration-500 space-y-4">
                 <div className="p-4 bg-transparent rounded-full">
                   {feature.icon}
                 </div>
@@ -200,7 +199,7 @@ export default function ChooseUs() {
               <h3 className="text-center text-cv6 leading-7   text-title mt-3">
                 {feature.title}
               </h3>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
