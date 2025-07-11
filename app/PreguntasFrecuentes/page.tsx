@@ -40,10 +40,10 @@ export default function App() {
         <div
           className="relative z-10 max-w-scv18 mx-auto"
         >
-          <div style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
+          <h1 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
             className=" text-white text-cv8 sm:text-cv9 text-center sm:text-left font-bold px-scv7 pt-scv7 sm:pt-scv8 pb-scv6 md:pl-scv9">
             Preguntas frecuentes
-          </div>
+          </h1>
           <div className="grid gap-4 pb-scv13 sm:pb-scv12  sm:max-w-scv15  px-scv7 md:pr-0 sm:pl-10  md:px-scv9">
             <AccordionQuest faqs={faqs} />
           </div>

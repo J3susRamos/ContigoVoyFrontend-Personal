@@ -25,12 +25,7 @@ export default function Logeo() {
       document.head.appendChild(meta);
     }
   }, []);
-
   return (
-    <div
-      className="flex flex-col sm:items-center justify-center h-screen bg-large-gradient"
-    >
-      <Login />
-    </div>
+    <Login />
   );
 }
