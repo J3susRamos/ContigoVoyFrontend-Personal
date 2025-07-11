@@ -63,18 +63,32 @@ export default function MainSlider() {
     }),
   ]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
   useEffect(() => {
     if (emblaApi) {
-      emblaApi.on("select", () => {
-        const currentIndex = emblaApi.selectedScrollSnap();
-        setSelectedIndex(currentIndex);
-      });
+      // Optimizar el callback para evitar forced reflow
+      const onSelect = () => {
+        // Usar requestAnimationFrame para evitar blocking
+        requestAnimationFrame(() => {
+          const currentIndex = emblaApi.selectedScrollSnap();
+          setSelectedIndex(currentIndex);
+        });
+      };
+      
+      emblaApi.on("select", onSelect);
+      
+      // Cleanup
+      return () => {
+        emblaApi.off("select", onSelect);
+      };
     }
   }, [emblaApi]);
-
   const scrollTo = (index: number) => {
-    if (emblaApi) emblaApi.scrollTo(index);
+    if (emblaApi) {
+      // Usar requestAnimationFrame para evitar forced reflow
+      requestAnimationFrame(() => {
+        emblaApi.scrollTo(index);
+      });
+    }
   };
 
   return (
@@ -85,13 +99,15 @@ export default function MainSlider() {
             <div className="relative embla__slide overflow-hidden" key={index}>
               <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
               <div className=" mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right -right-scv7">
-                <div key={index} className="h-full flex-1 relative ">
-                  <Image
+                <div key={index} className="h-full flex-1 relative ">                  <Image
                     src={item.background}
                     alt={item.alt}
-                    title={item.title}                    
+                    title={item.title}
                     fill
                     className="object-cover"
+                    priority={index === 0} // Solo la primera imagen tiene prioridad
+                    fetchPriority={index === 0 ? "high" : "auto"}
+                    loading={index === 0 ? "eager" : "lazy"}
                   />
                 </div>
               </div>
@@ -106,8 +122,7 @@ export default function MainSlider() {
                     dangerouslySetInnerHTML={{
                       __html: item.phrase,
                     }}
-                  />
-                  <AnimatePresence mode="wait">
+                  />                  <AnimatePresence mode="wait">
                     {selectedIndex === index && (
                       <motion.div
                         initial={{ opacity: 0 }}
@@ -116,11 +131,13 @@ export default function MainSlider() {
                           transition: { duration: 1 },
                         }}
                         exit={{ opacity: 0 }}
+                        style={{ willChange: 'opacity' }} // Optimización GPU
                       >
                         <div
                           style={{
                             textShadow:
                               "4px 5px 16px rgba(0,0,0,0.55), 2px 2px 3px rgba(0,0,0,0.85)",
+                            willChange: 'auto', // Evitar forced reflow
                           }}
                           className="mr-scv6 max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
                           dangerouslySetInnerHTML={{
@@ -151,15 +168,15 @@ export default function MainSlider() {
         </div>
       </div>
 
-      <div className="lg:block hidden">
-        <div className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
+      <div className="lg:block hidden">        <div className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
           {sections.map((_, index) => (
             <button
               key={index}
               onClick={() => scrollTo(index)}
               aria-label={`Ir a la sección ${index + 1}`}
+              style={{ willChange: 'background-color' }} // Optimización GPU
               className={`
-            w-3 h-3 rounded-full transition-all duration-300
+            w-3 h-3 rounded-full transition-all duration-300 transform-gpu
             ${selectedIndex === index ? "bg-[#634AE2]" : "bg-white"}
           `}
             />
