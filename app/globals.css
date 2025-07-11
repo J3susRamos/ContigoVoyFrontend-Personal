@@ -395,6 +395,7 @@ body {
   mask-repeat: no-repeat;
 }
 
+
 .mask-all-fade {
   -webkit-mask-image: radial-gradient(
     ellipse at center,
