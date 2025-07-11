@@ -367,6 +367,7 @@ body {
   mask-repeat: no-repeat;
 }
 
+
 .mask-all-fade {
   -webkit-mask-image: -webkit-linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);

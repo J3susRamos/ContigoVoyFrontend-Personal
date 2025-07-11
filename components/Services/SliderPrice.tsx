@@ -25,7 +25,7 @@ export default function SliderPrice({
 
   return (
     <>
-      {promotions.length && (
+      {promotions.length > 0 && (
         <div className="h-[680px] w-full items-center bg-large-gradient">
           <h1 className="text-center p-10 text-4xl text-white font-semibold  ">
             Promociones

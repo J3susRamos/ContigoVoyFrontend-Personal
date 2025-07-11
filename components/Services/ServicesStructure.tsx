@@ -242,7 +242,7 @@ export default function ServicesStructure({
           </div>
 
           <div className="hidden md:flex max-w-scv18 mx-auto pl-8 mt-scv8">
-            <div className="flex-[1.5] pt-scv9">
+            <div className="flex-[1.5] pt-scv8">
               <div className="flex justify-center">
                 <div className="w-full text-title font-semibold text-[24px] leading-[33px] text-center px-scv6">
                   {item.tittleIcon}
