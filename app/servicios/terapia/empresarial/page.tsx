@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 
-const FamilyTerapias: ServicesStructureProps[] = [{
+const terapiaEmpresarial: ServicesStructureProps[] = [{
   title: "Terapia empresarial",
   edad: "",
   motto:
@@ -87,6 +87,96 @@ const FamilyTerapias: ServicesStructureProps[] = [{
     "¿Te atreves a revolucionar tu ambiente laboral y motivar a tu equipo como nunca antes?",
   textfootermobile:
     "¿Te atreves a revolucionar tu ambiente laboral y motivar a tu equipo como <br/>nunca antes?",
+  promotionCards: [
+      {
+        id: 1,
+        title: "Terapia empresarial",
+        preciounit: "s/69",
+        cents: ".00",
+        regularprice: "Precio regular: s/90.00",
+        list: [
+          {
+            id: 1,
+            text: "Sesiones online de 40 a 50 minutos.",
+          },
+          {
+            id: 2,
+            text: "Desarrollo de estrategias para manejar momentos difíciles.",
+          },
+          {
+            id: 3,
+            text: "Espacio seguro para hablar y crecer.",
+          },
+          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+        ],
+      },
+      {
+        id: 1,
+        title: "Terapia empresarial",
+        preciounit: "s/69",
+        cents: ".00",
+        regularprice: "Precio regular: s/90.00",
+        list: [
+          {
+            id: 1,
+            text: "Sesiones online de 40 a 50 minutos.",
+          },
+          {
+            id: 2,
+            text: "Desarrollo de estrategias para manejar momentos difíciles.",
+          },
+          {
+            id: 3,
+            text: "Espacio seguro para hablar y crecer.",
+          },
+          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+        ],
+      },
+      {
+        id: 1,
+        title: "Terapia empresarial",
+        preciounit: "s/69",
+        cents: ".00",
+        regularprice: "Precio regular: s/90.00",
+        list: [
+          {
+            id: 1,
+            text: "Sesiones online de 40 a 50 minutos.",
+          },
+          {
+            id: 2,
+            text: "Desarrollo de estrategias para manejar momentos difíciles.",
+          },
+          {
+            id: 3,
+            text: "Espacio seguro para hablar y crecer.",
+          },
+          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+        ],
+      },
+      {
+        id: 1,
+        title: "Terapia empresarial",
+        preciounit: "s/69",
+        cents: ".00",
+        regularprice: "Precio regular: s/90.00",
+        list: [
+          {
+            id: 1,
+            text: "Sesiones online de 40 a 50 minutos.",
+          },
+          {
+            id: 2,
+            text: "Desarrollo de estrategias para manejar momentos difíciles.",
+          },
+          {
+            id: 3,
+            text: "Espacio seguro para hablar y crecer.",
+          },
+          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+        ],
+      },
+    ],
 }
 
 ]
@@ -94,6 +184,6 @@ const FamilyTerapias: ServicesStructureProps[] = [{
 export default function Home() {
 
 
-  return <ServicesStructure services={FamilyTerapias} />
+  return <ServicesStructure services={terapiaEmpresarial} />
 
 }
