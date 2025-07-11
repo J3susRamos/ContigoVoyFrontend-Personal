@@ -81,8 +81,6 @@ const EmailMarketingPage = () => {
                     height={200}
                     src="/marketing.svg"
                     alt="Campaña Email Marketing"
-                    width={300}
-                    height={200}
                     className="w-[300px] h-auto rounded-md"
                     priority
                   />

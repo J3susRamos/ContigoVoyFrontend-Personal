@@ -2,21 +2,20 @@
 import React, { useState } from "react";
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
-import { City, Country, FormPaciente, Paciente2, State } from "@/interface";
+import { Country, FormPaciente, Paciente2, State } from "@/interface";
 import { CountrySelect, StateSelect } from "react-country-state-city";
 import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date";
 import "react-country-state-city/dist/react-country-state-city.css";
 import Image from "next/image";
-import { Plus, X } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import { Controller, useForm } from "react-hook-form";
 import FormFieldInput from "@/components/ui/Form/FormFieldInput";
 import FormField from "@/components/ui/Form/FormField";
 import FormFieldSelect from "@/components/ui/Form/FormFieldSelect";
 import HeaderUser from "@/components/User/HeaderUser";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 
 const defaultValues = {
   nombre: "",
@@ -54,26 +53,7 @@ export default function App() {
   } = useForm<FormPaciente>({
     defaultValues,
   });
-
-  const [currentState, setCurrentState] = useState<City | null>(null);
-  const [formData, setFormData] = useState<Omit<FormPaciente, "provincia">>({
-    nombre: "",
-    apellidoPaterno: "",
-    apellidoMaterno: "",
-    DNI: "",
-    email: "",
-    celular: "",
-    imagen: "",
-    fecha_nacimiento: "",
-    genero: "",
-    estadoCivil: "",
-    ocupacion: "",
-    direccion: "",
-    departamento: currentState?.name || "",
-    pais: country?.name || "",
-    antecedentesMedicos: "",
-    medicamentosPrescritos: "",
-  });
+  
   // Corrige el tipo de currentState y currentCity en el formData
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>

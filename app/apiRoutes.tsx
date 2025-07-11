@@ -41,28 +41,33 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
 }
 
 export const GetPsicologos = async (
-  filters: {
+  filters?: {
     pais: string[];
     genero: string[];
     idioma: string[];
     enfoque: string[];
   },
-  search: string,
-  page: number,
-  perPage: number
+  search?: string,
+  page?: number,
+  perPage?: number
 ) => {
   const params = new URLSearchParams();
-
-  if (filters.pais.length) params.append("pais", filters.pais.join(","));
+  if (filters){
+    if (filters.pais.length) params.append("pais", filters.pais.join(","));
   if (filters.genero.length) params.append("genero", filters.genero.join(","));
   if (filters.idioma.length) params.append("idioma", filters.idioma.join(","));
   if (filters.enfoque.length)
     params.append("enfoque", filters.enfoque.join(","));
+  }
+  
 
   if (search) params.append("search", search);
   params.append("paginate", "true");
-  params.append("per_page", perPage.toString());
-  params.append("page", page.toString());
+
+  if(perPage && page){
+    params.append("per_page", perPage.toString());
+    params.append("page", page.toString());
+  }
 
   const url = `${
     process.env.NEXT_PUBLIC_API_URL
