@@ -37,6 +37,7 @@ const EmailMarketingEditor = () => {
             setEmailBlocks(parsed.blocks);
           }
         } catch (e) {
+          console.error(e)
           // Si hay error, ignora y no carga nada
         }
       }

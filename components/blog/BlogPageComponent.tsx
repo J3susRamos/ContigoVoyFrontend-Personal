@@ -16,18 +16,17 @@ export default function BlogPageComponent({
   Categories: Categoria[];
   Authors: Authors[];
 }) {  const [filteredData, setFilteredData] = useState<BlogPreviewData[]>(Datos);
-  const [activeCategory, setActiveCategory] = useState<number | null>(null);
-  const [activeAuthor, setActiveAuthor] = useState<number | null>(null);
+  const [activeCategories, setActiveCategories] = useState<number[]>([]);
+  const [activeAuthors, setActiveAuthors] = useState<number[]>([]);
   const [selectedBlog, setSelectedBlog] = useState<BlogPreviewData | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  // Estados para el carrusel
+  
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isCarouselPlaying, setIsCarouselPlaying] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
-  
-  // Carrusel automático
+
   useEffect(() => {
     if (!selectedBlog?.imagenes || selectedBlog.imagenes.length <= 1 || !isCarouselPlaying) return;
 
@@ -35,10 +34,10 @@ export default function BlogPageComponent({
       setCurrentImageIndex((prev) => 
         prev === selectedBlog.imagenes!.length - 1 ? 0 : prev + 1
       );
-    }, 4000); // Cambia cada 4 segundos
+    }, 4000); 
 
     return () => clearInterval(interval);
-  }, [selectedBlog, isCarouselPlaying]);  // Manejo de teclado para el modal
+  }, [selectedBlog, isCarouselPlaying]);  
   useEffect(() => {
     if (!showImageModal) return;
 
@@ -81,16 +80,16 @@ export default function BlogPageComponent({
   };
   const toggleCarousel = () => {
     setIsCarouselPlaying(!isCarouselPlaying);
-  };  // Funciones del modal con useCallback para optimización
+  };  
   const openImageModal = (index: number) => {
     setModalImageIndex(index);
     setShowImageModal(true);
-    setIsCarouselPlaying(false); // Pausar carrusel cuando se abre modal
+    setIsCarouselPlaying(false); 
   };
 
   const closeImageModal = useCallback(() => {
     setShowImageModal(false);
-    setIsCarouselPlaying(true); // Reanudar carrusel cuando se cierra modal
+    setIsCarouselPlaying(true); 
   }, []);
 
   const nextModalImage = useCallback(() => {
@@ -106,9 +105,8 @@ export default function BlogPageComponent({
       prev === 0 ? selectedBlog.imagenes!.length - 1 : prev - 1
     );
   }, [selectedBlog?.imagenes]);
-
   // Función para aplicar filtros
-  const applyFilters = (search = searchTerm, categoryId = activeCategory, authorId = activeAuthor) => {
+  const applyFilters = (search = searchTerm, categoryIds = activeCategories, authorIds = activeAuthors) => {
     let filtered = [...Datos];
 
     // Filtro por búsqueda
@@ -120,42 +118,56 @@ export default function BlogPageComponent({
       );
     }
 
-    // Filtro por categoría
-    if (categoryId) {
-      const categoryName = Categories.find(cat => cat.idCategoria === categoryId)?.nombre;
-      filtered = filtered.filter(blog => blog.categoria === categoryName);
+    // Filtro por categorías (múltiples)
+    if (categoryIds.length > 0) {
+      const categoryNames = categoryIds.map(id => 
+        Categories.find(cat => cat.idCategoria === id)?.nombre
+      ).filter(Boolean);
+      
+      filtered = filtered.filter(blog => 
+        categoryNames.some(categoryName => blog.categoria === categoryName)
+      );
     }
 
-    // Filtro por autor
-    if (authorId) {
-      const author = Authors.find(a => a.id === authorId);
-      filtered = filtered.filter(blog => blog.psicologo?.includes(author?.name || ''));
+    // Filtro por autores (múltiples)
+    if (authorIds.length > 0) {
+      const authorNames = authorIds.map(id => 
+        Authors.find(a => a.id === id)?.name
+      ).filter(Boolean);
+      
+      filtered = filtered.filter(blog => 
+        authorNames.some(authorName => blog.psicologo?.includes(authorName || ''))
+      );
     }
 
     setFilteredData(filtered);
   };
-
   const handleCategoryFilter = (categoryId: number) => {
-    const newCategoryId = activeCategory === categoryId ? null : categoryId;
-    setActiveCategory(newCategoryId);
-    applyFilters(searchTerm, newCategoryId, activeAuthor);
+    const newCategories = activeCategories.includes(categoryId)
+      ? activeCategories.filter(id => id !== categoryId)
+      : [...activeCategories, categoryId];
+    
+    setActiveCategories(newCategories);
+    applyFilters(searchTerm, newCategories, activeAuthors);
   };
 
   const handleAuthorFilter = (authorId: number) => {
-    const newAuthorId = activeAuthor === authorId ? null : authorId;
-    setActiveAuthor(newAuthorId);
-    applyFilters(searchTerm, activeCategory, newAuthorId);
+    const newAuthors = activeAuthors.includes(authorId)
+      ? activeAuthors.filter(id => id !== authorId)
+      : [...activeAuthors, authorId];
+    
+    setActiveAuthors(newAuthors);
+    applyFilters(searchTerm, activeCategories, newAuthors);
   };
-
   const handleSearch = (value: string) => {
     setSearchTerm(value);
-    applyFilters(value, activeCategory, activeAuthor);
+    applyFilters(value, activeCategories, activeAuthors);
   };
 
   const clearAllFilters = () => {
     setSearchTerm("");
-    setActiveCategory(null);
-    setActiveAuthor(null);
+    setActiveCategories([]);
+    setActiveAuthors([]);
     setFilteredData(Datos);
   };
   const handleSelectBlog = (blog: BlogPreviewData) => {
@@ -189,34 +201,43 @@ export default function BlogPageComponent({
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-          </div>
-
-          {/* Filter Tags */}
-          {(activeCategory || activeAuthor || searchTerm) && (
+          </div>          {/* Filter Tags */}
+          {(activeCategories.length > 0 || activeAuthors.length > 0 || searchTerm) && (
             <div className="flex flex-wrap items-center gap-3 mt-6 p-4 bg-white/50 dark:bg-gray-800/50 rounded-2xl backdrop-blur-sm">
               <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Filtros activos:</span>
-              {activeCategory && (
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
-                  {Categories.find(cat => cat.idCategoria === activeCategory)?.nombre}
-                  <button 
-                    onClick={() => handleCategoryFilter(activeCategory)} 
-                    className="hover:bg-white/20 rounded-full p-1 transition-colors"
-                  >
-                    ×
-                  </button>
-                </span>
-              )}
-              {activeAuthor && (
-                <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
-                  {Authors.find(a => a.id === activeAuthor)?.name}
-                  <button 
-                    onClick={() => handleAuthorFilter(activeAuthor)} 
-                    className="hover:bg-white/20 rounded-full p-1 transition-colors"
-                  >
-                    ×
-                  </button>
-                </span>
-              )}
+              
+              {/* Category filters */}
+              {activeCategories.map(categoryId => {
+                const category = Categories.find(cat => cat.idCategoria === categoryId);
+                return category ? (
+                  <span key={categoryId} className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
+                    {category.nombre}
+                    <button 
+                      onClick={() => handleCategoryFilter(categoryId)} 
+                      className="hover:bg-white/20 rounded-full p-1 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ) : null;
+              })}
+              
+              {/* Author filters */}
+              {activeAuthors.map(authorId => {
+                const author = Authors.find(a => a.id === authorId);
+                return author ? (
+                  <span key={authorId} className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
+                    {author.name}
+                    <button 
+                      onClick={() => handleAuthorFilter(authorId)} 
+                      className="hover:bg-white/20 rounded-full p-1 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ) : null;
+              })}              
+              {/* Search filter */}
               {searchTerm && (
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
                   &ldquo;{searchTerm}&rdquo;
@@ -228,6 +249,7 @@ export default function BlogPageComponent({
                   </button>
                 </span>
               )}
+              
               <button
                 onClick={clearAllFilters}
                 className="text-sm text-[#634AE2] hover:text-[#4f46e5] underline font-medium transition-colors"
@@ -417,14 +439,13 @@ export default function BlogPageComponent({
             {/* Sidebar - Desktop */}
             <div className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden'} lg:block`}>
               <div className="sticky top-6">
-                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-[#634AE2]/10">
-                  <BlogAside
+                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-[#634AE2]/10">                  <BlogAside
                     Categories={Categories}
                     Authors={Authors}
                     onCategoryClick={handleCategoryFilter}
                     onAuthorClick={handleAuthorFilter}
-                    activeCategory={activeCategory}
-                    activeAuthor={activeAuthor}
+                    activeCategories={activeCategories}
+                    activeAuthors={activeAuthors}
                   />
                 </div>
               </div>

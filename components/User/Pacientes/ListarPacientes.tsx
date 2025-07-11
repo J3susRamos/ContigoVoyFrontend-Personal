@@ -30,7 +30,7 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
   const handleGetPacientes = useCallback(
     async (showToast = true, page = 1) => {
       try {
-        const pacientsData = await pacientesGet(page, 5, true, filters, filterValue); 
+        const pacientsData = await pacientesGet(page, 5, true, filters, filterValue);
 
         const status = pacientsData.state;
         const data = pacientsData.result;

@@ -5,6 +5,7 @@ import CerrarSesion from "@/components/CerrarSesion";
 import { ArrowLeft, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
+import Image from "next/image";
 
 type EmailBlock =
   | { type: "divider" }
@@ -91,6 +92,7 @@ const DetalleCampania = () => {
         }
       } catch (e) {
         setEmailBlocks([]);
+        console.error(e)
       }
     } else {
       setEmailBlocks([]);
@@ -167,7 +169,7 @@ const DetalleCampania = () => {
         return;
       }
 
-      const responseGuardado = await fetch(`${apiUrl}api/marketing/`, {
+      const responseGuardado = await fetch(`${apiUrl}api/marketing`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -299,13 +301,13 @@ const DetalleCampania = () => {
                 <div key={idx} className="mb-4">
                   {block.type === "divider" && <hr />}
                   {block.type === "image" && block.imageUrl && (
-                    <img src={block.imageUrl} alt="Imagen" className="rounded-lg w-full max-h-40 object-cover" />
+                    <Image src={block.imageUrl} alt="Imagen" className="rounded-lg w-full max-h-40 object-cover" />
                   )}
                   {block.type === "columns" && (
                     <div className="grid grid-cols-2 gap-2">
                       {block.imageUrls.map((url, columnIdx) => (
                         url && (
-                          <img key={columnIdx} src={url} alt={`Imagen columna ${columnIdx + 1}`} className="rounded-lg w-full max-h-32 object-cover" />
+                          <Image key={columnIdx} src={url} alt={`Imagen columna ${columnIdx + 1}`} className="rounded-lg w-full max-h-32 object-cover" />
                         )
                       ))}
                     </div>

@@ -1,10 +1,8 @@
 "use client";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   Card,
-  CardDescription,
   CardFooter,
-  CardTitle,
 } from "@/components/ui/card";
 import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
@@ -12,6 +10,7 @@ import { PrePaciente, PsicologoPreviewData } from "@/interface";
 import React, { useState } from "react";
 import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
 import Image from "next/image";
+import { User } from "lucide-react";
 
 export default function ReservarPsiPreview({
   psicologo,
@@ -99,7 +98,7 @@ export default function ReservarPsiPreview({
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/pre-pacientes/`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/pre-pacientes`,
         {
           method: "POST",
           headers: {
@@ -150,7 +149,9 @@ export default function ReservarPsiPreview({
           {/* Header con avatar y info básica */}
           <div className="flex items-start gap-4 mb-4">            <div className="relative">
               <Avatar className="w-20 h-20 ring-4 ring-white dark:ring-gray-600 shadow-lg">
-                <AvatarImage src={psicologo.imagen} className="object-cover" />
+                <AvatarImage src={psicologo.imagen} className="object-cover" />                <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800">
+                  <User className="w-10 h-10 text-purple-600 dark:text-purple-300" />
+                </AvatarFallback>
               </Avatar>
               <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-md">
                 <ReactCountryFlag
@@ -241,12 +242,13 @@ export default function ReservarPsiPreview({
             <>
               <ModalContent className="w-[695px] h-[416px] bg-background rounded-3xl  overflow-hidden  mt-8">
                 <div className="grid grid-cols-[0.8fr_1.6fr] items-center">
-                  <div className="h-full w-full flex ">
-                    <Avatar className="w-[208px] h-[416px] rounded-2xl overflow-hidden">
+                  <div className="h-full w-full flex ">                    <Avatar className="w-[208px] h-[416px] rounded-2xl overflow-hidden">
                       <AvatarImage
                         src={psicologo.imagen}
                         className="w-full h-full object-cover"
-                      />
+                      />                      <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800 w-full h-full">
+                        <User className="w-24 h-24 text-purple-600 dark:text-purple-300" />
+                      </AvatarFallback>
                     </Avatar>
                   </div>
 

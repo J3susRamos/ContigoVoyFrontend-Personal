@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@heroui/react";
 
 export default function ServicesStructure({
   services,
@@ -39,8 +40,7 @@ export default function ServicesStructure({
               textShadow:
                 "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
             }}
-          >
-            <div className="flex-1 relative max-w-scv18 mx-auto pl-8 lg:pl-[79px]">
+          >            <div className="flex-1 relative max-w-scv18 mx-auto pl-8 lg:pl-[79px]">
               <div className="absolute -right-[220px] h-full w-[576px] sm:w-[1200px]">
                 <Image
                   src={item.background}
@@ -50,9 +50,80 @@ export default function ServicesStructure({
                   className="mix-blend-multiply bg-cover mask-horizontal-fade "
                 />
               </div>
-              <p className="text-cv6 sm:text-cv8 pt-scv7 pb-scv8 sm:py-0 top-1/2 -translate-y-1/2 relative max-w-[350px] sm:max-w-[600px] text-white text-left h-auto font-bold leading-1  ">
+              
+              <p className="text-cv6 sm:text-cv8 pt-scv7 pb-scv8 sm:py-0 sm:top-1/2 sm:-translate-y-1/2 relative max-w-[350px] sm:max-w-[600px] text-white text-left h-auto font-bold leading-1">
                 {item.motto}
-              </p>
+              </p>              {/* Botones de acción - posicionados a la derecha */}
+              <div className="absolute right-64 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4">
+                <Link href="/ReservarCita">
+                  <Button
+                    style={{
+                      boxShadow:
+                        "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                    }}
+                    className="bg-[#634AE2] px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-purple-700 lg:text-cv6 min-w-[160px]"
+                  >
+                    Reservar Cita
+                  </Button>
+                </Link>
+                
+                {item.promotionCards && item.promotionCards.length > 0 && (
+                  <button
+                    onClick={() => {
+                      const promotionsSection = document.getElementById('service-promotions');
+                      if (promotionsSection) {
+                        promotionsSection.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                      }
+                    }}
+                    style={{
+                      boxShadow:
+                        "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                    }}
+                    className="bg-white/20 backdrop-blur-sm border-2 border-white/30 px-[25px] py-[10px] lg:p-6 text-white rounded-[30px] hover:bg-white/30 transition-all duration-300 lg:text-cv6 font-medium min-w-[160px]"
+                  >
+                    Ver Promociones
+                  </button>
+                )}
+              </div>
+              
+              {/* Botones para mobile/tablet */}
+              <div className="flex lg:hidden flex-col sm:flex-row gap-4 mt-6">
+                <Link href="/ReservarCita">
+                  <Button
+                    style={{
+                      boxShadow:
+                        "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                    }}
+                    className="bg-[#634AE2] px-[25px] py-[10px] text-white rounded-[30px] hover:bg-purple-700 w-full sm:w-auto"
+                  >
+                    Reservar Cita
+                  </Button>
+                </Link>
+                
+                {item.promotionCards && item.promotionCards.length > 0 && (
+                  <button
+                    onClick={() => {
+                      const promotionsSection = document.getElementById('service-promotions');
+                      if (promotionsSection) {
+                        promotionsSection.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                      }
+                    }}
+                    style={{
+                      boxShadow:
+                        "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                    }}
+                    className="bg-white/20 backdrop-blur-sm border-2 border-white/30 px-[25px] py-[10px] text-white rounded-[30px] hover:bg-white/30 transition-all duration-300 font-medium w-full sm:w-auto"
+                  >
+                    Ver Promociones
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -282,7 +353,9 @@ export default function ServicesStructure({
             </div>
           </div>
 
-          <SliderPrice promotions={item.promotionCards} />
+          <div id="service-promotions">
+            <SliderPrice promotions={item.promotionCards} />
+          </div>
 
           <div
             className={`${

@@ -38,6 +38,7 @@ const ListarCitas = ({
   const cookies = useMemo(() => parseCookies(), []);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [editingCita, setEditingCita] = useState<Citas | null>(null);
 
   const handleGetCitas = useCallback(
     async ({
@@ -92,7 +93,7 @@ const ListarCitas = ({
           queryParams.append("nombre", paciente);
         }
 
-        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas${
+        const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/lista${
           queryParams.toString() ? `?${queryParams.toString()}` : ""
         }`;
 
@@ -153,7 +154,6 @@ const ListarCitas = ({
     [cookies]
   );
 
-
   const handleDelete = async (idCita: number) => {
     setIsDeleting(true);
     try {
@@ -171,7 +171,7 @@ const ListarCitas = ({
       const citaData = await response.json();
 
       if (citaData.state === 2) {
-        showToastFunction("success", "Paciente eliminado correctamente");
+        showToastFunction("success", "Cita eliminada correctamente");
         await handleGetCitas({ showToast: false });
         return true;
       } else {
@@ -191,8 +191,34 @@ const ListarCitas = ({
     }
   };
 
+  // Handle edit function
+  const handleEdit = (cita: Citas) => {
+    setEditingCita(cita);
+    setShowFormCita(true);
+  };
+
+  // Handle modal close
+  const handleCloseModal = () => {
+    setShowFormCita(false);
+    setEditingCita(null);
+  };
+
   useEffect(() => {
-    handleGetCitas({filters: filters, paciente: filterValue});
+    const loadCitas = async () => {
+      try {
+        await handleGetCitas({ filters: filters, paciente: filterValue });
+      } catch (error) {
+        console.error("Error loading citas:", error);
+        setError("Error al cargar las citas");
+        showToastFunction("error", "Error al cargar las citas");
+      }
+    };
+
+    loadCitas().catch((error) => {
+      console.error("Unhandled error in loadCitas:", error);
+      setError("Error inesperado al cargar las citas");
+      showToastFunction("error", "Error inesperado al cargar las citas");
+    });
   }, [handleGetCitas, filterValue, filters]);
 
   if (error) {
@@ -209,23 +235,38 @@ const ListarCitas = ({
     <>
       <FormCita
         isOpen={showFormCita}
-        onCloseAction={() => setShowFormCita(false)}
+        onCloseAction={handleCloseModal}
         onCitaCreatedAction={() => {
-          setShowFormCita(false);
-          handleGetCitas({ showToast: false });
+          handleCloseModal();
+          handleGetCitas({ showToast: false }).catch((error) => {
+            console.error("Error refreshing citas after creation:", error);
+            showToastFunction("error", "Error al actualizar la lista de citas");
+          });
         }}
+        editingCita={editingCita}
       />
       {citas.length > 0 ? (
         <>
           <TableCitas
             filteredCitas={citas}
-            action={(id) => setDeleteId(id)}
+            onDeleteAction={(id) => setDeleteId(id)}
+            onEditAction={handleEdit}
           />
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onNext={() => handleGetCitas({ page: currentPage + 1 })}
-            onPrevious={() => handleGetCitas({ page: currentPage - 1 })}
+            onNext={() => {
+              handleGetCitas({ page: currentPage + 1 }).catch((error) => {
+                console.error("Error loading next page:", error);
+                showToastFunction("error", "Error al cargar la siguiente página");
+              });
+            }}
+            onPrevious={() => {
+              handleGetCitas({ page: currentPage - 1 }).catch((error) => {
+                console.error("Error loading previous page:", error);
+                showToastFunction("error", "Error al cargar la página anterior");
+              });
+            }}
           />
         </>
       ) : (
@@ -249,6 +290,9 @@ const ListarCitas = ({
           if (deleteId) {
             handleDelete(deleteId).then((success) => {
               if (success) setDeleteId(null);
+            }).catch((error) => {
+              console.error("Error deleting cita:", error);
+              showToastFunction("error", "Error al eliminar la cita");
             });
           }
         }}

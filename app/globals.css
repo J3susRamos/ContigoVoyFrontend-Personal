@@ -36,23 +36,14 @@ body {
 
 .circle-checkbox {
   width: 20px;
-
   height: 20px;
-
   border-radius: 50%;
-
   border: 2px solid #634ae2;
-
   accent-color: #634ae2;
-
   appearance: none;
-
   outline: none;
-
   cursor: pointer;
-
   position: relative;
-
   background: #fff;
 }
 
@@ -62,19 +53,12 @@ body {
 
 .circle-checkbox:after {
   display: block;
-
   width: 12px;
-
   height: 12px;
-
   margin: 2px auto;
-
   border-radius: 50%;
-
   background: white;
-
   opacity: 0;
-
   transition: opacity 0.2s;
 }
 
@@ -375,20 +359,8 @@ body {
 }
 
 .mask-horizontal-fade {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 10%,
-    black 90%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 10%,
-    black 90%,
-    transparent
-  );
+  -webkit-mask-image: -webkit-linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -397,14 +369,11 @@ body {
 
 
 .mask-all-fade {
-  -webkit-mask-image: radial-gradient(
-    ellipse at center,
-    black 40%,
-    transparent 90%
-  );
+  -webkit-mask-image: -webkit-linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
   -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
 
@@ -412,27 +381,14 @@ body {
 .dark input:-webkit-autofill,
 .dark input:-webkit-autofill:hover,
 .dark input:-webkit-autofill:focus,
-.dark input:-webkit-autofill:active {
-  -webkit-text-fill-color: #634AE2 !important;
-  font-weight: 700 !important;
-  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-  transition: background-color 5000s ease-in-out 0s !important;
-}
-
-/* Estilos adicionales para campos de contraseña autocompletados */
+.dark input:-webkit-autofill:active,
 .dark input[type="password"]:-webkit-autofill,
 .dark input[type="password"]:-webkit-autofill:hover,
 .dark input[type="password"]:-webkit-autofill:focus,
 .dark input[type="password"]:-webkit-autofill:active {
   -webkit-text-fill-color: #634AE2 !important;
   font-weight: 700 !important;
-  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   transition: background-color 5000s ease-in-out 0s !important;
-}
-
-/* Para navegadores basados en Chromium con modo oscuro */
-.dark input:-internal-autofill-selected {
   background-color: transparent !important;
-  color: #634AE2 !important;
-  font-weight: 700 !important;
 }

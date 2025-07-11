@@ -1,23 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image, AlignLeft, Bold, Italic} from "lucide-react";
-import { UsuarioLocalStorage } from "@/interface";
+import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image as ImageIcon, AlignLeft, Bold, Italic} from "lucide-react";
+import { EmailBlock, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
-
-interface EmailBlock {
-  id: string;
-  type: 'text' | 'header' | 'divider'  | 'image' | 'columns';
-  content: string;
-  styles: {
-    bold: boolean;
-    italic: boolean;
-    color: string;
-  };
-  imageUrl?: string;
-  imageUrls?: string[]; 
-  filesUrls?: string[];
-}
+import { defaultDosColumnasTemplate } from "./PlantillasConfig";
+import Image from "next/image";
 
 const EmailMarketingEditor = () => {
   const PLANTILLA_TYPE = "dos-columnas";
@@ -38,11 +26,16 @@ const EmailMarketingEditor = () => {
           const parsed = JSON.parse(storedPlantilla);
           if (parsed.type === PLANTILLA_TYPE && Array.isArray(parsed.blocks)) {
             setEmailBlocks(parsed.blocks);
+            return;
           }
         } catch (e) {
+          console.error(e)
           // Si hay error, ignora y no carga nada
         }
       }
+
+      // Si no hay plantilla guardada, usar la plantilla por defecto
+      setEmailBlocks(defaultDosColumnasTemplate.blocks);
     }
   }, []);
 
@@ -217,7 +210,7 @@ const EmailMarketingEditor = () => {
   if (!user) return <div className="text-gray-600">Cargando...</div>;
 
   const featureButtons = [
-    { icon: Image, label: "Imagen", action: addImageBlock }, // ✅ Aquí corregido
+    { icon: ImageIcon, label: "Imagen", action: addImageBlock }, // ✅ Aquí corregido
     { icon: Columns, label: "Columnas", action: addColumnsBlock },
     { icon: AlignLeft, label: "Espaciado", action: addDividerBlock },
     { icon: Share2, label: "Redes", action: () => showFeatureNotAvailable("Redes") },
@@ -280,7 +273,7 @@ const EmailMarketingEditor = () => {
                     {block.type === 'divider' ? (
                   <hr className="border-t border-gray-300 my-6" />
                 ) : block.type === 'image' && block.imageUrl ? (
-                  <img
+                  <Image
                     src={block.imageUrl}
                     alt="Imagen de la plantilla"
                     className="max-w-full h-auto rounded mb-4"
@@ -290,7 +283,7 @@ const EmailMarketingEditor = () => {
                     {block.imageUrls && block.imageUrls.length > 0 ? (
                     block.imageUrls.map((url, index) => (
                       <div key={index} className="flex flex-col gap-2">
-                        <img
+                        <Image
                           src={url}
                           alt={`Columna ${index + 1}`}
                           className="w-full h-48 object-cover rounded"
@@ -308,9 +301,9 @@ const EmailMarketingEditor = () => {
                       block.type === 'header' ? 'text-2xl font-bold' : 'text-base'
                     }`}
                     style={{
-                      fontWeight: block.styles.bold ? 'bold' : 'normal',
-                      fontStyle: block.styles.italic ? 'italic' : 'normal',
-                      color: block.styles.color
+                      fontWeight: block.styles?.bold ? 'bold' : 'normal',
+                      fontStyle: block.styles?.italic ? 'italic' : 'normal',
+                      color: block.styles?.color
                     }}
                   >
                     {block.content}
@@ -369,7 +362,7 @@ const EmailMarketingEditor = () => {
           />
 
               {block.imageUrl && (
-                <img
+                <Image
                   src={block.imageUrl}
                   alt="Imagen superior"
                   className="max-w-full h-auto rounded mt-2"
@@ -429,7 +422,7 @@ const EmailMarketingEditor = () => {
                       />
 
                               {url && (
-                                <img
+                                <Image
                                 src={url}
                                 alt={`Columna ${index + 1}`}
                                 className="w-full h-48 object-cover rounded"
@@ -450,20 +443,20 @@ const EmailMarketingEditor = () => {
                           {selectedBlock === block.id && (
                             <div className="flex items-center gap-2">
                               <button
-                                onClick={() => updateBlockStyle(block.id, 'bold', !block.styles.bold)}
-                                className={`px-2 py-1 rounded text-white ${block.styles.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
+                                onClick={() => updateBlockStyle(block.id, 'bold', !block.styles?.bold)}
+                                className={`px-2 py-1 rounded text-white ${block.styles?.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
                               >
                                 <Bold className="w-4 h-4" />
                               </button>
                               <button
-                                onClick={() => updateBlockStyle(block.id, 'italic', !block.styles.italic)}
-                                className={`px-2 py-1 rounded text-white ${block.styles.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
+                                onClick={() => updateBlockStyle(block.id, 'italic', !block.styles?.italic)}
+                                className={`px-2 py-1 rounded text-white ${block.styles?.italic ? 'bg-blue-500' : 'bg-gray-600'}`}
                               >
                                 <Italic className="w-4 h-4" />
                               </button>
                               <input
                                 type="color"
-                                value={block.styles.color}
+                                value={block.styles?.color}
                                 onChange={(e) => updateBlockStyle(block.id, 'color', e.target.value)}
                                 className="w-8 h-8 p-0 border-none cursor-pointer"
                                 title="Color del texto"

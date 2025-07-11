@@ -40,10 +40,10 @@ const FilterSubMenu = <T, K extends keyof T>({
   return (
     <>
       {isOpen && (
-        <div className="w-60 bg-white  shadow-xl rounded-xl py-4 px-2 pt-2 ">
-          <h3 className="mb-1 text-[#634AE2] pl-10 text-lg">{titulo}</h3>
+        <div className="w-60 bg-white dark:bg-[#373636] shadow-xl rounded-xl py-4 px-2 pt-2">
+          <h3 className="mb-1 text-[#634AE2] pl-10 text-lg dark:text-[#bbbafe]">{titulo}</h3>
           {children}
-          <div className="flex justify-between mt-3">
+          <div className="flex justify-between mt-3 ">
             <Button
               size="sm"
               className="bg-[#E7E7FF] text-[#634AE2] text-md px-5 font-light rounded-2xl"
