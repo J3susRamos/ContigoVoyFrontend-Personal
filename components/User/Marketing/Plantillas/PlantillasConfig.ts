@@ -7,16 +7,6 @@ export const defaultDosColumnasTemplate: {
   "type": "dos-columnas",
   "blocks": [
     {
-      id: "header-1",
-      type: 'header',
-      content: "¡Bienvenido a nuestro boletín!",
-      styles: {
-        bold: true,
-        italic: false,
-        color: "#ffffff"
-      }
-    },
-    {
       id: "image-1",
       type: 'image',
       content: "",
@@ -26,6 +16,16 @@ export const defaultDosColumnasTemplate: {
         color: "#ffffff"
       },
       imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
+    },
+    {
+      id: "header-1",
+      type: 'header',
+      content: "¡Bienvenido a nuestro boletín!",
+      styles: {
+        bold: true,
+        italic: false,
+        color: "#ffffff"
+      }
     },
     {
       id: "columns-1",
@@ -51,5 +51,166 @@ export const defaultDosColumnasTemplate: {
         color: "#ffffff"
       }
     }
+  ],
+} as const;
+
+
+export const defaultImagenTexto: {
+  type: string;
+  blocks: EmailBlock[];
+} = {
+  "type": "imagen-texto",
+  "blocks": [
+    {
+      id: "image-1",
+      type: 'image',
+      content: "",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      },
+      imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
+    },
+    {
+      id: "header-1",
+      type: 'header',
+      content: "¡Bienvenido a nuestro boletín!",
+      styles: {
+        bold: true,
+        italic: false,
+        color: "#ffffff"
+      }
+    },
+    {
+      id: "text-1",
+      type: 'text',
+      content: "Aquí puedes escribir el contenido principal de tu email.",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      }
+    }
+  ],
+} as const;
+
+export const defaultSoloTexto: {
+  type: string;
+  blocks: EmailBlock[];
+} = {
+  "type": "solo-texto",
+  "blocks": [
+    {
+      id: "header-1",
+      type: 'header',
+      content: "¡Bienvenido a nuestro boletín!",
+      styles: {
+        bold: true,
+        italic: false,
+        color: "#ffffff"
+      }
+    },
+    {
+      id: "text-1",
+      type: 'text',
+      content: "Aquí puedes escribir el contenido principal de tu email.",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      }
+    }
+  ],
+} as const;
+
+export const defaultTextoImagen: {
+  type: string;
+  blocks: EmailBlock[];
+} = {
+  "type": "texto-imagen",
+  "blocks": [
+    {
+      id: "header-1",
+      type: 'header',
+      content: "¡Bienvenido a nuestro boletín!",
+      styles: {
+        bold: true,
+        italic: false,
+        color: "#ffffff"
+      }
+    },
+    {
+      id: "text-1",
+      type: 'text',
+      content: "Aquí puedes escribir el contenido principal de tu email.",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      }
+    },
+    {
+      id: "image-1",
+      type: 'image',
+      content: "",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      },
+      imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
+    }
+  ],
+} as const;
+
+export const defaultUnaColumna: {
+  type: string;
+  blocks: EmailBlock[];
+} = {
+  "type": "una-columna",
+  "blocks": [
+    {
+      id: "image-1",
+      type: 'image',
+      content: "",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      },
+      imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
+    },
+    {
+      id: "header-1",
+      type: 'header',
+      content: "¡Bienvenido a nuestro boletín!",
+      styles: {
+        bold: true,
+        italic: false,
+        color: "#ffffff"
+      }
+    },
+    {
+      id: "image-2",
+      type: 'image',
+      content: "",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      },
+      imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
+    },
+    {
+      id: "text-1",
+      type: 'text',
+      content: "Aquí puedes escribir el contenido principal de tu email.",
+      styles: {
+        bold: false,
+        italic: false,
+        color: "#ffffff"
+      }
+    },
   ],
 } as const;

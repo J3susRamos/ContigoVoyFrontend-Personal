@@ -43,7 +43,7 @@ export default function TherapyServices() {
       title: "Terapia familiar",
     },
     {
-      id: "/terapia/familia",
+      id: "/terapia/empresarial",
       icon: "/imagesTherapy/familyTherapy.webp",
       alt: "Servicio Terapia Psicológica para Empresas Contigo Voy Online",
       name: "Terapia Psicología Empresarial",

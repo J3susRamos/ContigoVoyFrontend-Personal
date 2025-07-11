@@ -88,17 +88,6 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-    },
-  },
-};
-
 export default function ChooseUs() {
   
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -144,7 +133,7 @@ export default function ChooseUs() {
 
   return (
     <div className="w-full max-w-full flex flex-col items-center justify-center pt-8 pb-14  mw:pt-12 mw:pb-16 my-scv6 bg-large-gradient relative overflow-hidden">
-      <div className="relative w-full max-w-scv18">
+      <div className="relative w-full pb-14">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -167,9 +156,9 @@ export default function ChooseUs() {
             <div className="embla" ref={emblaRef}>
               <div className="embla__container">
                 {features.map((feature, index) => (
-                  <div className="flex max-w-[550px] embla__slide" key={index}>
-                    <div className="flex-1">
-                        <div className="flex flex-col items-center justify-center p-6">
+                  <div className="grid max-sm:grid-cols-2 grid-cols-2 embla__slide" key={index}>
+                    <div className="flex-1 md:pl-40">
+                        <div className="flex flex-col justify-center p-6">
                           <div className="flex flex-col items-center justify-center w-28 h-28 rounded-full bg-[#9494F3] backdrop-blur-sm transition-all duration-300">
                             <div className="bg-transparent rounded-full transition-colors duration-300 w-14">
                               {feature.icon}
@@ -182,15 +171,14 @@ export default function ChooseUs() {
                         <p className="text-cv3 leading-[20px] text-white justify-center tracking-normal font-light ml-5 mr-3">
                           {feature.description}
                         </p>
-
                     </div>
-                    <div className="flex-1 relative w-full">
+                    <div className="flex-1 relative w-full ">
                       <Image
                         src={feature.background}
                         alt={feature.description}
                         title={feature.title}
                         fill
-                        className="mask-all-fade object-contain"
+                        className="mask-all-fade  object-contain object-right"
                       />
                     </div>
                   </div>
@@ -216,23 +204,21 @@ export default function ChooseUs() {
           </div>
         </div>
 
-        <div className="lg:block hidden">
-          <div className="flex items-center">
-            <div className="w-full md:w-2/3 flex pl-[30px] py-scv4">
+        <div className="lg:block hidden w-full">
+          <div className="flex w-full relative justify-center max-2xl:justify-start">
+            <div className="w-full md:w-2/3 flex pl-[30px] py-scv4 max-w-[800px] 2xl:mr-20">
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="grid grid-cols-2 justify-between gap-y-scv8 w-full mx-auto md:mx-0"
+                className="grid grid-cols-2 justify-between gap-y-scv8 w-full mx-auto md:mx-0 "
               >
                 {features.map((feature, index) => (
                   <motion.div
                     key={index}
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.1 }}
                     className="group flex flex-col gap-y-scv4 w-full max-w-[315px]"
                   >
-                    <div className="flex flex-col items-center justify-center w-40 h-40 rounded-full bg-[#9494F3] group-hover:bg-[#7863e3] group-hover:shadow-2xl transition-all duration-500 space-y-4">
+                    <div className="flex flex-col items-center justify-center w-40 h-40 rounded-full bg-[#9494F3] space-y-4">
                       <div className="p-4 bg-transparent rounded-full">
                         {feature.icon}
                       </div>
@@ -247,14 +233,14 @@ export default function ChooseUs() {
                 ))}
               </motion.div>
             </div>
-            <div className="w-[500px] md:w-1/3">
+            <div className=" md:w-1/3 min-w-[500px] max-w-[500px] absolute right-0">
               {isLg && 
                 <div ref={emblaRef}>
                   <div className="embla__container  ">
                     {features.map((item, index) => (
                       <div className="embla__slide " key={index}>
                         <div
-                          className="h-[800px] w-[500px]  bg-full rounded-l-full mask-all-fade"
+                          className="h-[800px] max-w-[500px] rounded-l-full mask-all-fade"
                           style={{
                             backgroundImage: `url(${item.background})`,
                           }}

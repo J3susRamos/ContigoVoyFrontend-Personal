@@ -26,7 +26,7 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
       {/* Título principal centrado */}
       <div className="text-center py-4 md:py-6">
         <h2 className="text-2xl md:text-3xl font-bold text-purple-400">
-          Selecciona una plantilla
+          Plantillas
         </h2>
       </div>
 
@@ -34,13 +34,13 @@ const CrearPlantilla: React.FC<CrearPlantillaProps> = ({ onBack }) => {
       <div className="w-full h-auto md:h-16 bg-primary dark:bg-primary flex items-center justify-start">
         <div className="md:ml-10 flex flex-col md:flex-row gap-2 md:gap-6 items-center w-full max-w-full md:max-w-[400px] py-6 md:py-4 mx-4">
           {/* Botón activo */}
-          <button onClick={() => router.push("/user/marketing/crear")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 bg-white dark:bg-background text-primary dark:text-primary dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+          <button onClick={() => router.push("/user/marketing/crear")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 bg-white dark:bg-background dark:text-white text-primary dark:text-primary dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
             Plantillas
           </button>
 
           {/* Botón inactivo */}
-          <button onClick={() => router.push("/user/marketing/crear/plantillasGuardadas")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 dark:bg-background text-primary dark:text-primary hover:bg-white text-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
-            Plantillas enviadas
+          <button onClick={() => router.push("/user/marketing/crear/plantillasGuardadas")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 text-primary dark:text-black dark:hover:text-white hover:bg-white text-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+            Plantillas guardadas
           </button>
         </div>
       </div>
