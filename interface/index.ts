@@ -210,6 +210,16 @@ export interface PsicologoApiResponseAlone {
   result: PsicologoPreviewData;
 }
 
+export interface PsicologoFilters {
+  pais?: string[];
+  genero?: string[];
+  idioma?: string[];
+  enfoque?: string[];
+  search?: string;
+  page?: number;
+  size?: number;
+}
+
 export interface UsuarioLocalStorage {
   id: number,
   nombre: string,
