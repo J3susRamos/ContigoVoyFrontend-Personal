@@ -285,7 +285,7 @@ const DetalleCampania = () => {
       </div>
 
       {/* Título */}
-      <div className="flex items-center gap-3 px-4 sm:px-6 py-4 sm:py-6 max-w-6xl mx-auto">
+      <div className="flex gap-4 text-center py-6 items-center max-w-[600px] pl-4">
         <ArrowLeft
           className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
           onClick={() => router.back()}
@@ -310,15 +310,15 @@ const DetalleCampania = () => {
       )}
 
       {/* Botones */}
-      <div className="bg-primary text-white dark:bg-purple-700 px-4 sm:px-6 py-3 sm:py-4">
+      <div className="bg-primary text-white dark:bg-purple-700 px-4 sm:px-6 py-3 sm:py-4 mb-4">
         <div className="flex justify-center items-center gap-3 sm:gap-4">
           <button
             onClick={handleSend}
             disabled={isProcessingImages || isSending}
-            className={`flex items-center space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded transition-colors ${isProcessingImages || isSending
+            className={`flex items-center space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded transition-all duration-300 ${isProcessingImages || isSending
               ? "bg-gray-500 cursor-not-allowed"
-              : "bg-primary dark:bg-purple-600 hover:bg-primary/80 dark:hover:bg-purple-700"
-              }`}
+              : "bg-[#8338ea] dark:bg-purple-500 hover:scale-110 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/30 dark:hover:shadow-purple-600/30"
+            }`}
           >
             {isSending ? (
               <LoadingSpinner size="sm" text="" />
@@ -338,7 +338,7 @@ const DetalleCampania = () => {
 
       {/* Información sobre imágenes */}
       {hasBase64Images(emailBlocks) && (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 px-4 sm:px-6 py-2 my-6 sm:py-3 mx-4 sm:mx-6 rounded-lg">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-700 dark:border-yellow-700 px-4 sm:px-6 py-2 my-6 sm:py-3 mx-4 sm:mx-6 rounded-lg">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
             <div className="flex items-center space-x-2 text-yellow-800 dark:text-yellow-200">
               <Cloud className="h-3 w-3 sm:h-4 sm:w-4" />
