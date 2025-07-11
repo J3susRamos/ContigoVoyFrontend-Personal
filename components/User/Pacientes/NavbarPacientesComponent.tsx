@@ -94,7 +94,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                 {["Masculino", "Femenino", "Otro"].map((opcion) => (
                   <label
                     key={opcion}
-                    className="text-[#634AE2] text-lg flex items-center gap-4"
+                    className="text-[#634AE2] dark:text-[#bbbafe] text-lg flex items-center gap-4"
                   >
                     <input
                       type="checkbox"
@@ -113,7 +113,7 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                           );
                         }
                       }}
-                      className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
+                      className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] dark:checked:bg-[#bbbafe] checked:border-[#634AE2] dark:border-[#bbbafe] mr-2 "
                     />
                     {opcion}
                   </label>
@@ -209,7 +209,8 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
           />          {/* Grupo de icono de agregar y botón - Desktop */}
           <div className="ml-auto hidden md:flex items-center gap-4 mr-12">
             <span
-              className="text-primary transition-colors"
+              onClick={handleAddNew}
+              className="text-primary transition-colors cursor-pointer"
               dangerouslySetInnerHTML={{
                 __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
               }}

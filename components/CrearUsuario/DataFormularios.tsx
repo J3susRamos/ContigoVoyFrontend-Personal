@@ -1,5 +1,5 @@
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons/iconsvg";
-import { FormData } from "@/interface";
+import { FormData, SelectItemI } from "@/interface";
 import { Flags } from "@/utils/flagsPsicologos";
 import {
   Autocomplete,
@@ -14,6 +14,47 @@ import {
 } from "@heroui/react";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import React from "react";
+
+
+// Obtener estos datos de manera dinamica
+const genders: SelectItemI[] = [
+  {
+    textValue: "femenino",
+    showLabel: "Femenino",
+  },
+  {
+    textValue: "masculino",
+    showLabel: "Masculino",
+  },
+  {
+    textValue: "otro",
+    showLabel: "Otro",
+  },
+];
+
+// Obtener estos datos de manera dinamica
+const titles: SelectItemI[] = [
+  {
+    textValue: "Pedagogo",
+    showLabel: "Pedagogo",
+  },
+  {
+    textValue: "Psicoanalista",
+    showLabel: "Psicoanalista",
+  },
+  {
+    textValue: "Terapeuta",
+    showLabel: "Terapeuta",
+  },
+  {
+    textValue: "Pediatra",
+    showLabel: "Pediatra",
+  },
+  {
+    textValue: "Conductual",
+    showLabel: "Conductual",
+  },
+];
 
 export const PersonalForm = ({
   onNext,
@@ -39,7 +80,7 @@ export const PersonalForm = ({
     }));
   };
 
-  return (    
+  return (
     <div className="text-[#634AE2] h-auto p-10 items-center bg-background rounded-3xl ">
       <h1 className="font-semibold text-center mb-5 text-4xl">
         Ingrese sus datos
@@ -104,27 +145,15 @@ export const PersonalForm = ({
                 setFormData({ ...formData, genero: e.target.value })
               }
             >
-              <SelectItem
-                className="text-[#BABAFF]"
-                key="femenino"
-                textValue="femenino"
-              >
-                Femenino
-              </SelectItem>
-              <SelectItem
-                className="text-[#BABAFF]"
-                key="masculino"
-                textValue="masculino"
-              >
-                Masculino
-              </SelectItem>
-              <SelectItem
-                className="text-[#BABAFF]"
-                key="otros"
-                textValue="otros"
-              >
-                Otros
-              </SelectItem>
+              {genders.map((gender) => (
+                <SelectItem
+                  className="text-[#BABAFF]"
+                  textValue={gender.textValue}
+                  key={gender.textValue}
+                >
+                  {gender.showLabel}
+                </SelectItem>
+              ))}
             </Select>
             <Input
               label="E-mail"
@@ -227,25 +256,35 @@ export const PersonalForm = ({
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <Input
+            <Select
               name="titulo"
               isRequired
               radius="full"
               label="Título"
-              minLength={3}
               labelPlacement="outside"
               value={formData.titulo}
               onChange={(e) =>
                 setFormData({ ...formData, titulo: e.target.value })
               }
-              placeholder="ingrese su título"
+              placeholder="Seleccione su título"
+              variant="faded"
+              selectedKeys={[formData.titulo]}
               classNames={{
                 label: "!text-[#BABAFF]",
-                inputWrapper: "border-2 border-[#BABAFF]",
-                input: "placeholder:!text-[#BABAFF]",
+                trigger: "border-2 border-[#BABAFF]",
+                value: "!text-[#BABAFF]",
               }}
-            />
-            
+            >
+              {titles.map((title) => (
+                <SelectItem
+                  className="text-[#BABAFF]"
+                  textValue={title.textValue}
+                  key={title.textValue}
+                >
+                  {title.showLabel}
+                </SelectItem>
+              ))}
+            </Select>
           </div>
         </div>
         <div className="flex w-full justify-center">

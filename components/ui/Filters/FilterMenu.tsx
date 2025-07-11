@@ -26,7 +26,7 @@ export const FilterMenu = <T extends Record<string, boolean>>({
 
   return (
     <div
-      className={`flex flex-col w-[17rem] bg-white shadow-lg rounded-xl grow-0 py-1`}
+      className={`flex flex-col w-[17rem] bg-white dark:bg-[#373636] shadow-lg rounded-xl grow-0 py-1 dark:text-[#bbbafe]`}
     >
       {menuItems.map((item, index) => (
         <button

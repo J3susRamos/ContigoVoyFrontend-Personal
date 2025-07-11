@@ -18,6 +18,8 @@ const ParejaTerapias: ServicesStructureProps[] = [
     background: "/Services/couple/ayuda-para-parejas-en-crisis.webp",
     bgdown: "/Services/couple/psicoterapia-para-relaciones-de-pareja.webp",
     bgup: "/Services/couple/bguppareja.webp",
+    bgdownAlt: "",
+    bgdownTitle: "",
     description:
       "Todas las parejas enfrentan desafíos y buscar ayuda es un paso hacia una relación más satisfactoria. En Contigo Voy, pueden iniciar una terapia de pareja online diseñada para cuidar su bienestar de forma accesible y práctica.",
     tittleIcon:

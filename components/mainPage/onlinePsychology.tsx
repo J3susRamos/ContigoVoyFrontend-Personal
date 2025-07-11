@@ -12,9 +12,9 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/terapiaonline.webp"}
         alt="Psicología online Beneficios Terapia en casa"
-        title="Recibe terapia en casa"
         width={70}
         height={60}
+        title="Terapia en casa Online Contigo Voy"
         className="w-[50px] mw:w-[70px]"
       />
     ),

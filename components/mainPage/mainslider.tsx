@@ -23,8 +23,8 @@ const sections: SliderSection[] = [
       "Con nuestras terapias virtuales, transformamos tu vida y te acompañamos en cada paso de tu camino hacia la sanación.",
     button: true,
     background: "/carruselImages/salud-mental-terapia-virtual.webp",
-    alt: "Imagen de salud mental y terapia virtual",
-    title: "Salud Mental y Terapia Virtual",
+    alt: "Estamos contigo en tu proceso de sanación ",
+    title: "Terapias virtuales y bienestar emocional ",
   },
   {
     phrase: "Apoyo a un click de distancia",
@@ -32,8 +32,8 @@ const sections: SliderSection[] = [
       "Nuestras terapias virtuales te permiten cuidar de tu bienestar desde la comodidad de tu hogar cuando más lo necesites.",
     button: true,
     background: "/carruselImages/centro-psicologico-terapia-online.webp",
-    alt: "Imagen de centro psicologico y terapia online",
-    title: "Centro Psicológico y Terapia Online",
+    alt: "Terapias virtuales para ti estés donde estés",
+    title: "Tu bienestar a un click de distancia",
   },
   {
     phrase: "Tu bienestar emocional inicia aqui",
@@ -41,8 +41,8 @@ const sections: SliderSection[] = [
       "Transforma tu vida con nuestras terapias diseñadas para ayudarte a sanar y crecer.",
     button: true,
     background: "/carruselImages/bienestar-mental-terapia-virtual.webp",
-    alt: "Imagen de bienestar mental y terapia virtual",
-    title: "Bienestar Mental y Terapia Virtual",
+    alt: "Terapia online centro psicológico contigo voy, te ayudamos a sanar y crecer ",
+    title: "Tu bienestar emocional es importante",
   },
   {
     phrase: "No dejemos que el silencio sea el enemigo",
@@ -50,8 +50,8 @@ const sections: SliderSection[] = [
       "8 de cada 10 peruanos no reciben la atención mental que necesitan.",
     button: true,
     background: "/carruselImages/psicologo-en-linea-ayuda-emocional.webp",
-    alt: "Imagen de psicologo en linea y ayuda emocional",
-    title: "Psicologo en Linea y Ayuda Emocional",
+    alt: "La salud mental es importante, estamos aqui para escucharte",
+    title: "No seas parte de la estadística, hablar es el primer paso",
   },
 ];
 
@@ -59,7 +59,7 @@ export default function MainSlider() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({
       stopOnInteraction: false,
-      delay: 4000,
+      delay: 400000,
     }),
   ]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -89,7 +89,8 @@ export default function MainSlider() {
                   <Image
                     src={item.background}
                     alt={item.alt}
-                    title={item.title}                    fill
+                    title={item.title}                    
+                    fill
                     className="object-cover"
                   />
                 </div>

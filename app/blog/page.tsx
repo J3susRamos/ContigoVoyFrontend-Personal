@@ -5,6 +5,7 @@ import {
   GetCagetories,
 } from "@/app/apiRoutes";
 import BlogPageComponent from "@/components/blog/BlogPageComponent";
+import BlogPageLoading from "@/components/blog/BlogPageLoading";
 import {
   ApiResponse,
   AuthorsApi,
@@ -59,13 +60,15 @@ export default  function BlogPage() {
 
   return (
     <div>
-      {error &&  <p className="flex items-center justify-center h-screen">{error}</p>}
-      { data && categoria && authors &&
+      {error && (
+        <p className="flex items-center justify-center h-screen">{error}</p>
+      )}
+      { (data && categoria && authors) ?
         <BlogPageComponent
           Datos={data.result}
           Categories={categoria.result}
           Authors={authors.result}
-        />
+        /> : <BlogPageLoading/>
       }
     </div>
   );

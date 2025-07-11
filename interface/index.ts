@@ -47,20 +47,23 @@ export interface ServicesStructureProps {
   motto: string;
   background: string;
   bgdown: string;
+  bgdownAlt: string;
+  bgdownTitle: string;
   bgup: string;
   description: string;
   tittleIcon: string;
   iconos: {
     id: number;
+    title?: string;
     text: string;
     iconImage: string;
   }[];
   tittlecards: string;
   cards: {
     id: number;
+    title?: string;
     text: string;
     icon: string;
-    title: string;
   }[];
   textfooter: string;
   textfootermobile:string;
@@ -574,7 +577,7 @@ export interface EmailBlock {
     imageUrl?: string;
     imageUrls?: string[];
     content?: string;
-    styles?: { color?: string; bold?: boolean; italic?: boolean };
+    styles: { color?: string; bold?: boolean; italic?: boolean };
 }
 
 export interface Plantilla {
@@ -588,4 +591,9 @@ export interface Plantilla {
 
 export interface MarketingApiResponse {
     result: Plantilla[];
+}
+
+export interface SelectItemI {
+  textValue: string,
+  showLabel: string,
 }

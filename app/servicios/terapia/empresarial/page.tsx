@@ -16,6 +16,8 @@ const FamilyTerapias: ServicesStructureProps[] = [{
     "¿Tu empresa enfrenta altos niveles de estrés y conflictos internos? Impulsa el bienestar de tu equipo con nuestra terapia empresarial",
   background: "/Services/business/buisness.webp",
   bgdown: "/Services/business/bg2.webp",
+  bgdownAlt: "",
+  bgdownTitle: "",
   bgup: "/Services/business/bgtiny.webp",
   description:
     "Ayudamos a equipos y líderes a gestionar el estrés, mejorar la comunicación y fortalecer un ambiente laboral saludable. A través de sesiones económicas y personalizadas, promovemos un entorno más equilibrado y productivo para todos.",

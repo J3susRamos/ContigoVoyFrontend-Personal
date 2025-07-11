@@ -155,7 +155,12 @@ export const DataView = ({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Plus width={40} height={40} strokeWidth={2} className="text-primary dark:text-primary" />
+                <Plus
+                  width={40}
+                  height={40}
+                  strokeWidth={2}
+                  className="text-primary dark:text-primary"
+                />
               )}
 
               <input
@@ -220,7 +225,8 @@ export const DataView = ({
               }
               classNames={{
                 label: "!text-primary dark:!text-primary font-bold text-base",
-                inputWrapper: "border-2 border-primary dark:border-primary bg-background dark:bg-background",
+                inputWrapper:
+                  "border-2 border-primary dark:border-primary bg-background dark:bg-background",
               }}
               type="number"
             />
@@ -236,67 +242,21 @@ export const DataView = ({
                 label: "!text-primary dark:!text-primary font-bold text-base",
               }}
               onValueChange={handleEspecialidadesChange}
+              defaultValue={[Object.keys(especialidadesMap)[0]]}
             >
-              <div className="flex flex-row w-full">
-                <div className="flex flex-col w-1/2">
-                  <Checkbox
-                    defaultSelected
-                    color="secondary"
-                    classNames={{
-                      label: "text-primary dark:text-primary",
-                    }}
-                    value="cognitivo-conductual"
-                  >
-                    cognitivo-conductual
-                  </Checkbox>
-                  <Checkbox
-                    classNames={{
-                      label: "text-primary dark:text-primary",
-                    }}
-                    color="secondary"
-                    value="neuropsicologia"
-                  >
-                    Neuropsicología
-                  </Checkbox>
-                  <Checkbox
-                    classNames={{
-                      label: "text-primary dark:text-primary",
-                    }}
-                    color="secondary"
-                    value="psicoanalisis"
-                  >
-                    Psicoanálisis
-                  </Checkbox>
-                </div>
-                <div className="flex flex-col w-1/2">
+              <div className="grid grid-cols-2 gap-4 w-full mb-scv2 my-scv1">
+                {Object.keys(especialidadesMap).map((clave) => (
                   <Checkbox
                     color="secondary"
                     classNames={{
                       label: "text-primary dark:text-primary",
                     }}
-                    value="psicopedagogia"
+                    key={clave}
+                    value={clave}
                   >
-                    Psicopedagogía
+                    {clave}
                   </Checkbox>
-                  <Checkbox
-                    color="secondary"
-                    classNames={{
-                      label: "text-primary dark:text-primary",
-                    }}
-                    value="gestalt"
-                  >
-                    Gestalt humanista
-                  </Checkbox>
-                  <Checkbox
-                    color="secondary"
-                    classNames={{
-                      label: "text-primary dark:text-primary",
-                    }}
-                    value="racional-emotivo"
-                  >
-                    Racional-emotivo-conductual
-                  </Checkbox>
-                </div>
+                ))}
               </div>
             </CheckboxGroup>
           </div>

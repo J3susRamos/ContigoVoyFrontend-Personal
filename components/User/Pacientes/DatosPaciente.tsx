@@ -9,6 +9,7 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
   const [paciente, setPaciente] = useState<Paciente | null>(null);
   const HandleGetPaciente = async (idPaciente: number) => {
     const result = await getPaciente(idPaciente);
+    console.log(result.data)
     if (result.success) {
       setPaciente(result.data);
     }
@@ -23,7 +24,7 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
   }, [idPaciente]);
    const router = useRouter();
 
-  const handleAddNew = useCallback(() => {
+  const handleEditPaciente = useCallback(() => {
       router.push(`/user/pacientes/EditarPaciente?id=${idPaciente}`);
     }, [router, idPaciente]);
 
@@ -89,7 +90,7 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
 
             <div className="mt-2">
               <button
-                  onClick={handleAddNew}
+                  onClick={handleEditPaciente}
                   className={cn(
                       "bg-transparent text-primary dark:text-primary border-primary dark:border-primary border rounded-full py-2 px-4 mt-4 hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground transition-colors duration-200"
                   )}
