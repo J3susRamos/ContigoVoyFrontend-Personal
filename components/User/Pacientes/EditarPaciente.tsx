@@ -644,18 +644,18 @@ export default function EditarPaciente({ id }: { id: string | null }) {
       </div>
 
       <div className="flex flex-col md:flex-row justify-center items-center w-full p-4 mt-6 gap-4">
-        <button
-          onClick={HandleUpdatePaciente}
-          className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
-        >
-          Actualizar
-        </button>
         <Link
           href="/user/pacientes/DetallePaciente/"
           className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
         >
           Volver
         </Link>
+        <button
+          onClick={HandleUpdatePaciente}
+          className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+        >
+          Actualizar
+        </button>
       </div>
     </div>
   );
