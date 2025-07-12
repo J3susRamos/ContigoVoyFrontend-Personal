@@ -186,7 +186,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
 
   return (
     <>
-      <div className="p-4 dark:bg-[#2e3033] h-[100vh]">
+      <div className="p-4 dark:bg-[#2e3033] min-h-[100vh]">
         {/* Header */}
         <HeaderUser title="Registro Familiar" />
         <form onSubmit={handleSubmit(handleUpdateFamilia)}>

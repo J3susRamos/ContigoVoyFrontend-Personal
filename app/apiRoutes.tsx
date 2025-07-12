@@ -3,15 +3,14 @@ import {
   AuthorsApi,
   CategoriaApi,
   CitasPendientesApiResponse,
-  PsicologoApiResponse,
   PsicologoApiResponseAlone,
   PsicologoPreviewData,
   DashboardApiResponse,
   CitasApiResponse,
   MarketingApiResponse,
-  CitaMensual
+  CitaMensual,
 } from "@/interface";
-import {parseCookies} from "nookies";
+import { parseCookies } from "nookies";
 
 export const token = parseCookies()["session"];
 
@@ -24,9 +23,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/categorias`
-  );
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -43,15 +40,56 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   return await res.json();
 }
 
-export async function GetPsicologos(): Promise<PsicologoApiResponse> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos`
-  );
-  if (!res.ok) {
-    throw new Error("Error al obtener los datos");
+export const GetPsicologos = async (
+  filters?: {
+    pais: string[];
+    genero: string[];
+    idioma: string[];
+    enfoque: string[];
+  },
+  search?: string,
+  page?: number,
+  perPage?: number
+) => {
+  const params = new URLSearchParams();
+  if (filters){
+    if (filters.pais.length) params.append("pais", filters.pais.join(","));
+  if (filters.genero.length) params.append("genero", filters.genero.join(","));
+  if (filters.idioma.length) params.append("idioma", filters.idioma.join(","));
+  if (filters.enfoque.length)
+    params.append("enfoque", filters.enfoque.join(","));
   }
-  return await res.json();
-}
+  
+
+  if (search) params.append("search", search);
+  params.append("paginate", "true");
+
+  if(perPage && page){
+    params.append("per_page", perPage.toString());
+    params.append("page", page.toString());
+  }
+
+  const url = `${
+    process.env.NEXT_PUBLIC_API_URL
+  }api/psicologos?${params.toString()}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    const data = await res.json();
+
+    if (data.status_message === "OK") {
+      return data.result;
+    } else {
+      console.error("Error:", data.message);
+    }
+  } catch (error) {
+    console.error("Error al obtener psicólogos:", error);
+  }
+};
 
 export async function DeletePsycologo(id: number | null): Promise<void> {
   const res = await fetch(
@@ -155,18 +193,15 @@ export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
 }
 
 //Traer citas del psicologo por mes
-export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/citas/lista`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/citas/lista`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!res.ok) {
     throw new Error("Error al obtener las citas del psicologo");
@@ -176,17 +211,14 @@ export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse>{
 }
 
 export async function GetPlantillas(): Promise<MarketingApiResponse> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/marketing`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/marketing`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!res.ok) {
     const errorText = await res.text();
@@ -198,17 +230,17 @@ export async function GetPlantillas(): Promise<MarketingApiResponse> {
 }
 
 //Traer citas totales por fecha
-export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]>{
+export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]> {
   const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
 
   if (!res.ok) {
