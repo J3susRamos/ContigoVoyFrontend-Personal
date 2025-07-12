@@ -2,19 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {ArrowLeft, Eye, Type, Columns, Hash, Share2, Square, Image, AlignLeft, Bold, Italic} from "lucide-react";
-import { UsuarioLocalStorage } from "@/interface";
+import { EmailBlock, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
-
-interface EmailBlock {
-  id: string;
-  type: 'text' | 'header' | 'divider';
-  content: string;
-  styles: {
-    bold: boolean;
-    italic: boolean;
-    color: string;
-  };
-}
+import { defaultSoloTexto } from "./PlantillasConfig";
 
 const EmailMarketingEditor = () => {
   const PLANTILLA_TYPE = "solo-texto";
@@ -40,6 +30,8 @@ const EmailMarketingEditor = () => {
           console.error(e)
           // Si hay error, ignora y no carga nada
         }
+      } else {        
+        setEmailBlocks(defaultSoloTexto.blocks);
       }
     }
   }, []);

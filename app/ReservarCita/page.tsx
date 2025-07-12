@@ -2,29 +2,49 @@
 import { useEffect, useState } from "react";
 import ReservarComponents from "@/components/ReservarComponents";
 import { GetPsicologos } from "../apiRoutes";
-import { PsicologoApiResponse } from "@/interface";
+import { PsicologoFilters, PsicologoPreviewData } from "@/interface";
 
 export default function BlogPage() {
-  const [psicologos, setPsicologos] = useState<PsicologoApiResponse | null>(
+  const [psicologos, setPsicologos] = useState<PsicologoPreviewData[] | null>(
     null
   );
+  const [filters, setFilters] = useState<PsicologoFilters>({});
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const [perPage] = useState(6);
+  const [lastPage, setLastPage] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await GetPsicologos();
-        setPsicologos(data);
-      } catch (error) {
-        setError("Error obteniendo psicólogos");
-        console.error(error);
-      }
+  const handleFilterChange = (newFilters: PsicologoFilters, newSearchTerm?: string) => {
+    setPage(1);
+    setFilters(newFilters);
+    if (newSearchTerm !== undefined) {
+      setSearchTerm(newSearchTerm);
     }
+  };
 
-    fetchData().catch((error) => {
-      console.error("Error in fetchData:", error);
-    });
-  }, []);
+  useEffect(() => {
+    const loadPsicologos = async () => {
+      const normalizedFilters = {
+        pais: filters.pais || [],
+        genero: filters.genero || [],
+        idioma: filters.idioma || [],
+        enfoque: filters.enfoque || [],
+      };
+      const result = await GetPsicologos(normalizedFilters, searchTerm, page, perPage);
+      
+      if (result) {
+        setPsicologos(result.data);
+        setLastPage(result.pagination.last_page);
+      } else {
+        setPsicologos([]);
+        setError("No se pudieron cargar los psicólogos. Intenta nuevamente.");
+      }
+    };
+  
+    loadPsicologos();
+  }, [filters, searchTerm, page, perPage]);
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {error && (
@@ -49,7 +69,7 @@ export default function BlogPage() {
           </div>
         </div>
       )}
-      {psicologos && <ReservarComponents Psicologos={psicologos.result} />}
+      {psicologos && <ReservarComponents data={psicologos} onFilterChange={handleFilterChange} currentPage={page} setPage={setPage} lastPage={lastPage} setSearchTerm={setSearchTerm} searchTerm={searchTerm}/>}
     </div>
   );
 }
