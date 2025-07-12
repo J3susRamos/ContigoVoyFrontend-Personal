@@ -3,8 +3,15 @@ import { ServicesStructureProps } from "@/interface"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terapia Familiar Online | Contigo Voy fortalece los lazos en tu hogar",
-  description: "Recupera la armonía con terapia familiar online. Mejora la comunicación, resuelve conflictos y fortalece los vínculos entre los miembros de tu familia.",
+  title:
+    "Terapia Familiar Online | Contigo Voy fortalece los lazos en tu hogar",
+  description:
+    "Recupera la armonía con terapia familiar online. Mejora la comunicación, resuelve conflictos y fortalece los vínculos entre los miembros de tu familia.",
+  authors: [{ name: "Contigo Voy" }],
+  viewport: "width=device-width, initial-scale=1",
+  verification: {
+    google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
+  },
 };
 
 const FamilyTerapias: ServicesStructureProps[] = [

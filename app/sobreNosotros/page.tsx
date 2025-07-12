@@ -1,12 +1,16 @@
 import SobreNosotrosStructure from "@/components/SobreNosotrosStructure";
 import { QuienesSomos } from "@/interface";
-
 import { Metadata } from "next";
 
-export	const metadata: Metadata = {
+export const metadata: Metadata = {
   title: "Centro Psicológico | Contigo Voy",
   description:
     "Somos un equipo de psicólogos especializados en terapia online donde encontrarás un espacio seguro y confidencial. Tu salud mental es nuestra prioridad. ",
+  authors: [{ name: "Contigo Voy" }],
+  viewport: "width=device-width, initial-scale=1",
+  verification: {
+    google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
+  },
 };
 
 const dataQS: QuienesSomos[] = [
@@ -28,9 +32,7 @@ const dataQS: QuienesSomos[] = [
 
 export default function Home() {
   return (
-    <div
-      className="w-full relative overflow-y-hidden over overflow-x-clip bg-large-gradient"  
-    >
+    <div className="w-full relative overflow-y-hidden over overflow-x-clip bg-large-gradient">
       <SobreNosotrosStructure qs={dataQS} />
     </div>
   );

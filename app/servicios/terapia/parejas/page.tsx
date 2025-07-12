@@ -4,8 +4,15 @@ import { ServicesStructureProps } from "@/interface"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terapia de Pareja Online | Contigo Voy Psicólogos para Relaciones Sanas y Conectadas",
-  description: "Fortalece tu relación con terapia de pareja online. Mejora la comunicación, resuelve conflictos y recupera la conexión con apoyo profesional.",
+  title:
+    "Terapia de Pareja Online | Contigo Voy Psicólogos para Relaciones Sanas y Conectadas",
+  description:
+    "Fortalece tu relación con terapia de pareja online. Mejora la comunicación, resuelve conflictos y recupera la conexión con apoyo profesional.",
+  authors: [{ name: "Contigo Voy" }],
+  viewport: "width=device-width, initial-scale=1",
+  verification: {
+    google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
+  },
 };
 
 
