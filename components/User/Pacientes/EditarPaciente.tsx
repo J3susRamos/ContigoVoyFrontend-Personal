@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icons } from "@/icons";
 import CerrarSesion from "@/components/CerrarSesion";
 import { parseCookies } from "nookies";
@@ -17,6 +17,7 @@ import { Plus, X } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getPaciente } from "./getPacienteData";
 
 export default function EditarPaciente({ id }: { id: string | null }) {
   const router = useRouter();
@@ -41,6 +42,152 @@ export default function EditarPaciente({ id }: { id: string | null }) {
     antecedentesMedicos: "",
     medicamentosPrescritos: "",
   });
+  const [prefix, setPrefix] = useState("+51");
+
+  const countryPrefixes = [
+  { name: "Afganistán", code: "+93" },
+  { name: "Albania", code: "+355" },
+  { name: "Alemania", code: "+49" },
+  { name: "Andorra", code: "+376" },
+  { name: "Angola", code: "+244" },
+  { name: "Argentina", code: "+54" },
+  { name: "Arabia Saudita", code: "+966" },
+  { name: "Argelia", code: "+213" },
+  { name: "Armenia", code: "+374" },
+  { name: "Australia", code: "+61" },
+  { name: "Austria", code: "+43" },
+  { name: "Azerbaiyán", code: "+994" },
+  { name: "Bahamas", code: "+1-242" },
+  { name: "Bangladés", code: "+880" },
+  { name: "Barbados", code: "+1-246" },
+  { name: "Bélgica", code: "+32" },
+  { name: "Belice", code: "+501" },
+  { name: "Benín", code: "+229" },
+  { name: "Bolivia", code: "+591" },
+  { name: "Bosnia y Herzegovina", code: "+387" },
+  { name: "Botsuana", code: "+267" },
+  { name: "Brasil", code: "+55" },
+  { name: "Brunéi", code: "+673" },
+  { name: "Bulgaria", code: "+359" },
+  { name: "Burkina Faso", code: "+226" },
+  { name: "Bután", code: "+975" },
+  { name: "Cabo Verde", code: "+238" },
+  { name: "Camboya", code: "+855" },
+  { name: "Camerún", code: "+237" },
+  { name: "Canadá", code: "+1" },
+  { name: "Catar", code: "+974" },
+  { name: "Chile", code: "+56" },
+  { name: "China", code: "+86" },
+  { name: "Chipre", code: "+357" },
+  { name: "Colombia", code: "+57" },
+  { name: "Comoras", code: "+269" },
+  { name: "Corea del Norte", code: "+850" },
+  { name: "Corea del Sur", code: "+82" },
+  { name: "Costa Rica", code: "+506" },
+  { name: "Croacia", code: "+385" },
+  { name: "Cuba", code: "+53" },
+  { name: "Dinamarca", code: "+45" },
+  { name: "Ecuador", code: "+593" },
+  { name: "Egipto", code: "+20" },
+  { name: "El Salvador", code: "+503" },
+  { name: "Emiratos Árabes Unidos", code: "+971" },
+  { name: "Eslovaquia", code: "+421" },
+  { name: "Eslovenia", code: "+386" },
+  { name: "España", code: "+34" },
+  { name: "Estados Unidos", code: "+1" },
+  { name: "Estonia", code: "+372" },
+  { name: "Etiopía", code: "+251" },
+  { name: "Filipinas", code: "+63" },
+  { name: "Finlandia", code: "+358" },
+  { name: "Francia", code: "+33" },
+  { name: "Georgia", code: "+995" },
+  { name: "Ghana", code: "+233" },
+  { name: "Grecia", code: "+30" },
+  { name: "Guatemala", code: "+502" },
+  { name: "Guinea", code: "+224" },
+  { name: "Guinea-Bisáu", code: "+245" },
+  { name: "Haití", code: "+509" },
+  { name: "Honduras", code: "+504" },
+  { name: "Hungría", code: "+36" },
+  { name: "India", code: "+91" },
+  { name: "Indonesia", code: "+62" },
+  { name: "Irán", code: "+98" },
+  { name: "Irak", code: "+964" },
+  { name: "Irlanda", code: "+353" },
+  { name: "Islandia", code: "+354" },
+  { name: "Israel", code: "+972" },
+  { name: "Italia", code: "+39" },
+  { name: "Jamaica", code: "+1-876" },
+  { name: "Japón", code: "+81" },
+  { name: "Jordania", code: "+962" },
+  { name: "Kazajistán", code: "+7" },
+  { name: "Kenia", code: "+254" },
+  { name: "Kuwait", code: "+965" },
+  { name: "Laos", code: "+856" },
+  { name: "Letonia", code: "+371" },
+  { name: "Líbano", code: "+961" },
+  { name: "Liberia", code: "+231" },
+  { name: "Libia", code: "+218" },
+  { name: "Lituania", code: "+370" },
+  { name: "Luxemburgo", code: "+352" },
+  { name: "Madagascar", code: "+261" },
+  { name: "Malasia", code: "+60" },
+  { name: "Malaui", code: "+265" },
+  { name: "Maldivas", code: "+960" },
+  { name: "Malí", code: "+223" },
+  { name: "Malta", code: "+356" },
+  { name: "Marruecos", code: "+212" },
+  { name: "México", code: "+52" },
+  { name: "Moldavia", code: "+373" },
+  { name: "Mónaco", code: "+377" },
+  { name: "Mongolia", code: "+976" },
+  { name: "Montenegro", code: "+382" },
+  { name: "Mozambique", code: "+258" },
+  { name: "Nicaragua", code: "+505" },
+  { name: "Nigeria", code: "+234" },
+  { name: "Noruega", code: "+47" },
+  { name: "Nueva Zelanda", code: "+64" },
+  { name: "Omán", code: "+968" },
+  { name: "Países Bajos", code: "+31" },
+  { name: "Pakistán", code: "+92" },
+  { name: "Panamá", code: "+507" },
+  { name: "Papúa Nueva Guinea", code: "+675" },
+  { name: "Paraguay", code: "+595" },
+  { name: "Perú", code: "+51" },
+  { name: "Polonia", code: "+48" },
+  { name: "Portugal", code: "+351" },
+  { name: "Reino Unido", code: "+44" },
+  { name: "República Checa", code: "+420" },
+  { name: "República Dominicana", code: "+1-809" },
+  { name: "Rumanía", code: "+40" },
+  { name: "Rusia", code: "+7" },
+  { name: "Senegal", code: "+221" },
+  { name: "Serbia", code: "+381" },
+  { name: "Singapur", code: "+65" },
+  { name: "Siria", code: "+963" },
+  { name: "Somalia", code: "+252" },
+  { name: "Sri Lanka", code: "+94" },
+  { name: "Sudáfrica", code: "+27" },
+  { name: "Sudán", code: "+249" },
+  { name: "Suecia", code: "+46" },
+  { name: "Suiza", code: "+41" },
+  { name: "Tailandia", code: "+66" },
+  { name: "Taiwán", code: "+886" },
+  { name: "Tanzania", code: "+255" },
+  { name: "Tayikistán", code: "+992" },
+  { name: "Túnez", code: "+216" },
+  { name: "Turquía", code: "+90" },
+  { name: "Ucrania", code: "+380" },
+  { name: "Uganda", code: "+256" },
+  { name: "Uruguay", code: "+598" },
+  { name: "Uzbekistán", code: "+998" },
+  { name: "Venezuela", code: "+58" },
+  { name: "Vietnam", code: "+84" },
+  { name: "Yemen", code: "+967" },
+  { name: "Zambia", code: "+260" },
+  { name: "Zimbabue", code: "+263" }
+];
+
   // Corrige el tipo de currentState y currentCity en el formData
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -113,9 +260,10 @@ export default function EditarPaciente({ id }: { id: string | null }) {
            const pacienteData: Omit<Paciente2, "idPaciente" | "provincia"> = {
              DNI: formData.DNI,
              nombre: formData.nombre,
-             apellido: `${formData.apellidoPaterno} ${formData.apellidoMaterno}`,
+             apellidoPaterno: `${formData.apellidoPaterno}`,
+            apellidoMaterno: `${formData.apellidoMaterno}`,
              email: formData.email,
-             celular: formData.celular,
+             celular: `${prefix}${formData.celular}`,
              fecha_nacimiento: formData.fecha_nacimiento,
              imagen: base64Image || '',
              genero: formData.genero,
@@ -130,7 +278,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
       const cookies = parseCookies();
       const token = cookies["session"];
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const urlApi = apiUrl ? `${apiUrl}api/pacientes/${id}` : `/api/pacientes/${id}`;
+      const urlApi = `${apiUrl}api/pacientes/${id}`;
       const response = await fetch(urlApi, {
         method: "PUT",
         headers: {
@@ -154,6 +302,44 @@ export default function EditarPaciente({ id }: { id: string | null }) {
       showToast("error", "Error de conexión. Intenta nuevamente.");
     }
   };
+
+  useEffect(() => {
+    if (!id) return;
+    (async () => {
+      const res = await getPaciente(Number(id));
+      if (res.success && res.data) {
+        const paciente = res.data;
+        let fechaFormateada = "";
+        if (paciente.fecha_nacimiento) {
+          const fecha = new Date(paciente.fecha_nacimiento);
+          fechaFormateada = `${fecha.getDate().toString().padStart(2, "0")}/${(fecha.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}/${fecha.getFullYear()}`;
+        }
+        setFormData({
+          nombre: paciente.nombre || "",
+          apellidoPaterno: paciente.apellido?.split(" ")[0] || " ",
+          apellidoMaterno: paciente.apellido?.split(" ")[1] || " ",
+          DNI: paciente.DNI || "",
+          email: paciente.email || "",
+          celular: paciente.celular || "",
+          imagen: paciente.imagen || "",
+          fecha_nacimiento: fechaFormateada,
+          genero: paciente.genero || "",
+          estadoCivil: paciente.estadoCivil || "",
+          ocupacion: paciente.ocupacion || "",
+          direccion: paciente.direccion || "",
+          departamento: paciente.departamento || "",
+          pais: paciente.pais || "",
+          antecedentesMedicos: paciente.antecedentesMedicos || "",
+          medicamentosPrescritos: paciente.medicamentosPrescritos || "",
+        });
+        setBase64Image(paciente.imagen || "");
+        setCountry(paciente.pais ? { id: 0, name: paciente.pais } : null);
+        setCurrentState(paciente.departamento ? { id: 0, name: paciente.departamento } : null);
+      }
+    })();
+  }, [id]);
 
   return (
     <div className="p-4 bg-[#f8f8ff] dark:bg-background min-h-screen">
@@ -290,15 +476,28 @@ export default function EditarPaciente({ id }: { id: string | null }) {
           </div>
           <div className="mt-4">
             <label className="block text-center text-card-foreground dark:text-card-foreground">Celular</label>
+            <div className="flex gap-2 mt-2 items-center justify-center">
+            <select
+              value={prefix}
+              onChange={(e) => setPrefix(e.target.value)}
+              className="text-sm h-9 rounded-full  border border-border bg-input text-foreground px-2 dark:border-border dark:bg-input dark:text-foreground"
+            >
+              {countryPrefixes.map((country, index) => (
+                <option key={index} value={country.code}>
+                {country.name} ({country.code})
+                </option>
+              ))}
+            </select>
             <input
               type="text"
               maxLength={30}
               minLength={3}
               value={formData.celular}
               onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
-              placeholder="Ejemp. +51 999999999"
-              className="pl-4 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
-            />
+              placeholder="Ejemplo 999999999"
+              className="pl-4 pr-3 text-sm max-w-[400px] h-9 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+              />
+            </div>
           </div>
           {/* Imagen */}
           <h1 className="text-center pt-4 pb-2 text-card-foreground dark:text-card-foreground">
@@ -357,6 +556,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
               <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">País</div>
               <div className="relative w-full">
                 <CountrySelect
+                  value={country?.id ?? ""}
                   containerClassName="mt-2 w-full [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-input [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
                   inputClassName="appearance-none !border-none !outline-none pl-12 pr-10 text-sm h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-muted-foreground placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-foreground dark:text-foreground"
                   onChange={handleCountryChange}
@@ -386,6 +586,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
               <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Departamento</div>
               <div className="relative w-full">
                 <StateSelect
+                  value={currentState?.id ?? ""}
                   countryid={country?.id ?? 0}
                   containerClassName="mt-2 w-full [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-input [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
                   inputClassName="appearance-none !border-none !outline-none pl-12 pr-10 text-sm h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-muted-foreground placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-foreground dark:text-foreground"
@@ -443,18 +644,18 @@ export default function EditarPaciente({ id }: { id: string | null }) {
       </div>
 
       <div className="flex flex-col md:flex-row justify-center items-center w-full p-4 mt-6 gap-4">
-        <button
-          onClick={HandleUpdatePaciente}
-          className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
-        >
-          Actualizar
-        </button>
         <Link
           href="/user/pacientes/DetallePaciente/"
           className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
         >
           Volver
         </Link>
+        <button
+          onClick={HandleUpdatePaciente}
+          className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+        >
+          Actualizar
+        </button>
       </div>
     </div>
   );

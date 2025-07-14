@@ -62,7 +62,6 @@ const DetalleCampania = () => {
   };
 
   const defaultStyles = { bold: false, italic: false, color: "#000000" };
-
   const formatearBloquesParaEnvio = (blocks: EmailBlock[]) => {
     return blocks.map((block) => {
       if (block.type === "divider") {
@@ -73,9 +72,7 @@ const DetalleCampania = () => {
         return {
           type: "image",
           imageUrl: block.imageUrl,
-          styles: {
-            defaultStyles,
-          },
+          styles: defaultStyles,
         };
       }
 
@@ -95,9 +92,9 @@ const DetalleCampania = () => {
           type: block.type,
           content: block.content,
           styles: {
-            bold: block.styles?.bold,
-            italic: block.styles?.italic,
-            color: "#000000",
+            bold: block.styles?.bold || false,
+            italic: block.styles?.italic || false,
+            color: block.styles?.color || "#000000",
           },
         };
       }
@@ -228,33 +225,78 @@ const DetalleCampania = () => {
         console.error("❌ Error al enviar:", dataEnvio);
         alert(dataEnvio.message || "Error al enviar el correo.");
         return;
+      }      console.log("💾 Guardando plantilla con datos:", {
+        nombre: campaignName,
+        asunto: emailSubject,
+        remitente: sender,
+        destinatarios: recipients.join(","),
+        cantidadBloques: bloquesParaEnviar.length,
+        tiposBloques: bloquesParaEnviar.map(b => b.type),
+        tokenLength: token.length,
+        apiUrl: apiUrl
+      });     
+      if (!campaignName.trim()) {
+        alert("El nombre de la campaña es requerido para guardar la plantilla.");
+        return;
+      }
+      if (!emailSubject.trim()) {
+        alert("El asunto del email es requerido para guardar la plantilla.");
+        return;
+      }
+      if (!bloquesParaEnviar || bloquesParaEnviar.length === 0) {
+        alert("Debe haber al menos un bloque de contenido para guardar la plantilla.");
+        return;
       }
 
-      const responseGuardado = await fetch(`${apiUrl}api/marketing`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          nombre: campaignName,
-          asunto: emailSubject,
-          remitente: sender,
-          destinatarios: recipients.join(","),
-          bloques: bloquesParaEnviar,
-          fecha: new Date().toISOString(),
-          estado: "enviada",
-        }),
-      });
 
-      const dataGuardado = await responseGuardado.json();
+      console.log("🔍 Estructura detallada de bloques:", JSON.stringify(bloquesParaEnviar, null, 2));
+
+      let responseGuardado;
+      try {
+        responseGuardado = await fetch(`${apiUrl}api/marketing`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            nombre: campaignName,
+            asunto: emailSubject,
+            remitente: sender,
+            destinatarios: recipients.join(","),
+            bloques: bloquesParaEnviar,
+          }),
+        });
+      } catch (networkError) {
+        console.error("❌ Error de red al guardar plantilla:", networkError);
+        alert("El correo fue enviado, pero hubo un error de conexión al guardar la plantilla.");
+        return;
+      }const dataGuardado = await responseGuardado.json().catch(async () => {
+     
+        const textResponse = await responseGuardado.text();
+        console.error("❌ Respuesta no es JSON válido:", textResponse);
+        return { error: "Respuesta no válida del servidor", raw: textResponse };
+      });
 
       if (!responseGuardado.ok) {
         console.error("❌ Error al guardar como enviada:", dataGuardado);
-        alert("El correo fue enviado, pero hubo un error al guardar la plantilla.");
+        console.error("❌ Status:", responseGuardado.status);
+        console.error("❌ Status Text:", responseGuardado.statusText);
+        console.error("❌ Response Headers:", Object.fromEntries(responseGuardado.headers.entries()));
+        
+        let errorMessage = 'Error desconocido';
+        if (dataGuardado.message) {
+          errorMessage = dataGuardado.message;
+        } else if (dataGuardado.raw) {
+          errorMessage = `Error del servidor: ${responseGuardado.status}`;
+        }
+        
+        alert(`El correo fue enviado, pero hubo un error al guardar la plantilla: ${errorMessage}`);
         return;
       }
+
+      console.log("✅ Plantilla guardada correctamente:", dataGuardado);
 
       if (processedBlocks !== emailBlocks) {
         localStorage.setItem("emailBlocks", JSON.stringify({ blocks: processedBlocks }));
@@ -383,30 +425,127 @@ const DetalleCampania = () => {
               className="w-full p-2 sm:p-3 rounded-md sm:rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white text-sm sm:text-base"
               disabled={isProcessingImages || isSending}
             />
-          </div>
-
-          {/* Destinatarios */}
+          </div>          {/* Destinatarios */}
           <div className="mt-4 sm:mt-6">
             <label className="block text-base sm:text-lg font-medium mb-2 sm:mb-3 text-purple-600">
               Destinatarios <span className="text-red-500">*</span>
             </label>
-            <select
-              multiple
-              value={recipients}
-              onChange={(e) => setRecipients([...e.target.selectedOptions].map(o => o.value))}
-              className="w-full p-2 sm:p-3 rounded-md sm:rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white text-sm sm:text-base h-[120px] sm:h-auto"
-              disabled={isProcessingImages || isSending}
-            >
+            
+            {/* Botones de acción rápida */}
+            <div className="flex gap-2 mb-3">
+              <button
+                type="button"
+                onClick={() => {
+                  const allEmails = pacientes.filter(p => p.email).map(p => p.email);
+                  const allSelected = allEmails.every(email => recipients.includes(email));
+                  if (allSelected) {
+                    setRecipients([]);
+                  } else {
+                    setRecipients(allEmails);
+                  }
+                }}
+                disabled={isProcessingImages || isSending || pacientes.length === 0}
+                className="flex-1 px-3 py-2 text-sm font-medium text-purple-600 bg-purple-50 dark:bg-purple-900/20 dark:text-purple-400 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {pacientes.filter(p => p.email).every(p => recipients.includes(p.email)) && pacientes.length > 0 
+                  ? 'Deseleccionar todos' 
+                  : 'Seleccionar todos'}
+              </button>
+            </div>
+
+            {/* Contador dinámico */}
+            <div className="flex items-center gap-2 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg mb-3">
+              <div className="flex items-center gap-1">
+                <svg className="h-4 w-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.196-2.121M9 20H4v-2a3 3 0 015.196-2.121m0 0A5.002 5.002 0 0119 16.5M9 17.879A5.002 5.002 0 0115 16.5M9 17.879V16.5A5.002 5.002 0 019 11.5m0 6.379a3 3 0 00-6 0m6 0v-1.5a3 3 0 00-6 0" />
+                </svg>
+                <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
+                  {recipients.length} {recipients.length === 1 ? 'destinatario seleccionado' : 'destinatarios seleccionados'}
+                </span>
+              </div>
+            </div>
+
+            {/* Lista de pacientes */}
+            <div className="max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700">
               {Array.isArray(pacientes) && pacientes.length > 0 ? (
-                pacientes.map((paciente, index) => (
-                  <option key={paciente.id ?? index} value={paciente.email}>
-                    {paciente.nombre} {paciente.apellido} - {paciente.email}
-                  </option>
-                ))
+                <div className="divide-y divide-gray-200 dark:divide-gray-600">
+                  {pacientes.map((paciente, index) => {
+                    if (!paciente.email) return null;
+                    
+                    const isSelected = recipients.includes(paciente.email);
+                    const initials = `${(paciente.nombre || '?').charAt(0).toUpperCase()}${(paciente.apellido || '?').charAt(0).toUpperCase()}`;
+                    const colors = ['bg-purple-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500'];
+                    const avatarColor = colors[initials.charCodeAt(0) % colors.length];
+
+                    return (
+                      <div
+                        key={paciente.id ?? index}
+                        onClick={() => {
+                          if (isProcessingImages || isSending) return;
+                          if (isSelected) {
+                            setRecipients(recipients.filter(r => r !== paciente.email));
+                          } else {
+                            setRecipients([...recipients, paciente.email]);
+                          }
+                        }}
+                        className={`flex items-center gap-3 p-3 cursor-pointer transition-all duration-200 ${
+                          isProcessingImages || isSending ? 'cursor-not-allowed opacity-50' : 'hover:bg-gray-50 dark:hover:bg-gray-600'
+                        } ${
+                          isSelected 
+                            ? 'bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500' 
+                            : 'bg-white dark:bg-gray-700'
+                        }`}
+                      >
+                        {/* Checkbox personalizado */}
+                        <div
+                          className={`flex items-center justify-center w-5 h-5 rounded transition-colors ${
+                            isSelected
+                              ? 'bg-purple-600 text-white'
+                              : 'border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
+                          }`}
+                        >
+                          {isSelected && (
+                            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+
+                        {/* Avatar con iniciales */}
+                        <div
+                          className={`flex items-center justify-center w-8 h-8 rounded-full text-white text-xs font-semibold ${avatarColor}`}
+                        >
+                          {initials}
+                        </div>
+
+                        {/* Información del paciente */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            {paciente.nombre ? paciente.nombre : ''}{paciente.apellido ? ` ${paciente.apellido}` : ''}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                            {paciente.email}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               ) : (
-                <option disabled>No hay pacientes disponibles</option>
+                <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                  No hay pacientes disponibles
+                </div>
               )}
-            </select>
+            </div>
+
+            {/* Resumen de envío */}
+            {recipients.length > 0 && (
+              <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <p className="text-sm text-green-700 dark:text-green-300">
+                  <span className="font-medium">Resumen:</span> El email se enviará a {recipients.length} destinatario{recipients.length !== 1 ? 's' : ''}
+                </p>
+              </div>
+            )}
           </div>
         </section>
 
