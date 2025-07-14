@@ -76,8 +76,8 @@ export default function TherapyServices() {
             hover:flex-[1.2] hover:shadow-[0_7px_29px_0px_rgba(99,74,226,0.2)]
             md:w-auto w-full md:hover:flex-[1.2] rounded-3xl sm:rounded-none"
                 >
-                  <div className="pl-scv3 flex gap-x-scv3 items-center sm:block">
-                    <div className="flex flex-col items-end mb-[25px] mt-scv4 mr-scv4">
+                  <div className="pl-2 flex gap-x-3 items-center sm:block">
+                    <div className="flex flex-col items-end mb-3 mt-2 mr-3">
                       <Image
                         src={service.icon}
                         alt={service.alt}
@@ -93,7 +93,7 @@ export default function TherapyServices() {
                     />
                   </div>
 
-                  <div className="flex flex-col items-end mt-auto mb-5">
+                  <div className="flex flex-col items-end mt-auto mb-3 sm:mb-5">
                     <button
                       onClick={() => router.push(`/servicios${service.id}`)}
                       className="group flex items-center space-x-2 text-sm hover:text-purple-200 transition-colors"
