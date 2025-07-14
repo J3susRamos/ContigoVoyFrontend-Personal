@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   description:
     "En Contigo Voy te escuchamos, llena nuestro formulario de contacto y da el primer paso hacia tu bienestar con un equipo psicológico que te acompaña siempre",
   authors: [{ name: "Contigo Voy" }],
-  viewport: "width=device-width, initial-scale=1",
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },

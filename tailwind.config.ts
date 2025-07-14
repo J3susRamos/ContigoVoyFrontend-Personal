@@ -98,7 +98,6 @@ export default {
                 'scv18': '1280px'
             },
 
-
         },
         screens: {
             'mw': '400px',
