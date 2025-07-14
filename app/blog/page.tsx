@@ -20,26 +20,6 @@ export default  function BlogPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "Blog | Centro Psicológico Contigo Voy";
-
-    const metaDescription = document.querySelector("meta[name='description']");
-
-    if (metaDescription) {
-      metaDescription.setAttribute(
-        "content",
-
-        " En el Blog de Contigo Voy encontrarás inspiración para transformar tu vida. Desde como sanar emocionalmente hasta artículos que te harán vivir con conciencia."
-      );
-    } else {
-      const meta = document.createElement("meta");
-
-      meta.name = "description";
-
-      meta.content =
-        " En el Blog de Contigo Voy encontrarás inspiración para transformar tu vida. Desde como sanar emocionalmente hasta artículos que te harán vivir con conciencia.";
-
-      document.head.appendChild(meta);
-    }
     async function fetchData() {
       try {
         const dato = await BlogsWebSite();

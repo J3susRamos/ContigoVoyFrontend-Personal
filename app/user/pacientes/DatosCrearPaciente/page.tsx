@@ -15,7 +15,8 @@ import FormField from "@/components/ui/Form/FormField";
 import FormFieldSelect from "@/components/ui/Form/FormFieldSelect";
 import HeaderUser from "@/components/User/HeaderUser";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
+import Link from "next/link";
 
 const defaultValues = {
   nombre: "",
@@ -276,6 +277,14 @@ export default function App() {
                   </div>
                 )}
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                <button
+                  type="button"
+                  className="absolute top-2 right-2 bg-white/80 dark:bg-white/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-100 transition-colors"
+                  onClick={() => setBase64Image('')}
+                  aria-label="Eliminar imagen"
+                  >
+                  <X className="w-5 h-5 text-primary dark:bg-text-primary" />
+                </button>
               </div>
             </div>
           </div>
@@ -325,7 +334,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="flex justify-center w-full p-4 mt-6">
+        <div className="flex justify-center w-full p-4 mt-6 gap-6">
           <button
             type="submit"
             disabled={isSubmitting}
@@ -333,6 +342,12 @@ export default function App() {
           >
             {isSubmitting ? "Enviando..." : "Registrar"}
           </button>
+          <Link
+          href="/user/pacientes/"
+          className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+        >
+          Volver
+        </Link>
         </div>
       </form>
     </div>

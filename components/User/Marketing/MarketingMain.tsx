@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // ✅ Importar useRouter
 import { UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
-import Image from "next/image";
+
 
 const EmailMarketingPage = () => {
   const router = useRouter(); // ✅ Instanciar el router
@@ -53,9 +53,9 @@ const EmailMarketingPage = () => {
       </div>      {/* Contenido principal */}
       <div className="flex-1 px-4 md:px-8 pb-8 flex items-center">
         <div className="max-w-7xl mx-auto bg-background dark:bg-background rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden w-full">
-          <div className="flex flex-col lg:flex-row h-[500px] lg:h-[450px]">
+          <div className="flex flex-col lg:flex-row h-auto min-h-[500px]">
             {/* Columna izquierda */}
-            <div className="w-full lg:w-1/2 flex flex-col items-start justify-center p-8 lg:p-12">
+            <div className="w-full lg:w-1/2 flex flex-col items-start justify-center p-4 sm:p-8 lg:p-12">
               <div className="w-full max-w-lg">
                 <h2 className="text-3xl lg:text-5xl font-bold text-primary dark:text-primary mb-6 leading-tight">
                   ¡Crea tu primera campaña email marketing!
@@ -74,19 +74,17 @@ const EmailMarketingPage = () => {
             </div>
 
             {/* Columna derecha */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center relative p-8 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
-              <div className="bg-background dark:bg-gray-800 p-6 rounded-xl shadow-xl w-full max-w-md relative border border-gray-200 dark:border-gray-700">                <div className="mb-6 flex justify-center">
-                  <Image
-                    width={200}
-                    height={200}
+            <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900">
+              <div className="bg-background dark:bg-gray-800 p-4 sm:p-6 rounded-xl shadow-xl w-full max-w-md border border-gray-200 dark:border-gray-700 flex flex-col items-center">
+                <div className="mb-6 flex justify-center w-full">
+                  <img
                     src="/marketing.svg"
                     alt="Campaña Email Marketing"
-                    className="w-[300px] h-auto rounded-md"
-                    priority
+                    className="w-full max-w-[220px] h-auto rounded-md mx-auto"
+                    loading="lazy"
                   />
                 </div>
-
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-4 w-full">
                   <h3 className="font-bold text-primary dark:text-primary text-xl">
                     📢 ¡No dejes pasar esta oportunidad!
                   </h3>
@@ -95,9 +93,10 @@ const EmailMarketingPage = () => {
                     🎯 Únete hoy y accede a nuestra oferta exclusiva.
                   </p>
                 </div>
-
+              </div>
+              <div className="flex justify-center w-full mt-6">
                 <button
-                  className="absolute left-1/2 -translate-x-1/2 -bottom-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center shadow-xl hover:shadow-2xl transform hover:scale-105 group"
+                  className="w-full max-w-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center shadow-xl hover:shadow-2xl transform hover:scale-105 group"
                   onClick={() => router.push("/user/marketing/crear")}
                 >
                   <span className="mr-2">Comenzar</span>
