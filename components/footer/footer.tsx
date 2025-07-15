@@ -24,35 +24,43 @@ export default function Footer() {
       <div className="lg:max-w-7xl p-10 mx-auto">
         {/* Contenido Principal */}
         <div className="flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
-          {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 }}
-            className="flex-shrink-0"
-          >
-            <Image
-              src="/LogoBlanco.webp"
-              title="Contigo Voy - Terapia Psicológica Centro Psicológico"
-              alt="Confidencialidad Contigo Voy Terapia Psicológica Online"
-              width={150}
-              height={60}
-            />
-          </motion.div>
+          {/* Logo centrado con redes */}
+          <div className="flex flex-col items-center justify-center text-center w-full md:w-auto space-y-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex-shrink-0"
+            >
+              <Image
+                src="/LogoBlanco.webp"
+                title="Contigo Voy - Terapia Psicológica Centro Psicológico"
+                alt="Confidencialidad Contigo Voy Terapia Psicológica Online"
+                width={150}
+                height={60}
+              />
+            </motion.div>
 
-          {/* Sección de Enlaces */}
+            {/* Redes sociales debajo del logo */}
+            <div className="mt-2 scale-75">
+              <RedesSociales />
+            </div>
+          </div>
+
+          {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h3 className="text-xl font-semibold mb-5">Enlaces</h3>
-            <div className="grid grid-cols-2 lg:gap-20">
+            <h3 className="text-2xl font-semibold mb-4 text-white">Enlaces</h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
               {/* Columna izquierda */}
-              <ul className="space-y-5">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-white">
                 {leftLinks.map((link) => (
                   <li key={link.text}>
                     <Link
                       href={link.href}
-                      passHref 
+                      passHref
                       legacyBehavior
-                      className="text-purple-100 hover:text-white transition-colors duration-500 text-sm flex items-center group relative"
+                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
                     >
                       <a title={link.title} className="relative group">
                         {link.text}
@@ -64,14 +72,14 @@ export default function Footer() {
               </ul>
 
               {/* Columna derecha */}
-              <ul className="space-y-5">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-white">
                 {rightLinks.map((link) => (
                   <li key={link.text}>
                     <Link
                       href={link.href}
-                      passHref 
+                      passHref
                       legacyBehavior
-                      className="text-purple-100 hover:text-white transition-colors duration-500 text-sm flex items-center group relative"
+                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
                     >
                       <a title={link.title} className="relative group whitespace-nowrap">
                         {link.text}
@@ -84,69 +92,52 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Redes Sociales y Contacto */}
+          {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
-            {/* Redes Sociales */}
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-xl font-semibold text-white mb-4">
-                Síguenos
-              </h3>
-              <div className="">
-                <RedesSociales/>
-              </div>
-            </div>
+              <h3 className="text-2xl font-semibold mb-4 text-white">Contacto</h3>
 
-            <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-xl font-semibold text-white mb-4">
-                Contacto
-              </h3>
+              <div className="flex flex-col space-y-3 items-start">
+                {/* Perú */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-start">
+                  <a
+                    href="https://w.app/dvwynv"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1 border border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                  >
+                    <span className="text-white text-[10px]">Perú</span>
+                    <Image
+                      src="/WSP.webp"
+                      title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
+                      alt="WhatsApp Terapia Peru Psicológica Online"
+                      width={14}
+                      height={14}
+                      className="flex-shrink-0"
+                    />
+                  </a>
+                  <span className="text-sm mt-1 sm:mt-0">+51 983 027 828</span>
+                </div>
 
-              <div className="flex flex-col space-y-2">
-                <div className="flex flex-col space-y-2">
-                  <div className="flex flex-col space-y-2">
-                    <div className="flex items-center gap-2">
-                      <a
-                        href="https://w.app/dvwynv"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-1 border border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors"
-                      >
-                        <span className="text-white text-[10px]">Perú</span>
-                        <Image
-                          src="/WSP.webp"
-                          title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
-                          alt="WhatsApp Terapia Peru Psicológica Online"
-                          width={14}
-                          height={14}
-                          className="flex-shrink-0"
-                        />
-                      </a>
-
-                      <span className="text-sm">+51 983 027 828</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <a
-                        href="https://w.app/qv4uqn"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-1 border border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors"
-                      >
-                        <span className="text-white text-[10px]">
-                          Argentina
-                        </span>
-                        <Image
-                          src="/WSP.webp"
-                          title="Whatsapp Terapia Psicológica Argentina Online Contigo Voy"
-                          alt="WhatsApp Terapia Argentina Psicológica Online"
-                          width={14}
-                          height={14}
-                          className="flex-shrink-0"
-                        />
-                      </a>
-                      <span className="text-sm">+54 922 130 326 75</span>
-                    </div>
-                  </div>
+                {/* Argentina */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-start">
+                  <a
+                    href="https://w.app/qv4uqn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1 border border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                  >
+                    <span className="text-white text-[10px]">Argentina</span>
+                    <Image
+                      src="/WSP.webp"
+                      title="Whatsapp Terapia Psicológica Argentina Online Contigo Voy"
+                      alt="WhatsApp Terapia Argentina Psicológica Online"
+                      width={14}
+                      height={14}
+                      className="flex-shrink-0"
+                    />
+                  </a>
+                  <span className="text-sm mt-1 sm:mt-0">+54 922 130 326 75</span>
                 </div>
               </div>
             </div>
