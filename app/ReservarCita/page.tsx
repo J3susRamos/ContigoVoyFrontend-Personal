@@ -54,12 +54,10 @@ export default function BlogPage() {
         genero: filters.genero || [],
         idioma: filters.idioma || [],
         enfoque: filters.enfoque || [],
-      };
-      const result = await GetPsicologos(normalizedFilters, searchTerm, page, perPage);
-      
-      if (result) {
-        setPsicologos(result.data);
-        setLastPage(result.pagination.last_page);
+      };      const result = await GetPsicologos(normalizedFilters, searchTerm, page, perPage);
+        if (result && result.result) {
+        setPsicologos(result.result.data);
+        setLastPage(result.result.pagination.last_page);
       } else {
         setPsicologos([]);
         setError("No se pudieron cargar los psicólogos. Intenta nuevamente.");

@@ -46,10 +46,9 @@ export default function Psicologos() {
             <p>{error}</p>
           </div>
       )}
-      
-      <div className="mx-5">
-        {data?.result && data.result.length > 0 ? (
-          <AllPsicologos Data={data.result} />
+        <div className="mx-5">
+        {data?.result?.data && data.result.data.length > 0 ? (
+          <AllPsicologos Data={data.result.data} />
         ) : (
           <div className="text-center py-8 text-primary dark:text-primary-foreground">
             <p>No se encontraron psicólogos</p>

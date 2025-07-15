@@ -198,8 +198,15 @@ export interface PsicologoApiResponse {
   status_code: number;
   status_message: string;
   description: string;
-  errorBag: never[];
-  result: PsicologoPreviewData[];
+  errorBag: never[];  result: {
+    data: PsicologoPreviewData[];
+    pagination: {
+      current_page: number;
+      per_page: number;
+      total: number;
+      last_page: number;
+    };
+  };
 }
 
 export interface PsicologoApiResponseAlone {
