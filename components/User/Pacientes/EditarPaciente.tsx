@@ -338,6 +338,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
           </div>
           <div className="mt-4">
             <div className="flex gap-2 mt-2 items-end justify-center">
+            <div className="flex gap-2 mt-2 items-end justify-center">
             <select
               value={prefix}
               onChange={(e) => setPrefix(e.target.value)}
@@ -360,6 +361,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
                 placeholder="Ejemplo 999999999"
                 className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
                 />
+            </div>
             </div>
             </div>
           </div>
