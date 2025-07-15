@@ -11,7 +11,7 @@ interface Props {
   currentPage: number;
   setPage: Dispatch<SetStateAction<number>>;
   data: PsicologoPreviewData[];
-  onFilterChange: (filters: PsicologoFilters) => void;
+  onFilterChange: (filters: PsicologoFilters, searchTerm?: string) => void;
   lastPage: number;
 }
 
@@ -31,14 +31,10 @@ export default function ReservarComponents({
     enfoque: [] as string[],
   });
 
-  useEffect(() => {
-    onFilterChange(filters);
-  }, [filters, onFilterChange]);
+useEffect(() => {
+  onFilterChange(filters);
+}, [filters, onFilterChange]);
   
-  useEffect(() => {
-    setSearchTerm(searchTerm);
-  }, [searchTerm, setSearchTerm]);
-
   return (
     <div className="w-full">
       <div className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
@@ -94,10 +90,12 @@ export default function ReservarComponents({
       {/* Contenido principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar con filtros */}{" "}
-          <div className="lg:w-80 flex-shrink-0">
+          {/* Sidebar con filtros */}{" "}          <div className="lg:w-80 flex-shrink-0">
             <ReservarComponentSearch
-              onSearchChange={(term) => setSearchTerm(term)}
+              onSearchChange={(term) => {
+                setSearchTerm(term);
+                onFilterChange(filters, term);
+              }}
               setFilters={setFilters}
             />
           </div>
