@@ -156,7 +156,7 @@ export default function ChooseUs() {
             <div className="embla" ref={emblaRef}>
               <div className="embla__container">
                 {features.map((feature, index) => (
-                  <div className="grid max-sm:grid-cols-2 grid-cols-2 embla__slide" key={index}>
+                  <div className="grid max-sm:grid-cols-2 grid-cols-2 max-sm:gap-x-4 sm:gap-x-0 embla__slide" key={index}>
                     <div className="flex-1 md:pl-40">
                         <div className="flex flex-col justify-center p-6">
                           <div className="flex flex-col items-center justify-center w-28 h-28 rounded-full bg-[#9494F3] backdrop-blur-sm transition-all duration-300">
@@ -168,7 +168,7 @@ export default function ChooseUs() {
                         <h3 className="text-cv4 font-bold text-white tracking-normal pb-3 ml-5 mr-3 leading-5">
                           <span className="block">{feature.title}</span>
                         </h3>
-                        <p className="text-cv3 leading-[20px] text-white justify-center tracking-normal font-light ml-5 mr-3">
+                        <p className="hidden lg:block text-cv3 leading-[20px] text-white justify-center tracking-normal font-light ml-5 mr-3">
                           {feature.description}
                         </p>
                     </div>

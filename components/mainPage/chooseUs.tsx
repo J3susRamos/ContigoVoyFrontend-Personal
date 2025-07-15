@@ -125,7 +125,7 @@ export default function ChooseUs() {
         <h2 className="text-cv5 sm:text-cv7 font-bold text-title lg:mb-scv3">
           ¿Por qué elegirnos?
         </h2>
-        <p className="text-cv3 sm:text-cv5 px-[30px] max-w-[800px] mx-auto leading-relaxed text-[#634AE2]">
+        <p className="hidden sm:block text-cv3 sm:text-cv5 px-[30px] max-w-[800px] mx-auto leading-relaxed text-[#634AE2]">
           En Contigo Voy, te ofrecemos atención psicológica online que se adapta
           a ti, brindándote el apoyo necesario para afrontar los desafíos
           diarios con mayor fortaleza y equilibrio emocional.
