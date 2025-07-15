@@ -86,8 +86,8 @@ export default function MainSlider() {
   };
 
   return (
-    <div className="relative ">
-      <div className="embla" ref={emblaRef}>
+    <div className="relative">
+      <div className="embla" ref={emblaRef} role="region" aria-label="Carrusel de servicios">
         <div className="embla__container">
           {sections.map((item, index) => (
             <div className="relative embla__slide overflow-hidden" key={index}>
@@ -164,15 +164,23 @@ export default function MainSlider() {
       </div>
 
       <div className="lg:block hidden">
-        <div className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
+        <div 
+          className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2"
+          role="tablist"
+          aria-label="Navegación del carrusel"
+        >
           {sections.map((_, index) => (
             <button
               key={index}
               onClick={() => scrollTo(index)}
               aria-label={`Ir a la sección ${index + 1}`}
+              aria-current={selectedIndex === index ? "true" : "false"}
+              role="tab"
+              aria-selected={selectedIndex === index}
+              tabIndex={selectedIndex === index ? 0 : -1}
               style={{ willChange: 'background-color' }} // Optimización GPU
               className={`
-            w-3 h-3 rounded-full transition-all duration-300 transform-gpu
+            w-3 h-3 rounded-full transition-all duration-300 transform-gpu focus:outline-none focus:ring-2 focus:ring-[#634AE2] focus:ring-offset-2
             ${selectedIndex === index ? "bg-[#634AE2]" : "bg-white"}
           `}
             />
