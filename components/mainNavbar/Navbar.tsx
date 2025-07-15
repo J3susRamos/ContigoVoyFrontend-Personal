@@ -3,8 +3,55 @@ import Link from "next/link";
 import React from "react";
 import { DesktopNav } from "./DesktopNav";
 import Image from "next/image";
+import { MobileNav } from "./MobileNav";
+import { NavLink, NavItem } from "./types/navBar.types";
 
-const navItems = [
+const serviciosLinks: NavLink[] = [
+  { name: "Terapia para Niños", link: "/servicios/terapia/infantes" },
+  {
+    name: "Terapia para Adolescentes",
+    link: "/servicios/terapia/adolescentes",
+  },
+  { name: "Terapia para Adultos", link: "/servicios/terapia/adultos" },
+  { name: "Terapia para Parejas", link: "/servicios/terapia/parejas" },
+  { name: "Terapia Familiar", link: "/servicios/terapia/familia" },
+  { name: "Terapia Empresarial", link: "/servicios/terapia/empresarial" },
+];
+
+const contigoLinks: NavLink[] = [
+  { name: "Inicio", link: "/" },
+  { name: "Sobre nosotros", link: "/sobreNosotros" },
+  { name: "Contáctanos", link: "/contactanos" },
+  { name: "Preguntas frecuentes", link: "/PreguntasFrecuentes" },
+];
+
+const navItemsDesktop : NavItem[] = [
+  {
+    name: "ContigoVoy",
+    link: "/",
+    dropList: contigoLinks
+  },
+  {
+    name: "Servicios",
+    link: "/#",
+    dropList: serviciosLinks
+  },
+  {
+    name: "Blog",
+    link: "/blog",
+  },
+  {
+    name: "Reservar Cita",
+    link: "/ReservarCita",
+  },
+  {
+    name: "Iniciar Sesión",
+    link: "/login",
+    isButton: true,
+  },
+];
+
+const navItemsMobil : NavItem[]= [
   {
     name: "Inicio",
     link: "/",
@@ -61,7 +108,10 @@ const Navbar = () => {
           />
         </Link>
         <div className="flex items-center gap-x-5">
-          <DesktopNav navItems={navItems} />
+          <DesktopNav navItems={navItemsDesktop} />
+          <div className="lg:hidden ">
+              <MobileNav navItems={navItemsMobil} />
+          </div>
         </div>
       </div>
     </nav>
