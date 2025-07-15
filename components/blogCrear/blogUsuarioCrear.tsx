@@ -735,7 +735,7 @@ export default function BlogUsuarioCrear() {
                                     className="bg-[#634AE2] text-white"
                                     size="sm"
                                 >
-                                    Agregar imagen por URL
+                                    Agregar imagen por URL 
                                 </Button>
                             )}
 
