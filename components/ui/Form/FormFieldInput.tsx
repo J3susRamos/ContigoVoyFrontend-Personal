@@ -37,8 +37,8 @@ const FormFieldInput = <T extends FieldValues>({
             readOnly = {readOnly}
             maxLength= {maxLenght}
             minLength= {minLenght}
-            className="w-full pl-4 pr-3 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none bg-[#F3F3F3] dark:bg-[#1e1e23] dark:text-[#babbfe]"
-          />
+            className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+            />
         )}
         {type === "number" && (
           <input
@@ -46,8 +46,8 @@ const FormFieldInput = <T extends FieldValues>({
             min={0}
             disabled = {disabled}
             {...(register && name && register(name, { valueAsNumber: true }))}
-            className="w-full pl-4 pr-3 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none bg-[#F3F3F3] dark:bg-[#1e1e23] placeholder:text-[#babbfe] dark:text-[#babbfe]"
-          />
+            className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+            />
         )}
     </FormField>
   );

@@ -11,7 +11,7 @@ interface Props<T extends FieldValues> {
 const FormField = <T extends FieldValues>({errors, name, label, children}: Props<T>) => {
   return (
     <div className="space-y-2">
-      <label className="block text-center text-md font-semibold dark:text-[#babbfe]">{label}</label>
+      <label className="block text-center text-md font-semibold">{label}</label>
       {children}
 
         {errors?.[name]?.message && (
