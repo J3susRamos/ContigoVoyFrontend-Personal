@@ -7,7 +7,6 @@ export const metadata: Metadata = {
   description:
     "Somos un equipo de psicólogos especializados en terapia online donde encontrarás un espacio seguro y confidencial. Tu salud mental es nuestra prioridad. ",
   authors: [{ name: "Contigo Voy" }],
-  viewport: "width=device-width, initial-scale=1",
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },

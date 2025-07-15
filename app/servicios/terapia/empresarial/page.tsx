@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description:
     "Reduce el estrés y mejora el clima laboral. Terapia empresarial online para líderes y equipos. Más productividad y bienestar emocional. Basta de burnout.",
   authors: [{ name: "Contigo Voy" }],
-  viewport: "width=device-width, initial-scale=1",
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },

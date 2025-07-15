@@ -38,12 +38,12 @@ export function ThemeToggle() {
         />
 
         <span
-          className={`absolute h-[33px] cursor-pointer top-0 left-0 right-0 bottom-0 transition-all duration-1500 rounded-full ${
+          className={`absolute h-[33px] cursor-pointer top-0 left-0 right-0 bottom-0 transition-all duration-1500 rounded-md ${
             theme === "light" ? "bg-[#9494F3]" : "bg-[#9494F3]"
           }`}
         >
           <span
-            className={`absolute h-[33px] w-[33px] bg-[#634AE2] rounded-full transition-all duration-1500 ${
+            className={`absolute h-[33px] w-[33px] bg-[#634AE2] rounded-md transform transition-all duration-150 ${
               theme === "light" ? "translate-x-8" : "translate-x-0"
             }`}
           ></span>

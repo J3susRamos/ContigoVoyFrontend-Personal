@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   description:
     "Terapia para adolescentes online con psicólogos expertos. Mejora autoestima, manejo emocional, habilidades sociales y orientación vocacional segura.",
   authors: [{ name: "Contigo Voy" }],
-  viewport: "width=device-width, initial-scale=1",
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
