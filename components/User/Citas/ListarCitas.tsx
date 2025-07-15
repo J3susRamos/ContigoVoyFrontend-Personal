@@ -154,42 +154,49 @@ const ListarCitas = ({
     [cookies]
   );
 
-  const handleDelete = async (idCita: number) => {
-    setIsDeleting(true);
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/${idCita}`;
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const citaData = await response.json();
+const handleDelete = async (idCita: number) => {
+  setIsDeleting(true);
+  try {
+    const cookies = parseCookies();
+    const token = cookies["session"];
+    const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/${idCita}`;
+    
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      if (citaData.state === 2) {
-        showToastFunction("success", "Cita eliminada correctamente");
-        await handleGetCitas({ showToast: false });
-        return true;
-      } else {
-        const errorMessage =
-          citaData.state === 1
-            ? citaData.result.status_message ||
-              "Error de conexión. Intenta nuevamente."
-            : "Error de conexión. Intenta nuevamente.";
-        showToastFunction("error", errorMessage);
-        return false;
-      }
-    } catch (error) {
-      console.error(error);
-      showToast("error", "Error de conexión. Intenta nuevamente");
-    } finally {
-      setIsDeleting(false);
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+      showToastFunction("error", "Error al eliminar la cita");
+      return false;
     }
-  };
+
+    const citaData = await response.json();
+    console.log("Delete response:", citaData);
+
+    // Update this condition to match your Laravel response structure
+    if (citaData.status_code === 200) {
+      showToastFunction("success", "Cita eliminada correctamente");
+      await handleGetCitas({ showToast: false });
+      return true;
+    } else {
+      const errorMessage = citaData.status_message || "Error de conexión. Intenta nuevamente.";
+      showToastFunction("error", errorMessage);
+      return false;
+    }
+  } catch (error) {
+    console.error("Delete error:", error);
+    showToast("error", "Error de conexión. Intenta nuevamente");
+    return false;
+  } finally {
+    setIsDeleting(false);
+  }
+};
 
   // Handle edit function
   const handleEdit = (cita: Citas) => {
