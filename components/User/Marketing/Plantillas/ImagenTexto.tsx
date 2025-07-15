@@ -208,21 +208,21 @@ const EmailMarketingEditor = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center space-x-3">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-            Email marketing
-          </h1>
+      {/* Navbar */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 border-b border-gray-200 dark:border-gray-700">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">Email marketing</h1>
+        <div className="mt-2 sm:mt-0">
+          <CerrarSesion />
         </div>
-        <CerrarSesion />
       </div>
 
-      <div className="flex text-center py-6 items-center max-w-[600px]">
+      {/* Título */}
+      <div className="flex gap-4 text-center py-6 items-center max-w-[600px] pl-4">
         <ArrowLeft
-          className="w-6 h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
+          className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 dark:text-gray-300 cursor-pointer hover:text-gray-800 dark:hover:text-gray-100"
           onClick={() => handleRetroClean()}
         />
-        <h2 className="text-3xl font-bold text-purple-400">Edita el email</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-purple-400">Edita el email</h2>
       </div>
 
 
@@ -232,39 +232,44 @@ const EmailMarketingEditor = () => {
         </div>
       )}
 
-      <div className="bg-primary text-white px-6 py-4">
-        <div className="flex justify-center items-center">
+      {/* Botones */}
+      <div className="bg-primary text-white dark:bg-purple-700 px-4 sm:px-6 py-3 sm:py-4 mb-4">
+        <div className="flex justify-center items-center gap-3 sm:gap-4">
           <button
             onClick={() => setShowPreview(!showPreview)}
-            className="flex items-center space-x-2 bg-primary px-4 py-2 rounded hover:bg-primary transition-colors"
+            className="flex items-center space-x-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded transition-all duration-300 bg-[#8338ea] dark:bg-purple-500 hover:scale-110 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/30 dark:hover:shadow-purple-600/30"
           >
-            <Eye className="w-4 h-4" />
-            <span>Pre visualización</span>
+            <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-sm sm:text-base">Pre visualización</span>
           </button>
         </div>
       </div>
 
-      <div className="flex">
-        <div className="flex-1 p-6">
-          <div className="bg-gray-800 rounded-lg min-h-[500px] p-6 relative">
+      {/* Preview - Content */}
+      <div className="flex flex-col lg:flex-row min-h-screen">
+        {/* Área principal del editor */}
+        <div className="flex-1 p-3 sm:p-4 lg:p-6">
+          <div className="bg-gray-800 rounded-lg min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] p-3 sm:p-4 lg:p-6 relative">
             {showPreview ? (
-              <div className="bg-white rounded-lg p-6 w-full">
+              <div className="bg-white rounded-lg p-3 sm:p-4 lg:p-6 w-full">
                 {emailBlocks.map(block => (
                   <div key={block.id} className="mb-4">
                     {block.type === 'divider' ? (
-                      <hr className="border-t border-gray-300 my-6" />
+                      <hr className="border-t border-gray-300 my-4 sm:my-6" />
                     ) : block.type === 'image' && block.imageUrl ? (
                       <Image
                         width={800}
                         height={200}
                         src={block.imageUrl}
                         alt="Imagen de la plantilla"
-                        className="w-full h-auto max-h-[300px] object-cover rounded mb-4"
+                        className="w-full h-auto max-h-[200px] sm:max-h-[300px] object-cover rounded mb-4"
                       />
                     ) : (
                       <p
-                        className={`leading-relaxed ${block.type === 'header' ? 'text-2xl font-bold' : 'text-base'
-                          } text-black`}
+                        className={`leading-relaxed ${block.type === 'header'
+                            ? 'text-xl sm:text-2xl font-bold'
+                            : 'text-sm sm:text-base'
+                          } text-black break-words`}
                         style={{
                           fontWeight: block.styles.bold ? 'bold' : 'normal',
                           fontStyle: block.styles.italic ? 'italic' : 'normal',
@@ -277,11 +282,11 @@ const EmailMarketingEditor = () => {
                 ))}
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {emailBlocks.map(block => (
                   <div
                     key={block.id}
-                    className={`relative bg-gray-700 rounded-lg p-4 cursor-pointer transition-all ${selectedBlock === block.id ? 'ring-2 ring-blue-500' : 'hover:bg-gray-600'
+                    className={`relative bg-gray-700 rounded-lg p-3 sm:p-4 cursor-pointer transition-all ${selectedBlock === block.id ? 'ring-2 ring-blue-500' : 'hover:bg-gray-600'
                       }`}
                     onClick={() => setSelectedBlock(block.id)}
                   >
@@ -300,7 +305,7 @@ const EmailMarketingEditor = () => {
                               )
                             )
                           }
-                          className="bg-gray-600 text-white p-2 rounded w-full"
+                          className="bg-gray-600 text-white p-2 rounded w-full text-sm"
                         />
                         <input
                           type="file"
@@ -311,10 +316,8 @@ const EmailMarketingEditor = () => {
                               try {
                                 // Convertir la imagen a WebP
                                 const webpBlob = await convertImageToWebP(file);
-
                                 // Convertir el blob WebP a base64
                                 const base64 = await convertToBase64(webpBlob);
-
                                 // Actualizar el estado con la imagen convertida
                                 setEmailBlocks(prev =>
                                   prev.map(b =>
@@ -328,18 +331,16 @@ const EmailMarketingEditor = () => {
                               }
                             }
                           }}
-                          className="bg-gray-600 text-white p-2 rounded w-full"
+                          className="bg-gray-600 text-white p-2 rounded w-full text-sm"
                         />
-
                         {block.imageUrl && (
                           <Image
                             width={500}
                             height={200}
                             src={block.imageUrl}
                             alt="Imagen de la plantilla"
-                            className="max-w-full h-auto max-h-[300px] object-cover rounded mb-4"
+                            className="max-w-full h-auto max-h-[200px] sm:max-h-[300px] object-cover rounded mb-4"
                           />
-
                         )}
                       </div>
                     ) : (
@@ -347,12 +348,12 @@ const EmailMarketingEditor = () => {
                         <textarea
                           value={block.content}
                           onChange={(e) => updateBlockContent(block.id, e.target.value)}
-                          className="bg-gray-600 text-white p-2 rounded w-full resize-none"
+                          className="bg-gray-600 text-white p-2 rounded w-full resize-none text-sm"
                           placeholder={block.type === 'header' ? 'Escribe un encabezado' : 'Escribe tu texto'}
                           rows={block.type === 'header' ? 2 : 3}
                         />
                         {selectedBlock === block.id && (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <button
                               onClick={() => updateBlockStyle(block.id, 'bold', !block.styles.bold)}
                               className={`px-2 py-1 rounded text-white ${block.styles.bold ? 'bg-blue-500' : 'bg-gray-600'}`}
@@ -369,7 +370,7 @@ const EmailMarketingEditor = () => {
                               type="color"
                               value={block.styles.color}
                               onChange={(e) => updateBlockStyle(block.id, 'color', e.target.value)}
-                              className="w-8 h-8 p-0 border-none cursor-pointer"
+                              className="w-8 h-8 p-0 border-none cursor-pointer rounded"
                               title="Color del texto"
                             />
                             <button
@@ -377,7 +378,7 @@ const EmailMarketingEditor = () => {
                                 e.stopPropagation();
                                 deleteBlock(block.id);
                               }}
-                              className="ml-auto text-red-400 hover:text-red-300"
+                              className="ml-auto text-red-400 hover:text-red-300 text-xl"
                               title="Eliminar bloque"
                             >
                               ×
@@ -388,73 +389,74 @@ const EmailMarketingEditor = () => {
                     )}
                   </div>
                 ))}
-
               </div>
             )}
           </div>
         </div>
 
-        <div className="w-80 bg-gray-50 dark:bg-gray-800 p-4 border-l border-gray-200 dark:border-gray-700">
-          {/* Botones de creación */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
+        {/* Panel lateral - Responsive */}
+        <div className="w-full lg:w-80 bg-gray-50 dark:bg-gray-800 p-3 sm:p-4 border-t lg:border-t-0 lg:border-l border-gray-200 dark:border-gray-700">
+
+          {/* Botones de creación - Grid responsive */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
             <button
               onClick={addBlock}
               disabled={emailBlocks.length >= MAX_BLOCKS}
-              className={`flex flex-col items-center p-4 rounded-lg shadow border
-                ${emailBlocks.length >= MAX_BLOCKS ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-700 hover:shadow-md'}
-              `}
+              className={`flex flex-col items-center p-3 sm:p-4 rounded-lg shadow border text-xs sm:text-sm
+          ${emailBlocks.length >= MAX_BLOCKS ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-700 hover:shadow-md'}
+        `}
             >
-              <Type className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
-              <span className="text-sm">Texto</span>
+              <Type className="w-6 h-6 sm:w-8 sm:h-8 text-gray-600 dark:text-gray-300 mb-1 sm:mb-2" />
+              <span>Texto</span>
             </button>
 
             <button
               onClick={addHeaderBlock}
               disabled={emailBlocks.some(b => b.type === 'header') || emailBlocks.length >= MAX_BLOCKS}
-              className={`flex flex-col items-center p-4 rounded-lg shadow border
-                ${emailBlocks.some(b => b.type === 'header') || emailBlocks.length >= MAX_BLOCKS ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-700 hover:shadow-md'}
-              `}
+              className={`flex flex-col items-center p-3 sm:p-4 rounded-lg shadow border text-xs sm:text-sm
+          ${emailBlocks.some(b => b.type === 'header') || emailBlocks.length >= MAX_BLOCKS ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-700 hover:shadow-md'}
+        `}
             >
-              <Hash className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
-              <span className="text-sm">Encabezado</span>
+              <Hash className="w-6 h-6 sm:w-8 sm:h-8 text-gray-600 dark:text-gray-300 mb-1 sm:mb-2" />
+              <span>Encabezado</span>
             </button>
 
             {featureButtons.map(({ icon: Icon, label, action }, index) => (
               <button
                 key={index}
                 onClick={action}
-                className="flex flex-col items-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:shadow-md border"
+                className="flex flex-col items-center p-3 sm:p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:shadow-md border text-xs sm:text-sm"
               >
-                <Icon className="w-8 h-8 text-gray-600 dark:text-gray-300 mb-2" />
-                <span className="text-sm">{label}</span>
+                <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-gray-600 dark:text-gray-300 mb-1 sm:mb-2" />
+                <span>{label}</span>
               </button>
             ))}
-
           </div>
 
           {/* Propiedades del bloque seleccionado */}
           {selectedBlock && (
-            <div className="bg-white dark:bg-gray-700 rounded-lg p-4 mb-4 border">
-              <h3 className="font-medium mb-3 text-gray-800 dark:text-white">Propiedades</h3>
+            <div className="bg-white dark:bg-gray-700 rounded-lg p-3 sm:p-4 mb-4 border">
+              <h3 className="font-medium mb-3 text-gray-800 dark:text-white text-sm sm:text-base">Propiedades</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo de bloque</label>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo de bloque</label>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 capitalize">
                     {emailBlocks.find(b => b.id === selectedBlock)?.type}
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ID</label>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">{selectedBlock}</p>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ID</label>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-mono break-all">{selectedBlock}</p>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Botón Continuar */}
           <div className="flex justify-center">
             <button
               onClick={handleContinuar}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors font-medium"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-colors font-medium text-sm sm:text-base w-full sm:w-auto"
             >
               Continuar
             </button>
