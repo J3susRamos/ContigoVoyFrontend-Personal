@@ -201,77 +201,75 @@ export default function EditarPaciente({ id }: { id: string | null }) {
   }, [id]);
 
   return (
-    <div className="p-4 bg-[#f8f8ff] dark:bg-background min-h-screen">
+    <div className="p-4 bg-[#eaeded] dark:bg-background min-h-screen">
       {/* Header */}
-      <div className="flex flex-1 bg-[#f8f8ff] dark:bg-background w-full z-30">
-        <div>
-          <nav className="bg-[#f8f8ff] dark:bg-background rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
-            <div className="bg-[#f8f8ff] dark:bg-background flex items-end justify-end w-full">
+      <div className="w-full z-30">
+          <nav className="rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
+            <div className="flex items-end justify-end w-full">
               <div className="flex gap-x-5">
                 <CerrarSesion />
               </div>
             </div>
           </nav>
-        </div>
       </div>
 
-      <div>
-        <div className="pl-0 md:pl-12 text-3xl md:text-4xl font-bold text-primary dark:text-primary mb-6 text-center md:text-left">
+        <div className="pl-0 md:pl-12 text-3xl md:text-4xl font-bold mb-6 text-center md:text-left text-[#634AE2]">
           <h1>Datos del Paciente</h1>
         </div>
-      </div>
-      <div className="flex flex-col lg:flex-row gap-6 text-primary dark:text-primary font-bold text-normal">
+
+      <div className="flex flex-col lg:flex-row gap-6 text-[#634AE2] font-bold text-normal">
         {/* Primera columna */}
         <div className="flex-1 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Nombre</label>
+              <label className="block py-1 mt-2">Nombre</label>
               <input
                 type="text"
                 value={formData.nombre}
                 onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                className="pl-4 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               />
             </div>
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">DNI</label>
+              <label className="block py-1 mt-2">DNI</label>
               <input
                 type="text"
                 value={formData.DNI}
                 maxLength={8}
                 onChange={(e) => setFormData({ ...formData, DNI: e.target.value })}
-                className="pl-4 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               />
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Paterno</label>
+              <label className="block py-1 mt-2">Apellido Paterno</label>
               <input
                 type="text"
                 value={formData.apellidoPaterno}
                 onChange={(e) => setFormData({ ...formData, apellidoPaterno: e.target.value })}
-                className="pl-4 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               />
             </div>
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Apellido Materno</label>
+              <label className="block py-1 mt-2">Apellido Materno</label>
               <input
                 type="text"
                 value={formData.apellidoMaterno}
                 onChange={(e) => setFormData({ ...formData, apellidoMaterno: e.target.value })}
-                className="pl-4 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               />
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Fecha de nacimiento</label>
+              <label className="block py-1 mt-2">Fecha de nacimiento</label>
               <DatePicker
                 showMonthAndYearPickers
                 selectorButtonPlacement="start"
                 classNames={{
-                  inputWrapper: "bg-input dark:bg-input rounded-full border border-border dark:border-border",
+                  inputWrapper:
+                    "px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]",
                   segment: "!text-foreground dark:!text-foreground",
                 }}
                 calendarProps={{
@@ -279,11 +277,16 @@ export default function EditarPaciente({ id }: { id: string | null }) {
                     pickerMonthList: "bg-popover dark:bg-popover",
                     pickerYearList: "bg-popover dark:bg-popover",
                     pickerItem: "!text-popover-foreground dark:!text-popover-foreground",
-                    base: "bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
-                    headerWrapper: "pt-4 bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
-                    prevButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
-                    nextButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
-                    gridHeader: "bg-popover dark:bg-popover shadow-none border-b-1 border-border dark:border-border text-popover-foreground dark:text-popover-foreground",
+                    base:
+                      "bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
+                    headerWrapper:
+                      "pt-4 bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
+                    prevButton:
+                      "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                    nextButton:
+                      "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                    gridHeader:
+                      "bg-popover dark:bg-popover shadow-none border-b-1 border-border dark:border-border text-popover-foreground dark:text-popover-foreground",
                     cellButton: [
                       "data-[today=true]:bg-accent dark:data-[today=true]:bg-accent data-[selected=true] text-foreground dark:text-foreground:bg-accent dark:bg-accent rounded-full",
                       "data-[selected=true]:!bg-primary dark:data-[selected=true]:!bg-primary data-[selected=true]:!text-primary-foreground dark:data-[selected=true]:!text-primary-foreground rounded-full",
@@ -295,22 +298,22 @@ export default function EditarPaciente({ id }: { id: string | null }) {
               />
             </div>
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Ocupación</label>
+              <label className="block py-1 mt-2">Ocupación</label>
               <input
                 type="text"
                 value={formData.ocupacion}
                 onChange={(e) => setFormData({ ...formData, ocupacion: e.target.value })}
-                className="pl-4 pr-3 text-sm h-9 mt-1 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               />
             </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Estado civil</label>
+              <label className="block py-1 mt-2">Estado civil</label>
               <select
                 value={formData.estadoCivil}
                 onChange={(e) => setFormData({ ...formData, estadoCivil: e.target.value })}
-                className="font-normal pl-4 pr-3 text-base h-9 mt-1 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               >
                 <option value="">Seleccionar</option>
                 <option value="Soltero">Soltero</option>
@@ -320,11 +323,11 @@ export default function EditarPaciente({ id }: { id: string | null }) {
               </select>
             </div>
             <div className="flex-1">
-              <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Género</label>
+              <label className="block py-1 mt-2">Género</label>
               <select
                 value={formData.genero}
                 onChange={(e) => setFormData({ ...formData, genero: e.target.value })}
-                className="text-base font-normal pl-4 pr-3 h-9 mt-1 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               >
                 <option value="">Seleccionar</option>
                 <option value="Masculino">Masculino</option>
@@ -338,8 +341,8 @@ export default function EditarPaciente({ id }: { id: string | null }) {
             <select
               value={prefix}
               onChange={(e) => setPrefix(e.target.value)}
-              className="text-sm h-9 rounded-full  border border-border bg-input text-foreground px-2 dark:border-border dark:bg-input dark:text-foreground"
-            >
+              className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              >
               {countryPrefixes.map((country, index) => (
                 <option key={index} value={country.code}>
                 {country.name} ({country.code})
@@ -347,7 +350,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
               ))}
             </select>
             <div>
-              <label className="block text-center text-card-foreground dark:text-card-foreground">Celular</label>
+              <label className="block text-center">Celular</label>
               <input
                 type="text"
                 maxLength={30}
@@ -355,17 +358,17 @@ export default function EditarPaciente({ id }: { id: string | null }) {
                 value={formData.celular}
                 onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
                 placeholder="Ejemplo 999999999"
-                className="pl-4 pr-3 text-sm max-w-[400px] h-9 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
                 />
             </div>
             </div>
           </div>
           {/* Imagen */}
-          <h1 className="text-center pt-4 pb-2 text-card-foreground dark:text-card-foreground">
+          <h1 className="text-center pt-4 pb-2">
             Imagen
           </h1>
-          <div className="w-full flex flex-col gap-2 m-auto items-center">
-            <div className="relative border border-border dark:border-border rounded-lg h-[220px] w-[220px] bg-input flex justify-center items-center cursor-pointer overflow-hidden">
+          <div className="w-full flex flex-col gap-2 m-auto items-center ">
+            <div className="relative border-2 border-[#634AE2] rounded-lg h-[220px] w-[220px] bg-[#F3F3F3] dark:bg-input flex justify-center items-center cursor-pointer overflow-hidden">
               {base64Image ? (
                 <Image
                   src={base64Image}
@@ -377,7 +380,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
               ) : (
                 <div className="flex flex-col items-center">
                   <Plus width={40} height={40} strokeWidth={2} className="text-card-foreground dark:text-card-foreground" />
-                  <span className="text-card-foreground dark:text-card-foreground text-sm mt-2">
+                  <span className="text-sm mt-2">
                     Subir foto del paciente
                   </span>
                 </div>
@@ -401,20 +404,20 @@ export default function EditarPaciente({ id }: { id: string | null }) {
         </div>
 
         {/* Segunda columna */}
-        <div className="flex-1 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl mt-6 lg:mt-0">
-          <div className="mb-4">
-            <label className="block text-center text-card-foreground dark:text-card-foreground">Correo electrónico</label>
+        <div className="flex-1 bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl text-[#634AE2] font-bold text-normal">
+          <div>
+            <label className="block text-center">Correo electrónico</label>
             <input
               type="text"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="pl-4 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
-            />
+              className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              />
           </div>
           <div className="flex flex-col md:flex-row pt-1 gap-4">
             {/* País */}
             <div className="flex-1 w-full">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">País</div>
+              <div className="py-1 mt-2">País</div>
               <div className="relative w-full">
                 <CountrySelect
                   value={country?.id ?? ""}
@@ -444,7 +447,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
             </div>
             {/* Departamento */}
             <div className="flex-1 w-full">
-              <div className="py-1 mt-2 text-card-foreground dark:text-card-foreground">Departamento</div>
+              <div className="py-1 mt-2">Departamento</div>
               <div className="relative w-full">
                 <StateSelect
                   value={currentState?.id ?? ""}
@@ -475,30 +478,30 @@ export default function EditarPaciente({ id }: { id: string | null }) {
             </div>
           </div>
           <div className="mt-4">
-            <label className="block py-1 mt-2 text-card-foreground dark:text-card-foreground">Dirección</label>
+            <label className="block py-1 mt-2">Dirección</label>
             <input
               type="text"
               value={formData.direccion}
               onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
-              className="pl-4 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+              className="px-4 text-sm h-9 mt-2 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
             />
           </div>
           <div className="mt-4">
-            <label className="block text-center text-card-foreground dark:text-card-foreground">Antecedentes médicos</label>
+            <label className="block text-center">Antecedentes médicos</label>
             <input
               type="text"
               value={formData.antecedentesMedicos}
               onChange={(e) => setFormData({ ...formData, antecedentesMedicos: e.target.value })}
-              className="pl-4 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+              className="px-4 text-sm h-9 mt-2 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
             />
           </div>
           <div className="mt-4">
-            <label className="block text-center text-card-foreground dark:text-card-foreground">Medicamentos prescritos</label>
+            <label className="block text-center">Medicamentos prescritos</label>
             <input
               type="text"
               value={formData.medicamentosPrescritos}
               onChange={(e) => setFormData({ ...formData, medicamentosPrescritos: e.target.value })}
-              className="pl-4 pr-3 text-sm h-9 mt-2 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+              className="px-4 text-sm h-9 mt-2 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
             />
           </div>
         </div>
@@ -507,13 +510,13 @@ export default function EditarPaciente({ id }: { id: string | null }) {
       <div className="flex flex-col md:flex-row justify-center items-center w-full p-4 mt-6 gap-4">
         <Link
           href="/user/pacientes/DetallePaciente/"
-          className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
-        >
+          className="grid place-items-center text-[#634AE2] bg-card dark:bg-card rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+          >
           Volver
         </Link>
         <button
           onClick={HandleUpdatePaciente}
-          className="text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+          className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
         >
           Actualizar
         </button>
