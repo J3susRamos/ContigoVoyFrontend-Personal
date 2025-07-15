@@ -90,10 +90,10 @@ export default function MainSlider() {
       <div className="embla" ref={emblaRef} role="region" aria-label="Carrusel de servicios">
         <div className="embla__container">
           {sections.map((item, index) => (
-            <div className="relative embla__slide overflow-hidden" key={index}>
+            <div className="relative embla__slide overflow-hidden" key={`slide-${index}`}>
               <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
-              <div className=" mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right -right-scv7">
-                <div key={index} className="h-full flex-1 relative ">
+              <div className="mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right">
+                <div className="h-full flex-1 relative">
                   <Image
                     src={item.background}
                     alt={item.alt}
@@ -106,7 +106,7 @@ export default function MainSlider() {
                   />
                 </div>
               </div>
-              <div className="mx-auto relative max-w-scv18 w-full  z-10 lg:min-h-[650px]  min-h-[340px]  md:pt-0 bg-cover flex items-center vg-left pl-[30px]">
+              <div className="mx-auto relative max-w-scv18 w-full z-10 lg:min-h-[650px] min-h-[340px] md:pt-0 bg-cover flex items-center bg-left pl-[30px]">
                 <div className="my-scv6">
                   <div
                     style={{
@@ -121,6 +121,7 @@ export default function MainSlider() {
                   <AnimatePresence mode="wait">
                     {selectedIndex === index && (
                       <motion.div
+                        key={`motion-${index}`}
                         initial={{ opacity: 0 }}
                         animate={{
                           opacity: 1,
@@ -171,7 +172,7 @@ export default function MainSlider() {
         >
           {sections.map((_, index) => (
             <button
-              key={index}
+              key={`nav-button-${index}`}
               onClick={() => scrollTo(index)}
               aria-label={`Ir a la sección ${index + 1}`}
               aria-current={selectedIndex === index ? "true" : "false"}
