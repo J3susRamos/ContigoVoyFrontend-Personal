@@ -17,6 +17,7 @@ import HeaderUser from "@/components/User/HeaderUser";
 import { useRouter } from "next/navigation";
 import { Plus, X } from "lucide-react";
 import Link from "next/link";
+import { countryPrefixes } from "@/utils/CountryPrefixes";
 
 const defaultValues = {
   nombre: "",
@@ -42,6 +43,7 @@ export default function App() {
   const [base64Image, setBase64Image] = useState<string | null>(null);
   const [url, setUrl] = useState("");
   const [country, setCountry] = useState<Country | null>(null);
+  const [prefix, setPrefix] = useState("+51");
 
   const {
     register,
@@ -122,7 +124,7 @@ export default function App() {
         apellidoPaterno: data.apellidoPaterno,
         apellidoMaterno: data.apellidoMaterno,
         email: data.email,
-        celular: data.celular,
+        celular: `${prefix} ${data.celular}` ,
         fecha_nacimiento: data.fecha_nacimiento,
         imagen: base64Image || url,
         genero: data.genero,
@@ -262,9 +264,20 @@ export default function App() {
                 ]}
               />
             </div>
-
-            <FormFieldInput label="Celular" name="celular" register={register} errors={errors} minLenght={3} maxLenght={30} />
-
+            <div className="flex gap-2 items-end justify-center">
+              <select
+                value={prefix}
+                onChange={e => setPrefix(e.target.value)}
+                className="pl-4 pr-3 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none font-medium bg-[#F3F3F3] dark:bg-[#1e1e23] text-[#5d23df] dark:text-[#bbbafe]"
+              >
+                {countryPrefixes.map((item, index) => (
+                  <option key={index} value={item.code}>
+                    {item.name} ({item.code}) 
+                  </option>
+                ))}
+              </select>
+              <FormFieldInput label="Celular" name="celular" register={register} errors={errors} minLenght={3} maxLenght={30} />
+            </div>
             <h1 className="text-center pt-4 pb-2 text-card-foreground dark:text-[#babbfe]">Imagen</h1>
             <div className="flex justify-center">
               <div className="relative border border-border dark:border-border rounded-lg h-[220px] w-[220px] bg-input flex justify-center items-center cursor-pointer overflow-hidden dark:bg-[#1e1e23]">
@@ -335,6 +348,12 @@ export default function App() {
         </div>
 
         <div className="flex justify-center w-full p-4 mt-6 gap-6">
+          <Link
+            href="/user/pacientes/"
+            className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+          >
+            Volver
+          </Link>
           <button
             type="submit"
             disabled={isSubmitting}
@@ -342,12 +361,6 @@ export default function App() {
           >
             {isSubmitting ? "Enviando..." : "Registrar"}
           </button>
-          <Link
-          href="/user/pacientes/"
-          className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
-        >
-          Volver
-        </Link>
         </div>
       </form>
     </div>
