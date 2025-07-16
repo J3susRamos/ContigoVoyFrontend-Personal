@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, SetStateAction } from "react";
 import ReservarComponents from "@/components/ReservarComponents";
 import { GetPsicologos } from "../apiRoutes";
 import { PsicologoFilters, PsicologoPreviewData } from "@/interface";
@@ -13,15 +13,17 @@ export default function BlogPage() {
   const [page, setPage] = useState(1);
   const [perPage] = useState(6);
   const [lastPage, setLastPage] = useState<number>(1);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleFilterChange = (newFilters: PsicologoFilters, newSearchTerm?: string) => {
-    setPage(1);
-    setFilters(newFilters);
-    if (newSearchTerm !== undefined) {
-      setSearchTerm(newSearchTerm);
-    }
-  };
+  const [error, setError] = useState<string | null>(null); const handleFilterChange = useCallback((newFilters: PsicologoFilters, newSearchTerm?: string) => {
+  setPage(1);
+  setFilters(newFilters);
+  if (newSearchTerm !== undefined) {
+    setSearchTerm(newSearchTerm);
+  }
+}, []);
+  // Función separada para cambio de página que NO resetea filtros
+  const handlePageChange = useCallback((value: SetStateAction<number>) => {
+    setPage(value);
+  }, []);
 
   useEffect(() => {
     const loadPsicologos = async () => {
@@ -30,12 +32,10 @@ export default function BlogPage() {
         genero: filters.genero || [],
         idioma: filters.idioma || [],
         enfoque: filters.enfoque || [],
-      };
-      const result = await GetPsicologos(normalizedFilters, searchTerm, page, perPage);
-      
-      if (result) {
-        setPsicologos(result.data);
-        setLastPage(result.pagination.last_page);
+      };      const result = await GetPsicologos(normalizedFilters, searchTerm, page, perPage);
+        if (result && result.result) {
+        setPsicologos(result.result.data);
+        setLastPage(result.result.pagination.last_page);
       } else {
         setPsicologos([]);
         setError("No se pudieron cargar los psicólogos. Intenta nuevamente.");
@@ -69,7 +69,7 @@ export default function BlogPage() {
           </div>
         </div>
       )}
-      {psicologos && <ReservarComponents data={psicologos} onFilterChange={handleFilterChange} currentPage={page} setPage={setPage} lastPage={lastPage} setSearchTerm={setSearchTerm} searchTerm={searchTerm}/>}
+      {psicologos && <ReservarComponents data={psicologos} onFilterChange={handleFilterChange} currentPage={page} setPage={handlePageChange} lastPage={lastPage} setSearchTerm={setSearchTerm} searchTerm={searchTerm}/>}
     </div>
   );
 }

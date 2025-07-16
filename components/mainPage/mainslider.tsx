@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { AnimatePresence, motion } from "framer-motion";
 import Autoplay from "embla-carousel-autoplay";
-import { Button } from "@heroui/react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -59,19 +59,15 @@ export default function MainSlider() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({
       stopOnInteraction: false,
-      delay: 400000,
+      delay: 4000, // 4 seconds
     }),
   ]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
   useEffect(() => {
     if (emblaApi) {
-      // Optimizar el callback para evitar forced reflow
       const onSelect = () => {
-        // Usar requestAnimationFrame para evitar blocking
-        requestAnimationFrame(() => {
-          const currentIndex = emblaApi.selectedScrollSnap();
-          setSelectedIndex(currentIndex);
-        });
+        setSelectedIndex(emblaApi.selectedScrollSnap());
       };
       
       emblaApi.on("select", onSelect);
@@ -82,24 +78,23 @@ export default function MainSlider() {
       };
     }
   }, [emblaApi]);
+
   const scrollTo = (index: number) => {
     if (emblaApi) {
-      // Usar requestAnimationFrame para evitar forced reflow
-      requestAnimationFrame(() => {
-        emblaApi.scrollTo(index);
-      });
+      emblaApi.scrollTo(index);
     }
   };
 
   return (
-    <div className="relative ">
-      <div className="embla" ref={emblaRef}>
+    <div className="relative">
+      <div className="embla" ref={emblaRef} role="region" aria-label="Carrusel de servicios">
         <div className="embla__container">
           {sections.map((item, index) => (
-            <div className="relative embla__slide overflow-hidden" key={index}>
+            <div className="relative embla__slide overflow-hidden" key={`slide-${index}`}>
               <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
-              <div className=" mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right -right-scv7">
-                <div key={index} className="h-full flex-1 relative ">                  <Image
+              <div className="mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right">
+                <div className="h-full flex-1 relative">
+                  <Image
                     src={item.background}
                     alt={item.alt}
                     title={item.title}
@@ -111,7 +106,7 @@ export default function MainSlider() {
                   />
                 </div>
               </div>
-              <div className="mx-auto relative max-w-scv18 w-full  z-10 lg:min-h-[650px]  min-h-[340px]  md:pt-0 bg-cover flex items-center vg-left pl-[30px]">
+              <div className="mx-auto relative max-w-scv18 w-full z-10 lg:min-h-[650px] min-h-[340px] md:pt-0 bg-cover flex items-center bg-left pl-[30px]">
                 <div className="my-scv6">
                   <div
                     style={{
@@ -119,12 +114,14 @@ export default function MainSlider() {
                         "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
                     }}
                     className="mr-scv6 max-w-scv13 lg:max-w-scv14 text-cv8 lg:text-cv9 leading-10 lg:leading-[60px] font-bold text-white mt-13"
-                    dangerouslySetInnerHTML={{
-                      __html: item.phrase,
-                    }}
-                  />                  <AnimatePresence mode="wait">
+                  >
+                    {item.phrase}
+                  </div>
+                  
+                  <AnimatePresence mode="wait">
                     {selectedIndex === index && (
                       <motion.div
+                        key={`motion-${index}`}
                         initial={{ opacity: 0 }}
                         animate={{
                           opacity: 1,
@@ -140,10 +137,9 @@ export default function MainSlider() {
                             willChange: 'auto', // Evitar forced reflow
                           }}
                           className="mr-scv6 max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
-                          dangerouslySetInnerHTML={{
-                            __html: item.smallPhrase,
-                          }}
-                        />
+                        >
+                          {item.smallPhrase}
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -168,15 +164,24 @@ export default function MainSlider() {
         </div>
       </div>
 
-      <div className="lg:block hidden">        <div className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2">
+      <div className="lg:block hidden">
+        <div 
+          className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2"
+          role="tablist"
+          aria-label="Navegación del carrusel"
+        >
           {sections.map((_, index) => (
             <button
-              key={index}
+              key={`nav-button-${index}`}
               onClick={() => scrollTo(index)}
               aria-label={`Ir a la sección ${index + 1}`}
+              aria-current={selectedIndex === index ? "true" : "false"}
+              role="tab"
+              aria-selected={selectedIndex === index}
+              tabIndex={selectedIndex === index ? 0 : -1}
               style={{ willChange: 'background-color' }} // Optimización GPU
               className={`
-            w-3 h-3 rounded-full transition-all duration-300 transform-gpu
+            w-3 h-3 rounded-full transition-all duration-300 transform-gpu focus:outline-none focus:ring-2 focus:ring-[#634AE2] focus:ring-offset-2
             ${selectedIndex === index ? "bg-[#634AE2]" : "bg-white"}
           `}
             />

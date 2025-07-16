@@ -18,6 +18,7 @@ import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getPaciente } from "./getPacienteData";
+import { countryPrefixes } from "@/utils/CountryPrefixes";
 
 export default function EditarPaciente({ id }: { id: string | null }) {
   const router = useRouter();
@@ -44,149 +45,6 @@ export default function EditarPaciente({ id }: { id: string | null }) {
   });
   const [prefix, setPrefix] = useState("+51");
 
-  const countryPrefixes = [
-  { name: "Afganistán", code: "+93" },
-  { name: "Albania", code: "+355" },
-  { name: "Alemania", code: "+49" },
-  { name: "Andorra", code: "+376" },
-  { name: "Angola", code: "+244" },
-  { name: "Argentina", code: "+54" },
-  { name: "Arabia Saudita", code: "+966" },
-  { name: "Argelia", code: "+213" },
-  { name: "Armenia", code: "+374" },
-  { name: "Australia", code: "+61" },
-  { name: "Austria", code: "+43" },
-  { name: "Azerbaiyán", code: "+994" },
-  { name: "Bahamas", code: "+1-242" },
-  { name: "Bangladés", code: "+880" },
-  { name: "Barbados", code: "+1-246" },
-  { name: "Bélgica", code: "+32" },
-  { name: "Belice", code: "+501" },
-  { name: "Benín", code: "+229" },
-  { name: "Bolivia", code: "+591" },
-  { name: "Bosnia y Herzegovina", code: "+387" },
-  { name: "Botsuana", code: "+267" },
-  { name: "Brasil", code: "+55" },
-  { name: "Brunéi", code: "+673" },
-  { name: "Bulgaria", code: "+359" },
-  { name: "Burkina Faso", code: "+226" },
-  { name: "Bután", code: "+975" },
-  { name: "Cabo Verde", code: "+238" },
-  { name: "Camboya", code: "+855" },
-  { name: "Camerún", code: "+237" },
-  { name: "Canadá", code: "+1" },
-  { name: "Catar", code: "+974" },
-  { name: "Chile", code: "+56" },
-  { name: "China", code: "+86" },
-  { name: "Chipre", code: "+357" },
-  { name: "Colombia", code: "+57" },
-  { name: "Comoras", code: "+269" },
-  { name: "Corea del Norte", code: "+850" },
-  { name: "Corea del Sur", code: "+82" },
-  { name: "Costa Rica", code: "+506" },
-  { name: "Croacia", code: "+385" },
-  { name: "Cuba", code: "+53" },
-  { name: "Dinamarca", code: "+45" },
-  { name: "Ecuador", code: "+593" },
-  { name: "Egipto", code: "+20" },
-  { name: "El Salvador", code: "+503" },
-  { name: "Emiratos Árabes Unidos", code: "+971" },
-  { name: "Eslovaquia", code: "+421" },
-  { name: "Eslovenia", code: "+386" },
-  { name: "España", code: "+34" },
-  { name: "Estados Unidos", code: "+1" },
-  { name: "Estonia", code: "+372" },
-  { name: "Etiopía", code: "+251" },
-  { name: "Filipinas", code: "+63" },
-  { name: "Finlandia", code: "+358" },
-  { name: "Francia", code: "+33" },
-  { name: "Georgia", code: "+995" },
-  { name: "Ghana", code: "+233" },
-  { name: "Grecia", code: "+30" },
-  { name: "Guatemala", code: "+502" },
-  { name: "Guinea", code: "+224" },
-  { name: "Guinea-Bisáu", code: "+245" },
-  { name: "Haití", code: "+509" },
-  { name: "Honduras", code: "+504" },
-  { name: "Hungría", code: "+36" },
-  { name: "India", code: "+91" },
-  { name: "Indonesia", code: "+62" },
-  { name: "Irán", code: "+98" },
-  { name: "Irak", code: "+964" },
-  { name: "Irlanda", code: "+353" },
-  { name: "Islandia", code: "+354" },
-  { name: "Israel", code: "+972" },
-  { name: "Italia", code: "+39" },
-  { name: "Jamaica", code: "+1-876" },
-  { name: "Japón", code: "+81" },
-  { name: "Jordania", code: "+962" },
-  { name: "Kazajistán", code: "+7" },
-  { name: "Kenia", code: "+254" },
-  { name: "Kuwait", code: "+965" },
-  { name: "Laos", code: "+856" },
-  { name: "Letonia", code: "+371" },
-  { name: "Líbano", code: "+961" },
-  { name: "Liberia", code: "+231" },
-  { name: "Libia", code: "+218" },
-  { name: "Lituania", code: "+370" },
-  { name: "Luxemburgo", code: "+352" },
-  { name: "Madagascar", code: "+261" },
-  { name: "Malasia", code: "+60" },
-  { name: "Malaui", code: "+265" },
-  { name: "Maldivas", code: "+960" },
-  { name: "Malí", code: "+223" },
-  { name: "Malta", code: "+356" },
-  { name: "Marruecos", code: "+212" },
-  { name: "México", code: "+52" },
-  { name: "Moldavia", code: "+373" },
-  { name: "Mónaco", code: "+377" },
-  { name: "Mongolia", code: "+976" },
-  { name: "Montenegro", code: "+382" },
-  { name: "Mozambique", code: "+258" },
-  { name: "Nicaragua", code: "+505" },
-  { name: "Nigeria", code: "+234" },
-  { name: "Noruega", code: "+47" },
-  { name: "Nueva Zelanda", code: "+64" },
-  { name: "Omán", code: "+968" },
-  { name: "Países Bajos", code: "+31" },
-  { name: "Pakistán", code: "+92" },
-  { name: "Panamá", code: "+507" },
-  { name: "Papúa Nueva Guinea", code: "+675" },
-  { name: "Paraguay", code: "+595" },
-  { name: "Perú", code: "+51" },
-  { name: "Polonia", code: "+48" },
-  { name: "Portugal", code: "+351" },
-  { name: "Reino Unido", code: "+44" },
-  { name: "República Checa", code: "+420" },
-  { name: "República Dominicana", code: "+1-809" },
-  { name: "Rumanía", code: "+40" },
-  { name: "Rusia", code: "+7" },
-  { name: "Senegal", code: "+221" },
-  { name: "Serbia", code: "+381" },
-  { name: "Singapur", code: "+65" },
-  { name: "Siria", code: "+963" },
-  { name: "Somalia", code: "+252" },
-  { name: "Sri Lanka", code: "+94" },
-  { name: "Sudáfrica", code: "+27" },
-  { name: "Sudán", code: "+249" },
-  { name: "Suecia", code: "+46" },
-  { name: "Suiza", code: "+41" },
-  { name: "Tailandia", code: "+66" },
-  { name: "Taiwán", code: "+886" },
-  { name: "Tanzania", code: "+255" },
-  { name: "Tayikistán", code: "+992" },
-  { name: "Túnez", code: "+216" },
-  { name: "Turquía", code: "+90" },
-  { name: "Ucrania", code: "+380" },
-  { name: "Uganda", code: "+256" },
-  { name: "Uruguay", code: "+598" },
-  { name: "Uzbekistán", code: "+998" },
-  { name: "Venezuela", code: "+58" },
-  { name: "Vietnam", code: "+84" },
-  { name: "Yemen", code: "+967" },
-  { name: "Zambia", code: "+260" },
-  { name: "Zimbabue", code: "+263" }
-];
 
   // Corrige el tipo de currentState y currentCity en el formData
   const handleImageUpload = async (
@@ -263,7 +121,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
              apellidoPaterno: `${formData.apellidoPaterno}`,
             apellidoMaterno: `${formData.apellidoMaterno}`,
              email: formData.email,
-             celular: `${prefix}${formData.celular}`,
+             celular: `${prefix} ${formData.celular}`,
              fecha_nacimiento: formData.fecha_nacimiento,
              imagen: base64Image || '',
              genero: formData.genero,
@@ -322,7 +180,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
           apellidoMaterno: paciente.apellido?.split(" ")[1] || " ",
           DNI: paciente.DNI || "",
           email: paciente.email || "",
-          celular: paciente.celular || "",
+          celular: paciente.celular?.split(" ")[1] || " ",
           imagen: paciente.imagen || "",
           fecha_nacimiento: fechaFormateada,
           genero: paciente.genero || "",
@@ -335,6 +193,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
           medicamentosPrescritos: paciente.medicamentosPrescritos || "",
         });
         setBase64Image(paciente.imagen || "");
+        setPrefix(paciente.celular?.split(" ")[0] || +51);
         setCountry(paciente.pais ? { id: 0, name: paciente.pais } : null);
         setCurrentState(paciente.departamento ? { id: 0, name: paciente.departamento } : null);
       }
@@ -475,8 +334,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
             </div>
           </div>
           <div className="mt-4">
-            <label className="block text-center text-card-foreground dark:text-card-foreground">Celular</label>
-            <div className="flex gap-2 mt-2 items-center justify-center">
+            <div className="flex gap-2 mt-2 items-end justify-center">
             <select
               value={prefix}
               onChange={(e) => setPrefix(e.target.value)}
@@ -488,15 +346,18 @@ export default function EditarPaciente({ id }: { id: string | null }) {
                 </option>
               ))}
             </select>
-            <input
-              type="text"
-              maxLength={30}
-              minLength={3}
-              value={formData.celular}
-              onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
-              placeholder="Ejemplo 999999999"
-              className="pl-4 pr-3 text-sm max-w-[400px] h-9 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
-              />
+            <div>
+              <label className="block text-center text-card-foreground dark:text-card-foreground">Celular</label>
+              <input
+                type="text"
+                maxLength={30}
+                minLength={3}
+                value={formData.celular}
+                onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
+                placeholder="Ejemplo 999999999"
+                className="pl-4 pr-3 text-sm max-w-[400px] h-9 outline-none focus:ring-2 focus:ring-primary w-full rounded-full border border-border dark:border-border bg-input dark:bg-input text-foreground dark:text-foreground"
+                />
+            </div>
             </div>
           </div>
           {/* Imagen */}

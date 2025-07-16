@@ -3,6 +3,7 @@ import {
   AuthorsApi,
   CategoriaApi,
   CitasPendientesApiResponse,
+  PsicologoApiResponse,
   PsicologoApiResponseAlone,
   PsicologoPreviewData,
   DashboardApiResponse,
@@ -50,7 +51,7 @@ export const GetPsicologos = async (
   search?: string,
   page?: number,
   perPage?: number
-) => {
+): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
   if (filters){
     if (filters.pais.length) params.append("pais", filters.pais.join(","));
@@ -67,9 +68,7 @@ export const GetPsicologos = async (
   if(perPage && page){
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
-  }
-
-  const url = `${
+  }  const url = `${
     process.env.NEXT_PUBLIC_API_URL
   }api/psicologos?${params.toString()}`;
 
@@ -79,15 +78,21 @@ export const GetPsicologos = async (
         Accept: "application/json",
       },
     });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
     const data = await res.json();
 
     if (data.status_message === "OK") {
-      return data.result;
+      return data; // Retornar toda la respuesta
     } else {
-      console.error("Error:", data.message);
+      throw new Error(data.message || "Error al obtener psicólogos");
     }
   } catch (error) {
     console.error("Error al obtener psicólogos:", error);
+    throw error;
   }
 };
 
