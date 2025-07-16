@@ -274,7 +274,7 @@ export default function App() {
               <select
                 value={prefix}
                 onChange={e => setPrefix(e.target.value)}
-                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
                 >
                 {countryPrefixes.map((item, index) => (
                   <option key={index} value={item.code}>
