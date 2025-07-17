@@ -114,9 +114,9 @@ const NavbarUser = () => {
       setNavItems(items);
     }
   }, []);  return (
-    <div className="flex flex-row bg-[#f8f8ff] dark:bg-background">
+    <div className="flex flex-row bg-[#E7E7FF] dark:bg-[#1f1e22]">
       {/* Mobile Navbar - Menú hamburguesa para pantallas menores a 1024px */}
-      <div className="lg:hidden bg-[#f8f8ff] dark:bg-background flex-1">
+      <div className="lg:hidden bg-[#E7E7FF] dark:bg-[#1f1e22] flex-1">
         <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
           <div className="w-full p-6 flex items-center justify-between">
             <Link href="/" className="ml-[60px] z-0">

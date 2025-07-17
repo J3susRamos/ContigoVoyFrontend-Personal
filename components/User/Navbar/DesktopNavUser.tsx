@@ -40,7 +40,7 @@ export const DesktopNavUser = ({ navItems }:{navItems:NavItems[]}) => {
                     " z-20 text-lg",
                     hovered === idx || pathname === items.link
                       ? "text-white"
-                      : "text-[#7b8fbd] dark:text-primary"
+                      : "text-[#937bbd] dark:text-primary"
                   )}
                   dangerouslySetInnerHTML={{
                     __html: items.icono.replace(
@@ -56,10 +56,8 @@ export const DesktopNavUser = ({ navItems }:{navItems:NavItems[]}) => {
                 />
                 <span
                   className={cn(
-                    "relative z-20 text-sm font-bold pt-1",
-                    hovered === idx || pathname === items.link
-                      ? "text-white"
-                      : "text-[#634AE2] dark:text-primary"
+                  "relative z-20 text-sm font-bold pt-1 text-[#634AE2] dark:text-[#634AE2]",
+                  hovered === idx || pathname === items.link ? "text-white" : ""
                   )}
                 >
                   {items.name}
