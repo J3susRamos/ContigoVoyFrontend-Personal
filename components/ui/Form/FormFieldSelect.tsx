@@ -28,8 +28,8 @@ const FormFieldSelect = <T extends FieldValues>({
     <FormField errors={errors} name={name} label={label}>
       <select
         {...register(name)}
-        className="w-full pl-4 pr-3 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none font-medium bg-[#F3F3F3] dark:bg-[#1e1e23] text-[#5d23df] dark:text-[#bbbafe]"
-      >
+        className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+        >
         {placeholder && (
           <option value="" disabled>
             {placeholder}
