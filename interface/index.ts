@@ -43,8 +43,10 @@ export interface AccordionQuestProps {
 //interface Services para el componente ServicesStructure No le mueva nada caracho
 export interface ServicesStructureProps {
   title: string;
+  titleMobil: string;
   edad: string;
-  motto: string;
+  edadMobil: string;
+  motto: React.ReactElement;
   background: string;
   bgdown: string;
   bgdownAlt: string;

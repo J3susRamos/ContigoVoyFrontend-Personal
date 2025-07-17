@@ -17,9 +17,11 @@ export const metadata: Metadata = {
 const AdultoTerapias: ServicesStructureProps[] = [
   {
     title: "Adultos felices en Contigo Voy",
+    titleMobil: "Adultos felices",
     edad: "de 19 años a más",
+    edadMobil: "19 +",
     motto:
-      "¿Sientes que las preocupaciones del día a día están afectando tu bienestar emocional?",
+      <p>¿Sientes que las preocupaciones del día a día están afectando tu bienestar <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent"> emocional</span>?</p>,
     background:
       "/Services/adult/Terapia_adultos_Mujer_agarrándose_rostro_feliz.webp",
     bgdown: "/Services/adult/Terapia_adultos_Mujer_afro_feliz_tablet.webp",

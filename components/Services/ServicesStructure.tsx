@@ -14,32 +14,29 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@heroui/react";
+import { motion } from "framer-motion";
 
 export default function ServicesStructure({
   services,
 }: {
   services: ServicesStructureProps[];
 }) {
-
   return (
     <div className="relative ">
       {services.map((item, index) => (
-        <div className="embla__slide" key={index}>
-          <div className="max-w-scv18 mx-auto flex justify-between px-scv6 lg:px-[79px] gap-x-[98px] py-scv3 sm:py-scv6 text-title items-center ">
-            <p className="text-cv5 sm:text-cv6 font-semibold">{item.title}</p>
-            <p className="text-cv3 sm:text-cv5 font-semibold">{item.edad}</p>
-          </div>
+        <>
+          <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
+            <div className="absolute inset-0">
+              <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
+              <div className="absolute top-0 left-0 w-full h-full">
+                <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+                <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
+              </div>
+            </div>
 
-          <div
-            className="flex sm:h-[578px]  min-h-[350px] pr-scv10 lg:pr-0 relative overflow-y-hidden overflow-x-clip bg-large-gradient"
-            style={{
-              backgroundPosition: "right center",
-              backgroundRepeat: "no-repeat",
-              textShadow:
-                "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
-            }}
-          >            <div className="flex-1 relative max-w-scv18 mx-auto pl-8 lg:pl-[79px]">
-              <div className="absolute -right-[220px] h-full w-[576px] sm:w-[1200px]">
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="hidden absolute -right-[220px] h-full w-[576px] sm:w-[1200px]">
                 <Image
                   src={item.background}
                   alt={item.title + item.motto}
@@ -48,10 +45,96 @@ export default function ServicesStructure({
                   className="mix-blend-multiply bg-cover mask-horizontal-fade "
                 />
               </div>
-              
+              <div className="text-left sm:text-center">
+                <motion.div className="mb-3  flex justify-start items-center sm:justify-between sm:px- gap-x-scv3">
+                  <span className="hidden sm:inline-block shadow-inner shadow-gray-500 dark:shadow-gray-800   px-3 py-1 text-medium font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
+                    {item.title}
+                  </span>
+                  <span className="sm:hidden inline-block shadow-inner shadow-gray-500 dark:shadow-gray-800 px-3 py-1 text-sm font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
+                    {item.titleMobil}
+                  </span>
+                  <span className="hidden sm:inline-block shadow-inner shadow-gray-500 dark:shadow-gray-800 px-3 py-1 text-medium font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
+                    {item.edad}
+                  </span>
+                  <span className="sm:hidden inline-block shadow-inner shadow-gray-500 dark:shadow-gray-800 px-3 py-1 text-sm font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
+                    {item.edadMobil}
+                  </span>
+                </motion.div>
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-8"
+                >
+                  {item.motto}
+                </motion.h1>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.8 }}
+                  className="flex flex-col sm:flex-row gap-scv3 items-start sm:justify-center"
+                >
+                  {item.promotionCards && item.promotionCards.length > 0 && (
+                    <button
+                      onClick={() => {
+                        const promotionsSection =
+                          document.getElementById("service-promotions");
+                        if (promotionsSection) {
+                          promotionsSection.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                        }
+                      }}
+                      style={{
+                        boxShadow:
+                          "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                      }}
+                      className="bg-white/20 backdrop-blur-sm border-2 border-white/30 px-[25px] py-[10px] lg:p-4 text-white rounded-[15px] hover:bg-white/30 transition-all duration-300 lg:text-cv6 font-medium min-w-[240px]"
+                    >
+                      Ver Promociones
+                    </button>
+                  )}
+
+                  <Link href="/ReservarCita">
+                    <button
+                      style={{
+                        boxShadow:
+                          "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+                      }}
+                      className="dark:bg-large-gradient bg-small-gradient px-[25px] py-[10px] lg:p-4 text-white rounded-[15px] hover:bg-purple-700 lg:text-cv6 font-medium !h-full min-w-[240px]"
+                    >
+                      Reservar Cita
+                    </button>
+                  </Link>
+                </motion.div>
+              </div>
+            </div>
+          </section>
+          <div
+            className="flex sm:h-[578px]  min-h-[350px] pr-scv10 lg:pr-0 relative overflow-y-hidden overflow-x-clip bg-large-gradient"
+            style={{
+              backgroundPosition: "right center",
+              backgroundRepeat: "no-repeat",
+              textShadow:
+                "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
+            }}
+          >
+            {" "}
+            <div className="flex-1 relative max-w-scv18 mx-auto pl-8 lg:pl-[79px]">
+              <div className="hidden absolute -right-[220px] h-full w-[576px] sm:w-[1200px]">
+                <Image
+                  src={item.background}
+                  alt={item.title + item.motto}
+                  title={item.title}
+                  fill
+                  className="mix-blend-multiply bg-cover mask-horizontal-fade "
+                />
+              </div>
               <p className="text-cv6 sm:text-cv8 pt-scv7 pb-scv8 sm:py-0 sm:top-1/2 sm:-translate-y-1/2 relative max-w-[350px] sm:max-w-[600px] text-white text-left h-auto font-bold leading-1">
                 {item.motto}
-              </p>              {/* Botones de acción - posicionados a la derecha */}
+              </p>{" "}
+              {/* Botones de acción - posicionados a la derecha */}
               <div className="absolute right-64 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4">
                 <Link href="/ReservarCita">
                   <Button
@@ -64,15 +147,16 @@ export default function ServicesStructure({
                     Reservar Cita
                   </Button>
                 </Link>
-                
+
                 {item.promotionCards && item.promotionCards.length > 0 && (
                   <button
                     onClick={() => {
-                      const promotionsSection = document.getElementById('service-promotions');
+                      const promotionsSection =
+                        document.getElementById("service-promotions");
                       if (promotionsSection) {
-                        promotionsSection.scrollIntoView({ 
-                          behavior: 'smooth',
-                          block: 'start'
+                        promotionsSection.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
                         });
                       }
                     }}
@@ -86,7 +170,6 @@ export default function ServicesStructure({
                   </button>
                 )}
               </div>
-              
               {/* Botones para mobile/tablet */}
               <div className="flex lg:hidden flex-col sm:flex-row gap-4 mt-6">
                 <Link href="/ReservarCita">
@@ -100,15 +183,16 @@ export default function ServicesStructure({
                     Reservar Cita
                   </Button>
                 </Link>
-                
+
                 {item.promotionCards && item.promotionCards.length > 0 && (
                   <button
                     onClick={() => {
-                      const promotionsSection = document.getElementById('service-promotions');
+                      const promotionsSection =
+                        document.getElementById("service-promotions");
                       if (promotionsSection) {
-                        promotionsSection.scrollIntoView({ 
-                          behavior: 'smooth',
-                          block: 'start'
+                        promotionsSection.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
                         });
                       }
                     }}
@@ -358,7 +442,6 @@ export default function ServicesStructure({
           <div
             className={`sticky bottom-0 left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]`}
           >
-            
             <div className="flex flex-col lg:flex-row gap-y-scv3 items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 py-scv4 space-x-0">
               <p
                 className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center prx-16"
@@ -371,7 +454,7 @@ export default function ServicesStructure({
               </Link>
             </div>
           </div>
-        </div>
+        </>
       ))}
     </div>
   );

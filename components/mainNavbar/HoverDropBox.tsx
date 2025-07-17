@@ -10,10 +10,13 @@ import {
 } from "@heroui/react";
 
 export const HoverDropBox = ({ navItem }: { navItem: NavItem }) => {
-
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleClick = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     
@@ -34,7 +37,6 @@ export const HoverDropBox = ({ navItem }: { navItem: NavItem }) => {
         clearTimeout(timeoutRef.current);
       }
     };
-
   }, []);
 
   const handleMouseEnter = () => {
@@ -62,7 +64,7 @@ export const HoverDropBox = ({ navItem }: { navItem: NavItem }) => {
         placement="bottom-start"
         className="rounded-sm text-cv3"
       >
-        <DropdownTrigger>
+        <DropdownTrigger onClick={handleClick}>
           <div className=" !text-cv3 !hover:opacity-1  px-4 py-2 rounded-sm text-title items-center flex gap-x-scv1 hover:bg-[#634AE2] hover:text-white font-normal">
             {navItem.name}
             <ChevronDown
