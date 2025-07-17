@@ -7,13 +7,16 @@ import { PsicologoFilters, PsicologoPreviewData } from "@/interface";
 
 export default function ReservarCitaPage() {
   const [psicologos, setPsicologos] = useState<PsicologoPreviewData[] | null>(null);
-  const [filters, setFilters] = useState<PsicologoFilters>({});
+  const [filters, setFilters] = useState<PsicologoFilters>({
+    pais: [],
+    genero: [],
+    idioma: [],
+    enfoque: []
+  });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [page, setPage] = useState(1);
-  const [perPage] = useState(6);
-  const [lastPage, setLastPage] = useState<number>(1);
+  const [perPage] = useState(6);  const [lastPage, setLastPage] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   const handleFilterChange = useCallback((newFilters: PsicologoFilters, newSearchTerm?: string) => {
     setPage(1);
@@ -21,11 +24,9 @@ export default function ReservarCitaPage() {
     if (newSearchTerm !== undefined) {
       setSearchTerm(newSearchTerm);
     }
-  }, []);
-  useEffect(() => {
+  }, []);  useEffect(() => {
     async function fetchData() {
       try {
-        setLoading(true);
         const data = await GetPsicologos(
           filters, 
           searchTerm,
@@ -39,8 +40,6 @@ export default function ReservarCitaPage() {
       } catch (error) {
         console.error("Error fetching psicologos:", error);
         setError("Error al cargar los psicólogos");
-      } finally {
-        setLoading(false);
       }
     }
 
@@ -59,7 +58,7 @@ export default function ReservarCitaPage() {
           setPage={setPage}
           lastPage={lastPage}
           setSearchTerm={setSearchTerm}
-          loading={loading}
+          searchTerm={searchTerm}
         />
       ) : (
         <ReservarCitaLoading />
