@@ -32,9 +32,8 @@ export default function ReservarComponents({
 
 useEffect(() => {
   onFilterChange(filters);
-}, [filters, onFilterChange]);
-    return (
-    <div className="w-full bg-[#1D2634]">
+}, [filters, onFilterChange]);    return (
+    <div className="w-full bg-gray-50 dark:bg-gray-900">
       <div className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
@@ -84,7 +83,7 @@ useEffect(() => {
           </div>
         </div>
       </div>      {/* Contenido principal */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-[#1D2634]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar con filtros */}{" "}          <div className="lg:w-80 flex-shrink-0">
             <ReservarComponentSearch
