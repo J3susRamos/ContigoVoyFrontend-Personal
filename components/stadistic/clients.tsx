@@ -228,6 +228,12 @@ export default function Clients() {
     }
     return null;
   };
+
+  const SinDatos = () => (
+  <div className="text-center text-muted-foreground font-medium">
+    No hay datos disponibles.
+  </div>
+);
   return (
       <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
         {/* Filtros */}
@@ -246,29 +252,33 @@ export default function Clients() {
             
             {/* Container del gráfico */}
             <div className="w-full h-[300px] md:h-[350px] lg:h-[400px] flex items-center justify-center">
+              {genero.every((g) => g.Total === 0) ? (
+              <SinDatos />
+              ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                      dataKey="Total"
-                      data={genero}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius="30%"
-                      outerRadius="70%"
-                      fill="#8884d8"
-                      label={renderCustomizedLabel}
-                      labelLine={false}
-                  >
-                    {genero.map((entry, index) => (
-                        <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                        />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
+              <PieChart>
+                <Pie
+              dataKey="Total"
+                data={genero}
+                cx="50%"
+                  cy="50%"
+                    innerRadius="30%"
+                outerRadius="70%"
+              fill="#8884d8"
+                label={renderCustomizedLabel}
+              labelLine={false}
+              >
+              {genero.map((entry, index) => (
+                <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+                ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
               </ResponsiveContainer>
+              )}
             </div>
             
             {/* Leyenda */}
@@ -293,37 +303,36 @@ export default function Clients() {
               <div className="rounded-r-full w-full max-w-[280px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
                 <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-lg md:text-xl">Edad</p>
               </div>
-              
+
               <div className="w-full h-[250px] md:h-[280px] flex items-center justify-center">
+                {filteredEdad.every(e => e.Total === 0) ? (
+              <p className="text-muted-foreground text-center font-medium">
+                No hay datos disponibles.
+              </p>
+                ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                      data={filteredEdad}
-                      margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
+                    data={filteredEdad}
+                    margin={{ top: 20, right: 20, left: 10, bottom: 40 }}
                   >
                     <XAxis
                         dataKey="name"
                         tickLine={{ stroke: "hsl(var(--primary))" }}
                         axisLine={{ stroke: "hsl(var(--primary))" }}
-                        tick={({ x, y, payload }) => {
-                          return (
-                              <text
-                                  x={x}
-                                  y={y + 15}
-                                  fill="hsl(var(--primary))"
-                                  textAnchor="middle"
-                                  fontSize={10}
-                                  fontWeight="500"
-                              >
-                                <tspan x={x} dy="0">
-                                  {payload.value}
-                                </tspan>
-                                <tspan x={x} dy="12">
-                                  años
-                                </tspan>
-                              </text>
-                          );
-                        }}
-                    />
+                        tick={({ x, y, payload }) => (
+                      <text
+                          x={x}
+                          y={y + 15}
+                          fill="hsl(var(--primary))"
+                          textAnchor="middle"
+                          fontSize={10}
+                          fontWeight="500"
+                      >
+                      <tspan x={x} dy="0">{payload.value}</tspan>
+                      <tspan x={x} dy="12">años</tspan>
+                      </text>
+                          )}
+                        />
                     <YAxis
                         tick={{ fontSize: 10, fill: "hsl(var(--primary))" }}
                         tickLine={{ stroke: "hsl(var(--primary))" }}
@@ -338,45 +347,56 @@ export default function Clients() {
                     />
                   </BarChart>
                 </ResponsiveContainer>
+              )}
               </div>
             </div>
 
             {/* Gráfico de Lugar - BarChart */}
             <div className="w-full bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-2xl p-4 lg:p-6 flex flex-col">
               <div className="rounded-r-full w-full max-w-[280px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
-                <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-lg md:text-xl">Ubicación</p>
-              </div>
-              
+              <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-lg md:text-xl">Ubicación</p>
+            </div>
+
               <div className="w-full h-[250px] md:h-[280px] flex items-center justify-center">
-                <ResponsiveContainer width="100%" height="100%">
+                {lugar.every(e => e.Total === 0) ? (
+                <p className="text-muted-foreground text-center font-medium">
+                 No hay datos disponibles.
+                </p>
+                ) : (
+              <ResponsiveContainer width="100%" height="100%">
                   <BarChart
-                      data={lugar}
-                      margin={{ top: 20, right: 20, left: 10, bottom: 60 }}
+                    data={lugar}
+                    margin={{ top: 20, right: 20, left: 10, bottom: 60 }}
                   >
-                    <XAxis
-                        dataKey="name"
-                        tickLine={{ stroke: "hsl(var(--primary))" }}
-                        axisLine={{ stroke: "hsl(var(--primary))" }}
-                        tick={{ fontSize: 9, fill: "hsl(var(--primary))", fontWeight: "500" }}
-                        angle={-45}
-                        textAnchor="end"
-                        height={60}
-                        interval={0}
-                    />
-                    <YAxis
-                        tick={{ fontSize: 10, fill: "hsl(var(--primary))" }}
-                        tickLine={{ stroke: "hsl(var(--primary))" }}
-                        axisLine={{ stroke: "hsl(var(--primary))" }}
-                    />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Bar
-                        dataKey="Total"
-                        fill="hsl(var(--primary))"
-                        radius={[4, 4, 0, 0]}
-                        opacity={0.8}
+                  <XAxis
+                      dataKey="name"
+                      tickLine={{ stroke: "hsl(var(--primary))" }}
+                      axisLine={{ stroke: "hsl(var(--primary))" }}
+                      tick={{
+                      fontSize: 9,
+                      fill: "hsl(var(--primary))",
+                      fontWeight: "500",
+                    }}
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
+                  interval={0}
+                  />
+                  <YAxis
+                  tick={{ fontSize: 10, fill: "hsl(var(--primary))" }}
+                  tickLine={{ stroke: "hsl(var(--primary))" }}
+                    axisLine={{ stroke: "hsl(var(--primary))" }}
+                 />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Bar
+                      dataKey="Total"
+                      fill="hsl(var(--primary))"
+                      radius={[4, 4, 0, 0]}
+                      opacity={0.8}
                     />
                   </BarChart>
                 </ResponsiveContainer>
+                )}
               </div>
             </div>
 

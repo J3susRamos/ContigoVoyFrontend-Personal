@@ -427,17 +427,17 @@ const DetalleCampania = () => {
             />
           </div>          {/* Destinatarios */}
           <div className="mt-4 sm:mt-6">
-            <label className="block text-base sm:text-lg font-medium mb-2 sm:mb-3 text-purple-600">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <label className="text-base sm:text-lg font-medium text-purple-600">
               Destinatarios <span className="text-red-500">*</span>
             </label>
-            
-            {/* Botones de acción rápida */}
-            <div className="flex gap-2 mb-3">
+
+            {/* Botón de seleccionar todos */}
               <button
                 type="button"
                 onClick={() => {
-                  const allEmails = pacientes.filter(p => p.email).map(p => p.email);
-                  const allSelected = allEmails.every(email => recipients.includes(email));
+                const allEmails = pacientes.filter(p => p.email).map(p => p.email);
+                const allSelected = allEmails.every(email => recipients.includes(email));
                   if (allSelected) {
                     setRecipients([]);
                   } else {
@@ -445,7 +445,7 @@ const DetalleCampania = () => {
                   }
                 }}
                 disabled={isProcessingImages || isSending || pacientes.length === 0}
-                className="flex-1 px-3 py-2 text-sm font-medium text-purple-600 bg-purple-50 dark:bg-purple-900/20 dark:text-purple-400 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-3 py-2 text-sm font-medium text-purple-600 bg-purple-50 dark:bg-purple-900/20 dark:text-purple-400 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {pacientes.filter(p => p.email).every(p => recipients.includes(p.email)) && pacientes.length > 0 
                   ? 'Deseleccionar todos' 
