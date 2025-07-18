@@ -86,7 +86,7 @@ export const PersonalForm = ({
         Ingrese sus datos
       </h1>
       <Form validationBehavior="native" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 w-auto lg:w-[700px]   gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full max-w-5xl mx-auto">
           <div className="flex flex-col space-y-10">
             <Input
               label="Nombre"

@@ -7,12 +7,14 @@ import { Button } from "@heroui/react";
 import { useAuth } from "@/components/auth/loginsec";
 import { useEffect } from "react";
 import { UsuarioLocalStorage } from "@/interface";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { logout } = useAuth();
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -48,7 +50,7 @@ export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
       {/* Menú deslizable */}
       <div
         id="mobile-drawer-user"
-        className={`fixed top-0 left-0 h-screen w-80 bg-[#E7E7FF] dark:bg-gray-800 shadow-lg transform transition-transform duration-400 ease-in-out flex flex-col z-50 ${
+        className={`fixed top-0 left-0 h-screen w-80 bg-[#E7E7FF] dark:bg-[#1f1e22] shadow-lg transform transition-transform duration-400 ease-in-out flex flex-col z-50 ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -83,7 +85,11 @@ export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
               <div className="w-full" key={idx}>
                 <Link href={navItem.link}>
                   <button
-                    className="w-full flex items-center gap-4 text-[#634AE2] dark:text-purple-300 font-medium text-base text-left p-3 hover:bg-[#634AE2] hover:text-white dark:hover:bg-purple-600 rounded-lg transition-colors duration-200"
+                    className={`w-full flex items-center gap-4 font-medium text-base text-left p-3 rounded-xl transition-colors duration-200
+                    ${pathname === navItem.link
+                    ? "bg-[#9494F3] text-white"
+                    : "text-[#634AE2] dark:text-[#634AE2] hover:bg-[#634AE2] hover:text-white dark:hover:bg-[#634ae264]"
+                    }`}
                     onClick={closeMenu}
                   >
                     <span
