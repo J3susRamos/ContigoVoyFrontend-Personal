@@ -287,12 +287,13 @@ export const FormCita: React.FC<FormCitaProps> = ({
             }}
             size="2xl"
             placement="center"
+            className="border border-[#634AE2]"
             closeButton
         >
             <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader className="flex flex-col gap-1">
+                        <ModalHeader className="flex flex-col gap-1 text-[#634AE2]">
                             {isEditing ? "Editar Cita" : "Agregar Nueva Cita"}
                         </ModalHeader>
                         <form onSubmit={handleSubmit}>
@@ -310,8 +311,10 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                         errorMessage={errors.idPaciente}
                                         isDisabled={isEditing} // Disable patient selection when editing
                                     >
+                                        
                                         {pacientes.map((paciente) => (
                                             <SelectItem
+                                            className="bg-[#634AE2] text-white"
                                                 key={paciente.idPaciente.toString()}
                                             >
                                                 {`${paciente.nombre} (${paciente.codigo})`}
@@ -358,7 +361,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                         }}
                                     >
                                         {APPOINTMENT_STATES.map((state) => (
-                                            <SelectItem key={state.key}>
+                                            <SelectItem className="bg-[#634AE2] text-white" key={state.key}>
                                                 {state.label}
                                             </SelectItem>
                                         ))}

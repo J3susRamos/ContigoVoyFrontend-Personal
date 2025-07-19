@@ -10,6 +10,7 @@ import {
   CitasApiResponse,
   MarketingApiResponse,
   CitaMensual,
+  FormCita,
 } from "@/interface";
 import { parseCookies } from "nookies";
 
@@ -250,6 +251,44 @@ export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]> {
 
   if (!res.ok) {
     throw new Error("Error al obtener las citas del psicologo");
+  }
+
+  return await res.json();
+}
+
+
+//Crear citas en el perfil del paciente
+export async function CreateCitaParaPaciente(values: FormCita): Promise<FormCita> {
+  const formatHora = (hora: string) => {
+    // Si ya tiene segundos, la dejamos igual
+    if (hora.match(/^\d{2}:\d{2}:\d{2}$/)) return hora;
+    // Si no, le agregamos ":00"
+    return `${hora}:00`;
+  };
+
+  const payload = {
+    ...values,
+    idPaciente: parseInt(values.idPaciente, 10),
+    duracion: parseInt(values.duracion, 10),
+    hora_cita: formatHora(values.hora_cita),
+  };
+
+  console.log("Payload corregido:", payload);
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/citas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error("Error del backend:", errorData);
+    throw new Error("Error al crear la cita");
   }
 
   return await res.json();

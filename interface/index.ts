@@ -615,3 +615,18 @@ export interface SelectItemI {
   textValue: string,
   showLabel: string,
 }
+
+export interface FormCita {
+    idPaciente: string;
+    fecha_cita: string;
+    hora_cita: string;
+    duracion: string;
+    motivo_Consulta: string;
+    estado_Cita: string;
+}
+export interface PacienteCita {
+    idPaciente : number,
+    nombre : string,
+    apellido: string,
+    codigo: string
+}
