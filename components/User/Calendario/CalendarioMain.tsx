@@ -159,7 +159,7 @@ export default function CalendarioMain({citas}: CalProps) {
                 </div>
                 </div>
         {/* Título en desktop */}
-        <div className="text-primary-foreground font-semibold text-lg md:text-2xl mx-auto hidden md:block">
+            <div className="text-primary-foreground font-semibold text-[clamp(12px,2.5vw,18px)] text-left whitespace-nowrap md:ml-4 hidden md:block">
                     {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {currentDate.getFullYear()}
                 </div>{/* Botones de cambio de vista */}
                 <div className="flex gap-2 items-center w-full max-w-full md:max-w-[530px] justify-center md:justify-end mt-2 md:mt-0">

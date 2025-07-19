@@ -378,7 +378,7 @@ const EmailMarketingEditor = () => {
                                 e.stopPropagation();
                                 deleteBlock(block.id);
                               }}
-                              className="ml-auto text-red-400 hover:text-red-300"
+                              className="text-red-400 hover:text-red-300 text-3xl font-bold"
                               title="Eliminar bloque"
                             >
                               ×
