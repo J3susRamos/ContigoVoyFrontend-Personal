@@ -43,8 +43,10 @@ export interface AccordionQuestProps {
 //interface Services para el componente ServicesStructure No le mueva nada caracho
 export interface ServicesStructureProps {
   title: string;
+  titleMobil: string;
   edad: string;
-  motto: string;
+  edadMobil: string;
+  motto: React.ReactElement;
   background: string;
   bgdown: string;
   bgdownAlt: string;
@@ -614,4 +616,19 @@ export interface MarketingApiResponse {
 export interface SelectItemI {
   textValue: string,
   showLabel: string,
+}
+
+export interface FormCita {
+    idPaciente: string;
+    fecha_cita: string;
+    hora_cita: string;
+    duracion: string;
+    motivo_Consulta: string;
+    estado_Cita: string;
+}
+export interface PacienteCita {
+    idPaciente : number,
+    nombre : string,
+    apellido: string,
+    codigo: string
 }

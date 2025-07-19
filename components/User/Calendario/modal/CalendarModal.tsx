@@ -1,6 +1,6 @@
 import { Citas } from "@/interface";
 import dayjs from "dayjs";
-import { Clock, MapPin, User, X } from "lucide-react";
+import { Clock, MapPin, User, X, Mars, Venus,VenusAndMars } from "lucide-react";
 
 function CalendarModal({
   cita,
@@ -62,9 +62,15 @@ function CalendarModal({
           {/* Dirección (si existe) */}
           {cita.genero && (
             <div className="flex items-center space-x-3">
-              <MapPin className="text-orange-500" size={20} />
+              {cita.genero.trim().toLowerCase() === "femenino" ? (
+                <Venus className="text-pink-500" size={20} />
+              ) : cita.genero.trim().toLowerCase() === "masculino" ? (
+                  <Mars className="text-blue-500" size={20} />
+              ) : (
+                <VenusAndMars  className="text-orange-500" size={20} />
+              )}
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Genero</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Género</p>
                 <p className="font-medium text-gray-900 dark:text-white">{cita.genero}</p>
               </div>
             </div>

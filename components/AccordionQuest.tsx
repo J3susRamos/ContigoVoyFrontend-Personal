@@ -14,7 +14,7 @@ const AnchorIcon = () => {
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={2.5}
-      stroke="white"
+      className="stroke-black/70 dark:stroke-white"
     >
       <path d="m19.5 8.25-7.5 7.5-7.5-7.5" />
     </svg>
@@ -40,16 +40,16 @@ const AccordionQuest: React.FC<AccordionQuestProps> = ({ faqs }) => {
         <AccordionItem
           key={Question}
           aria-label={Question}
-          title={<div style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}}  className=" pr-scv6 text-white text-cv4">{Question}</div>}
+          title={<div  className=" pr-scv6 text-black/70 dark:text-white text-cv4 sm:text-cv6 font-bold">{Question}</div>}
           indicator={
             <div className="sm:mx-scv4 truncate">
               <AnchorIcon />
             </div>
           }
-          className="border-b border-white  mt-scv5"
+          className="border-b border-gray-700 dark:border-white/90  mt-scv6"
         >
           
-          <div style={{textShadow: "2px 2px 3px rgba(0,0,0,0.45)"}} className="text-[#fff] mb-scv5 text-cv4 sm:text-cv4 rounded-xl py-scv3 px-scv5 border border-[#fff]">
+          <div className="dark:bg-white/5 bg-white/90 p-10 backdrop-blur-sm dark:border-white/10 border-gray-400 border shadow-lg text-gray-600 dark:text-white/70 mb-scv5 text-cv2 sm:text-cv4 rounded-xl py-scv3 px-scv5 ">
             {Answer}
           </div>
         </AccordionItem>

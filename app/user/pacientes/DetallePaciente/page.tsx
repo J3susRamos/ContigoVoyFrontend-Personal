@@ -9,13 +9,14 @@ import Link from "next/link";
 import HistorialClinico from "@/components/User/Pacientes/HistorialClinico";
 import CitasPaciente from "@/components/User/Pacientes/CitasPaciente";
 import { Paciente } from "@/interface";
+import AddCitas from "@/components/User/Citas/AddCitas";
 
 const PageHome = () => {
   const router = useRouter();
   const [view, setView] = useState("datos");
   const [idPaciente, setIdPaciente] = useState<number | null>(null);
   const [paciente, setPaciente] = useState<Paciente | null>(null);
-
+  const [viewModalCitas, setViewModalCitas] = useState<boolean>(false);
   const fetchPaciente = async (id: number) => {
     try {
       const token = parseCookies().session;
@@ -57,6 +58,11 @@ const PageHome = () => {
     { name: "Historial Clínico", key: "historial" },
     { name: "Citas", key: "citas" },
   ];
+  const handleViewModalAddCitas = (view: boolean) =>{
+      setViewModalCitas(view)
+  }
+  console.log(paciente)
+
   return (
     <div className="min-h-screen bg-background dark:bg-background flex flex-col">
       {/* Cabecera */}
@@ -78,9 +84,26 @@ const PageHome = () => {
                 <h1 className="text-4xl font-bold text-primary dark:text-primary">
                   {paciente?.nombre} {paciente?.apellido} #{idPaciente}
                 </h1>
-                <button className="bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground rounded-full text-base px-4 py-2 font-normal hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors">
+                <button 
+                onClick={()=>handleViewModalAddCitas(true)}
+                className="bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground rounded-full text-base px-4 py-2 font-normal hover:bg-primary/90 dark:hover:bg-primary/90 transition-colors">
                   Nueva Cita
                 </button>
+                {viewModalCitas && (
+                  <div className="fixed bg-black text-white top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    {paciente && (
+                      <AddCitas
+                        open={handleViewModalAddCitas}
+                        dataPaciente={{
+                          nombre: paciente.nombre,
+                          apellido: paciente.apellido,
+                          codigo: paciente.codigo,
+                          idPaciente: paciente.idPaciente
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
               <div className="flex gap-x-2 mt-2">
                 <CerrarSesion />
