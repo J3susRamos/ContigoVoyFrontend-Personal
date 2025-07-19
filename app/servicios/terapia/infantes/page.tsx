@@ -109,59 +109,58 @@ const NinosTerapias: ServicesStructureProps = {
   textfooter:
     "¿Tu pequeño enfrenta desafíos como falta de atención?<br/>¿Tiene una conducta agresiva?",
 
-    textfootermobile:
-      "¿Tu pequeño enfrenta desafíos como falta de atención?<br/> ¿Tiene una conducta agresiva?",
-    promotionCards: [
-      {
-        id: 1,
-        title: "Terapia para niños",
-        preciounit: "s/69",
-        cents: ".00",
-        regularprice: "Precio regular: s/90.00",
-        list: [
-          {
-            id: 1,
-            text: "Sesiones online de 40 a 50 minutos.",
-          },
-          {
-            id: 2,
-            text: "Evaluación de habilidades cognitivas.",
-          },
-          {
-            id: 3,
-            text: "Juegos terapéuticos adaptados para niños.",
-          },
-          { id: 4, text: "Psicólogos expertos en desarrollo infantil." },
-        ],
-      },
-      {
-        id: 2,
-        title: "Terapia de pareja",
-        preciounit: "s/129",
-        cents: ".00",
-        regularprice: "Precio regular: s/90.00",
-        list: [
-          {
-            id: 1,
-            text: "Sesiones online de 40 a 50 minutos.",
-          },
-          {
-            id: 2,
-            text: "Fortalece la comunicación y conexión emocional.",
-          },
-          {
-            id: 3,
-            text: "Técnicas para resolver conflictos de forma constructiva.",
-          },
-          {
-            id: 4,
-            text: "Psicólogos especializados en relaciones de pareja.",
-          },
-        ],
-      },
-    ],
-  },
-];
+  textfootermobile:
+    "¿Tu pequeño enfrenta desafíos como falta de atención?<br/> ¿Tiene una conducta agresiva?",
+  promotionCards: [
+    {
+      id: 1,
+      title: "Terapia para niños",
+      preciounit: "s/69",
+      cents: ".00",
+      regularprice: "Precio regular: s/90.00",
+      list: [
+        {
+          id: 1,
+          text: "Sesiones online de 40 a 50 minutos.",
+        },
+        {
+          id: 2,
+          text: "Evaluación de habilidades cognitivas.",
+        },
+        {
+          id: 3,
+          text: "Juegos terapéuticos adaptados para niños.",
+        },
+        { id: 4, text: "Psicólogos expertos en desarrollo infantil." },
+      ],
+    },
+    {
+      id: 2,
+      title: "Terapia de pareja",
+      preciounit: "s/129",
+      cents: ".00",
+      regularprice: "Precio regular: s/90.00",
+      list: [
+        {
+          id: 1,
+          text: "Sesiones online de 40 a 50 minutos.",
+        },
+        {
+          id: 2,
+          text: "Fortalece la comunicación y conexión emocional.",
+        },
+        {
+          id: 3,
+          text: "Técnicas para resolver conflictos de forma constructiva.",
+        },
+        {
+          id: 4,
+          text: "Psicólogos especializados en relaciones de pareja.",
+        },
+      ],
+    },
+  ],
+};
 
 export default function Ninos() {
   return <ServicesStructure service={NinosTerapias} />;

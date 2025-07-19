@@ -128,5 +128,5 @@ const FamilyTerapias: ServicesStructureProps = {
 };
 
 export default function Home() {
-  return <ServicesStructure services={FamilyTerapias} />;
+  return <ServicesStructure service={FamilyTerapias} />;
 }
