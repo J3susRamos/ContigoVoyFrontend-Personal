@@ -1,15 +1,19 @@
+'use client'
 import AccordionQuest from "@/components/AccordionQuest";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Preguntas Frecuentes | Terapia Psicológica - Contigo Voy",
-  description:
-    "¿Tienes dudas sobre nuestros servicios de atención psicológica en línea? En nuestra sección de preguntas frecuentes, resuelve tus inquietudes y se parte de nosotros.",
-  authors: [{ name: "Contigo Voy" }],
-  verification: {
-    google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
-  },
-};
+// import { Metadata } from "next";
+// export const metadata: Metadata = {
+//   title: "Preguntas Frecuentes | Terapia Psicológica - Contigo Voy",
+//   description:
+//     "¿Tienes dudas sobre nuestros servicios de atención psicológica en línea? En nuestra sección de preguntas frecuentes, resuelve tus inquietudes y se parte de nosotros.",
+//   authors: [{ name: "Contigo Voy" }],
+//   verification: {
+//     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
+//   },
+// };
 
 export default function App() {
   const faqs = [
@@ -36,23 +40,100 @@ export default function App() {
   ];
 
   return (
-    <div className="flex flex-col justify-center min-h-screen w-full relative overflow-y-hidden overflow-x-clip bg-large-gradient">
-      <div className="lg:relative overflow-y-hidden overflow-x-clip">
-        <div
-          className="mix-blend-multiply  z-0 absolute pointer-events-none top-0 left-0 -bottom-[20px] -right-[0] sm:-right-[130px] lg:-right-[260px] bg-[url('/preguntas-sobre-terapia-en-linea.webp')] bg-no-repeat bg-[length:700px] sm:bg-[length:900px] lg:bg-[length:1140px] bg-bottom"
-        ></div>
-        <div
-          className="relative z-10 max-w-scv18 mx-auto"
-        >
-          <h1 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
-            className=" text-white text-cv8 sm:text-cv9 text-center sm:text-left font-bold px-scv7 pt-scv7 sm:pt-scv8 pb-scv6 md:pl-scv9">
-            Preguntas frecuentes
-          </h1>
-          <div className="grid gap-4 pb-scv13 sm:pb-scv12  sm:max-w-scv15  px-scv7 md:pr-0 sm:pl-10  md:px-scv9">
-            <AccordionQuest faqs={faqs} />
+    <div className="w-full relative overflow-y-hidden over overflow-x-clip min-h-0">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
+        <div className="absolute inset-0">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Image
+              src="/preguntas-sobre-terapia-en-linea.webp"
+              alt="wa"
+              priority
+              width={800}
+              height={200}
+              className="hidden md:block h-auto absolute right-0 opacity-20 bottom-[-100]"
+            />
+          </motion.div>
+
+          <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
           </div>
         </div>
-      </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8"
+            >
+              Tus{" "}
+              <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                dudas{" "}
+              </span>{" "}
+              importan, y estamos aquí para ayudarte
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12"
+            >
+              Encontrarás respuestas claras y cercanas para que te sientas
+              acompañado en cada paso de tu camino emocional.
+            </motion.p>
+          </div>
+        </div>
+      </section>
+      <section className="py-12 pb-24  dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y : 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-7xl mx-auto px-scv6"
+        >
+          <AccordionQuest faqs={faqs} />
+        </motion.div>
+      </section>
+      {/* CTA Final */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-12">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
+          </div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-white">
+              ¿Listo para comenzar tu camino hacia el bienestar?
+            </h2>
+            <p className="text-xl mb-8 text-white/90">
+              Agenda tu primera sesión y descubre cómo podemos ayudarte.
+            </p>
+            <Link href="/contactanos">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+              >
+                Contactar Ahora
+              </motion.button>
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
