@@ -28,7 +28,12 @@ export default function ReservarCitaPage() {
     async function fetchData() {
       try {
         const data = await GetPsicologos(
-          filters, 
+          {
+            pais: filters.pais || [],
+            genero: filters.genero || [],
+            idioma: filters.idioma || [],
+            enfoque: filters.enfoque || []
+          }, 
           searchTerm,
           page, 
           perPage

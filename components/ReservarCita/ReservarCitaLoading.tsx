@@ -2,7 +2,7 @@ import { Skeleton } from "@heroui/react";
 
 export default function ReservarCitaLoading() {
   return (
-    <div className="min-h-screen bg-[#1D2634]">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4 py-6 lg:py-8">
             {/* Header Section */}
             <div className="mb-8">
@@ -11,7 +11,7 @@ export default function ReservarCitaLoading() {
                         <h1 className="text-4xl lg:text-6xl font-bold text-[#634AE2] dark:text-primary pb-1 lg:pb-2 mb-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] bg-clip-text text-transparent">
                             Reservar Cita
                         </h1>
-                        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl">
+                        <p className="text-gray-600 dark:text-gray-900 text-lg max-w-2xl">
                             Encuentra y reserva una cita con nuestros psicólogos especializados.
                         </p>
                     </div>
