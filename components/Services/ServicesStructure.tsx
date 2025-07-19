@@ -14,15 +14,32 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@heroui/react";
+import { useState, useEffect } from "react";
 
 export default function ServicesStructure({
   services,
 }: {
   services: ServicesStructureProps[];
 }) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Función para manejar el scroll suave
+  const handleScrollToPromotions = () => {
+    const promotionsSection = document.getElementById('service-promotions');
+    if (promotionsSection) {
+      promotionsSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
 
   return (
-    <div className="relative ">
+    <div className="relative dark:bg-gray-900 bg-gray-100">
       {services.map((item, index) => (
         <div className="embla__slide" key={index}>
           <div className="max-w-scv18 mx-auto flex justify-between px-scv6 lg:px-[79px] gap-x-[98px] py-scv3 sm:py-scv6 text-title items-center ">
@@ -38,20 +55,23 @@ export default function ServicesStructure({
               textShadow:
                 "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
             }}
-          >            <div className="flex-1 relative max-w-scv18 mx-auto pl-8 lg:pl-[79px]">
+          >
+            <div className="flex-1 relative max-w-scv18 mx-auto pl-8 lg:pl-[79px]">
               <div className="absolute -right-[220px] h-full w-[576px] sm:w-[1200px]">
                 <Image
                   src={item.background}
-                  alt={item.title + item.motto}
+                  alt={item.title + " " + item.motto}
                   title={item.title}
                   fill
                   className="mix-blend-multiply bg-cover mask-horizontal-fade "
                 />
               </div>
-              
+
               <p className="text-cv6 sm:text-cv8 pt-scv7 pb-scv8 sm:py-0 sm:top-1/2 sm:-translate-y-1/2 relative max-w-[350px] sm:max-w-[600px] text-white text-left h-auto font-bold leading-1">
                 {item.motto}
-              </p>              {/* Botones de acción - posicionados a la derecha */}
+              </p>
+
+              {/* Botones de acción - posicionados a la derecha */}
               <div className="absolute right-64 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4">
                 <Link href="/ReservarCita">
                   <Button
@@ -64,18 +84,10 @@ export default function ServicesStructure({
                     Reservar Cita
                   </Button>
                 </Link>
-                
+
                 {item.promotionCards && item.promotionCards.length > 0 && (
                   <button
-                    onClick={() => {
-                      const promotionsSection = document.getElementById('service-promotions');
-                      if (promotionsSection) {
-                        promotionsSection.scrollIntoView({ 
-                          behavior: 'smooth',
-                          block: 'start'
-                        });
-                      }
-                    }}
+                    onClick={handleScrollToPromotions}
                     style={{
                       boxShadow:
                         "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
@@ -86,7 +98,7 @@ export default function ServicesStructure({
                   </button>
                 )}
               </div>
-              
+
               {/* Botones para mobile/tablet */}
               <div className="flex lg:hidden flex-col sm:flex-row gap-4 mt-6">
                 <Link href="/ReservarCita">
@@ -100,18 +112,10 @@ export default function ServicesStructure({
                     Reservar Cita
                   </Button>
                 </Link>
-                
+
                 {item.promotionCards && item.promotionCards.length > 0 && (
                   <button
-                    onClick={() => {
-                      const promotionsSection = document.getElementById('service-promotions');
-                      if (promotionsSection) {
-                        promotionsSection.scrollIntoView({ 
-                          behavior: 'smooth',
-                          block: 'start'
-                        });
-                      }
-                    }}
+                    onClick={handleScrollToPromotions}
                     style={{
                       boxShadow:
                         "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
@@ -134,8 +138,8 @@ export default function ServicesStructure({
           <div className="sm:hidden w-full max-w-[560px] mx-auto h-[600px] lg:h-[770px] overflow-hidden relative mt-scv3 ">
             <Image
               src={item.bgup}
-              alt={item.bgdownAlt}
-              title={item.bgdownTitle}
+              alt={item.bgdownAlt || "Imagen decorativa"}
+              title={item.bgdownTitle || item.title}
               fill
               className="object-cover object-center mask-all-fade"
             />
@@ -148,28 +152,25 @@ export default function ServicesStructure({
 
             <div className="flex justify-center">
               <div className="flex sm:hidden max-w-[300px] sm:max-w-[360px]">
-                <Carousel
-                  opts={{
-                    loop: true,
-                    align: "start",
-                  }}
-                  plugins={[
-                    Autoplay({
-                      delay: 3000,
-                    }),
-                  ]}
-                  className="w-full bg-transparent"
-                >
-                  <CarouselContent>
-                    {item.cards?.slice(0, 5).map((card, index) => (
-                      <CarouselItem key={index}>
-                        <Card className="border-none bg-transparent shadow-none">
-                          <CardContent className="p-0">
-                            <span className="text-4xl font-semibold  ">
-                              <div
-                                key={card.id}
-                                className="flex flex-col rounded-[34px] bg-[#634AE2] items-center  "
-                              >
+                {isClient && (
+                  <Carousel
+                    opts={{
+                      loop: true,
+                      align: "start",
+                    }}
+                    plugins={[
+                      Autoplay({
+                        delay: 3000,
+                      }),
+                    ]}
+                    className="w-full bg-transparent"
+                  >
+                    <CarouselContent>
+                      {item.cards?.slice(0, 5).map((card, index) => (
+                        <CarouselItem key={card.id}>
+                          <Card className="border-none bg-transparent shadow-none">
+                            <CardContent className="p-0">
+                              <div className="flex flex-col rounded-[34px] bg-[#634AE2] items-center">
                                 <div className="w-full md:w-[370px] h-[220px] md:h-[236px] flex flex-col rounded-lg p-4">
                                   <div className="flex justify-center items-center mt-scv4">
                                     <Image
@@ -188,32 +189,31 @@ export default function ServicesStructure({
                                   </div>
                                 </div>
                               </div>
-                            </span>
-                          </CardContent>
-                        </Card>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious
-                    variant="ghost"
-                    className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                    defaultIcon={false}
-                  >
-                    <ChevronLeft strokeWidth={4} className="!w-scv5 !h-scv5" />
-                  </CarouselPrevious>
-                  <CarouselNext
-                    variant="ghost"
-                    defaultIcon={false}
-                    className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                  >
-                    <ChevronRight strokeWidth={4} className="!w-scv5 !h-scv5" />
-                  </CarouselNext>
-                </Carousel>
+                            </CardContent>
+                          </Card>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious
+                      variant="ghost"
+                      className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
+                      defaultIcon={false}
+                    >
+                      <ChevronLeft strokeWidth={4} className="w-5 h-5" />
+                    </CarouselPrevious>
+                    <CarouselNext
+                      variant="ghost"
+                      defaultIcon={false}
+                      className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
+                    >
+                      <ChevronRight strokeWidth={4} className="w-5 h-5" />
+                    </CarouselNext>
+                  </Carousel>
+                )}
               </div>
             </div>
 
             <div className="hidden sm:flex justify-center py-8 px-4 sm:px-8">
-              {/* Oculto en móviles, visible en pantallas medianas y grandes */}
               <div className="flex justify-center flex-wrap max-w-scv18 items-center gap-x-scv6 gap-y-scv7">
                 {item.cards?.map((card) => (
                   <div
@@ -231,7 +231,7 @@ export default function ServicesStructure({
                         />
                       </div>
 
-                      <p className="text-center text-cv4 text-white font- leading-[19px] w-full">
+                      <p className="text-center text-cv4 text-white font-normal leading-[19px] w-full">
                         {card.text}
                       </p>
                     </div>
@@ -252,7 +252,7 @@ export default function ServicesStructure({
               <div className="flex justify-center flex-wrap gap-x-scv8 gap-y-scv7 pt-scv7 pb-scv10">
                 {item.iconos?.map((icono, index) => (
                   <div
-                    key={index}
+                    key={`${icono.id || index}`}
                     className="w-[190px] flex flex-col items-center gap-4"
                   >
                     <div className=" rounded-full w-32 h-32 p-scv6 bg-[#634AE2] flex items-center justify-center">
@@ -276,8 +276,8 @@ export default function ServicesStructure({
             <div className="flex-1 relative">
               <Image
                 fill
-                alt={item.bgdownAlt}
-                title={item.bgdownTitle}
+                alt={item.bgdownAlt || "Imagen decorativa"}
+                title={item.bgdownTitle || item.title}
                 src={item.bgdown}
                 className="object-cover object-right mask-horizontal-fade"
               />
@@ -293,60 +293,59 @@ export default function ServicesStructure({
 
             <div className="flex justify-center py-scv7">
               <div className="block md:hidden w-64">
-                <Carousel
-                  opts={{
-                    loop: true,
-                    align: "start",
-                  }}
-                  plugins={[
-                    Autoplay({
-                      delay: 3000,
-                    }),
-                  ]}
-                  className="w-full bg-transparent "
-                >
-                  <CarouselContent>
-                    {item.iconos?.slice(0, 5).map((icono, index) => (
-                      <CarouselItem key={index}>
-                        <div
-                          key={icono.id}
-                          className="flex flex-col items-center gap-4"
-                        >
-                          <div className="rounded-full bg-[#9494F3] p-6">
-                            <div className="w-32 h-32 flex items-center justify-center">
-                              <Image
-                                title={icono.title}
-                                src={icono.iconImage}
-                                alt={icono.text}
-                                width={80}
-                                height={80}
-                                className="w-20 h-20 object-contain"
-                              />
+                {isClient && (
+                  <Carousel
+                    opts={{
+                      loop: true,
+                      align: "start",
+                    }}
+                    plugins={[
+                      Autoplay({
+                        delay: 3000,
+                      }),
+                    ]}
+                    className="w-full bg-transparent "
+                  >
+                    <CarouselContent>
+                      {item.iconos?.slice(0, 5).map((icono, index) => (
+                        <CarouselItem key={`${icono.id || index}`}>
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="rounded-full bg-[#9494F3] p-6">
+                              <div className="w-32 h-32 flex items-center justify-center">
+                                <Image
+                                  title={icono.title}
+                                  src={icono.iconImage}
+                                  alt={icono.text}
+                                  width={80}
+                                  height={80}
+                                  className="w-20 h-20 object-contain"
+                                />
+                              </div>
                             </div>
-                          </div>
 
-                          <p className="text-center pt-3 text-[16px] text-title font-semibold leading-[20px] max-w-[200px]">
-                            {icono.text}
-                          </p>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious
-                    variant="ghost"
-                    className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                    defaultIcon={false}
-                  >
-                    <ChevronLeft strokeWidth={4} className="!w-scv5 !h-scv5" />
-                  </CarouselPrevious>
-                  <CarouselNext
-                    variant="ghost"
-                    defaultIcon={false}
-                    className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
-                  >
-                    <ChevronRight strokeWidth={4} className="!w-scv5 !h-scv5" />
-                  </CarouselNext>
-                </Carousel>
+                            <p className="text-center pt-3 text-[16px] text-title font-semibold leading-[20px] max-w-[200px]">
+                              {icono.text}
+                            </p>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious
+                      variant="ghost"
+                      className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
+                      defaultIcon={false}
+                    >
+                      <ChevronLeft strokeWidth={4} className="w-5 h-5" />
+                    </CarouselPrevious>
+                    <CarouselNext
+                      variant="ghost"
+                      defaultIcon={false}
+                      className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
+                    >
+                      <ChevronRight strokeWidth={4} className="w-5 h-5" />
+                    </CarouselNext>
+                  </Carousel>
+                )}
               </div>
             </div>
           </div>
@@ -355,15 +354,21 @@ export default function ServicesStructure({
             <SliderPrice promotions={item.promotionCards} />
           </div>
 
-          <div
-            className={`sticky bottom-0 left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]`}
-          >
-            
+          <div className="sticky bottom-0 left-0 right-0 w-full bg-[#DEDEFF] flex justify-center items-center z-[10]">
             <div className="flex flex-col lg:flex-row gap-y-scv3 items-center justify-center lg:justify-between w-full max-w-[1230px] px-6 py-scv4 space-x-0">
-              <p
-                className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center prx-16"
-                dangerouslySetInnerHTML={{ __html: item.textfooter }}
-              />
+              {/* Cambio de dangerouslySetInnerHTML por JSX directo */}
+              <p className="text-[18px] w-full font-medium text-[#634AE2] lg:text-start text-center prx-16">
+                {item.textfooter?.includes('<br/>') ? (
+                  item.textfooter.split('<br/>').map((line, i, arr) => (
+                    <span key={i}>
+                      {line}
+                      {i < arr.length - 1 && <br />}
+                    </span>
+                  ))
+                ) : (
+                  item.textfooter
+                )}
+              </p>
               <Link href="/ReservarCita">
                 <button className="w-full md:w-[329px] h-10 md:h-[50px] bg-[#5A4AE8] rounded-[34px] text-white font-normal text-[18px] leading-[33px] text-center mt-2 md:mt-0 px-16 md:px-0">
                   Reserva tu cita gratuita
