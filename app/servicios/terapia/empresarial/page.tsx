@@ -1,5 +1,5 @@
-import ServicesStructure from "@/components/Services/ServicesStructure"
-import { ServicesStructureProps } from "@/interface"
+import ServicesStructure from "@/components/Services/ServicesStructure";
+import { ServicesStructureProps } from "@/interface";
 
 import { Metadata } from "next";
 
@@ -13,12 +13,22 @@ export const metadata: Metadata = {
   },
 };
 
-
-const terapiaEmpresarial: ServicesStructureProps[] = [{
+const terapiaEmpresarial: ServicesStructureProps = {
   title: "Terapia empresarial",
-  edad: "",
-  motto:
-    "¿Tu empresa enfrenta altos niveles de estrés y conflictos internos? Impulsa el bienestar de tu equipo con nuestra terapia empresarial",
+  edad: "Para todos los miembros",
+  titleMobil: "Terapia empresarial",
+  edadMobil: "Para todos",
+  motto: (
+    <p>
+      ¿Tu empresa enfrenta altos niveles de estrés y conflictos internos?
+      Impulsa el bienestar de tu
+      <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+        {" "}
+        equipo
+      </span>{" "}
+      con nuestra terapia empresarial
+    </p>
+  ),
   background: "/Services/business/buisness.webp",
   bgdown: "/Services/business/bg2.webp",
   bgdownAlt: "",
@@ -93,102 +103,97 @@ const terapiaEmpresarial: ServicesStructureProps[] = [{
   textfootermobile:
     "¿Te atreves a revolucionar tu ambiente laboral y motivar a tu equipo como <br/>nunca antes?",
   promotionCards: [
-      {
-        id: 1,
-        title: "Terapia empresarial",
-        preciounit: "s/69",
-        cents: ".00",
-        regularprice: "Precio regular: s/90.00",
-        list: [
-          {
-            id: 1,
-            text: "Sesiones online de 40 a 50 minutos.",
-          },
-          {
-            id: 2,
-            text: "Desarrollo de estrategias para manejar momentos difíciles.",
-          },
-          {
-            id: 3,
-            text: "Espacio seguro para hablar y crecer.",
-          },
-          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
-        ],
-      },
-      {
-        id: 1,
-        title: "Terapia empresarial",
-        preciounit: "s/69",
-        cents: ".00",
-        regularprice: "Precio regular: s/90.00",
-        list: [
-          {
-            id: 1,
-            text: "Sesiones online de 40 a 50 minutos.",
-          },
-          {
-            id: 2,
-            text: "Desarrollo de estrategias para manejar momentos difíciles.",
-          },
-          {
-            id: 3,
-            text: "Espacio seguro para hablar y crecer.",
-          },
-          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
-        ],
-      },
-      {
-        id: 1,
-        title: "Terapia empresarial",
-        preciounit: "s/69",
-        cents: ".00",
-        regularprice: "Precio regular: s/90.00",
-        list: [
-          {
-            id: 1,
-            text: "Sesiones online de 40 a 50 minutos.",
-          },
-          {
-            id: 2,
-            text: "Desarrollo de estrategias para manejar momentos difíciles.",
-          },
-          {
-            id: 3,
-            text: "Espacio seguro para hablar y crecer.",
-          },
-          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
-        ],
-      },
-      {
-        id: 1,
-        title: "Terapia empresarial",
-        preciounit: "s/69",
-        cents: ".00",
-        regularprice: "Precio regular: s/90.00",
-        list: [
-          {
-            id: 1,
-            text: "Sesiones online de 40 a 50 minutos.",
-          },
-          {
-            id: 2,
-            text: "Desarrollo de estrategias para manejar momentos difíciles.",
-          },
-          {
-            id: 3,
-            text: "Espacio seguro para hablar y crecer.",
-          },
-          { id: 4, text: "Psicólogos certificados con amplia experiencia." },
-        ],
-      },
-    ],
-}
-
-]
+    {
+      id: 1,
+      title: "Terapia empresarial",
+      preciounit: "s/69",
+      cents: ".00",
+      regularprice: "Precio regular: s/90.00",
+      list: [
+        {
+          id: 1,
+          text: "Sesiones online de 40 a 50 minutos.",
+        },
+        {
+          id: 2,
+          text: "Desarrollo de estrategias para manejar momentos difíciles.",
+        },
+        {
+          id: 3,
+          text: "Espacio seguro para hablar y crecer.",
+        },
+        { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+      ],
+    },
+    {
+      id: 1,
+      title: "Terapia empresarial",
+      preciounit: "s/69",
+      cents: ".00",
+      regularprice: "Precio regular: s/90.00",
+      list: [
+        {
+          id: 1,
+          text: "Sesiones online de 40 a 50 minutos.",
+        },
+        {
+          id: 2,
+          text: "Desarrollo de estrategias para manejar momentos difíciles.",
+        },
+        {
+          id: 3,
+          text: "Espacio seguro para hablar y crecer.",
+        },
+        { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+      ],
+    },
+    {
+      id: 1,
+      title: "Terapia empresarial",
+      preciounit: "s/69",
+      cents: ".00",
+      regularprice: "Precio regular: s/90.00",
+      list: [
+        {
+          id: 1,
+          text: "Sesiones online de 40 a 50 minutos.",
+        },
+        {
+          id: 2,
+          text: "Desarrollo de estrategias para manejar momentos difíciles.",
+        },
+        {
+          id: 3,
+          text: "Espacio seguro para hablar y crecer.",
+        },
+        { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+      ],
+    },
+    {
+      id: 1,
+      title: "Terapia empresarial",
+      preciounit: "s/69",
+      cents: ".00",
+      regularprice: "Precio regular: s/90.00",
+      list: [
+        {
+          id: 1,
+          text: "Sesiones online de 40 a 50 minutos.",
+        },
+        {
+          id: 2,
+          text: "Desarrollo de estrategias para manejar momentos difíciles.",
+        },
+        {
+          id: 3,
+          text: "Espacio seguro para hablar y crecer.",
+        },
+        { id: 4, text: "Psicólogos certificados con amplia experiencia." },
+      ],
+    },
+  ],
+};
 
 export default function Home() {
-
-
-  return <ServicesStructure services={terapiaEmpresarial} />
-
+  return <ServicesStructure service={terapiaEmpresarial} />;
 }
