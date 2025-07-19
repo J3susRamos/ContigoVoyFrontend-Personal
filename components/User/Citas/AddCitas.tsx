@@ -58,11 +58,11 @@ function AddCitas({ open, dataPaciente }: AddCitasProps) {
         setLoading(false);
         handleViewModal();
         showToast("success", "Cita creada correctamente");
-        // Puedes mostrar un toast aquí si lo deseas
+
       } catch (error) {
         setLoading(false);
         showToast("error", "Error al crear la cita");
-        // Maneja el error (toast, mensaje, etc)
+
       }
     };
 
