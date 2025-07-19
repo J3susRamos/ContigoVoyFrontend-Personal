@@ -180,12 +180,12 @@ export default function App() {
   };
 
   return (
-    <div className="p-4 bg-[#f8f8ff] dark:bg-[#2b2d31] min-h-screen">
+    <div className="p-4 bg-[#eaeded] dark:bg-background min-h-screen">
       <HeaderUser title="Datos del paciente" />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid lg:grid-cols-2 gap-6 text-primary font-bold text-normal">
+        <div className="grid lg:grid-cols-2 gap-6 text-[#634AE2] font-bold text-normal">
           {/* Primera columna */}
-          <div className="bg-card dark:bg-[#262626] rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4">
+          <div className="bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormFieldInput label="Nombre" name="nombre" register={register} errors={errors} />
               <FormFieldInput label="DNI" name="DNI" maxLenght={8} register={register} errors={errors} />
@@ -208,25 +208,31 @@ export default function App() {
                       label=""
                       selectorButtonPlacement="start"
                       classNames={{
-                        inputWrapper: "bg-input dark:bg-[#1e1e23] rounded-full border border-border dark:border-border",
+                        inputWrapper:
+                          "px-4 text-sm outline-none font-light focus:ring-0 w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]",
                         segment: "!text-foreground dark:!text-foreground",
                       }}
-                      calendarProps={{
-                        classNames: {
-                          pickerMonthList: "bg-popover dark:bg-popover",
-                          pickerYearList: "bg-popover dark:bg-popover",
-                          pickerItem: "!text-popover-foreground dark:!text-popover-foreground",
-                          base: "bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
-                          headerWrapper: "pt-4 bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
-                          prevButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
-                          nextButton: "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
-                          gridHeader: "bg-popover dark:bg-popover shadow-none border-b-1 border-border dark:border-border text-popover-foreground dark:text-popover-foreground",
-                          cellButton: [
-                            "data-[today=true]:bg-accent dark:data-[today=true]:bg-accent data-[selected=true] text-foreground dark:text-foreground:bg-accent dark:bg-accent rounded-full",
-                            "data-[selected=true]:!bg-primary dark:data-[selected=true]:!bg-primary data-[selected=true]:!text-primary-foreground dark:data-[selected=true]:!text-primary-foreground rounded-full",
-                          ],
-                        },
-                      }}
+                     calendarProps={{
+                      classNames: {
+                        pickerMonthList: "bg-popover dark:bg-popover",
+                        pickerYearList: "bg-popover dark:bg-popover",
+                        pickerItem: "!text-popover-foreground dark:!text-popover-foreground",
+                        base:
+                          "bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
+                        headerWrapper:
+                          "pt-4 bg-popover dark:bg-popover text-popover-foreground dark:text-popover-foreground",
+                        prevButton:
+                          "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                        nextButton:
+                          "border-1 border-border dark:border-border rounded-small bg-popover dark:bg-popover text-xl text-popover-foreground dark:text-popover-foreground",
+                        gridHeader:
+                          "bg-popover dark:bg-popover shadow-none border-b-1 border-border dark:border-border text-popover-foreground dark:text-popover-foreground",
+                        cellButton: [
+                          "data-[today=true]:bg-accent dark:data-[today=true]:bg-accent data-[selected=true] text-foreground dark:text-foreground:bg-accent dark:bg-accent rounded-full",
+                          "data-[selected=true]:!bg-primary dark:data-[selected=true]:!bg-primary data-[selected=true]:!text-primary-foreground dark:data-[selected=true]:!text-primary-foreground rounded-full",
+                        ],
+                      },
+                    }}
                       onChange={(dateValue) => handleDateChange(dateValue, onChange)}
                       value={parseDateString(value)}
                     />
@@ -268,8 +274,8 @@ export default function App() {
               <select
                 value={prefix}
                 onChange={e => setPrefix(e.target.value)}
-                className="pl-4 pr-3 py-2 text-md outline-none focus:ring-0 focus:outline-none rounded-full border-none font-medium bg-[#F3F3F3] dark:bg-[#1e1e23] text-[#5d23df] dark:text-[#bbbafe]"
-              >
+                className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+                >
                 {countryPrefixes.map((item, index) => (
                   <option key={index} value={item.code}>
                     {item.name} ({item.code}) 
@@ -280,13 +286,13 @@ export default function App() {
             </div>
             <h1 className="text-center pt-4 pb-2 text-card-foreground dark:text-[#babbfe]">Imagen</h1>
             <div className="flex justify-center">
-              <div className="relative border border-border dark:border-border rounded-lg h-[220px] w-[220px] bg-input flex justify-center items-center cursor-pointer overflow-hidden dark:bg-[#1e1e23]">
+                <div className="relative border-2 border-[#634AE2] rounded-lg h-[220px] w-[220px] bg-[#F3F3F3] dark:bg-input flex justify-center items-center cursor-pointer overflow-hidden">
                 {base64Image ? (
                   <Image src={base64Image} alt="Imagen seleccionada" width={220} height={220} className="w-full h-full object-cover object-center" />
                 ) : (
                   <div className="flex flex-col items-center ">
                     <Plus width={40} height={40} strokeWidth={2} className="text-card-foreground dark:text-[#babbfe] " />
-                    <span className="text-card-foreground dark:text-[#babbfe] text-sm mt-2">Subir foto del paciente</span>
+                    <span className="text-sm mt-2">Subir foto del paciente</span>
                   </div>
                 )}
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
@@ -303,7 +309,7 @@ export default function App() {
           </div>
 
           {/* Segunda columna */}
-          <div className="bg-card dark:bg-[#262626] rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4 mt-6 lg:mt-0">
+          <div className="bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4 mt-6 lg:mt-0">
             <FormFieldInput label="Correo electrónico" name="email" register={register} errors={errors} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -314,7 +320,7 @@ export default function App() {
                   control={control}
                   render={({ field: { onChange } }) => (
                     <CountrySelect
-                      containerClassName="mt-2 w-full [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-[#f2f3f2] [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border rounded-xl"
+                      containerClassName="mt-2 w-full [&_.stdropdown-container]:!border-none [&_.stdropdown-container]:!bg-transparent [&_.stdropdown-input]:!p-0 [&_.stsearch-box]:!bg-[#f2f3f2] [&_.stsearch-box]:dark:!bg-input [&_.stsearch-box]:!rounded-full [&_.stdropdown-tools]:hidden w-full [&_.stsearch-box]:!border [&_.stsearch-box]:!border-border [&_.stsearch-box]:dark:!border-border"
                       inputClassName="appearance-none !border-none !outline-none pl-12 pr-10 h-9 w-full placeholder:text-muted-foreground dark:placeholder:text-[#babbfe] placeholder:text-base placeholder:font-normal bg-transparent focus:ring-0 text-[#5d23df] dark:text-[#babbfe] placeholder:font-semibold dark:bg-[#1e1e23]"
                       onChange={(selected) => handleCountryChange(selected, onChange)}
                       placeHolder="Seleccionar"
@@ -350,15 +356,15 @@ export default function App() {
         <div className="flex justify-center w-full p-4 mt-6 gap-6">
           <Link
             href="/user/pacientes/"
-            className="grid place-items-center text-primary dark:text-primary bg-card dark:bg-card rounded-full border-2 border-primary dark:border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
-          >
+            className="grid place-items-center text-[#634AE2] bg-card dark:bg-card rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+            >
             Volver
           </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="text-primary bg-card dark:bg-card rounded-full border-2 border-primary w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold dark:text-[#babbfe] dark:border-[#babbfe] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+            className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+            >
             {isSubmitting ? "Enviando..." : "Registrar"}
           </button>
         </div>

@@ -264,19 +264,19 @@ const CreateAtencion = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="min-h-screen p-4 dark:bg-background">
       {/* Header */}
-      <div className="flex flex-1 bg-[#eaeded] w-full z-30">
+      <div className="flex flex-1 bg-[#eaeded] dark:bg-background w-full z-30">
         <div>
-          <nav className="bg-[#eaeded] rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
-            <div className="bg-[#eaeded] flex items-end justify-end w-full">
+          <nav className="bg-[#eaeded] dark:bg-background rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
+            <div className="bg-[#eaeded] dark:bg-background flex items-end justify-end w-full">
               <div className="flex gap-x-5">
                 <CerrarSesion />
               </div>
             </div>
           </nav>
           <div>
-            <div className="pl-12 text-4xl items-center justify-items-center font-bold text-[#634AE2]">
+            <div className="pl-12 text-4xl items-center text-center font-bold text-[#634AE2]">
               <h1>Atencion al paciente</h1>
             </div>
           </div>
@@ -284,7 +284,7 @@ const CreateAtencion = () => {
         {/* body */}
       </div>
       <div className="flex mt-4 text-[#634AE2] font-bold text-normal">
-        <div className="flex-1 ml-5 mr-5 bg-[#fff] rounded-2xl p-4">
+        <div className="flex-1 ml-5 mr-5 rounded-2xl p-4 bg-card dark:bg-card">
           <div className="flex pt-2">
             <div className="flex-1 items-center justify-items-center">
               <div>Codigo del Paciente *</div>
@@ -293,7 +293,7 @@ const CreateAtencion = () => {
                   type="text"
                   readOnly
                   value={cita?.idPaciente}
-                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground"
                 />
                 <span
                   className="text-[#634AE2] transition-colors absolute right-3 top-1/2 transform -translate-y-1/2"
@@ -317,7 +317,7 @@ const CreateAtencion = () => {
                   type="text"
                   readOnly
                   value={cita?.paciente}
-                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground"
                 />
 
                 <span
@@ -341,13 +341,13 @@ const CreateAtencion = () => {
             <input
               type="text"
               readOnly
-              className="pl-12 pr-3 text-sm h-9 font-normal outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+              className="pl-12 pr-3 text-sm h-9 font-normal outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground"
               value={cita?.paciente}
               placeholder="Ningún paciente seleccionado"
             />
           </div>
-          <div className="flex pt-1">
-            <div className="flex-1 items-center justify-items-center">
+          <div className="grid grid-cols-2 pt-1 place-items-center">
+            <div className="text-center">
               <div>Motivo de la consulta</div>
               <div className="relative">
                 <input
@@ -357,11 +357,11 @@ const CreateAtencion = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, MotivoConsulta: e.target.value })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
                 />
               </div>
             </div>
-            <div className="flex-1 items-center justify-items-center">
+            <div className="text-center">
               <div>Forma de contacto</div>
               <div className="relative">
                 <input
@@ -371,7 +371,7 @@ const CreateAtencion = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, FormaContacto: e.target.value })
                   }
-                  className="pl-12 pr-3 text-sm h-9 mt-1 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
                 />
               </div>
             </div>
@@ -379,7 +379,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Diagnostico</div>
           <div className="flex justify-center">
             <textarea
-              className="bg-[#F3F3F3] w-11/12 h-20 border-1 font-light text-[#634AE2] p-3 rounded-3xl placeholder:text-[#634AE2] text-base"
+              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               name="Diagnostico"
               value={formData.Diagnostico}
               onChange={(e) =>
@@ -391,7 +391,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Tratamiento</div>
           <div className="flex justify-center">
             <textarea
-              className="bg-[#F3F3F3] w-11/12 h-20 border-1 font-light text-[#634AE2] p-3 rounded-3xl placeholder:text-[#634AE2] text-base"
+              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               name="Tratamiento"
               value={formData.Tratamiento}
               onChange={(e) =>
@@ -403,7 +403,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Observacion</div>
           <div className="flex justify-center">
             <textarea
-              className="bg-[#F3F3F3] w-11/12 h-20 border-1 font-light text-[#634AE2] p-3 rounded-3xl placeholder:text-[#634AE2] text-base"
+              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               name="Observacion"
               value={formData.Observacion}
               onChange={(e) =>
@@ -414,13 +414,13 @@ const CreateAtencion = () => {
           </div>
         </div>
         {/*Segunda Columna*/}
-        <div className="flex-1 mr-5 ml-5 bg-[#fff] rounded-2xl p-6">
+        <div className="flex-1 mr-5 ml-5 bg-card dark:bg-card rounded-2xl p-6">
           <div className="text-center pt-1 pb-1">
             Últimos objetivos / Objetivo alcanzado
           </div>
           <div className="flex justify-center">
             <textarea
-              className="bg-[#F3F3F3] w-11/12 h-20 border-1 font-light text-[#634AE2] p-3 rounded-3xl placeholder:text-[#634AE2] text-base"
+              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               name="UltimosObjetivos"
               value={formData.UltimosObjetivos}
               onChange={(e) =>
@@ -444,11 +444,11 @@ const CreateAtencion = () => {
                     setShowDSM5Dropdown(true);
                     setDSM5SearchTerm("");
                   }}
-                  className="pl-12 pr-3 text-sm h-9 font-normal outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
                   placeholder="Buscar por DSM5"
                 />
                 {showDSM5Dropdown && (
-                  <div className="absolute z-10 top-12 w-full bg-[#efefef] border rounded-lg shadow-lg max-h-60 overflow-auto">
+                  <div className="absolute z-10 top-12 w-full bg-[#efefef] dark:bg-input border rounded-lg shadow-lg max-h-60 overflow-auto">
                     {filteredEnfermedadesByDSM5.length > 0 ? (
                       filteredEnfermedadesByDSM5.map((enfermedad) => (
                         <div
@@ -482,11 +482,11 @@ const CreateAtencion = () => {
                     setShowCEA10Dropdown(true);
                     setCEA10SearchTerm("");
                   }}
-                  className="pl-12 pr-3 text-sm h-9 font-normal outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
                   placeholder="Buscar por CEA10"
                 />
                 {showCEA10Dropdown && (
-                  <div className="absolute z-10 top-12 w-full bg-[#efefef] border rounded-lg shadow-lg max-h-60 overflow-auto">
+                  <div className="absolute z-10 top-12 w-full bg-[#efefef] dark:bg-input border rounded-lg shadow-lg max-h-60 overflow-auto">
                     {filteredEnfermedadesByCEA10.length > 0 ? (
                       filteredEnfermedadesByCEA10.map((enfermedad) => (
                         <div
@@ -512,7 +512,7 @@ const CreateAtencion = () => {
             <input
               type="text"
               readOnly
-              className="pl-12 pr-3 text-sm h-9 font-normal outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3]"
+              className="px-4 w-11/12 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               value={
                 selectedEnfermedad
                   ? `${selectedEnfermedad.nombreEnfermedad}`
@@ -528,7 +528,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Comentario</div>
           <div className="flex justify-center">
             <textarea
-              className="bg-[#F3F3F3] w-11/12 h-20 border-1 font-light text-[#634AE2] p-3 rounded-3xl placeholder:text-[#634AE2] text-base"
+              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
               name="Comentario"
               value={formData.Comentario}
               onChange={(e) =>
@@ -539,20 +539,20 @@ const CreateAtencion = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between w-full p-4">
+      <div className="flex justify-center gap-8 w-full p-4">
         <Link
           href={{
             pathname: "/user/citas",
           }}
-          className="text-[#fff] bg-[#634AE2] rounded-full py-1 px-7"
+          className="grid place-items-center text-[#634AE2] bg-card dark:bg-card rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
           passHref
         >
           Volver
         </Link>
         <button
           onClick={HandlePostAtencion}
-          className="text-[#634AE2] bg-[#fff] rounded-full border-2 border-[#634AE2] w-28 h-8"
-        >
+          className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+          >
           Registrar
         </button>
       </div>

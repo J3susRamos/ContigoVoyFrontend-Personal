@@ -194,7 +194,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
           <div className="mt-4 sm:mt-6 text-[#634AE2] font-bold text-semibold dark:text-[#bbbafe]">
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
               {/* Primera Columna */}
-              <div className="bg-[#fff] dark:bg-[#272726] rounded-2xl p-4 sm:p-6 lg:p-8">
+              <div className="bg-card dark:bg-card rounded-2xl p-4 sm:p-6 lg:p-8">
                 {hasFamily && paciente && (
                   <div className="mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -245,7 +245,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
               </div>
 
               {/* Segunda Columna */}
-              <div className="bg-[#fff] dark:bg-[#272726] rounded-2xl p-4 sm:p-6 lg:p-8">
+              <div className="bg-card dark:bg-card rounded-2xl p-4 sm:p-6 lg:p-8">
                 <div className="space-y-4 sm:space-y-6">
                   <FormFieldInput
                     label="Nombre del apoderado"
@@ -261,7 +261,7 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
                     placeholder="Selecciona el estado del apoderado"
                     options={estadoOptions}
                   />
-                  <div className="  grid grid-cols-1 sm:grid-cols-2">
+                  <div className="  grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <FormFieldInput
                       label="Cantidad de hijos"
                       errors={errors}
@@ -298,30 +298,28 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
             </div>
           </div>
           <div
-            className={`flex w-full p-4 mt-5 max-sm:flex-col max-sm:gap-2 relative ${
+            className={`flex w-full p-4 mt-5 max-sm:flex-col max-sm:gap-2 gap-4 relative ${
               hasFamily ? "justify-between" : "justify-center"
             }`}
           >
             <Link
               href="/user/pacientes"
-              className={`text-[#634AE2] bg-[#fff] dark:bg-[#1e1e23] rounded-full border-2 border-[#634AE2] dark:border-white dark:text-white w-28 sm:h-8 flex items-center justify-center max-sm:w-full max-sm:py-2 ${
-                !hasFamily ? "absolute left-4" : ""
-              }`}
+              className="bg-card grid place-items-center dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
             >
               Volver
             </Link>
             <button
               type="submit"
-              className="text-white bg-[#634AE2] dark:bg-[#1e1f22] rounded-full border-2 border-[#634AE2] dark:border-white dark:text-white w-28 sm:h-8 max-sm:w-full max-sm:py-2"
-            >
+              className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+              >
               {hasFamily ? "Actualizar" : "Registrar"}
             </button>
             {hasFamily && (
               <button
                 type="button"
                 onClick={() => setShowDeleteModal(true)}
-                className="text-red-500 bg-[#fff] dark:bg-[#1e1e23] rounded-full border-2 border-red-500 dark:border-white dark:text-white w-28 sm:h-8 flex items-center justify-center max-sm:w-full max-sm:py-2"
-              >
+                className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+                >
                 Borrar
               </button>
             )}
