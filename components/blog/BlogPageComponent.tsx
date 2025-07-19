@@ -176,7 +176,7 @@ export default function BlogPageComponent({
     setIsCarouselPlaying(true); // Activar carrusel automático
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8f9ff] via-[#f0f2ff] to-[#e8ebff] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen dark:bg-gray-900 bg-gray-100">
       <div className="container mx-auto px-4 py-6 lg:py-8">
         {/* Header Section */}
         <div className="mb-8">

@@ -116,7 +116,7 @@ const terapiaEmpresarial: ServicesStructureProps[] = [{
         ],
       },
       {
-        id: 1,
+        id: 2,
         title: "Terapia empresarial",
         preciounit: "s/69",
         cents: ".00",
@@ -138,7 +138,7 @@ const terapiaEmpresarial: ServicesStructureProps[] = [{
         ],
       },
       {
-        id: 1,
+        id: 3,
         title: "Terapia empresarial",
         preciounit: "s/69",
         cents: ".00",
@@ -160,7 +160,7 @@ const terapiaEmpresarial: ServicesStructureProps[] = [{
         ],
       },
       {
-        id: 1,
+        id: 4,
         title: "Terapia empresarial",
         preciounit: "s/69",
         cents: ".00",

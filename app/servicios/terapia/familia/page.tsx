@@ -115,6 +115,31 @@ const FamilyTerapias: ServicesStructureProps[] = [
           { id: 4, text: "Psicólogos expertos en dinámicas familiares." },
         ],
       },
+      {
+        id: 2,
+        title: "Terapia de pareja",
+        preciounit: "s/129",
+        cents: ".00",
+        regularprice: "Precio regular: s/90.00",
+        list: [
+          {
+            id: 1,
+            text: "Sesiones online de 40 a 50 minutos.",
+          },
+          {
+            id: 2,
+            text: "Fortalece la comunicación y conexión emocional.",
+          },
+          {
+            id: 3,
+            text: "Técnicas para resolver conflictos de forma constructiva.",
+          },
+          {
+            id: 4,
+            text: "Psicólogos especializados en relaciones de pareja.",
+          },
+        ],
+      },
     ],
   },
 ];

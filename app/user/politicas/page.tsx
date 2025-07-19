@@ -10,7 +10,7 @@ const POLITICAS_CONTENT = {
 export default function Politicas() {
   return (
     <div className="h-full">
-      <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div className="bg-[#f8f8ff] dark:bg-background min-h-screen transition-colors duration-300">
               {/* Encabezado */}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 pt-6 pb-4">
                 <div>

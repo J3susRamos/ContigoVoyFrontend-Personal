@@ -126,7 +126,7 @@ const AdultoTerapias: ServicesStructureProps[] = [
         ],
       },
       {
-        id: 1,
+        id: 2,
         title: "Terapia para adultos",
         preciounit: "s/69",
         cents: ".00",
@@ -148,7 +148,7 @@ const AdultoTerapias: ServicesStructureProps[] = [
         ],
       },
       {
-        id: 1,
+        id: 3,
         title: "Terapia para adultos",
         preciounit: "s/69",
         cents: ".00",
@@ -170,7 +170,7 @@ const AdultoTerapias: ServicesStructureProps[] = [
         ],
       },
       {
-        id: 1,
+        id: 4,
         title: "Terapia para adultos",
         preciounit: "s/69",
         cents: ".00",

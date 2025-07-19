@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden dark:bg-gray-900 bg-gray-100">
       <MainSlider />
       <TherapyServices />
       <ChooseUs />

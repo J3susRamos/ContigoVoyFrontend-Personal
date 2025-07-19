@@ -52,7 +52,7 @@ export default function TherapyServices() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 bg-gray-50 dark:bg-gray-900">
       {/* Título */}
       <motion.h2
         className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center dark:text-white text-[#543dec] mb-6 lg:mb-8"
@@ -85,8 +85,8 @@ export default function TherapyServices() {
               >
                 {/* Patrón de fondo sutil */}
                 <div className="absolute inset-0 opacity-5">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white dark:bg-gray-900 rounded-full -translate-y-16 translate-x-16"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-white dark:bg-gray-900 rounded-full translate-y-12 -translate-x-12"></div>
                 </div>
 
                 {/* Contenido Superior */}

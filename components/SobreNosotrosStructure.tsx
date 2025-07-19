@@ -29,7 +29,7 @@ const ValueCard = ({ title, content, icon }: { title: string, content: string, i
 
 export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
   return (
-    <div className="w-full">
+    <div className="w-full dark:bg-gray-900">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
         <div className="absolute inset-0">
@@ -65,7 +65,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
       </section>
 
       {/* Nuestra Historia */}
-      <section className="py-24 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50">
+      <section className="py-24 dark:bg-gray-900 bg-gray-100">
         <SectionHeader>Nuestra Historia</SectionHeader>
         <div className="grid lg:grid-cols-2 gap-16 items-center px-6 max-w-7xl mx-auto">
           <motion.div
@@ -111,7 +111,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
       </section>
 
       {/* Misión y Visión */}
-      <section className="py-20 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50">
+      <section className="py-20 dark:bg-gray-900 bg-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12">
             <motion.div
@@ -139,7 +139,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
       </section>
 
       {/* Nuestros Valores */}
-      <section className="py-24 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50">
+      <section className="py-24 dark:bg-gray-900 bg-gray-100">
         <SectionHeader>Nuestros Valores</SectionHeader>
         <div className="grid md:grid-cols-3 gap-8 px-6 max-w-7xl mx-auto">
           <motion.div

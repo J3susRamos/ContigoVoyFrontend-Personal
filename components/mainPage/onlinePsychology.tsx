@@ -132,7 +132,7 @@ export default function ChooseUs() {
   };
 
   return (
-    <div className="w-full max-w-full flex flex-col items-center justify-center pt-8 pb-14  mw:pt-12 mw:pb-16 my-scv6 bg-large-gradient relative overflow-hidden">
+    <div className="w-full max-w-full flex flex-col items-center justify-center pt-8 pb-14 mw:pt-12 mw:pb-16 my-scv6 bg-large-gradient relative overflow-hidden">
       <div className="relative w-full pb-14">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
