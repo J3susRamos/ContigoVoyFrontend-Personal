@@ -61,7 +61,7 @@ function AddCitas({ open, dataPaciente }: AddCitasProps) {
 
       } catch (error) {
         setLoading(false);
-        showToast("error", "Error al crear la cita");
+        showToast("error", "Error al crear la cita: " + error);
 
       }
     };

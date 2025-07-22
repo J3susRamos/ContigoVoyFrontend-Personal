@@ -1,6 +1,6 @@
 import { Citas } from "@/interface";
 import dayjs from "dayjs";
-import { Clock, MapPin, User, X, Mars, Venus,VenusAndMars } from "lucide-react";
+import { Clock, User, X, Mars, Venus,VenusAndMars } from "lucide-react";
 
 function CalendarModal({
   cita,
