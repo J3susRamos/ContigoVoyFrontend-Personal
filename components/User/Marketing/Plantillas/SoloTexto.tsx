@@ -49,15 +49,14 @@ const EmailMarketingEditor = () => {
     if (emailBlocks.length >= MAX_BLOCKS) {
       showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques de texto.`);
       return;
-    }
-    const newBlock: EmailBlock = {
+    }    const newBlock: EmailBlock = {
       id: Date.now().toString(),
       type: 'text',
       content: 'Nuevo bloque de texto',
       styles: {
         bold: false,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       }
     };
     setEmailBlocks([...emailBlocks, newBlock]);
@@ -70,15 +69,14 @@ const EmailMarketingEditor = () => {
     if (hasHeader) {
       showAlert("Solo puede haber un encabezado.");
       return;
-    }
-    const newBlock: EmailBlock = {
+    }    const newBlock: EmailBlock = {
       id: Date.now().toString(),
       type: 'header',
       content: 'Título del encabezado',
       styles: {
         bold: true,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       }
     };
     setEmailBlocks([newBlock, ...emailBlocks]);
@@ -90,15 +88,14 @@ const EmailMarketingEditor = () => {
     if (emailBlocks.length >= MAX_BLOCKS) {
       showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques.`);
       return;
-    }
-    const newBlock: EmailBlock = {
+    }    const newBlock: EmailBlock = {
       id: Date.now().toString(),
       type: 'divider',
       content: '',
       styles: {
         bold: false,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       }
     };
     setEmailBlocks([...emailBlocks, newBlock]);
@@ -231,10 +228,10 @@ const EmailMarketingEditor = () => {
                         className={`leading-relaxed ${block.type === 'header'
                           ? 'text-xl sm:text-2xl font-bold'
                           : 'text-sm sm:text-base'
-                          } text-black break-words`}
-                        style={{
+                          } text-black break-words`}                        style={{
                           fontWeight: block.styles.bold ? 'bold' : 'normal',
                           fontStyle: block.styles.italic ? 'italic' : 'normal',
+                          color: block.styles.color || '#000000',
                         }}
                       >
                         {block.content}
@@ -260,11 +257,15 @@ const EmailMarketingEditor = () => {
                         <div className="flex items-center space-x-3">
                           <div className="bg-blue-600 p-2 rounded">
                             <Type className="w-4 h-4 text-white" />
-                          </div>
-                          <textarea
+                          </div>                          <textarea
                             value={block.content}
                             onChange={(e) => updateBlockContent(block.id, e.target.value)}
                             className="bg-gray-600 text-white p-2 rounded w-full resize-none text-sm"
+                            style={{
+                              color: block.styles.color || '#ffffff',
+                              fontWeight: block.styles.bold ? 'bold' : 'normal',
+                              fontStyle: block.styles.italic ? 'italic' : 'normal',
+                            }}
                             placeholder="Escribe tu texto aquí..."
                             rows={3}
                           />

@@ -53,15 +53,14 @@ const EmailMarketingEditor = () => {
     if (emailBlocks.length >= MAX_BLOCKS) {
       showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques de texto.`);
       return;
-    }
-    const newBlock: EmailBlock = {
+    }    const newBlock: EmailBlock = {
       id: Date.now().toString(),
       type: 'text',
       content: 'Nuevo bloque de texto',
       styles: {
         bold: false,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       }
     };
     setEmailBlocks([...emailBlocks, newBlock]);
@@ -74,15 +73,14 @@ const EmailMarketingEditor = () => {
     if (hasHeader) {
       showAlert("Solo puede haber un encabezado.");
       return;
-    }
-    const newBlock: EmailBlock = {
+    }    const newBlock: EmailBlock = {
       id: Date.now().toString(),
       type: 'header',
       content: 'Título del encabezado',
       styles: {
         bold: true,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       }
     };
     setEmailBlocks([newBlock, ...emailBlocks]);
@@ -94,15 +92,14 @@ const EmailMarketingEditor = () => {
     if (emailBlocks.length >= MAX_BLOCKS) {
       showAlert(`Solo puedes agregar hasta ${MAX_BLOCKS} bloques.`);
       return;
-    }
-    const newBlock: EmailBlock = {
+    }    const newBlock: EmailBlock = {
       id: Date.now().toString(),
       type: 'divider',
       content: '',
       styles: {
         bold: false,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       }
     };
     setEmailBlocks([...emailBlocks, newBlock]);
@@ -115,16 +112,14 @@ const EmailMarketingEditor = () => {
     if (hasImage) {
       showAlert("Solo puede haber una imagen en la parte superior.");
       return;
-    }
-
-    const newBlock: EmailBlock = {
+    }    const newBlock: EmailBlock = {
       id: Date.now().toString(),
       type: 'image',
       content: '',
       styles: {
         bold: false,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       },
       imageUrl: ''
     };
@@ -132,7 +127,6 @@ const EmailMarketingEditor = () => {
     setSelectedBlock(newBlock.id);
     showAlert("Se agregó la imagen en la parte superior.");
   };
-
   const addColumnsBlock = () => {
     const newBlock: EmailBlock = {
       id: Date.now().toString(),
@@ -141,7 +135,7 @@ const EmailMarketingEditor = () => {
       styles: {
         bold: false,
         italic: false,
-        color: '#ffffff'
+        color: '#000000'
       },
       imageUrls: ['', '']
     };
@@ -307,10 +301,10 @@ const EmailMarketingEditor = () => {
                         className={`leading-relaxed ${block.type === 'header'
                             ? 'text-xl sm:text-2xl font-bold'
                             : 'text-sm sm:text-base'
-                          } text-black break-words`}
-                        style={{
+                          } text-black break-words`}                        style={{
                           fontWeight: block.styles?.bold ? 'bold' : 'normal',
                           fontStyle: block.styles?.italic ? 'italic' : 'normal',
+                          color: block.styles?.color || '#000000',
                         }}
                       >
                         {block.content}
@@ -441,11 +435,15 @@ const EmailMarketingEditor = () => {
                         ))}
                       </div>
                     ) : (
-                      <div className="flex flex-col gap-2">
-                        <textarea
+                      <div className="flex flex-col gap-2">                        <textarea
                           value={block.content}
                           onChange={(e) => updateBlockContent(block.id, e.target.value)}
                           className="bg-gray-600 text-white p-2 rounded w-full resize-none text-sm"
+                          style={{
+                            color: block.styles?.color || '#ffffff',
+                            fontWeight: block.styles?.bold ? 'bold' : 'normal',
+                            fontStyle: block.styles?.italic ? 'italic' : 'normal',
+                          }}
                           placeholder={block.type === 'header' ? 'Escribe un encabezado' : 'Escribe tu texto'}
                           rows={block.type === 'header' ? 2 : 3}
                         />
