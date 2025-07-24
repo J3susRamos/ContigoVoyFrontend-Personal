@@ -439,6 +439,7 @@ export interface Citas {
   genero: string;
   fecha_nacimiento: string;
 }
+
 export interface CitasApiResponse {
   status_code: number;
   status_message: string;
