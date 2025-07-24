@@ -14,10 +14,14 @@ export const CitaActionButtons: React.FC<CitaActionButtonsProps> = ({
   idCita,
   showPacientButton = false
 }) => {
-  const { navigateToAtencion } = useNavigation();
+  const { navigateToAtencion, navigateToPaciente } = useNavigation();
 
   const handleAtencionClick = () => {
     navigateToAtencion(idCita);
+  };
+
+  const handlePacienteClick = () => {
+    navigateToPaciente(idCita);
   };
 
   return (
@@ -31,7 +35,7 @@ export const CitaActionButtons: React.FC<CitaActionButtonsProps> = ({
         <ActionButton
           icon={ArrowUpCircle}
           label="Paciente"
-          onClick={handleAtencionClick}
+          onClick={handlePacienteClick}
         />
       )}
     </>
