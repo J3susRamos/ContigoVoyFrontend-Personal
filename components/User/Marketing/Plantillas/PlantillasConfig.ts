@@ -13,7 +13,7 @@ export const defaultDosColumnasTemplate: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       },
       imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
     },
@@ -24,7 +24,7 @@ export const defaultDosColumnasTemplate: {
       styles: {
         bold: true,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     },
     {
@@ -34,7 +34,7 @@ export const defaultDosColumnasTemplate: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       },
       imageUrls: [
         "https://via.placeholder.com/250x250?text=Columna+1",
@@ -48,7 +48,7 @@ export const defaultDosColumnasTemplate: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     }
   ],
@@ -68,7 +68,7 @@ export const defaultImagenTexto: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       },
       imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
     },
@@ -79,7 +79,7 @@ export const defaultImagenTexto: {
       styles: {
         bold: true,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     },
     {
@@ -89,7 +89,7 @@ export const defaultImagenTexto: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     }
   ],
@@ -108,7 +108,7 @@ export const defaultSoloTexto: {
       styles: {
         bold: true,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     },
     {
@@ -118,7 +118,7 @@ export const defaultSoloTexto: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     }
   ],
@@ -137,7 +137,7 @@ export const defaultTextoImagen: {
       styles: {
         bold: true,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     },
     {
@@ -147,7 +147,7 @@ export const defaultTextoImagen: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     },
     {
@@ -157,7 +157,7 @@ export const defaultTextoImagen: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       },
       imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
     }
@@ -177,7 +177,7 @@ export const defaultUnaColumna: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       },
       imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
     },
@@ -188,7 +188,7 @@ export const defaultUnaColumna: {
       styles: {
         bold: true,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     },
     {
@@ -198,7 +198,7 @@ export const defaultUnaColumna: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       },
       imageUrl: "https://via.placeholder.com/600x200?text=Imagen+Superior"
     },
@@ -209,7 +209,7 @@ export const defaultUnaColumna: {
       styles: {
         bold: false,
         italic: false,
-        color: "#ffffff"
+        color: "#000000"
       }
     },
   ],
