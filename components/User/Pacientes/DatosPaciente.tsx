@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { DatosPacienteProps, Paciente } from "@/interface";
 import { getPaciente } from "@/components/User/Pacientes/getPacienteData";
 import { useRouter } from "next/navigation";
+import { FamiliaButton } from "./TablePacientes";
 
 const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
   const [paciente, setPaciente] = useState<Paciente | null>(null);
@@ -97,6 +98,7 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
               >
                 Editar
               </button >
+              <FamiliaButton idPaciente={idPaciente || 0} />
             </div>
           </div>
         </div>
