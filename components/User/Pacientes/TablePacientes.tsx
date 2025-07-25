@@ -58,7 +58,7 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
 
 export default TablePacientes;
 
-const FamiliaButton = ({ idPaciente }: { idPaciente: number }) => {
+export const FamiliaButton = ({ idPaciente }: { idPaciente: number}) => {
 
   const redirectToFamily = (idPaciente: number) => {
     localStorage.setItem("idPaciente", String(idPaciente));
