@@ -29,7 +29,7 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/listapsicologo.webp"}
         alt="Psicología online Beneficios Elige a tu Psicologo"
-        title="Elige a tu psicólogo"
+        title="Elige a tu Psicólogo Contigo Voy Terapia Psicológica"
         width={70}
         height={60}
         className="w-[50px] mw:w-[70px]"
@@ -47,7 +47,7 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/terapiaencasa.webp"}
         alt="Psicología online Beneficios tu terapia en línea"
-        title="Inicia tu terapia en línea"
+        title="Elige tu terapia en línea - Terapia Psicológica Online"
         width={70}
         height={60}
         className="w-[50px] mw:w-[70px]"
@@ -64,7 +64,7 @@ const features = [
       <Image
         src={"/OnlinePsychologyImages/agendahorario.webp"}
         alt="Psicología online Beneficios elige tu horario ideal"
-        title="Agenda tu horario ideal"
+        title="Horario ideal - Terapia Psicológica Online"
         width={70}
         height={60}
         className="w-[50px] mw:w-[70px]"

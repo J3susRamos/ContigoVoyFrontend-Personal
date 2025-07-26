@@ -57,19 +57,19 @@ const AdultoTerapias: ServicesStructureProps = {
       id: 3,
       title:
         "Dificultades para manejar emociones en adultos Contigo Voy Psicología Online",
-      text: "Dificultades emocionales",
+      text: "Dificultades emocionales | Centro Psicológico Contigo Voy",
       iconImage: "/Services/adult/dificultades.webp",
     },
     {
       id: 4,
       title: "Acompañamiento en el duelo Adultos Contigo Voy Psicología Online",
-      text: "Proceso de duelo",
+      text: "Proceso de duelo | Centro Psicológico Contigo Voy",
       iconImage: "/Services/adult/duelo.webp",
     },
     {
       id: 5,
       title: "Crecimiento personal en Adultos Contigo Voy Psicología Online",
-      text: "Crecimiento personal",
+      text: "Crecimiento personal  | Centro Psicológico Contigo Voy",
       iconImage: "/Services/adult/personal.webp",
     },
   ],

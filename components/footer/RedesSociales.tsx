@@ -37,18 +37,18 @@ const redes = [
 
 const RedesSociales = () => {
   return (
-    <div>
-      <ul className="wrapper flex space-x-2 items-center">
+    <div className="w-[120%]">
+      <ul className="wrapper  space-x-2 items-center">
         {redes.map((rede, index) => (
           <li
-          className={`icon ${rede.nombre} fill-current text-[#634AE2]`}
+            className={`icon ${rede.nombre} fill-current text-[#634AE2] `}
             key={index}
             onClick={() => window.open(rede.link, "_blank")}
           >
             <span className="tooltip capitalize">{rede.nombre}</span>
             <div
               role="img"
-              aria-label= {rede.alt}
+              aria-label={rede.alt}
               className="icon-svg"
               dangerouslySetInnerHTML={{ __html: rede.icono }}
             />

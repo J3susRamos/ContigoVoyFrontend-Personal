@@ -86,15 +86,14 @@ const TeenTerapias: ServicesStructureProps = {
     },
     {
       id: 2,
-      title:
-        "Terapia para el equilibrio saludable en adolescentes Contigo Voy Psicología Online",
+      title: "Equilibrio en Adolescentes Contigo Voy Psicología Online",
       text: "Fomenta un equilibrio saludable entre sus responsabilidades y su bienestar emocional",
       icon: "/Services/teen/therapy/equilibrio.webp",
     },
     {
       id: 3,
       title:
-        "Terapia en adolescentes para comunicación efectiva Contigo Voy Psicología Online",
+        "Habilidades comunicativas en Adolescentes Contigo Voy Psicología Online",
       text: "Mejora las habilidades para comunicarse y relacionarse con los demás.",
       icon: "/Services/teen/therapy/comunicacion.webp",
     },

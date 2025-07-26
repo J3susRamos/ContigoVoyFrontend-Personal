@@ -97,7 +97,7 @@ const Navbar = () => {
         >
           <Image
             src="/LOGO.webp"
-            title="Contigo Voy Terapia Psicológica online"
+            title="Contigo Voy Psicología | Centro Psicologico Online"
             alt="Centro Psicológico Contigo Voy Online"
             width={143}
             height={50}
@@ -110,7 +110,7 @@ const Navbar = () => {
         <div className="flex items-center gap-x-5">
           <DesktopNav navItems={navItemsDesktop} />
           <div className="lg:hidden ">
-              <MobileNav navItems={navItemsMobil} />
+            <MobileNav navItems={navItemsMobil} />
           </div>
         </div>
       </div>
