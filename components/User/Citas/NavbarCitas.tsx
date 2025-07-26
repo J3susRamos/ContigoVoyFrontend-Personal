@@ -22,6 +22,7 @@ const SubmenusInitialState = {
     estado: false,
     fechaInicio: false,
     edad: false,
+    codigo: false,
 };
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -42,6 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     const [fechaSeleccionada, setFechaSeleccionada] = useState<
         [string, string] | string[]
     >([]);
+    const [codigo, setCodigo] = useState<string[]>([]);
 
     useEffect(() => {
         setSubmenus({
@@ -49,6 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             edad: false,
             estado: false,
             fechaInicio: false,
+            codigo: false,
         });
     }, [filters, menuOpen]);
 
@@ -76,6 +79,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                                     text: "Fecha de inicio",
                                     key: "fechaInicio",
                                 },
+                                {
+                                    text: "Tipo de usuario",
+                                    key: "codigo",
+                                }
                             ]}
                         />
 
@@ -221,6 +228,49 @@ export const Navbar: React.FC<NavbarProps> = ({
                                 fechaSeleccionada={fechaSeleccionada}
                                 setFechaSeleccionada={setFechaSeleccionada}
                             />
+                        </FilterSubMenu>
+
+                        <FilterSubMenu 
+                            titulo="Tipo de usuario"
+                            isOpen={submenus.codigo}
+                            value={codigo}
+                            setFilters={setFilters}
+                            setLocalValue={setCodigo}
+                            filterKey="codigo"
+                        >
+                            <div className="flex flex-col text-sm pl-10">
+                                {["Prepaciente", "Paciente"].map(
+                                    (opcion) => (
+                                        <label
+                                            key={opcion}
+                                            className="text-[#634AE2] text-lg flex items-center gap-4"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                name="codigo"
+                                                value={opcion}
+                                                checked={codigo.includes(opcion)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setCodigo([
+                                                            ...codigo,
+                                                            opcion,
+                                                        ]);
+                                                    } else {
+                                                        setCodigo(
+                                                            codigo.filter(
+                                                                (item) => item !== opcion
+                                                            )
+                                                        );
+                                                    }
+                                                }}
+                                                className="appearance-none w-4 h-4 rounded-full border-2 border-[#634AE2] checked:bg-[#634AE2] checked:border-[#634AE2] mr-2"
+                                            />
+                                            {opcion}
+                                        </label>
+                                    )
+                                )}
+                            </div>
                         </FilterSubMenu>
                     </FilterButton>
                     {/* Icono de lupa */}

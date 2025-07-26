@@ -590,6 +590,7 @@ export interface FiltersCitas extends GenericFilters {
   estado: string[];
   edad: string[];
   fechaInicio: string[];
+  codigo: string[];
 }
 
 export interface EmailBlock {

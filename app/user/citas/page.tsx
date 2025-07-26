@@ -12,6 +12,7 @@ const FiltersCitasInitialState: FiltersCitas = {
   estado: [],
   edad: [],
   fechaInicio: [],
+  codigo: [],
 };
 
 export default function App() {
