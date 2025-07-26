@@ -53,7 +53,7 @@ const features = [
         className="w-[50px] mw:w-[70px]"
       />
     ),
-    title: "Inicia tu terapia en línea",
+    title: "Elige tu terapia en línea - Terapia Psicológica Online",
     description:
       "Conéctate a tu consulta psicológica a través de contigo voy y empieza tu proceso terapéutico.",
     background:
@@ -70,7 +70,7 @@ const features = [
         className="w-[50px] mw:w-[70px]"
       />
     ),
-    title: "Agenda tu horario ideal",
+    title: "Horario ideal - Terapia Psicológica Online",
     description:
       "Programa tus sesiones en el día y la hora que mejor se ajusten a tu rutina.",
     background:

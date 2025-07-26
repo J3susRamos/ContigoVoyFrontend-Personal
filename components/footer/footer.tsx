@@ -31,10 +31,9 @@ export default function Footer() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6 }}
               className="flex-shrink-0"
-            >
-              <Image
+            >              <Image
                 src="/LogoBlanco.webp"
-                title="Contigo Voy - Terapia Psicológica "
+                title="Contigo Voy - Terapia Psicológica"
                 alt="Eligenos - Confidencialidad Contigo Voy"
                 width={150}
                 height={60}

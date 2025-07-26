@@ -35,9 +35,9 @@ const TeenTerapias: ServicesStructureProps = {
   bgdown: "/Services/teen/psicologos-especializados-en-adolescentes.webp",
   bgdownAlt: "Adolescente feliz | Psicología Online",
   bgdownTitle:
-    "Ayuda a tu hijo a sentirse escuchado y comprendido en esta etapa tan crucial de su desarrollo con nuestra terapia integral. Apoyamos a los adolescentes a manejar sus emociones, fortalecer su autoestima y desarrollar su habilidades sociales en un espacio seguro.",
+    " Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos.",
   description:
-    "Ayuda a tu hijo a sentirse escuchado y comprendido en esta etapa tan crucial de su desarrollo con nuestra terapia integral. Apoyamos a los adolescentes a manejar sus emociones, fortalecer su autoestima y desarrollar su habilidades sociales en un espacio seguro.",
+    " Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos",
   tittleIcon:
     "Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos.",
   iconos: [
@@ -83,10 +83,10 @@ const TeenTerapias: ServicesStructureProps = {
       title: "Frustraciones en adolescentes Contigo Voy Psicología Online",
       text: "Ayuda a manejar la frustración y transformar emociones difíciles en acciones positivas.",
       icon: "/Services/teen/therapy/frustraciones.webp",
-    },
-    {
+    },    {
       id: 2,
-      title: "Equilibrio en Adolescentes Contigo Voy Psicología Online",
+      title:
+        "Equilibrio en Adolescentes Contigo Voy Psicología Online",
       text: "Fomenta un equilibrio saludable entre sus responsabilidades y su bienestar emocional",
       icon: "/Services/teen/therapy/equilibrio.webp",
     },

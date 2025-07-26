@@ -34,105 +34,160 @@ export default function ServicesStructure({
   service: ServicesStructureProps;
 }) {
   return (
-    <div className="relative dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50 ">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
+    <div className="relative dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50 ">      <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 min-h-screen flex items-center">
+        {/* Background decorative elements */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
           <div className="absolute top-0 left-0 w-full h-full">
             <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
             <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
             <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute top-20 right-20 w-20 h-20 bg-yellow-400/20 rounded-full blur-lg animate-bounce"></div>
+            <div className="absolute bottom-32 left-16 w-28 h-28 bg-pink-400/20 rounded-full blur-lg animate-pulse delay-500"></div>
           </div>
+        </div>        {/* Desktop - Background Image */}
+        <div className="hidden xl:block absolute inset-0">
+          <Image
+            src={service.background}
+            alt={service.title}
+            title={service.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-black/40"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="mb-6 flex justify-center sm:grid sm:grid-cols-2  gap-x-scv3 w-full"
-            >
-              <span className="hidden sm:inline-block w-fit sm:justify-self-end shadow-inner shadow-gray-500 dark:shadow-gray-800   px-3 py-1 text-medium font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
-                {service.title}
-              </span>
-              <span className="sm:hidden inline-block w-fit sm:justify-self-end shadow-inner shadow-gray-500 dark:shadow-gray-800 px-3 py-1 text-sm font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
-                {service.titleMobil}
-              </span>
-              <span className="hidden sm:inline-block w-fit shadow-inner shadow-gray-500 dark:shadow-gray-800 px-3 py-1 text-medium font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
-                {service.edad}
-              </span>
-              <span className="sm:hidden inline-block w-fit shadow-inner shadow-gray-500 dark:shadow-gray-800 px-3 py-1 text-sm font-medium bg-gradient-to-r from-slate-400/50 to-gray-100/60 text-slate-700 dark:text-gray-900  rounded-full  border border-gray-200/60">
-                {service.edadMobil}
-              </span>
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-8 lg:!leading-[60px]"
-            >
-              {service.motto}
-            </motion.h1>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="mb-5 sm:mb-7 bg-gradient-to-r dark:from-blue-400 dark:to-purple-500 from-[#0EA5E9] to-[#f490d7]  w-[200px] sm:w-[280px] lg:w-[340px] aspect-square rounded-full flex justify-center items-center"
-            >
-              <div className="rounded-full relative aspect-square w-[180px] sm:w-[260px] lg:w-[320px] overflow-hidden drop-shadow-[2px_2px_12px_rgba(0,0,0,0.8)] shadow-inner">
-                <Image
-                  src={service.background}
-                  alt={service.title + service.motto}
-                  title={service.title}
-                  fill
-                  className="bg-slate-400"
-                />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+          <div className="grid xl:grid-cols-2 gap-12 items-center">            {/* Left content */}
+            <div className="text-center xl:text-left space-y-8">
+              {/* Content background container */}
+              <div className="bg-black/30 backdrop-blur-sm rounded-3xl p-8 border border-white/20 shadow-2xl">
+                {/* Service badges */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="flex flex-wrap justify-center xl:justify-start gap-4 mb-6"
+                >
+                  <span className="inline-flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full text-white font-medium text-sm shadow-lg hover:bg-white/30 transition-all duration-300">
+                    <span className="hidden sm:inline">{service.title}</span>
+                    <span className="sm:hidden">{service.titleMobil}</span>
+                  </span>
+                  <span className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-sm border border-yellow-300/30 rounded-full text-white font-medium text-sm shadow-lg">
+                    <span className="hidden sm:inline">{service.edad}</span>
+                    <span className="sm:hidden">{service.edadMobil}</span>
+                  </span>
+                </motion.div>
+
+                {/* Main heading */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white leading-tight mb-6"
+                >
+                  {service.motto}
+                </motion.h1>
+
+                {/* Call to action buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.8 }}
+                  className="flex flex-col sm:flex-row gap-4 justify-center xl:justify-start"
+                >                  <Link href="/ReservarCita">
+                    <button className="group relative px-8 py-4 bg-gradient-to-r from-[#634AE2] via-[#7B5FE8] to-[#9494F3] text-white font-semibold rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 overflow-hidden">
+                      <span className="relative z-10">Reservar Cita</span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] via-[#6366f1] to-[#8b5cf6] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </button>
+                  </Link>
+                  
+                  {service.promotionCards && service.promotionCards.length > 0 && (
+                    <button
+                      onClick={() => {
+                        const promotionsSection = document.getElementById("service-promotions");
+                        if (promotionsSection) {
+                          promotionsSection.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          });
+                        }
+                      }}
+                      className="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white font-semibold rounded-2xl hover:bg-white/30 hover:border-white/50 transition-all duration-300 shadow-lg"
+                    >
+                      Ver Promociones
+                    </button>
+                  )}
+                </motion.div>
               </div>
-            </motion.div>
+            </div>
 
+            {/* Right content - Image */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="flex flex-col sm:flex-row sm:items-stretch gap-scv4 items-center sm:justify-center w-[70%]"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.3 }}
+              className="flex justify-center xl:justify-end"
             >
-              {service.promotionCards && service.promotionCards.length > 0 && (
-                <button
-                  onClick={() => {
-                    const promotionsSection =
-                      document.getElementById("service-promotions");
-                    if (promotionsSection) {
-                      promotionsSection.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                      });
-                    }
-                  }}
-                  style={{
-                    boxShadow:
-                      "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
-                  }}
-                  className="w-full bg-white/20 backdrop-blur-sm border-2 border-white/30 px-[25px] py-[10px] lg:p-2 text-white rounded-[15px] hover:bg-white/30 transition-all duration-300 lg:text-cv5 font-medium min-w-[240px]"
-                >
-                  Ver Promociones
-                </button>
-              )}
+              {/* Mobile - Circular Image */}
+              <div className="relative lg:hidden">
+                <div className="relative w-80 h-80 sm:w-96 sm:h-96">
+                  {/* Outer gradient ring */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0EA5E9] via-[#f490d7] to-[#fbbf24] rounded-full p-1 animate-spin-slow">
+                    <div className="w-full h-full bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] rounded-full"></div>
+                  </div>
+                  
+                  {/* Inner image container */}
+                  <div className="absolute inset-4 bg-gradient-to-r from-blue-400/30 to-purple-500/30 rounded-full p-2 backdrop-blur-sm">
+                    <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl">
+                      <Image
+                        src={service.background}
+                        alt={service.title}
+                        title={service.title}
+                        fill
+                        className="object-cover hover:scale-110 transition-transform duration-700"
+                        priority
+                      />
+                      {/* Image overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-              <Link
-                href="/ReservarCita"
-                className="container flex justify-center"
-              >
-                <button
-                  style={{
-                    boxShadow:
-                      "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)",
-                  }}
-                  className="w-full transition-all duration-300 dark:bg-large-gradient bg-small-gradient dark:hover:bg-small-gradient px-[25px] py-[10px] lg:p-2 text-white rounded-[15px] hover:bg-purple-700 lg:text-cv5 font-medium !h-full min-w-[240px]"
-                >
-                  Reservar Cita
-                </button>
-              </Link>
+              {/* Tablet - Card Style Image */}
+              <div className="hidden lg:block xl:hidden relative">
+                <div className="relative w-[500px] h-[400px]">
+                  {/* Background decorative elements */}
+                  <div className="absolute -inset-4">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-400/30 to-orange-400/30 rounded-full blur-xl"></div>
+                    <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-br from-pink-400/30 to-purple-400/30 rounded-full blur-xl"></div>
+                  </div>
+                  
+                  {/* Main image container */}
+                  <div className="relative w-full h-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-3xl p-1 shadow-2xl border border-white/30">
+                    <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50">
+                      <Image
+                        src={service.background}
+                        alt={service.title}
+                        title={service.title}
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-700"
+                        priority
+                      />
+                      {/* Gradient overlays */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop - No additional image (background image covers all) */}
+              <div className="hidden xl:block">
+                {/* Placeholder para mantener el layout del grid */}
+              </div>
             </motion.div>
           </div>
         </div>
