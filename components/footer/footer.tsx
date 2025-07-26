@@ -34,8 +34,8 @@ export default function Footer() {
             >
               <Image
                 src="/LogoBlanco.webp"
-                title="Contigo Voy - Terapia Psicológica Centro Psicológico"
-                alt="Confidencialidad Contigo Voy Terapia Psicológica Online"
+                title="Contigo Voy - Terapia Psicológica"
+                alt="Eligenos - Confidencialidad Contigo Voy"
                 width={150}
                 height={60}
               />

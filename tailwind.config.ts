@@ -75,7 +75,9 @@ export default {
                 'cv8': '36px',
                 'cv9': '48px',
                 'cv10': '60px',
-                'cv11': '72px',
+                'cv11': '72px',            },
+            animation: {
+                'spin-slow': 'spin 8s linear infinite',
             },
             spacing: {
                 'scv1': '4px',

@@ -122,7 +122,8 @@ const NavbarUser = () => {
             <Link href="/" className="ml-[60px] z-0">
               <Image
                 src="/LOGO.webp"
-                alt="Centro Psicológico Contigo Voy Online"
+                title="Contigo Voy | Centro Psicologico Online"
+                alt="Servicio Terapia para Niños Contigo Voy Online"
                 width={143}
                 height={50}
                 priority
