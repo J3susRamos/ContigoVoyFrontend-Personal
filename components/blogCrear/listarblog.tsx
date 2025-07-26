@@ -230,11 +230,11 @@ export function Listarblog({
               </thead>
               <tbody className="text-center text-[#634AE2] font-normal text-[16px] leading-[20px]">
                 {bloge.map((blog) => (
-                  <tr key={blog.idBlog} style={{clipPath: 'xywh(0 0 100% 100% round 24px)'}} className="border-b bg-white hover:bg-gray-100 rounded-[36px] ">
-                    <td className="px-4 py-2">{blog.idBlog}</td>
-                    <td className="px-4 py-2 ">{blog.tema}</td>
-                    <td className="px-4 py-2">{blog.categoria}</td>
-                    <td className="px-4 py-2 flex justify-center items-center">
+                  <tr key={blog.idBlog} style={{clipPath: 'xywh(0 0 100% 100% round 24px)'}} className="border-b bg-white dark:bg-input dark:text-foreground rounded-[36px] ">
+                    <td className="px-4 py-2 border-b-4 border-[#634AE2]">{blog.idBlog}</td>
+                    <td className="px-4 py-2 border-b-4 border-[#634AE2]">{blog.tema}</td>
+                    <td className="px-4 py-2 border-b-4 border-[#634AE2]">{blog.categoria}</td>
+                    <td className="px-4 py-2 flex justify-center items-center border-b-4 border-[#634AE2]">
                       <div className="relative">
                         <Image
                           isZoomed
@@ -252,7 +252,7 @@ export function Listarblog({
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-2 rounded-r-[34px]">
+                    <td className="px-4 py-2 rounded-r-[34px] border-b-4 border-[#634AE2]">
                       <div className="flex flex-row items-center justify-center gap-x-4">
                         <div className="">
                           <button
