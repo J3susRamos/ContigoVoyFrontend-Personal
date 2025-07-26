@@ -65,7 +65,18 @@ export const useAuth = () => {
         error: null,
       });
 
-      window.location.assign("/user/home");
+      if (userDataToStore.rol === "PACIENTE") {
+        window.location.assign("/paciente");
+      }
+
+      if (userDataToStore.rol === "PSICOLOGO") {
+        window.location.assign("/user/home");
+      }
+
+      if (userDataToStore.rol === "ADMIN") {
+        window.location.assign("/user/home");
+      }
+
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error
