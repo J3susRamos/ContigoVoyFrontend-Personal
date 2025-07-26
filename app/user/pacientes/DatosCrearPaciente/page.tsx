@@ -138,7 +138,14 @@ export default function App() {
       const cookies = parseCookies();
       const token = cookies["session"];
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      const urlApi = `${apiUrl}api/pacientes`;
+
+      const citaId = sessionStorage.getItem("idCita");
+      let urlApi = "";
+      if (citaId) {
+        urlApi = `${apiUrl}api/pacientes/${citaId}`;
+      } else {
+        urlApi = `${apiUrl}api/pacientes`;
+      }
   
       const response = await fetch(urlApi, {
         method: "POST",
@@ -158,6 +165,8 @@ export default function App() {
         setBase64Image(null);
         setUrl("");
         setCountry(null);
+        // eliminar el idCita de la sesion
+        sessionStorage.removeItem('idCita');
         
         router.push('/user/pacientes/');
       } else {

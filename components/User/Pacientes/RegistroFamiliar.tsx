@@ -3,7 +3,6 @@ import { parseCookies } from "nookies";
 import showToastFunction from "../../ToastStyle";
 import React, { useCallback, useEffect, useState } from "react";
 import HeaderUser from "../HeaderUser";
-import Link from "next/link";
 import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import { useForm } from "react-hook-form";
 import FormFieldInput from "@/components/ui/Form/FormFieldInput";
@@ -30,7 +29,7 @@ const defaultValues = {
   historial_familiar: "",
 };
 
-const RegistroFamiliar = ({ id }: { id: string | null }) => {
+const RegistroFamiliar = ({ id }: { id: string | null}) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [hasFamily, setHasFamily] = useState<boolean>(false);
@@ -299,30 +298,25 @@ const RegistroFamiliar = ({ id }: { id: string | null }) => {
           </div>
           <div
             className={`flex w-full p-4 mt-5 max-sm:flex-col max-sm:gap-2 gap-4 relative ${
-              hasFamily ? "justify-between" : "justify-center"
+              hasFamily ? "justify-center" : "justify-center"
             }`}
           >
-            <Link
-              href="/user/pacientes"
-              className="bg-card grid place-items-center dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
-            >
-              Volver
-            </Link>
+
+            {hasFamily && (
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(true)}
+                className="bg-red-600  text-white rounded-full border-2 border-[#634AE2] w-32 h-10 hover:scale-105 transition-transform font-semibold"
+                >
+                Borrar
+              </button>
+            )}
             <button
               type="submit"
               className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
               >
               {hasFamily ? "Actualizar" : "Registrar"}
             </button>
-            {hasFamily && (
-              <button
-                type="button"
-                onClick={() => setShowDeleteModal(true)}
-                className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
-                >
-                Borrar
-              </button>
-            )}
           </div>
         </form>
       </div>

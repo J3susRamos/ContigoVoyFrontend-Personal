@@ -1,100 +1,94 @@
 "use client";
 
 import React from "react";
-import {Citas} from "@/interface";
 import DataTable from "@/components/ui/Table/DataTable";
-import {Icons} from "@/icons";
 import Row from "@/components/ui/Table/Row";
 import DataCard from "@/components/ui/DataCard";
+import { CitaActionButtons } from "./CitaActionButtons";
+import { canEditCita, formatCitaDate, formatCitaTime, shouldShowPacientButton } from "./citas";
+import { Citas } from "@/interface";
 
-interface TableProps {
+
+interface TableCitasProps {
     filteredCitas: Citas[];
     onDeleteAction: (id: number) => void;
     onEditAction: (cita: Citas) => void;
 }
 
-export const TableCitas: React.FC<TableProps> = ({
-                                                     filteredCitas,
-                                                     onDeleteAction,
-                                                     onEditAction,
-                                                 }) => {
-    const headers = [
-        "Paciente",
-        "Código",
-        "Motivo",
-        "Estado",
-        "Fecha de Inicio",
-        "Duración",
-        "Más",
-    ];
+const HEADERS = [
+    "Paciente",
+    "Código",
+    "Motivo",
+    "Estado",
+    "Fecha de Inicio",
+    "Duración",
+    "Más",
+];
 
-    interface AtencionButtonProps {
-        idCita: number;
-    }
-
-    const AtencionButton = ({ idCita }: AtencionButtonProps) => {
-        const handleClick = () => {
-            localStorage.setItem("idCita", String(idCita));
-            window.location.href = "/user/historial/AtencionPaciente";
-        };
-
-        return (
-            <button
-                onClick={handleClick}
-                className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-muted transition-colors"
-            >
-        <span
-            className="text-lg text-[#3df356]"
-            dangerouslySetInnerHTML={{ __html: Icons.hand }}
-            style={{ width: "30px", height: "30px", fill: "#3df356" }}
-        />
-                <span className="text-xs text-[#3df356] mt-1">Atención</span>
-            </button>
-        );
+export const TableCitas: React.FC<TableCitasProps> = ({
+    filteredCitas,
+    onDeleteAction,
+    onEditAction,
+}) => {
+    const handleDelete = (cita: Citas) => {
+        onDeleteAction(Number(cita.idCita));
     };
+
+    const handleEdit = (cita: Citas) => {
+        if (canEditCita(cita)) {
+            onEditAction(cita);
+        }
+    };
+
+    const renderTableRow = (cita: Citas) => (
+        <Row
+            values={[
+                cita.paciente,
+                cita.codigo || '',
+                cita.motivo,
+                cita.estado,
+                cita.fecha_inicio,
+                cita.duracion,
+            ]}
+            onDelete={() => handleDelete(cita)}
+            onEdit={canEditCita(cita) ? () => handleEdit(cita) : undefined}
+        >
+            <CitaActionButtons
+                idCita={cita.idCita}
+                showPacientButton={shouldShowPacientButton(cita)}
+            />
+        </Row>
+    );
+
+    const renderCard = (cita: Citas) => (
+        <DataCard
+            paciente={{
+                nombre: cita.paciente,
+                codigo: cita.codigo || ''
+            }}
+            info={[
+                { label: "Estado", value: cita.estado },
+                { label: "Motivo", value: cita.motivo },
+                { label: "Fecha", value: formatCitaDate(cita.fecha_inicio) },
+                { label: "Hora", value: formatCitaTime(cita.fecha_inicio) },
+                { label: "Duración", value: cita.duracion },
+            ]}
+            onDelete={() => handleDelete(cita)}
+            onEdit={() => handleEdit(cita)}
+        >
+            <CitaActionButtons
+                idCita={cita.idCita}
+                showPacientButton={shouldShowPacientButton(cita)}
+            />
+        </DataCard>
+    );
 
     return (
         <DataTable
-            headers={headers}
+            headers={HEADERS}
             data={filteredCitas}
-            renderRow={(c) => (
-                <Row
-                    values={[
-                        c.paciente,
-                        c.codigo,
-                        c.motivo,
-                        c.estado,
-                        c.fecha_inicio,
-                        c.duracion,
-                    ]}
-                    onDelete={() => onDeleteAction(Number(c.idCita))}
-                    onEdit={() => onEditAction(c)}
-                >
-                    <AtencionButton idCita={Number(c.idCita)} />
-                </Row>
-            )}
-            renderCard={(c) => (
-                <DataCard
-                    paciente={{ nombre: c.paciente, codigo: c.codigo }}
-                    info={[
-                        { label: "Estado", value: c.estado },
-                        { label: "Motivo", value: c.motivo },
-                        {
-                            label: "Fecha",
-                            value: new Date(c.fecha_inicio).toLocaleDateString(),
-                        },
-                        {
-                            label: "Hora",
-                            value: new Date(c.fecha_inicio).toLocaleTimeString(),
-                        },
-                        { label: "Duración", value: c.duracion },
-                    ]}
-                    onDelete={() => onDeleteAction(Number(c.idCita))}
-                    onEdit={() => onEditAction(c)}
-                >
-                    <AtencionButton idCita={Number(c.idCita)} />
-                </DataCard>
-            )}
+            renderRow={renderTableRow}
+            renderCard={renderCard}
         />
     );
 };

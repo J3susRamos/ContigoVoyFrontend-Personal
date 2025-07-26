@@ -4,17 +4,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-// import { Metadata } from "next";
-// export const metadata: Metadata = {
-//   title: "Preguntas Frecuentes | Terapia Psicológica - Contigo Voy",
-//   description:
-//     "¿Tienes dudas sobre nuestros servicios de atención psicológica en línea? En nuestra sección de preguntas frecuentes, resuelve tus inquietudes y se parte de nosotros.",
-//   authors: [{ name: "Contigo Voy" }],
-//   verification: {
-//     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
-//   },
-// };
-
 export default function App() {
   const faqs = [
     {

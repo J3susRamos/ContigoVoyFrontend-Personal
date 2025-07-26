@@ -83,8 +83,7 @@ const TeenTerapias: ServicesStructureProps = {
       title: "Frustraciones en adolescentes Contigo Voy Psicología Online",
       text: "Ayuda a manejar la frustración y transformar emociones difíciles en acciones positivas.",
       icon: "/Services/teen/therapy/frustraciones.webp",
-    },
-    {
+    },    {
       id: 2,
       title:
         "Equilibrio en Adolescentes Contigo Voy Psicología Online",
@@ -94,7 +93,7 @@ const TeenTerapias: ServicesStructureProps = {
     {
       id: 3,
       title:
-        "Terapia en adolescentes para comunicación efectiva Contigo Voy Psicología Online",
+        "Habilidades comunicativas en Adolescentes Contigo Voy Psicología Online",
       text: "Mejora las habilidades para comunicarse y relacionarse con los demás.",
       icon: "/Services/teen/therapy/comunicacion.webp",
     },

@@ -110,7 +110,7 @@ const Navbar = () => {
         <div className="flex items-center gap-x-5">
           <DesktopNav navItems={navItemsDesktop} />
           <div className="lg:hidden ">
-              <MobileNav navItems={navItemsMobil} />
+            <MobileNav navItems={navItemsMobil} />
           </div>
         </div>
       </div>
