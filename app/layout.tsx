@@ -21,6 +21,9 @@ export default function RootLayout({
     return `/${pathParts[1]}`;
   };
 
+  const baseRoute = getBaseRoute();
+  const hideLayout = ["/user", "/admin", "/paciente"].includes(baseRoute);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${lexend.className} antialiased`}>
@@ -30,17 +33,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {getBaseRoute() !== "/user" && getBaseRoute() !== "/admin" && (
-            <Navbar />
-          )}
-          <div
-            className={`${getBaseRoute() !== "/user" ? " min-h-[90vh]" : ""}`}
-          >
+          {!hideLayout && <Navbar />}
+
+          <div className={`${baseRoute !== "/user" ? " min-h-[90vh]" : ""}`}>
             {children}
           </div>
-          {getBaseRoute() !== "/user" && getBaseRoute() !== "/admin" && (
-            <Footer />
-          )}
+
+          {!hideLayout && <Footer />}
         </ThemeProvider>
         <ToastContainer />
       </body>
