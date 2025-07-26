@@ -202,6 +202,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+              onClick={() => window.location.href = '/contactanos'}
             >
               Contactar Ahora
             </motion.button>

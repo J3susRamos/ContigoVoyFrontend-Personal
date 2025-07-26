@@ -58,6 +58,7 @@ const ListarCitas = ({
         edad?: string[];
         estado?: string[];
         fechaInicio?: string[];
+        codigo?: string[];
       };
       paciente?: string;
     } = {}) => {
@@ -87,6 +88,10 @@ const ListarCitas = ({
         if (filters.fechaInicio?.length === 2) {
           queryParams.append("fecha_inicio", filters.fechaInicio[0]);
           queryParams.append("fecha_fin", filters.fechaInicio[1]);
+        }
+
+        if (filters.codigo?.length) {
+          queryParams.append("codigo", filters.codigo.join(","));
         }
 
         if (paciente) {

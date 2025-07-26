@@ -439,6 +439,7 @@ export interface Citas {
   genero: string;
   fecha_nacimiento: string;
 }
+
 export interface CitasApiResponse {
   status_code: number;
   status_message: string;
@@ -589,6 +590,7 @@ export interface FiltersCitas extends GenericFilters {
   estado: string[];
   edad: string[];
   fechaInicio: string[];
+  codigo: string[];
 }
 
 export interface EmailBlock {
