@@ -130,7 +130,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
                         </Link>
                         <Link href="/servicios/terapia/adolescentes/">
                           <button
-                            className="w-full bg-none text-[#634AE2] text-cv3 text-leftw-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
+                            className="w-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
                             onClick={closeMenu}
                           >
                             Terapia para adolescentes
@@ -138,7 +138,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
                         </Link>
                         <Link href="/servicios/terapia/adultos/">
                           <button
-                            className="w-full bg-none text-[#634AE2] text-cv3 text-leftw-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
+                            className="w-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
                             onClick={closeMenu}
                           >
                             Terapia para adultos
@@ -146,7 +146,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
                         </Link>
                         <Link href="/servicios/terapia/parejas/">
                           <button
-                            className="w-full bg-none text-[#634AE2] text-cv3 text-leftw-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
+                            className="w-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
                             onClick={closeMenu}
                           >
                             Terapia de parejas
@@ -154,7 +154,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
                         </Link>
                         <Link href="/servicios/terapia/familia/">
                           <button
-                            className="w-full bg-none text-[#634AE2] text-cv3 text-leftw-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
+                            className="w-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
                             onClick={closeMenu}
                           >
                             Terapia familiar
@@ -162,7 +162,7 @@ export function MobileNav({ navItems }: { navItems: NavItem[] }) {
                         </Link>
                         <Link href="/servicios/terapia/empresarial/">
                           <button
-                            className="w-full bg-none text-[#634AE2] text-cv3 text-leftw-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
+                            className="w-full bg-none text-[#634AE2] dark:text-white font-bold text-cv3 text-left"
                             onClick={closeMenu}
                           >
                             Terapia empresarial
