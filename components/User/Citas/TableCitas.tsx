@@ -56,6 +56,7 @@ export const TableCitas: React.FC<TableCitasProps> = ({
             <CitaActionButtons
                 idCita={cita.idCita}
                 showPacientButton={shouldShowPacientButton(cita)}
+                estado={cita.estado}
             />
         </Row>
     );
@@ -79,6 +80,7 @@ export const TableCitas: React.FC<TableCitasProps> = ({
             <CitaActionButtons
                 idCita={cita.idCita}
                 showPacientButton={shouldShowPacientButton(cita)}
+                estado={cita.estado}
             />
         </DataCard>
     );
