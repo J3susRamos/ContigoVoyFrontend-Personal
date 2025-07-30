@@ -2,6 +2,7 @@
 import { QuienesSomos } from "@/interface";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const SectionHeader = ({ children }: { children: React.ReactNode }) => (
   <motion.h2
@@ -198,13 +199,15 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             <p className="text-xl mb-12 text-white/90">
               Agenda tu primera sesión y descubre cómo podemos ayudarte.
             </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all"
-            >
-              Contactar Ahora
-            </motion.button>
+            <Link href="/contactanos">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+              >
+                Contactar Ahora
+              </motion.button>
+            </Link>
           </div>
         </div>
       </section>
