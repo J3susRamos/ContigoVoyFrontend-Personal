@@ -8,11 +8,13 @@ import { useNavigation } from './useNavigation';
 interface CitaActionButtonsProps {
   idCita: number | string;
   showPacientButton?: boolean;
+  estado: string;
 }
 
 export const CitaActionButtons: React.FC<CitaActionButtonsProps> = ({
   idCita,
-  showPacientButton = false
+  showPacientButton = false,
+  estado,
 }) => {
   const { navigateToAtencion, navigateToPaciente } = useNavigation();
 
@@ -24,20 +26,21 @@ export const CitaActionButtons: React.FC<CitaActionButtonsProps> = ({
     navigateToPaciente(idCita);
   };
 
-  return (
-    <>
+  if (estado === 'Pendiente') {
+    return (
       <ActionButton
         icon={HandCoins}
         label="Atención"
         onClick={handleAtencionClick}
       />
-      {showPacientButton && (
-        <ActionButton
-          icon={ArrowUpCircle}
-          label="Paciente"
-          onClick={handlePacienteClick}
-        />
-      )}
-    </>
-  );
+    );
+  } else if (estado === 'Confirmada' && showPacientButton) {
+    return (
+      <ActionButton
+        icon={ArrowUpCircle}
+        label="Paciente"
+        onClick={handlePacienteClick}
+      />
+    );
+  }
 };
