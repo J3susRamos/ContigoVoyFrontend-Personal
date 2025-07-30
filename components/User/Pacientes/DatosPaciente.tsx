@@ -87,6 +87,10 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
                 <div className="w-28">Dirección</div>
                 <div className="font-normal text-foreground dark:text-foreground">{paciente?.direccion}</div>
               </div>
+              <div className="flex gap-6">
+                <div className="w-28">Contraseña</div>
+                <div className="font-normal text-foreground dark:text-foreground">{paciente?.password?.slice(0, 10)}</div>
+              </div>
             </div>
 
             <div className="mt-2">

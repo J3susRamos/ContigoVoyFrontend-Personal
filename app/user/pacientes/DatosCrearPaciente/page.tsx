@@ -44,6 +44,7 @@ export default function App() {
   const [url, setUrl] = useState("");
   const [country, setCountry] = useState<Country | null>(null);
   const [prefix, setPrefix] = useState("+51");
+  const [generatedPassword, setGeneratedPassword] = useState("");
 
   const {
     register,
@@ -51,6 +52,7 @@ export default function App() {
     reset,
     setError,
     clearErrors,
+    setValue,
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormPaciente>({
@@ -133,6 +135,7 @@ export default function App() {
         direccion: data.direccion,
         pais: data.pais,
         departamento: data.departamento,
+        password: data.password,
       };
   
       const cookies = parseCookies();
@@ -186,6 +189,16 @@ export default function App() {
       showToast("error", "Error inesperado en el envío del formulario.");
     }
   
+  };
+
+  const generarPassword = () => {
+    const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let password = "";
+    for (let i = 0; i < 8; i++) {
+      password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    setGeneratedPassword(password);
+    setValue("password", password); // <-- si usas react-hook-form
   };
 
   return (
@@ -359,6 +372,30 @@ export default function App() {
             <FormFieldInput label="Dirección" name="direccion" register={register} errors={errors} />
             <FormFieldInput label="Antecedentes médicos" name="antecedentesMedicos" register={register} errors={errors} />
             <FormFieldInput label="Medicamentos prescritos" name="medicamentosPrescritos" register={register} errors={errors} />
+
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+              <div className="flex flex-col space-y-2 w-full max-w-md mx-auto">
+                <FormFieldInput
+                  label="Contraseña"
+                  name="password"
+                  register={register}
+                  errors={errors}
+                />
+                <button
+                  type="button"
+                  onClick={generarPassword}
+                  className="self-center px-4 py-2 bg-[#634AE2] text-white rounded-lg hover:bg-[#4e3ac7] transition"
+                >
+                  Generar contraseña
+                </button>
+                {generatedPassword && (
+                  <p className="text-sm text-gray-500 text-center">
+                    Contraseña generada: <span className="font-mono">{generatedPassword}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+
           </div>
         </div>
 
