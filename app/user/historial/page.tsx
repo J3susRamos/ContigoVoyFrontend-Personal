@@ -117,7 +117,7 @@ export default function App() {
     try {
       const cookies = parseCookies();
       const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/atenciones/`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}api/atenciones`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
