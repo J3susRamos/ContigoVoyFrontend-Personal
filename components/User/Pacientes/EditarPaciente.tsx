@@ -13,7 +13,7 @@ import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date"
 import "react-country-state-city/dist/react-country-state-city.css"
 import Image from "next/image";
-import { Plus, X, RefreshCcw  } from "lucide-react";
+import { Plus, X  } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -202,15 +202,6 @@ export default function EditarPaciente({ id }: { id: string | null }) {
       }
     })();
   }, [id]);
-
-  const generarPassword = () => {
-    const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let password = "";
-    for (let i = 0; i < 8; i++) {
-      password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-    }
-    setFormData({ ...formData, password });
-  };
 
   return (
     <div className="p-4 bg-[#eaeded] dark:bg-background min-h-screen">
@@ -515,23 +506,6 @@ export default function EditarPaciente({ id }: { id: string | null }) {
               onChange={(e) => setFormData({ ...formData, medicamentosPrescritos: e.target.value })}
               className="px-4 text-sm h-9 mt-2 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
             />
-          </div>
-          <div className="mt-4 relative">
-            <label className="block text-center">Contraseña</label>
-            <input
-              type="text"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="px-4 pr-10 text-sm h-9 mt-2 outline-none font-light w-full rounded-full bg-[#F3F3F3] border-2 border-[#634AE2] dark:bg-input dark:text-foreground"
-            />
-            <button
-              type="button"
-              onClick={generarPassword}
-              className="absolute right-3 top-[38px] text-[#634AE2] hover:text-[#4e3ac7]"
-              title="Generar contraseña"
-            >
-              <RefreshCcw  className="w-4 h-4" />
-            </button>
           </div>
         </div>
       </div>
