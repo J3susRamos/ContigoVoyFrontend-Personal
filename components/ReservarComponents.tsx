@@ -2,12 +2,12 @@
 import { PsicologoFilters, PsicologoPreviewData } from "@/interface";
 import ReservarComponentSearch from "./ReservarComponentSearch";
 import ReservarPsiPreview from "./ReservarPsiPreview";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import Pagination from "./ui/Pagination";
 
 interface Props {
-  searchTerm: string,
-  setSearchTerm: Dispatch<SetStateAction<string>>,
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
   currentPage: number;
   setPage: Dispatch<SetStateAction<number>>;
   data: PsicologoPreviewData[];
@@ -21,7 +21,7 @@ export default function ReservarComponents({
   currentPage,
   setPage,
   lastPage,
-  setSearchTerm
+  setSearchTerm,
 }: Props) {
   const [filters, setFilters] = useState({
     pais: [] as string[],
@@ -30,9 +30,17 @@ export default function ReservarComponents({
     enfoque: [] as string[],
   });
 
-useEffect(() => {
-  onFilterChange(filters);
-}, [filters, onFilterChange]);    return (
+  const sectionTopRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    onFilterChange(filters);
+  }, [filters, onFilterChange]);
+
+  const scrollToSection = () => {
+    sectionTopRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
     <div className="w-full bg-gray-50 dark:bg-gray-900">
       <div className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
         <div className="absolute inset-0">
@@ -62,7 +70,10 @@ useEffect(() => {
               privado
             </p>
 
-            <div className="flex flex-wrap justify-center gap-6 text-white/80">
+            <div
+              ref={sectionTopRef}
+              className="flex flex-wrap justify-center gap-6 text-white/80"
+            >
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-sm font-medium">
@@ -82,10 +93,12 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </div>      {/* Contenido principal */}
+      </div>{" "}
+      {/* Contenido principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar con filtros */}{" "}          <div className="lg:w-80 flex-shrink-0">
+          {/* Sidebar con filtros */}{" "}
+          <div className="lg:w-80 flex-shrink-0">
             <ReservarComponentSearch
               onSearchChange={(term) => {
                 setSearchTerm(term);
@@ -110,8 +123,14 @@ useEffect(() => {
                 </div>
                 <Pagination
                   currentPage={currentPage}
-                  onPrevious={() => setPage((prev) => Math.max(prev - 1, 1))}
-                  onNext={() => setPage((prev) => prev + 1)}
+                  onPrevious={() => {
+                    setPage((prev) => Math.max(prev - 1, 1));
+                    scrollToSection();
+                  }}
+                  onNext={() => {
+                    setPage((prev) => prev + 1);
+                    scrollToSection();
+                  }}
                   totalPages={lastPage}
                 />
               </>
