@@ -48,6 +48,8 @@ export interface ServicesStructureProps {
   edadMobil: string;
   motto: React.ReactElement;
   background: string;
+  backgroundAlt: string;
+  backgroundTitle: string;
   bgdown: string;
   bgdownAlt: string;
   bgdownTitle: string;
@@ -59,6 +61,7 @@ export interface ServicesStructureProps {
     title?: string;
     text: string;
     iconImage: string;
+    
   }[];
   tittlecards: string;
   cards: {
@@ -66,6 +69,7 @@ export interface ServicesStructureProps {
     title?: string;
     text: string;
     icon: string;
+  
   }[];
   textfooter: string;
   textfootermobile:string;
