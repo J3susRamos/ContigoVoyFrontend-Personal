@@ -330,7 +330,8 @@ export interface Paciente {
   estadoCivil: string,
   direccion: string,
   idPsicologo: number
-  ultima_cita_fecha: Date
+  ultima_cita_fecha: Date,
+  password: string,
 }
 
 export interface Paciente2 {
@@ -350,6 +351,7 @@ export interface Paciente2 {
   direccion: string,
   pais: string | null,
   departamento: string | null,
+  password: string | null,
 }
 
 export interface FormPaciente {
@@ -370,6 +372,7 @@ export interface FormPaciente {
   pais: string| null;
   antecedentesMedicos: string;
   medicamentosPrescritos: string;
+  password: string;
 }
 
 export interface FormFamilia {

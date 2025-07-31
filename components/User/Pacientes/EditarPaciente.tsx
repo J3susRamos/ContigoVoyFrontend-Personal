@@ -13,7 +13,7 @@ import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date"
 import "react-country-state-city/dist/react-country-state-city.css"
 import Image from "next/image";
-import { Plus, X } from "lucide-react";
+import { Plus, X  } from "lucide-react";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,6 +42,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
     pais: country?.name || "",
     antecedentesMedicos: "",
     medicamentosPrescritos: "",
+    password: "",
   });
   const [prefix, setPrefix] = useState("+51");
 
@@ -130,6 +131,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
              direccion: formData.direccion,
              pais: formData.pais,
              departamento: formData.departamento,
+             password: formData.password,
            };
 
 
@@ -191,6 +193,7 @@ export default function EditarPaciente({ id }: { id: string | null }) {
           pais: paciente.pais || "",
           antecedentesMedicos: paciente.antecedentesMedicos || "",
           medicamentosPrescritos: paciente.medicamentosPrescritos || "",
+          password: paciente.password || "",
         });
         setBase64Image(paciente.imagen || "");
         setPrefix(paciente.celular?.split(" ")[0] || +51);
