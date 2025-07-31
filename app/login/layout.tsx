@@ -6,6 +6,7 @@ export const metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: ["acceder a mi terapia"],
 };
 
 export default function LoginLayout({

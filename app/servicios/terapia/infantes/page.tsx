@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: ["psicología para niños","lenguaje","tratamiento infantil","aprendizaje cognitivo"],
 };
 
 const NinosTerapias: ServicesStructureProps = {

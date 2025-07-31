@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   verification: {
     google: "ddLU23MMNVC0iknLLV3PFXxVUN5RHLSJkQLzEbg4t8s",
   },
+  keywords: ["psicología", "bienestar emocional","terapia personalizada", "espacio seguro", "nueva cita"],
 };
 
 export default function Home() {
