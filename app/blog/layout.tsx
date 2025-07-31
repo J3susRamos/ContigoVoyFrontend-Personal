@@ -6,6 +6,7 @@ export const metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: ["consejos","bienestar","salud mental"],
 };
 
 export default function BlogLayout({

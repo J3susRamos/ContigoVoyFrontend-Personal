@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: ["contacto", "psicólogos ", "psicólogos  lima", "primera cita", "gratis", "cita gratuita", "ayuda emocional", "ayuda psicológica"],
 };
 
 const ContactUs = () => {

@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: ["psicología para adolescentes","terapia juvenil","regulación emocional","acompañamiento escolar","salud mental adolescentes"],
 };
 
 const TeenTerapias: ServicesStructureProps = {
