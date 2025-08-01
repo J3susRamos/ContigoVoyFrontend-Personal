@@ -16,6 +16,11 @@ export const metadata = {
   alternates: {
     canonical: "https://centropsicologicocontigovoy.com/ReservarCita/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 export default function ReservaLayout({

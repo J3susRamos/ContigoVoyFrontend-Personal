@@ -22,6 +22,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://centropsicologicocontigovoy.com/sobreNosotros/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 const dataQS: QuienesSomos[] = [

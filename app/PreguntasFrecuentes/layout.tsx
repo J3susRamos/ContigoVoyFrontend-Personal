@@ -14,6 +14,11 @@ export const metadata = {
   alternates: {
     canonical: "https://centropsicologicocontigovoy.com/PreguntasFrecuentes/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 export default function PreguntasFrecuentesLayout({

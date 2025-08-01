@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     canonical:
       "https://centropsicologicocontigovoy.com/servicios/terapia/adultos/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 const AdultoTerapias: ServicesStructureProps = {

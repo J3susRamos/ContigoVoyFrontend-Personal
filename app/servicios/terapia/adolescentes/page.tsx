@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     canonical:
       "https://centropsicologicocontigovoy.com/servicios/terapia/adolescentes/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 const TeenTerapias: ServicesStructureProps = {
