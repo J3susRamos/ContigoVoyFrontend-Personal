@@ -14,7 +14,7 @@ export const metadata = {
     "reservar consulta psicológica",
   ],
   alternates: {
-    canonical: "https://centropsicologicocontigovoy.com/ReservarCita",
+    canonical: "https://centropsicologicocontigovoy.com/ReservarCita/",
   },
 };
 
