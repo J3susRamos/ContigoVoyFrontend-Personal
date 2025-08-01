@@ -7,11 +7,12 @@ import React from "react";
 interface Props {
   filteredPacientes: Paciente[];
   onDeleteInit: (id: number) => void;
+  onDisableInit: (id: number) => void;
 }
 
 const headers = ["Paciente", "Código", "DNI", "Correo", "Celular", "Más"];
 
-const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
+const TablePacientes = ({ filteredPacientes, onDisableInit }: Props) => {
 
   const redirectToPaciente = (idPaciente: number) => {
     localStorage.setItem("idPaciente", String(idPaciente));
@@ -31,8 +32,8 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
         <Row
           values={[p.nombre, p.codigo, p.DNI, p.email, p.celular]}
           onClick={() => redirectToPaciente(p.idPaciente)}
-          onDelete={() => onDeleteInit(p.idPaciente)}
           onEdit={() => redirectToEdit(p.idPaciente)}
+          onDisable={() => onDisableInit(p.idPaciente)}
         >
           <FamiliaButton idPaciente={p.idPaciente}/>
         </Row>
@@ -46,7 +47,6 @@ const TablePacientes = ({ filteredPacientes, onDeleteInit }: Props) => {
             { label: "Celular", value: p.celular },
           ]}
           onClick={() => redirectToPaciente(p.idPaciente)}
-          onDelete={() => onDeleteInit(p.idPaciente)}
           onEdit={() => redirectToPaciente(p.idPaciente)}
         >
           <FamiliaButton idPaciente={p.idPaciente}/>
