@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     canonical:
       "https://centropsicologicocontigovoy.com/servicios/terapia/infantes/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 const NinosTerapias: ServicesStructureProps = {

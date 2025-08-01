@@ -10,6 +10,11 @@ export const metadata = {
   alternates: {
     canonical: "https://centropsicologicocontigovoy.com/blog/",
   },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 export default function BlogLayout({
