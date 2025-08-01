@@ -35,7 +35,7 @@ export default function ConfirmDeleteModal({
             isLoading={isProcessing}
             disabled={isProcessing}
           >
-            {isProcessing ? "Eliminando..." : "Eliminar"}
+            {isProcessing ? "Eliminando..." : "Deshabilitar"}
           </Button>
         </ModalFooter>
       </ModalContent>
