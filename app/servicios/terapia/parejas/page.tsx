@@ -12,7 +12,17 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
-  keywords: ["terapia de parejas","conflictos de pareja","comunicación en la relación","crisis de pareja","vinculo emocional"],
+  keywords: [
+    "terapia de parejas",
+    "conflictos de pareja",
+    "comunicación en la relación",
+    "crisis de pareja",
+    "vinculo emocional",
+  ],
+  alternates: {
+    canonical:
+      "https://centropsicologicocontigovoy.com/servicios/terapia/parejas",
+  },
 };
 
 const ParejaTerapias: ServicesStructureProps = {

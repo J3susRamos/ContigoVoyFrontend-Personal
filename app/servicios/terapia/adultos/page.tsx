@@ -12,7 +12,17 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
-  keywords: ["psicoterapia para adultos","terapia para adultos","ansiedad en adultos","manejo del estrés","terapia cognitiva conductual"],
+  keywords: [
+    "psicoterapia para adultos",
+    "terapia para adultos",
+    "ansiedad en adultos",
+    "manejo del estrés",
+    "terapia cognitiva conductual",
+  ],
+  alternates: {
+    canonical:
+      "https://centropsicologicocontigovoy.com/servicios/terapia/adultos",
+  },
 };
 
 const AdultoTerapias: ServicesStructureProps = {

@@ -6,7 +6,14 @@ export const metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
-  keywords: ["precios, como funciona la terapia","duración tratamiento","psicología accesible"],
+  keywords: [
+    "precios, como funciona la terapia",
+    "duración tratamiento",
+    "psicología accesible",
+  ],
+  alternates: {
+    canonical: "https://centropsicologicocontigovoy.com/PreguntasFrecuentes",
+  },
 };
 
 export default function PreguntasFrecuentesLayout({
