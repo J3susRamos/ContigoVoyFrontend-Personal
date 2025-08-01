@@ -7,6 +7,9 @@ export const metadata = {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
   keywords: ["acceder a mi terapia"],
+  alternates: {
+    canonical: "https://centropsicologicocontigovoy.com/login",
+  },
 };
 
 export default function LoginLayout({

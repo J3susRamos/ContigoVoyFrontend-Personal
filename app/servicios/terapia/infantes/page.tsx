@@ -11,7 +11,16 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
-  keywords: ["psicología para niños","lenguaje","tratamiento infantil","aprendizaje cognitivo"],
+  keywords: [
+    "psicología para niños",
+    "lenguaje",
+    "tratamiento infantil",
+    "aprendizaje cognitivo",
+  ],
+  alternates: {
+    canonical:
+      "https://centropsicologicocontigovoy.com/servicios/terapia/infantes",
+  },
 };
 
 const NinosTerapias: ServicesStructureProps = {

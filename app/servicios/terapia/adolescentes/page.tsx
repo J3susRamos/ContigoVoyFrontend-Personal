@@ -13,7 +13,17 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
-  keywords: ["psicología para adolescentes","terapia juvenil","regulación emocional","acompañamiento escolar","salud mental adolescentes"],
+  keywords: [
+    "psicología para adolescentes",
+    "terapia juvenil",
+    "regulación emocional",
+    "acompañamiento escolar",
+    "salud mental adolescentes",
+  ],
+  alternates: {
+    canonical:
+      "https://centropsicologicocontigovoy.com/servicios/terapia/adolescentes",
+  },
 };
 
 const TeenTerapias: ServicesStructureProps = {

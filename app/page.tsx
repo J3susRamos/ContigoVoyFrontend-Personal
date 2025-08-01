@@ -14,7 +14,16 @@ export const metadata: Metadata = {
   verification: {
     google: "ddLU23MMNVC0iknLLV3PFXxVUN5RHLSJkQLzEbg4t8s",
   },
-  keywords: ["psicología", "bienestar emocional","terapia personalizada", "espacio seguro", "nueva cita"],
+  keywords: [
+    "psicología",
+    "bienestar emocional",
+    "terapia personalizada",
+    "espacio seguro",
+    "nueva cita",
+  ],
+  alternates: {
+    canonical: "https://centropsicologicocontigovoy.com",
+  },
 };
 
 export default function Home() {

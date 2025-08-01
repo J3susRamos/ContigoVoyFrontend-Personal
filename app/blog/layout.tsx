@@ -6,7 +6,10 @@ export const metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
-  keywords: ["consejos","bienestar","salud mental"],
+  keywords: ["consejos", "bienestar", "salud mental"],
+  alternates: {
+    canonical: "https://centropsicologicocontigovoy.com/blog",
+  },
 };
 
 export default function BlogLayout({

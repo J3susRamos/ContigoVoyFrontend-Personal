@@ -12,6 +12,10 @@ export const metadata: Metadata = {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
   keywords: ["psicología organizacional"],
+  alternates: {
+    canonical:
+      "https://centropsicologicocontigovoy.com/servicios/terapia/empresarial",
+  },
 };
 
 const terapiaEmpresarial: ServicesStructureProps = {
