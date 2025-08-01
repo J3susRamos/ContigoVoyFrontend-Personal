@@ -8,7 +8,7 @@ export const metadata = {
   },
   keywords: ["acceder a mi terapia"],
   alternates: {
-    canonical: "https://centropsicologicocontigovoy.com/login",
+    canonical: "https://centropsicologicocontigovoy.com/login/",
   },
 };
 

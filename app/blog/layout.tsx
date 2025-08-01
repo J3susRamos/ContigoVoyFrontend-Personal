@@ -8,7 +8,7 @@ export const metadata = {
   },
   keywords: ["consejos", "bienestar", "salud mental"],
   alternates: {
-    canonical: "https://centropsicologicocontigovoy.com/blog",
+    canonical: "https://centropsicologicocontigovoy.com/blog/",
   },
 };
 
