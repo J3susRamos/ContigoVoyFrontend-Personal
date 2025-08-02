@@ -22,8 +22,6 @@ interface Props {
 export default function ListarPacientes({ filters, filterValue }: Props) {
   const [paciente, setPaciente] = useState<Paciente[]>([]);
   const toastShownRef = useRef(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [disableId, setDisableId] = useState<number | null>(null);
@@ -79,7 +77,6 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
   );
 
   const handleDisable = async (idPaciente: number) => {
-    setIsDeleting(true);
     try {
       const pacienteData = await pacientesDesactivar(idPaciente);
 
@@ -100,8 +97,6 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
       console.error("Error deshabilitando paciente:", error);
       showToastFunction("error", "Error inesperado al deshabilitar paciente");
       return false;
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -115,7 +110,6 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
         <>
           <TablePacientes
             filteredPacientes={paciente}
-            onDeleteInit={(id) => setDeleteId(id)}
             onDisableInit={(id) => setDisableId(id)}
           />
           <Pagination
