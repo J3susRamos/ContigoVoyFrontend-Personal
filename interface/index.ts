@@ -48,8 +48,6 @@ export interface ServicesStructureProps {
   edadMobil: string;
   motto: React.ReactElement;
   background: string;
-  backgroundAlt: string;
-  backgroundTitle: string;
   bgdown: string;
   bgdownAlt: string;
   bgdownTitle: string;
