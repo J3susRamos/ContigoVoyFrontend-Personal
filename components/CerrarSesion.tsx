@@ -51,6 +51,7 @@ export default function CerrarSesion() {
           setAllEspecialidades(data.result);
         }
       } catch (e) {
+        console.log(e);
         setAllEspecialidades([]);
       }
     };
@@ -70,6 +71,7 @@ export default function CerrarSesion() {
           }
         }
       } catch (e) {
+        console.log(e);
         setEspecialidades([]);
       }
     };
@@ -85,7 +87,8 @@ export default function CerrarSesion() {
       const base64 = await convertToBase64(webpImage);
       setImagen(base64);
     } catch (error) {
-      alert("Error al procesar la imagen.");
+      showToast("error", "Error al procesar la imagen");
+      console.log(error);
     }
   };
 
@@ -125,7 +128,7 @@ export default function CerrarSesion() {
         const especialidadesPsicologo = await GetEspecialidadesPsicologos(id as number);
         let nombres: string[] = [];
         if (Array.isArray(especialidadesPsicologo)) {
-          nombres = especialidadesPsicologo.map((esp: any) =>
+          nombres = especialidadesPsicologo.map((esp: string | { nombre: string }) =>
             typeof esp === "string" ? esp : esp.nombre
           );
         }
@@ -133,6 +136,7 @@ export default function CerrarSesion() {
       }
     } catch (err) {
       showToast("error", "Error al actualizar el psicólogo");
+      console.error("Error al actualizar el psicólogo:", err);
     } finally {
       setLoading(false);
     }
