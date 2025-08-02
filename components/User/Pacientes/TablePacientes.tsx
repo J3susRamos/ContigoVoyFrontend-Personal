@@ -6,7 +6,6 @@ import React from "react";
 
 interface Props {
   filteredPacientes: Paciente[];
-  onDeleteInit: (id: number) => void;
   onDisableInit: (id: number) => void;
 }
 
