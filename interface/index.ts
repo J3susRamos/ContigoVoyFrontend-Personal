@@ -198,6 +198,20 @@ export interface PsicologoPreviewData {
   };
 }
 
+export interface actulizarPsicologo{
+  nombre: string,
+  apellido: string,
+  imagen: string,
+  especialidades: string[]
+}
+export interface EspecialidadesPsicologoResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  result: string[];
+  errorBag: never[];
+}
+
 export interface PsicologoApiResponse {
   status_code: number;
   status_message: string;
@@ -239,6 +253,16 @@ export interface UsuarioLocalStorage {
   rol: string,
   imagen: string,
   idpsicologo?: number,
+}
+export interface UsuarioLocalStorageUpdate {
+  id: number,
+  nombre: string,
+  apellido: string,
+  email: string,
+  rol: string,
+  imagen: string,
+  idpsicologo?: number,
+  especialidades: string[]
 }
 
 //Usuario LocalStorage
