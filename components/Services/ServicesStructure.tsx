@@ -50,8 +50,8 @@ export default function ServicesStructure({
         <div className="hidden xl:block absolute inset-0">
           <Image
             src={service.background}
-            alt={service.backgroundAlt}
-            title={service.backgroundTitle}
+            alt={service.bgdownAlt}
+            title={service.bgdownTitle}
             fill
             className="object-cover"
             priority
@@ -123,8 +123,8 @@ export default function ServicesStructure({
             <div className="relative lg:hidden h-[300px] sm:h-[400px] w-full overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-purple-500/10 to-blue-500/10 p-1">
                 <div className="relative w-full h-full rounded-xl overflow-hidden">                  <Image
                     src={service.background}
-                    alt={service.backgroundAlt}
-                    title={service.backgroundTitle}
+                    alt={service.bgdownAlt}
+                    title={service.bgdownTitle}
                     fill
                     className="object-cover object-right w-full h-full transform hover:scale-105 transition-transform duration-700"
                     priority
@@ -162,8 +162,8 @@ export default function ServicesStructure({
                   <div className="relative w-full h-full bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm rounded-3xl p-1 shadow-2xl border border-white/30">
                     <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50">                      <Image
                         src={service.background}
-                        alt={service.backgroundAlt}
-                        title={service.backgroundTitle}
+                        alt={service.bgdownAlt}
+                        title={service.bgdownTitle}
                         fill
                         className="object-cover object-right hover:scale-105 transition-transform duration-700"
                         priority
@@ -287,7 +287,7 @@ export default function ServicesStructure({
                       <Image
                         title={card.title}
                         src={card.icon}
-                        alt={card.alt ? card.alt : card.text}
+                        alt={card.text ? card.text : card.text}
                         fill
                         className="w-[130px] object-contain drop-shadow-[0_0_2px_rgba(0,0,0,0.8)]"
                       />
