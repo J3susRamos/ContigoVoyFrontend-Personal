@@ -1,14 +1,14 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { Edit3, Trash2 } from "lucide-react";
+import { Edit3, Ban} from "lucide-react";
 import { ActionButton } from "./ActionButton";
 
 interface RowProps {
   values: string[];
   onClick?: () => void;
   onEdit?: () => void;
-  onDelete?: () => void;
+  onDisable?: () => void;
   children?: ReactNode;
   showActions?: boolean;
 }
@@ -16,8 +16,8 @@ interface RowProps {
 const Row: React.FC<RowProps> = ({
   values,
   onClick,
-  onDelete,
   onEdit,
+  onDisable,
   children,
   showActions = true
 }) => {
@@ -44,11 +44,11 @@ const Row: React.FC<RowProps> = ({
                     onClick={onEdit}
                   />
                 )}
-                {onDelete && (
+                {onDisable && (
                   <ActionButton
-                    icon={Trash2}
-                    label="Eliminar"
-                    onClick={onDelete}
+                    icon={Ban}
+                    label="Deshabilitar"
+                    onClick={onDisable}
                   />
                 )}
               </>
