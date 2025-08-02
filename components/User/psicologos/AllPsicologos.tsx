@@ -141,7 +141,6 @@ export default function AllPsicologos({
                   psicologo.idPsicologo.toString(),
                 ]}
                 onEdit={() => handleEdit(psicologo.idPsicologo)}
-                onDelete={() => openDeleteModal(psicologo.idPsicologo)}
               />
             )}            renderCard={(psicologo) => (
               <DataCard
