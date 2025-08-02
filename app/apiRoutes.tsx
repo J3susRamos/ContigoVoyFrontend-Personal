@@ -11,6 +11,8 @@ import {
   MarketingApiResponse,
   CitaMensual,
   FormCita,
+  actulizarPsicologo,
+  EspecialidadesPsicologoResponse,
 } from "@/interface";
 import { parseCookies } from "nookies";
 
@@ -289,6 +291,47 @@ export async function CreateCitaParaPaciente(values: FormCita): Promise<FormCita
     const errorData = await res.json();
     console.error("Error del backend:", errorData);
     throw new Error("Error al crear la cita");
+  }
+
+  return await res.json();
+}
+
+//Para que los mismos psicologos actualicen su perfil, solo el nombre apellido, foto y especialidades
+export async function actualizarPsicologo(
+  id: number | null,
+  data: actulizarPsicologo
+): Promise<void> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/update/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al actualizar el psicologo");
+  }
+}
+
+//Obtener las especialidades de los psicologos
+export async function GetEspecialidadesPsicologos(id: number): Promise<EspecialidadesPsicologoResponse> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Error al obtener las especialidades de los psicologos");
   }
 
   return await res.json();
