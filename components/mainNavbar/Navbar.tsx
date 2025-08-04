@@ -89,7 +89,7 @@ const navItemsMobil : NavItem[]= [
 
 const Navbar = () => {
   return (
-    <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
+    <nav className="bg-white dark:bg-gray-900 h-[80px] flex items-center sticky w-full z-40 top-0 border-b-2 border-gray-300 dark:border-gray-700">
       <div className="w-full px-4 lg:px-6 flex items-center justify-between relative">
         <Link
           href="/"
