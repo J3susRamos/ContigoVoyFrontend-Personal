@@ -1,6 +1,5 @@
 "use client";
 import RedesSociales from "@/components/footer/RedesSociales";
-import { Image } from "@heroui/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ReactSVG } from "react-svg";
@@ -21,12 +20,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="h-auto bg-[#634AE2] text-white isolate ">
+    <footer className="h-auto bg-white dark:bg-gray-900 text-[#634AE2] dark:text-white isolate">
       <div className="lg:max-w-6xl p-10 md:px-11 mx-auto">
         {/* Contenido Principal */}
         <div className="flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
           {/* Logo centrado con redes */}
-          <div className="flex flex-col shrink-2  justify-center  w-full md:w-[220px] ">
+          <div className="flex flex-col shrink-2 justify-center w-full md:w-[220px]">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -48,20 +47,19 @@ export default function Footer() {
 
           {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h3 className="text-2xl font-semibold mb-4 text-white">Enlaces</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-2 sm:gap-y-4">
               {/* Columna izquierda */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-[#634AE2] dark:text-white">
                 {leftLinks.map((link) => (
                   <li key={link.text}>
-                    <Link
-                      href={link.href}
-                      passHref
-                      legacyBehavior
-                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
-                    >
-                      <a title={link.title} className="relative group">
+                    <Link href={link.href} passHref legacyBehavior>
+                      <a
+                        title={link.title}
+                        className="relative group text-[#634AE2] dark:text-white transition-colors duration-300 hover:text-[#634AE2] cursor-pointer"
+
+                      >
                         {link.text}
                         <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
                       </a>
@@ -71,16 +69,15 @@ export default function Footer() {
               </ul>
 
               {/* Columna derecha */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-[#634AE2] dark:text-white">
                 {rightLinks.map((link) => (
                   <li key={link.text}>
-                    <Link
-                      href={link.href}
-                      passHref
-                      legacyBehavior
-                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
-                    >
-                      <a title={link.title} className="relative group">
+                    <Link href={link.href} passHref legacyBehavior>
+                      <a
+                        title={link.title}
+                        className="relative group text-[#634AE2] dark:text-white transition-colors duration-300 hover:text-[#634AE2] cursor-pointer"
+
+                      >
                         {link.text}
                         <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
                       </a>
@@ -94,13 +91,11 @@ export default function Footer() {
           {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-2xl font-semibold mb-4 text-white">
-                Contacto
-              </h3>
+              <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</h3>
 
               <div className="flex flex-col space-y-3 items-start">
                 {/* Perú */}
-                <div className="flex flex-col sm:flex-row  sm:items-center sm:gap-2 text-start w-full">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-start w-full">
                   <a
                     href="https://w.app/dvwynv"
                     target="_blank"
@@ -123,13 +118,13 @@ export default function Footer() {
                       }}
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
                     +51 983 027 828
                   </span>
                 </div>
 
                 {/* Argentina */}
-                <div className="flex flex-col sm:flex-row  sm:items-center sm:gap-2 text-start">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-start">
                   <a
                     href="https://w.app/qv4uqn"
                     target="_blank"
@@ -152,7 +147,7 @@ export default function Footer() {
                       }}
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
                     +54 922 130 326 75
                   </span>
                 </div>

@@ -214,7 +214,7 @@ export default function Login() {
                         inputWrapper:
                           "border-gray-300 dark:border-gray-600 hover:border-[#634AE2] dark:hover:border-[#9494F3] focus-within:!border-[#634AE2] dark:focus-within:!border-[#9494F3] bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm h-12 shadow-sm",
                         input:
-                          "text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-500",
+                          "text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400",
                       }}
                       value={credentials.email}
                       onChange={handleChange}
@@ -239,7 +239,7 @@ export default function Login() {
                         inputWrapper:
                           "border-gray-300 dark:border-gray-600 hover:border-[#634AE2] dark:hover:border-[#9494F3] focus-within:!border-[#634AE2] dark:focus-within:!border-[#9494F3] bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm h-12 shadow-sm",
                         input:
-                          "text-gray-800 dark:text-gray-200 placeholder:text-gray-500 dark:placeholder:text-gray-500",
+                          "text-gray-800 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400",
                       }}
                       radius="lg"
                       value={credentials.password}

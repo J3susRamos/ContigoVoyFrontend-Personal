@@ -40,7 +40,8 @@ const PageHome = () => {
   }
 
   return (
-    <section className="bg-[#f8f8ff] dark:bg-background min-h-screen">
+    <section className="bg-white dark:bg-[#1A1A1A] min-h-screen">
+
       <div className="flex flex-col md:flex-row justify-between">
         <div className="m-5">
         {user.rol === "ADMIN" ? (
