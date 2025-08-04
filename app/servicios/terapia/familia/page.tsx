@@ -11,6 +11,22 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: [
+    "terapia familiar",
+    "conflictos familiares",
+    "comunicación familiar",
+    "vínculos familiares",
+    "terapia sistemática",
+  ],
+  alternates: {
+    canonical:
+      "https://centropsicologicocontigovoy.com/servicios/terapia/familia/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 const FamilyTerapias: ServicesStructureProps = {

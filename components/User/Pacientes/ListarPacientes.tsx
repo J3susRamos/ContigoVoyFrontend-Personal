@@ -9,8 +9,8 @@ import { FiltersPaciente, Paciente } from "@/interface";
 import TablePacientes from "./TablePacientes";
 import pacientesGet from "@/utils/pacientesCRUD/pacientesGet";
 import showToastFunction from "../../ToastStyle";
-import pacientesDelete from "@/utils/pacientesCRUD/pacientesDelete";
-import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
+import { pacientesDesactivar} from "@/utils/pacientesCRUD/pacientesDelete";
+import ConfirmDisableModal from "@/components/ui/confirm-delete-modal";
 import EmptyTable from "@/components/ui/Table/EmptyTable";
 import Pagination from "@/components/ui/Pagination";
 
@@ -22,10 +22,10 @@ interface Props {
 export default function ListarPacientes({ filters, filterValue }: Props) {
   const [paciente, setPaciente] = useState<Paciente[]>([]);
   const toastShownRef = useRef(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [disableId, setDisableId] = useState<number | null>(null);
+  const [isDisabling] = useState(false);
 
   const handleGetPacientes = useCallback(
     async (showToast = true, page = 1) => {
@@ -76,30 +76,27 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
     [setPaciente, filterValue, filters]
   );
 
-  const handleDelete = async (idPaciente: number) => {
-    setIsDeleting(true);
+  const handleDisable = async (idPaciente: number) => {
     try {
-      const pacienteData = await pacientesDelete(idPaciente);
+      const pacienteData = await pacientesDesactivar(idPaciente);
 
       if (pacienteData.state === 2) {
-        showToastFunction("success", "Paciente eliminado correctamente");
+        showToastFunction("success", "Paciente deshabilitado correctamente");
         await handleGetPacientes(false);
         return true;
       } else {
         const errorMessage =
           pacienteData.state === 1
             ? pacienteData.result.status_message ||
-              "Error de conexión. Intenta nuevamente."
+              "Error al deshabilitar. Intenta nuevamente."
             : "Error de conexión. Intenta nuevamente.";
         showToastFunction("error", errorMessage);
         return false;
       }
     } catch (error) {
-      console.error("Error eliminando paciente:", error);
-      showToastFunction("error", "Error inesperado al eliminar paciente");
+      console.error("Error deshabilitando paciente:", error);
+      showToastFunction("error", "Error inesperado al deshabilitar paciente");
       return false;
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -113,7 +110,7 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
         <>
           <TablePacientes
             filteredPacientes={paciente}
-            onDeleteInit={(id) => setDeleteId(id)}
+            onDisableInit={(id) => setDisableId(id)}
           />
           <Pagination
             currentPage={currentPage}
@@ -138,18 +135,18 @@ export default function ListarPacientes({ filters, filterValue }: Props) {
         />
       )}
 
-      <ConfirmDeleteModal
-        isOpen={deleteId !== null}
-        onClose={() => setDeleteId(null)}
+      <ConfirmDisableModal
+        isOpen={disableId !== null}
+        onClose={() => setDisableId(null)}
         onConfirm={() => {
-          if (deleteId) {
-            handleDelete(deleteId).then((success) => {
-              if (success) setDeleteId(null);
-            });
-          }
+          if (disableId) {
+          handleDisable(disableId).then((success) => {
+          if (success) setDisableId(null);
+        });
+      }
         }}
-        isProcessing={isDeleting}
-        message="¿Estás seguro de eliminar este paciente?"
+          isProcessing={isDisabling}
+          message="¿Estás seguro de deshabilitar este paciente? No podrá acceder a su perfil."
       />
     </>
   );

@@ -8,10 +8,26 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terapia Psicológica Online | Contigo Voy",
-  description: "Conecta con tu bienestar. Psicólogos online, comienza tu terapia hoy. Contigo Voy te acompaña desde el primer paso. Agenda tu cita, la primera es gratis.",
-  authors: [{ name: 'Contigo Voy' }],
+  description:
+    "Conecta con tu bienestar. Psicólogos online, comienza tu terapia hoy. Contigo Voy te acompaña desde el primer paso. Agenda tu cita, la primera es gratis.",
+  authors: [{ name: "Contigo Voy" }],
   verification: {
-    google: 'E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY',
+    google: "ddLU23MMNVC0iknLLV3PFXxVUN5RHLSJkQLzEbg4t8s",
+  },
+  keywords: [
+    "psicología",
+    "bienestar emocional",
+    "terapia personalizada",
+    "espacio seguro",
+    "nueva cita",
+  ],
+  alternates: {
+    canonical: "https://centropsicologicocontigovoy.com/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
   },
 };
 

@@ -1,9 +1,6 @@
 "use client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Card,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
 import { PrePaciente, PsicologoPreviewData } from "@/interface";
@@ -11,6 +8,7 @@ import React, { useState } from "react";
 import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
 import Image from "next/image";
 import { User } from "lucide-react";
+import { countryPrefixes } from "@/utils/CountryPrefixes";
 
 export default function ReservarPsiPreview({
   psicologo,
@@ -23,6 +21,7 @@ export default function ReservarPsiPreview({
   const [horaSeleccionada, setHoraSeleccionada] = useState("");
   const [fechaSeleccionada, setFechaSeleccionada] = useState("");
   // Estados para los campos del formulario
+  const [prefix, setPrefix] = useState(countryPrefixes[0].code);
   const [error, setError] = useState<string | null>(null);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -74,17 +73,6 @@ export default function ReservarPsiPreview({
       return;
     }
 
-    // Validación de número
-    const telefonoRegex = /^[0-9]{9,}$/;
-    if (!telefonoRegex.test(data.celular)) {
-      setError(
-        "El número de celular debe contener solo números y tener al menos 9 dígitos."
-      );
-      setLoading(false);
-      return;
-    }
-
-    // Validación de correo electrónico
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!correoRegex.test(data.correo)) {
       setError("Por favor, ingresa un correo electrónico válido.");
@@ -93,7 +81,8 @@ export default function ReservarPsiPreview({
     }
 
     if (data.celular) {
-      data.celular = String(data.celular);
+      const cleanNumber = data.celular.replace(/\D/g, "");
+      data.celular = `${prefix} ${cleanNumber}`;
     }
 
     try {
@@ -138,90 +127,123 @@ export default function ReservarPsiPreview({
     }
   };
   return (
-    <>      <Card className="group relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 min-h-[320px]">
+    <>
+      <Card className="flex h-full flex-col group relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 min-h-[320px]">
         {/* Gradiente de fondo sutil */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-indigo-50/30 dark:from-gray-800/50 dark:via-gray-800 dark:to-gray-700/30"></div>
-        
+
         {/* Elemento decorativo animado */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 rounded-full opacity-20 transform translate-x-16 -translate-y-16 group-hover:scale-110 transition-transform duration-700"></div>
-        
-        <div className="relative z-10 p-6">
+
+        <div className="relative z-10 p-6 min-h-0 flex-1 flex flex-col justify-between">
           {/* Header con avatar y info básica */}
-          <div className="flex items-start gap-4 mb-4">            <div className="relative">
-              <Avatar className="w-20 h-20 ring-4 ring-white dark:ring-gray-600 shadow-lg">
-                <AvatarImage src={psicologo.imagen} className="object-cover" />                <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800">
-                  <User className="w-10 h-10 text-purple-600 dark:text-purple-300" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-md">
-                <ReactCountryFlag
-                  svg
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                  countryCode={psicologo.pais}
-                />
+          <div>
+            <div className="flex items-start gap-4 mb-4">
+              <div className="relative">
+                <Avatar className="w-20 h-20 ring-4 ring-white dark:ring-gray-600 shadow-lg">
+                  <AvatarImage
+                    src={psicologo.imagen}
+                    className="object-cover"
+                  />{" "}
+                  <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800">
+                    <User className="w-10 h-10 text-purple-600 dark:text-purple-300" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-gray-600 shadow-md">
+                  <ReactCountryFlag
+                    svg
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                    countryCode={psicologo.pais}
+                  />
+                </div>
               </div>
-            </div>            <div className="flex-1 min-w-0">              <div className="mb-1">
-                <span className="inline-block px-3 py-1 text-xs font-medium text-purple-600 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/30 rounded-full">
-                  {psicologo.titulo}
-                </span>
-              </div><h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">
-                Dr. {psicologo.nombre} {psicologo.apellido}
-              </h3>
+              <div className="flex-1 min-w-0">
+                <div className="mb-1">
+                  <span className="inline-block px-3 py-1 text-xs font-medium text-purple-600 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/30 rounded-full">
+                    {psicologo.titulo}
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">
+                  Dr. {psicologo.nombre} {psicologo.apellido}
+                </h3>
+              </div>
             </div>
-          </div>          {/* Línea divisoria con gradiente */}
-          <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-600 to-transparent mb-4"></div>
-
-          {/* Descripción */}
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3">
-            {psicologo.introduccion.slice(0, 120)}...
-          </p>
-
-          {/* Especialidades */}
-          <div className="mb-6">
-            <div className="flex flex-wrap gap-2">
-              {psicologo.especialidades.slice(0, 3).map((especialidad, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-700"
-                >
-                  {especialidad}
-                </span>
-              ))}
-              {psicologo.especialidades.length > 3 && (
-                <span className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">
-                  +{psicologo.especialidades.length - 3} más
-                </span>
-              )}
-            </div>
+            {/* Línea divisoria con gradiente */}
+            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-600 to-transparent mb-4"></div>
+            {/* Descripción */}
+            <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3 md:h-[67px]">
+              {psicologo.introduccion.slice(0, 120)}...
+            </p>
+            {/* Especialidades */}
           </div>
-
-          {/* Botones de acción */}
-          <CardFooter className="flex gap-3 p-0 mt-auto">
-            <Button
-              onPress={() => setIsScheduleOpen(true)}
-              className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Agendar
-            </Button>            <Button
-              onPress={() => setIsProfileOpen(true)}
-              className="flex-1 bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-300 font-semibold py-3 rounded-xl border-2 border-purple-200 dark:border-purple-600 hover:border-purple-300 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              Ver perfil
-            </Button>
-          </CardFooter>
+          <div>
+            <div className="mb-2">
+              <div className="flex overflow-x-auto gap-2 pb-scv4">
+                {psicologo.especialidades
+                  .slice(0, 3)
+                  .map((especialidad, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 flex-shrink-0 text-xs font-medium text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-700"
+                    >
+                      {especialidad}
+                    </span>
+                  ))}
+                {psicologo.especialidades.length > 3 && (
+                  <span className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">
+                    +{psicologo.especialidades.length - 3} más
+                  </span>
+                )}
+              </div>
+            </div>
+            {/* Botones de acción */}
+            <CardFooter className="flex gap-3 p-0 mt-auto">
+              <Button
+                onPress={() => setIsScheduleOpen(true)}
+                className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+              >
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                Agendar
+              </Button>{" "}
+              <Button
+                onPress={() => setIsProfileOpen(true)}
+                className="flex-1 bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-300 font-semibold py-3 rounded-xl border-2 border-purple-200 dark:border-purple-600 hover:border-purple-300 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-gray-600 transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
+              >
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+                Ver perfil
+              </Button>
+            </CardFooter>
+          </div>
         </div>
       </Card>
-
       {/*modal de profile */}
       <Modal
         isOpen={isProfileOpen}
@@ -242,11 +264,14 @@ export default function ReservarPsiPreview({
             <>
               <ModalContent className="w-[695px] h-[416px] bg-background rounded-3xl  overflow-hidden  mt-8">
                 <div className="grid grid-cols-[0.8fr_1.6fr] items-center">
-                  <div className="h-full w-full flex ">                    <Avatar className="w-[208px] h-[416px] rounded-2xl overflow-hidden">
+                  <div className="h-full w-full flex ">
+                    {" "}
+                    <Avatar className="w-[208px] h-[416px] rounded-2xl overflow-hidden">
                       <AvatarImage
                         src={psicologo.imagen}
                         className="w-full h-full object-cover"
-                      />                      <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800 w-full h-full">
+                      />{" "}
+                      <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800 w-full h-full">
                         <User className="w-24 h-24 text-purple-600 dark:text-purple-300" />
                       </AvatarFallback>
                     </Avatar>
@@ -286,7 +311,6 @@ export default function ReservarPsiPreview({
           )}
         </ModalContent>
       </Modal>
-
       {/* Horarios */}
       <Modal
         isOpen={isScheduleOpen}
@@ -327,7 +351,6 @@ export default function ReservarPsiPreview({
           </ModalBody>
         </ModalContent>
       </Modal>
-
       {/* Modal de confirmación */}
       <Modal
         isOpen={isConfirmOpen}
@@ -363,14 +386,29 @@ export default function ReservarPsiPreview({
                 <label className="block text-[#634AE2] text-sm mb-1">
                   Número de celular
                 </label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-full px-4 py-2 outline-none focus:border-[#634AE2]"
-                  placeholder="Número de celular"
-                  name="celular"
-                  value={formData.celular}
-                  onChange={handleChange}
-                />
+                <div className="flex">
+                  <select
+                    value={prefix}
+                    onChange={(e) => setPrefix(e.target.value)}
+                    className="rounded-l-full border border-gray-300 px-2 py-2  focus:border-[#634AE2] outline-none"
+                    style={{ minWidth: 80 }}
+                  >
+                    {countryPrefixes.map((prefix, index) => (
+                      <option key={index} value={prefix.code}>
+                        {prefix.name} ({prefix.code})
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 rounded-r-full px-4 py-2 outline-none focus:border-[#634AE2]"
+                    placeholder="Número de celular"
+                    name="celular"
+                    value={formData.celular}
+                    onChange={handleChange}
+                    style={{ borderLeft: "none" }}
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-[#634AE2] text-sm mb-1">
@@ -403,7 +441,6 @@ export default function ReservarPsiPreview({
           </ModalBody>
         </ModalContent>
       </Modal>
-
       <Modal
         isOpen={isSuccessOpen}
         onOpenChange={setIsSuccessOpen}

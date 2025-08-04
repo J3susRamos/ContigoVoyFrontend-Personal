@@ -28,6 +28,14 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
                     {navItem.name}
                   </button>
                 </Link>
+              ) : navItem.name === "Reservar Cita" ? (
+                <Link href={navItem.link}>
+                  <button
+                    className="px-5 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-[#634AE2] via-[#7B5FE8] to-[#9494F3] shadow-lg border-2 border-[#634AE2] hover:from-[#7B5FE8] hover:to-[#634AE2] hover:scale-105 transition-all duration-300"
+                  >
+                    {navItem.name}
+                  </button>
+                </Link>
               ) : navItem.name === "Servicios" ||
                 navItem.name == "ContigoVoy" ? (
                 <HoverDropBox key={navItem.name} navItem={navItem}/>

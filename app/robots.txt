@@ -1,0 +1,6 @@
+User-Agent: *
+Allow: /
+Disallow: /user/
+Disallow: /paciente/
+
+Sitemap: https://centropsicologicocontigovoy.com/sitemap.xml

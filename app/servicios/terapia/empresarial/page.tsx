@@ -11,6 +11,16 @@ export const metadata: Metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: ["psicología organizacional"],
+  alternates: {
+    canonical:
+      "https://centropsicologicocontigovoy.com/servicios/terapia/empresarial/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 const terapiaEmpresarial: ServicesStructureProps = {
@@ -31,8 +41,8 @@ const terapiaEmpresarial: ServicesStructureProps = {
   ),
   background: "/Services/business/buisness.webp",
   bgdown: "/Services/business/bg2.webp",
-  bgdownAlt: "",
-  bgdownTitle: "",
+  bgdownAlt: "Servicio Terapia Psicológica para Empresas Contigo Voy Online",
+  bgdownTitle: "Terapia Empresarial | Contigo Voy Psicología Online",
   bgup: "/Services/business/bgtiny.webp",
   description:
     "Ayudamos a equipos y líderes a gestionar el estrés, mejorar la comunicación y fortalecer un ambiente laboral saludable. A través de sesiones económicas y personalizadas, promovemos un entorno más equilibrado y productivo para todos.",
@@ -43,6 +53,8 @@ const terapiaEmpresarial: ServicesStructureProps = {
       id: 1,
       text: "Estrés laboral",
       iconImage: "/Services/business/therapy/estres.webp",
+      title: "Estrés laboral",
+    
     },
     {
       id: 2,
@@ -69,33 +81,36 @@ const terapiaEmpresarial: ServicesStructureProps = {
   cards: [
     {
       id: 1,
-      text: "Colaboradores con menos índices de estrés",
+      text: "Acompañamos emocionalmente a tus colaboradores",
       icon: "/Services/business/colaboradores.webp",
-      title: "Menos estrés laboral",
+      title: "Menos estrés laboral trabajo Contigo Voy Psicología Online",
+      
+
     },
     {
       id: 2,
-      text: "Incremento en la productividad",
+      text: "Psicología empresarial que potencia la productividad de tus equipos desde el bienestar emocional.",
       icon: "/Services/business/incremento.webp",
-      title: "Mayor productividad",
+      title: "Mayor Productividad Contigo Voy Psicología Online",
     },
     {
       id: 3,
-      text: "Mejora en el clima laboral",
+      text: "Promovemos entornos laborales emocionalmente saludables",
       icon: "/Services/business/clima.webp",
-      title: "Clima laboral positivo",
+      title: "Clima Laboral Saludable Contigo Voy Psicología Online",
+      
     },
     {
       id: 4,
-      text: "Colaboradores con mayor gestión emocional",
+      text: "Colaboradores con mejores herramientas psicológicas para gestionar sus emociones",
       icon: "/Services/business/mayor.webp",
-      title: "Mejor gestión emocional",
+      title: "Mejor gestión emocional Contigo Voy Psicología Online",
     },
     {
       id: 5,
-      text: "Disminución de la rotación de personal",
+      text: "Cuidamos el bienestar emocional para mantener equipos comprometidos",
       icon: "/Services/business/disminucion.webp",
-      title: "Mayor estabilidad personal",
+      title: "Menor rotación de personal Contigo Voy Psicología Online",
     },
   ],
   textfooter:

@@ -50,12 +50,12 @@ export const TableCitas: React.FC<TableCitasProps> = ({
                 cita.fecha_inicio,
                 cita.duracion,
             ]}
-            onDelete={() => handleDelete(cita)}
             onEdit={canEditCita(cita) ? () => handleEdit(cita) : undefined}
         >
             <CitaActionButtons
                 idCita={cita.idCita}
                 showPacientButton={shouldShowPacientButton(cita)}
+                estado={cita.estado}
             />
         </Row>
     );
@@ -79,6 +79,7 @@ export const TableCitas: React.FC<TableCitasProps> = ({
             <CitaActionButtons
                 idCita={cita.idCita}
                 showPacientButton={shouldShowPacientButton(cita)}
+                estado={cita.estado}
             />
         </DataCard>
     );

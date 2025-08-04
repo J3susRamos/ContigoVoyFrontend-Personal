@@ -59,6 +59,7 @@ export interface ServicesStructureProps {
     title?: string;
     text: string;
     iconImage: string;
+    
   }[];
   tittlecards: string;
   cards: {
@@ -66,6 +67,7 @@ export interface ServicesStructureProps {
     title?: string;
     text: string;
     icon: string;
+  
   }[];
   textfooter: string;
   textfootermobile:string;
@@ -196,6 +198,20 @@ export interface PsicologoPreviewData {
   };
 }
 
+export interface actulizarPsicologo{
+  nombre: string,
+  apellido: string,
+  imagen: string,
+  especialidades: string[]
+}
+export interface EspecialidadesPsicologoResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  result: string[];
+  errorBag: never[];
+}
+
 export interface PsicologoApiResponse {
   status_code: number;
   status_message: string;
@@ -237,6 +253,16 @@ export interface UsuarioLocalStorage {
   rol: string,
   imagen: string,
   idpsicologo?: number,
+}
+export interface UsuarioLocalStorageUpdate {
+  id: number,
+  nombre: string,
+  apellido: string,
+  email: string,
+  rol: string,
+  imagen: string,
+  idpsicologo?: number,
+  especialidades: string[]
 }
 
 //Usuario LocalStorage
@@ -330,7 +356,8 @@ export interface Paciente {
   estadoCivil: string,
   direccion: string,
   idPsicologo: number
-  ultima_cita_fecha: Date
+  ultima_cita_fecha: Date,
+  password: string,
 }
 
 export interface Paciente2 {
@@ -350,6 +377,7 @@ export interface Paciente2 {
   direccion: string,
   pais: string | null,
   departamento: string | null,
+  password: string | null,
 }
 
 export interface FormPaciente {
@@ -370,6 +398,7 @@ export interface FormPaciente {
   pais: string| null;
   antecedentesMedicos: string;
   medicamentosPrescritos: string;
+  password: string;
 }
 
 export interface FormFamilia {

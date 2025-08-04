@@ -6,6 +6,21 @@ export const metadata = {
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
+  keywords: [
+    "mi psicólogo",
+    "reservar",
+    "nueva cita",
+    "primera cita",
+    "reservar consulta psicológica",
+  ],
+  alternates: {
+    canonical: "https://centropsicologicocontigovoy.com/ReservarCita/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    noimageindex: true,
+  },
 };
 
 export default function ReservaLayout({

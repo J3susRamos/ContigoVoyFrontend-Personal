@@ -133,6 +133,7 @@ export default function App() {
         direccion: data.direccion,
         pais: data.pais,
         departamento: data.departamento,
+        password: data.password,
       };
   
       const cookies = parseCookies();
@@ -359,6 +360,7 @@ export default function App() {
             <FormFieldInput label="Dirección" name="direccion" register={register} errors={errors} />
             <FormFieldInput label="Antecedentes médicos" name="antecedentesMedicos" register={register} errors={errors} />
             <FormFieldInput label="Medicamentos prescritos" name="medicamentosPrescritos" register={register} errors={errors} />
+
           </div>
         </div>
 
