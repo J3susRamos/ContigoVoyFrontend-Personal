@@ -45,7 +45,7 @@ export default function CerrarSesion() {
   useEffect(() => {
     const fetchAllEspecialidades = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades`);
         const data = await res.json();
         if (Array.isArray(data.result)) {
           setAllEspecialidades(data.result);
