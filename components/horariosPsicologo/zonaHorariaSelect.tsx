@@ -40,7 +40,11 @@ const ZonaHorariaSelect: React.FC<ZonaHorariaSelectProps> = ({ onChange }) => {
     <div className="relative inline-block">
       <select
         onChange={(e) => onChange(e.target.value)}
-        className="mt-3 w-full p-2 pr-9 text-center rounded-full text-base bg-[#EAEAFF] text-[#634AE2] appearance-none">
+        className="mt-3 w-full p-2 pr-9 text-center rounded-full text-base 
+             bg-[#EAEAFF] text-[#634AE2] 
+             dark:bg-[#2A2A5A] dark:text-white 
+             border border-transparent dark:border-[#444] 
+             appearance-none transition-colors duration-300">
         {zonasHorarias.map((z) => (
           <option key={z.zona} value={z.zona}>
             {`(${obtenerOffset(z.zona)}:00) ${z.zona}`}
@@ -50,7 +54,8 @@ const ZonaHorariaSelect: React.FC<ZonaHorariaSelectProps> = ({ onChange }) => {
 
       {/* Flecha */}
       <svg
-        className="absolute right-4 transform -translate-y-7 pointer-events-none text-[#634AE2]"
+        className="absolute right-4 transform -translate-y-7 pointer-events-none 
+             text-[#634AE2] dark:text-white"
         aria-hidden="true"
         focusable="false"
         height="16"
