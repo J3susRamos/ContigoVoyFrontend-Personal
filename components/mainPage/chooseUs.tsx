@@ -1,86 +1,96 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Fade from "embla-carousel-fade";
+import { ReactSVG } from "react-svg";
+
+
+const features = [
+  {
+    icon: (
+      <ReactSVG
+        className="sm:p-6 bg-transparent rounded-full"
+        src={"/ImgsInicio/ImgsElegirnos/especialistas.svg"}
+        title="Especialistas Contigo Voy Terapia online"
+        beforeInjection={(svg) => {
+          svg.classList.add("stroke-gray-200");
+        }}
+      />
+    ),
+    title: "Especialistas colegiados",
+  },
+  {
+    icon: (
+      <ReactSVG
+        className="sm:p-8 bg-transparent rounded-full"
+        src={"/ImgsInicio/ImgsElegirnos/atencionvirtual.svg"}
+        title="Atención virtual Contigo Voy Terapia online"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+      />
+    ),
+    title: "Atención virtual",
+  },
+  {
+    icon: (
+      <ReactSVG
+        className="sm:p-8 bg-transparent rounded-full"
+        src={"/ImgsInicio/ImgsElegirnos/etica.svg"}
+        title="Ética y Confiabilidad Contigo Voy Centro Psicológico"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+      />
+    ),
+    title: "Ética y confiabilidad",
+  },
+  {
+    icon: (
+      <ReactSVG
+        className="sm:p-8 bg-transparent rounded-full"
+        src={"/ImgsInicio/ImgsElegirnos/horarios.svg"}
+        title="Atención virtual Contigo Voy Terapia Psicológica"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+      />
+    ),
+    title: "Horarios flexibles",
+  },
+  {
+    icon: (
+      <ReactSVG
+        className="sm:p-8 bg-transparent rounded-full"
+        src={"/ImgsInicio/ImgsElegirnos/costos.svg"}
+        title="Costos Accesibles Contigo Voy Terapia Online"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+      />
+    ),
+    title: "Costos accesibles",
+  },
+  {
+    icon: (
+      <ReactSVG
+        className="sm:p-5 bg-transparent rounded-full"
+        src={"/ImgsInicio/ImgsElegirnos/confidencialidad.svg"}
+        title="Confidencialidad Contigo Voy Centro Psicológico"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+      />
+    ),
+    title: "Confidencialidad",
+  },
+];
 
 export default function ChooseUs() {
-  const features = [
-    {
-      icon: (
-        <Image
-          src={"/ChooseUsImages/especialistas.webp"}
-          title="Especialistas Contigo Voy Terapia online"
-          alt="Especialistas Terapia Psicológica Online Contigo Voy"
-          width={70}
-          height={60}
-        />
-      ),
-      title: "Especialistas colegiados",
-    },
-    {
-      icon: (
-        <Image
-          src="/ChooseUsImages/atencionvirtual.webp"
-          title="Atención virtual Contigo Voy Terapia online"
-          alt="Atención virtual Terapia Psicológica Contigo Voy Centro Psicológico"
-          width={70}
-          height={60}
-        />
-      ),
-      title: "Atención virtual",
-    },
-    {
-      icon: (
-        <Image
-          src="/ChooseUsImages/etica.webp"
-          title="Ética y Confiabilidad Contigo Voy Centro Psicológico"
-          alt="Ética y Confiabilidad Contigo Voy"
-          width={70}
-          height={60}
-        />
-      ),
-      title: "Ética y confiabilidad",
-    },
-    {
-      icon: (
-        <Image
-          src="/ChooseUsImages/horarios.webp"
-          title="Atención virtual Contigo Voy Terapia Psicológica"
-          alt="Horarios flexibles Contigo Voy Terapia Psicológica"
-          width={70}
-          height={60}
-        />
-      ),
-      title: "Horarios flexibles",
-    },
-    {
-      icon: (
-        <Image
-          src="/ChooseUsImages/costos.webp"
-          title="Costos Accesibles Contigo Voy Terapia Online"
-          alt="Costos Accesibles Contigo Voy Terapia Psicológica"
-          width={70}
-          height={60}
-        />
-      ),
-      title: "Costos accesibles",
-    },
-    {
-      icon: (
-        <Image
-          src="/ChooseUsImages/confidencialidad.webp"
-          title="Confidencialidad Contigo Voy Centro Psicológico"
-          alt="Confidencialidad Contigo Voy Centro Psicológico"
-          width={70}
-          height={60}
-        />
-      ),
-      title: "Confidencialidad",
-    },
-  ];
+  
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -151,7 +161,7 @@ export default function ChooseUs() {
                 <div className="flex max-w-[550px] embla__slide " key={index}>
                   <div className="flex-1 flex flex-col items-center gap-y-scv4">
                     <div className="flex flex-col items-center justify-center w-28 h-28 rounded-full bg-[#634AE2] backdrop-blur-sm transition-all duration-300">
-                      <div className="bg-transparent rounded-full  transition-colors duration-300 w-14">
+                      <div className="bg-transparent rounded-full  transition-colors duration-300 w-16">
                         {feature.icon}
                       </div>
                     </div>
@@ -193,9 +203,7 @@ export default function ChooseUs() {
               className="group w-scv11 flex flex-col items-center"
             >
               <div className="flex flex-col items-center justify-center w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-[#634AE2]  duration-500 space-y-4">
-                <div className="p-4 bg-transparent rounded-full">
-                  {feature.icon}
-                </div>
+                {feature.icon}
               </div>
               <h3 className="text-center text-cv6 leading-7   text-title mt-3">
                 {feature.title}
