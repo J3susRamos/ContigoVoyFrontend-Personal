@@ -20,7 +20,8 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="h-auto bg-white dark:bg-gray-900 text-[#634AE2] dark:text-white isolate">
+    <footer className="h-auto bg-[#634AE2] dark:bg-gray-900 text-[#634AE2] dark:text-white isolate">
+
       <div className="lg:max-w-6xl p-10 md:px-11 mx-auto">
         {/* Contenido Principal */}
         <div className="flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
@@ -52,7 +53,7 @@ export default function Footer() {
 
           {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-white dark:text-white">Enlaces</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-2 sm:gap-y-4">
               {/* Columna izquierda */}
@@ -62,11 +63,11 @@ export default function Footer() {
                     <Link href={link.href} passHref legacyBehavior>
                       <a
                         title={link.title}
-                        className="relative group text-[#634AE2] dark:text-white transition-colors duration-300 hover:text-[#634AE2] cursor-pointer"
-
+                        className="relative group text-white dark:text-white transition-colors duration-300 cursor-pointer"
                       >
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                        {/* Línea debajo del texto */}
+                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full dark:bg-white group-hover:dark:bg-white inline-block duration-500"></span>
                       </a>
                     </Link>
                   </li>
@@ -74,17 +75,17 @@ export default function Footer() {
               </ul>
 
               {/* Columna derecha */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-[#634AE2] dark:text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-white dark:text-white">
                 {rightLinks.map((link) => (
                   <li key={link.text}>
                     <Link href={link.href} passHref legacyBehavior>
                       <a
                         title={link.title}
-                        className="relative group text-[#634AE2] dark:text-white transition-colors duration-300 hover:text-[#634AE2] cursor-pointer"
-
+                        className="relative group text-white dark:text-white transition-colors duration-300 cursor-pointer"
                       >
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                        {/* Línea debajo del texto */}
+                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full dark:bg-white group-hover:dark:bg-white inline-block duration-300"></span>
                       </a>
                     </Link>
                   </li>
@@ -96,7 +97,8 @@ export default function Footer() {
           {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</h3>
+              <h3 className="text-2xl font-semibold mb-4 text-white">Contacto</h3>
+
 
               <div className="flex flex-col space-y-3 items-start">
                 {/* Perú */}
@@ -105,9 +107,9 @@ export default function Footer() {
                     href="https://w.app/dvwynv"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 border border-[#634AE2] dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                    className="flex items-center space-x-1 border border-white dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
                   >
-                    <span className="text-[10px] text-[#634AE2] dark:text-white">Perú</span>
+                    <span className="text-[10px] text-white dark:text-white dark:text-shadow-md text-shadow-[0px_0px_2px_#fff]">Perú</span>
                     <Image
                       src="/WSP.webp"
                       title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
@@ -117,9 +119,11 @@ export default function Footer() {
                       className="flex-shrink-0 bg-[#634AE2] p-0.5 rounded-full dark:bg-transparent"
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-white">
                     +51 983 027 828
                   </span>
+
+
                 </div>
 
                 {/* Argentina */}
@@ -128,9 +132,9 @@ export default function Footer() {
                     href="https://w.app/qv4uqn"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 border border-[#634AE2] dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                    className="flex items-center space-x-1 border border-white dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
                   >
-                    <span className="text-[10px] text-[#634AE2] dark:text-white">Argentina</span>
+                    <span className="text-[10px] text-white dark:text-white dark:text-shadow-md text-shadow-[0px_0px_2px_#fff]">Argentina</span>
                     <Image
                       src="/WSP.webp"
                       title="Whatsapp Terapia Psicológica Argentina Online Contigo Voy"
@@ -140,9 +144,11 @@ export default function Footer() {
                       className="flex-shrink-0 bg-[#634AE2] p-0.5 rounded-full dark:bg-transparent"
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-white">
                     +54 922 130 326 75
                   </span>
+
+
                 </div>
               </div>
             </div>
