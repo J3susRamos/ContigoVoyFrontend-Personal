@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plantilla } from "@/interface";
 import Image from "next/image";
+import { tr } from "date-fns/locale";
 
 interface Props {
   onBack: () => void;
@@ -35,6 +36,16 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
     fetchPlantillas();
   }, []);
 
+  const getButtonClasses = (isActive: boolean) => {
+    const baseClasses = "w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-11 text-sm md:text-base font-semibold rounded-full px-4 md:px-8 py-2 transition-all duration-200 ease-in-out transform hover:scale-105";
+
+    if (isActive) {
+      return `${baseClasses} bg-white dark:bg-background text-primary dark:text-primary-foreground shadow-lg border-2 border-primary/20 hover:bg-white`;
+    }
+
+    return `${baseClasses} bg-transparent text-white dark:text-white hover:bg-white/10 dark:hover:bg-white/5 hover:text-white border-2 border-transparent hover:border-white/20`;
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 pb-8">
       {/* Navbar superior */}
@@ -51,15 +62,15 @@ const PlantillasGuardadas: React.FC<Props> = ({ onBack }) => {
       </div>
 
       {/* Navbar secundario con pestañas */}
-      <div className="w-full h-auto md:h-16 bg-primary dark:bg-primary flex items-center justify-start">
-        <div className="md:ml-10 flex flex-col md:flex-row gap-2 md:gap-6 items-center w-full max-w-full md:max-w-[400px] py-6 md:py-4 mx-4">
+      <div className="w-full bg-primary dark:bg-primary flex items-center justify-start">
+        <div className="mx-auto flex flex-col md:flex-row gap-2 md:gap-6 items-center w-full max-w-full md:max-w-[400px] p-4 md:p-6">
           {/* Botón activo */}
-          <button onClick={() => router.push("/user/marketing/crear")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 text-primary dark:text-black dark:hover:text-white hover:bg-white text-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+          <button onClick={() => router.push("/user/marketing/crear")} className={getButtonClasses(false)}>
             Plantillas
           </button>
 
           {/* Botón inactivo */}
-          <button onClick={() => router.push("/user/marketing/crear/plantillasGuardadas")} className="w-full md:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap shadow h-10 md:h-9 bg-white dark:bg-background dark:text-white text-primary dark:text-primary dark:hover:bg-background dark:hover:text-primary/80 text-base md:text-[16px] leading-[20px] font-bold rounded-full px-6 md:px-9 py-2 transition-colors">
+          <button onClick={() => router.push("/user/marketing/crear/plantillasGuardadas")} className={getButtonClasses(true)}>
             Plantillas guardadas
           </button>
         </div>

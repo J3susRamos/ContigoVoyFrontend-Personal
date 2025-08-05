@@ -15,7 +15,7 @@ export function DateRangeFilter({
     return (
         <div className="flex items-center gap-2 relative">
             <button
-                className="p-2 rounded-full bg-white dark:bg-background border border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+                className="p-2 rounded-full bg-white dark:bg-background border border-primary text-primary hover:text-white transition-colors"
                 onClick={() => setOpen((o) => !o)}
                 title="Filtrar por rango de fechas"
                 type="button"

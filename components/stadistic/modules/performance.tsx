@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { renderCustomizedLabel, CustomTooltip } from "./CustomTooltipComponent";
+import { renderCustomizedLabel, CustomTooltip } from "../custom/CustomTooltipComponent";
 
 // Datos para el LineChart
 const data = [
