@@ -1,16 +1,24 @@
-import { actualizarPsicologo, GetEspecialidadesPsicologos } from '@/app/apiRoutes';
-import { UsuarioLocalStorageUpdate } from '@/interface';
-import { convertImageToWebP, convertToBase64 } from '@/utils/convertir64';
-import { Button, Modal, ModalBody, ModalContent } from '@heroui/react'
-import React, { useEffect, useState } from 'react'
-import showToast from './ToastStyle';
+import {
+  actualizarPsicologo,
+  GetEspecialidadesPsicologos,
+} from "@/app/apiRoutes";
+import { UsuarioLocalStorageUpdate } from "@/interface";
+import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
+import { Button, Modal, ModalBody, ModalContent } from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import showToast from "./ToastStyle";
 import Image from "next/image";
 import { Plus, X } from "lucide-react";
 
 type Especialidad = { idEspecialidad: number; nombre: string };
 
-function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditOpen: (open: boolean) => void }) {
-
+function Editar({
+  isEditOpen,
+  setIsEditOpen,
+}: {
+  isEditOpen: boolean;
+  setIsEditOpen: (open: boolean) => void;
+}) {
   const [user, setUser] = useState<UsuarioLocalStorageUpdate | null>(null);
 
   // Modal y formulario
@@ -18,11 +26,12 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
   const [apellido, setApellido] = useState("");
   const [imagen, setImagen] = useState<string>("");
   const [especialidades, setEspecialidades] = useState<string[]>([]);
-  const [allEspecialidades, setAllEspecialidades] = useState<Especialidad[]>([]);
+  const [allEspecialidades, setAllEspecialidades] = useState<Especialidad[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -40,7 +49,9 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
   useEffect(() => {
     const fetchAllEspecialidades = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`
+        );
         const data = await res.json();
         if (Array.isArray(data.result)) {
           setAllEspecialidades(data.result);
@@ -74,7 +85,9 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
   }, [isEditOpen, user]);
 
   // Manejo de imagen (WebP y base64)
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
     try {
@@ -120,11 +133,14 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
 
       // Recarga especialidades del psicólogo desde el backend
       if (id) {
-        const especialidadesPsicologo = await GetEspecialidadesPsicologos(id as number);
+        const especialidadesPsicologo = await GetEspecialidadesPsicologos(
+          id as number
+        );
         let nombres: string[] = [];
         if (Array.isArray(especialidadesPsicologo)) {
-          nombres = especialidadesPsicologo.map((esp: string | { nombre: string }) =>
-            typeof esp === "string" ? esp : esp.nombre
+          nombres = especialidadesPsicologo.map(
+            (esp: string | { nombre: string }) =>
+              typeof esp === "string" ? esp : esp.nombre
           );
         }
         setEspecialidades(nombres);
@@ -138,13 +154,22 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
   };
 
   return (
-
-      <Modal isOpen={isEditOpen} onOpenChange={setIsEditOpen} className=" border-2 border-[#634AE2] rounded-lg">
-        <ModalContent>
-          <ModalBody>
-            <form onSubmit={handleSubmit} className="space-y-4 p-2">
+    <Modal
+      isOpen={isEditOpen}
+      onOpenChange={setIsEditOpen}
+      className=" border-2 border-[#634AE2] rounded-lg xl:min-w-[840px] max-md:flex max-md:flex-col"
+    >
+      <ModalContent>
+        <ModalBody>
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 p-2 grid xl:grid-cols-2 max-xl:grid-cols-1 gap-4 "
+          >
+            <div>
               <div>
-                <label className="block font-bold text-base text-[#634AE2] mb-2">Nombre</label>
+                <label className="block font-bold text-base text-[#634AE2] py-2 mt-2">
+                  Nombre
+                </label>
                 <input
                   type="text"
                   value={nombre}
@@ -154,7 +179,9 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
                 />
               </div>
               <div>
-                <label className="block font-bold text-base text-[#634AE2] mb-2">Apellido</label>
+                <label className="block font-bold text-base text-[#634AE2] mb-2">
+                  Apellido
+                </label>
                 <input
                   type="text"
                   value={apellido}
@@ -164,7 +191,9 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
                 />
               </div>
               {/* Imagen */}
-              <h1 className="block font-bold text-base text-[#634AE2] mb-2 text-center">Imagen</h1>
+              <h1 className="block font-bold text-base text-[#634AE2] mb-2 text-center">
+                Imagen
+              </h1>
               <div className="w-full flex flex-col gap-2 m-auto items-center ">
                 <div className="relative border-2 border-[#634AE2] rounded-lg h-[220px] w-[220px] bg-[#F3F3F3] dark:bg-input flex justify-center items-center cursor-pointer overflow-hidden">
                   {imagen ? (
@@ -177,7 +206,12 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
                     />
                   ) : (
                     <div className="flex flex-col items-center">
-                      <Plus width={40} height={40} strokeWidth={2} className="text-card-foreground dark:text-card-foreground" />
+                      <Plus
+                        width={40}
+                        height={40}
+                        strokeWidth={2}
+                        className="text-card-foreground dark:text-card-foreground"
+                      />
                       <span className="text-sm mt-2">
                         Subir foto del paciente
                       </span>
@@ -192,25 +226,33 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
                   <button
                     type="button"
                     className="absolute top-2 right-2 bg-white/80 dark:bg-white/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-100 transition-colors"
-                    onClick={() => setImagen('')}
+                    onClick={() => setImagen("")}
                     aria-label="Eliminar imagen"
                   >
                     <X className="w-5 h-5 text-primary dark:bg-text-primary" />
                   </button>
                 </div>
               </div>
+            </div>
+            <div className="min-w-[400px] pt-1 flex flex-col justify-between">
               {/* Especialidades */}
-              <div className="mt-6">
+              <div>
                 <label className="block font-bold text-base text-[#634AE2] mb-2">
                   Especialidades
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {allEspecialidades.map((esp) => (
-                    <label key={esp.idEspecialidad} className="flex items-center gap-2">
+                    <label
+                      key={esp.idEspecialidad}
+                      className="flex items-center gap-2"
+                    >
                       <input
                         type="checkbox"
                         value={esp.nombre}
-                        checked={Array.isArray(especialidades) && especialidades.includes(esp.nombre)}
+                        checked={
+                          Array.isArray(especialidades) &&
+                          especialidades.includes(esp.nombre)
+                        }
                         onChange={(e) => {
                           if (e.target.checked) {
                             setEspecialidades((prev) => [...prev, esp.nombre]);
@@ -237,7 +279,7 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
                   ))}
                 </div>
               </div>
-              <div className="flex justify-end gap-2 mt-4">
+              <div className="flex justify-center gap-2 mt-4">
                 <Button
                   type="button"
                   variant="light"
@@ -255,11 +297,12 @@ function Editar({ isEditOpen, setIsEditOpen }: { isEditOpen: boolean; setIsEditO
                   Guardar
                 </Button>
               </div>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-  )
+            </div>
+          </form>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
 }
 
-export default Editar
+export default Editar;
