@@ -73,12 +73,6 @@ export default function CalendarioMain({citas}: CalProps) {
                     <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-primary dark:text-primary-foreground text-center md:text-left">
                         Calendario de citas
                     </h1><div className="">
-                    <Button
-                        onPress={onOpen}
-                        className="bg-primary dark:bg-primary text-primary-foreground rounded-full px-6 font-light mt-2 md:mt-0"
-                    >
-                        Nueva cita
-                    </Button>
                 </div></div>
         {/* Otros controles a la derecha */}
         <div className="flex items-center gap-4 justify-center md:justify-end">
