@@ -338,11 +338,13 @@ export default function ReservarPsiPreview({
                 onClose={() => setIsScheduleOpen(false)}
                 onOpenConfirm={() => setIsConfirmOpen(true)}
                 onSelectHorario={handleSelectHorario}
-              />
+              /> 
               <div className="w-full flex justify-center">
                 <Button
                   onPress={() => setIsScheduleOpen(false)}
-                  className="rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light"
+                  className="rounded-3xl px-6 sm:px-8 py-1 sm:py-0 transition-colors duration-200 font-bold
+                              bg-[#E7E7FF] text-[#634AE2] hover:bg-[#3d1fd1] hover:text-white 
+                              dark:bg-[#2A2A38] dark:text-[#634AE2] dark:hover:bg-[#634AE2] dark:hover:text-[#111827] "
                 >
                   Cancelar
                 </Button>
