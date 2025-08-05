@@ -65,7 +65,8 @@ export default function CalendarioMain({citas}: CalProps) {
     }, [citas]);
 
     return (
-        <div className="bg-[#f8f8ff] dark:bg-background min-h-screen flex flex-col">
+        <div className="bg-[#f8f8ff] dark:bg-black min-h-screen flex flex-col">
+
             {/* Header principal */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
         {/* Título y botón juntos */}
@@ -125,7 +126,7 @@ export default function CalendarioMain({citas}: CalProps) {
           <div className="flex gap-2 items-center w-full max-w-full md:max-w-[730px] justify-center md:justify-start mt-2 md:mt-0">
             <Button
                         radius="full"
-                        className="text-[15px] md:text-[16px] leading-[20px] border-4 font-bold bg-transparent border border-background text-background dark:text-primary-foreground font-light"
+                        className="text-[15px] md:text-[16px] leading-[20px] border-4 font-bold bg-transparent  border-background text-background dark:text-primary-foreground"
                         onPress={goToToday}
                     >
                         Hoy
