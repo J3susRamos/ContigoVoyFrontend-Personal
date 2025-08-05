@@ -20,7 +20,8 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="h-auto bg-white dark:bg-gray-900 text-[#634AE2] dark:text-white isolate">
+    <footer className="h-auto bg-[#634AE2] dark:bg-gray-900 text-[#634AE2] dark:text-white isolate">
+
       <div className="lg:max-w-6xl p-10 md:px-11 mx-auto">
         {/* Contenido Principal */}
         <div className="flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
@@ -53,7 +54,7 @@ export default function Footer() {
 
           {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-white dark:text-white">Enlaces</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-2 sm:gap-y-4">
               {/* Columna izquierda */}
@@ -63,8 +64,7 @@ export default function Footer() {
                     <Link href={link.href} passHref legacyBehavior>
                       <a
                         title={link.title}
-                        className="relative group text-[#634AE2] dark:text-white transition-colors duration-300 hover:text-[#634AE2] cursor-pointer"
-
+                        className="relative group text-white dark:text-white transition-colors duration-300 cursor-pointer"
                       >
                         {link.text}
                         <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
@@ -76,14 +76,13 @@ export default function Footer() {
               </ul>
 
               {/* Columna derecha */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-[#634AE2] dark:text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-white dark:text-white">
                 {rightLinks.map((link) => (
                   <li key={link.text}>
                     <Link href={link.href} passHref legacyBehavior>
                       <a
                         title={link.title}
-                        className="relative group text-[#634AE2] dark:text-white transition-colors duration-300 hover:text-[#634AE2] cursor-pointer"
-
+                        className="relative group text-white dark:text-white transition-colors duration-300 cursor-pointer"
                       >
                         {link.text}
                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
@@ -99,7 +98,8 @@ export default function Footer() {
           {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</h3>
+              <h3 className="text-2xl font-semibold mb-4 text-white">Contacto</h3>
+
 
               <div className="flex flex-col space-y-3 items-start">
                 {/* Perú */}
@@ -121,9 +121,11 @@ export default function Footer() {
                       className="flex-shrink-0 bg-[#634AE2] p-0.5 rounded-full dark:bg-transparent"
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-white">
                     +51 983 027 828
                   </span>
+
+
                 </div>
 
                 {/* Argentina */}
@@ -145,9 +147,11 @@ export default function Footer() {
                       className="flex-shrink-0 bg-[#634AE2] p-0.5 rounded-full dark:bg-transparent"
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-white">
                     +54 922 130 326 75
                   </span>
+
+
                 </div>
               </div>
             </div>
