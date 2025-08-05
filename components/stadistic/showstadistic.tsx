@@ -9,7 +9,6 @@ import CitasSection from "./sections/CitasSection";
 import VentasSection from "./sections/VentasSection";
 import RendimientoSection from "./sections/RendimientoSection";
 import useStadistics from "./hooks/useStadistics";
-import { user } from "@heroui/react";
 
 export default function ShowStadistic() {
   const {
