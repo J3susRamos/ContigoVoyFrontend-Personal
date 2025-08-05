@@ -120,12 +120,16 @@ export default function AllPsicologos({
   return (
     <>
       <div className="flex flex-col w-full">
-        <div className="w-full h-16 bg-[#6364F4] dark:bg-primary items-center justify-start flex">
-          <div className="ml-10 flex items-center w-full">
+        <div className="w-full h-16 bg-[#6364F4] dark:bg-primary flex items-center justify-between px-10">
+          <div className="flex items-center">
             <h1 className="text-bold text-medium text-white dark:text-primary-foreground">
               Listado de Todos los Psicólogos
             </h1>
           </div>
+          <select className="px-2 py-1 rounded">
+            <option value="1">Activos</option>
+            <option value="2">Inactivos</option>
+          </select>
         </div>
 
         <div className="w-full mt-4">

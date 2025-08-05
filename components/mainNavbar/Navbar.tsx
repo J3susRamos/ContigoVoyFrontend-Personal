@@ -5,6 +5,7 @@ import { DesktopNav } from "./DesktopNav";
 import Image from "next/image";
 import { MobileNav } from "./MobileNav";
 import { NavLink, NavItem } from "./types/navBar.types";
+import { ReactSVG } from "react-svg";
 
 const serviciosLinks: NavLink[] = [
   { name: "Terapia para Niños", link: "/servicios/terapia/infantes" },
@@ -95,16 +96,16 @@ const Navbar = () => {
           href="/"
           className="ml-16  xl:ml-[60px] min-[1450px]:ml-[58px] z-10"
         >
-          <Image
-            src="/LOGO.webp"
+          <ReactSVG
+            src="/logoHeader.svg"
             title="Contigo Voy Psicología | Centro Psicologico Online"
-            alt="Centro Psicológico Contigo Voy Online"
             width={143}
             height={50}
-            priority
             style={{ height: "auto" }}
             className="w-[143px] lg:max-w-[160px] h-auto"
-            suppressHydrationWarning
+            beforeInjection={(svg) => {
+              svg.classList.add("fill-[#5d4bdd]", "dark:fill-gray-100");
+            }}
           />
         </Link>
         <div className="flex items-center gap-x-5">
