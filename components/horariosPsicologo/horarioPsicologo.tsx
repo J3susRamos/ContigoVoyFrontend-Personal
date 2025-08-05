@@ -120,7 +120,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
               const diaCapitalizado = diaNombre.charAt(0).toUpperCase() + diaNombre.slice(1);
 
               return (
-                <div key={fecha.toISOString()} className="text-center p-3 w-full rounded-full bg-[#9494F3] text-white dark:text-[#111827] dark:bg-[#634AE2]" >
+                <div key={fecha.toISOString()} className="text-center p-3 w-full rounded-full bg-[#634AE2] text-white dark:text-[#111827] dark:bg-[#634AE2]" >
                   <p>{diaCapitalizado}</p>
                   <p className="text-md">{obtenerEtiquetaDia(fecha, hoyISO, mananaISO, formateadorFecha)}</p>
                 </div>
@@ -169,7 +169,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
                         }}
                       />
                     ) : (
-                      <button key={`empty-${idx}`} className="w-full p-3 rounded-full bg-[#BEBEBE] dark:bg-[#444] text-[#CACACB] dark:text-[#888]" disabled>-</button>
+                      <button key={`empty-${idx}`} className="w-full p-3 rounded-full bg-[#F0F0F0] dark:bg-[#3C3C4A] text-[#CACACB] dark:text-[#888]" disabled>-</button>
                     )
                   )}
                 </div>
