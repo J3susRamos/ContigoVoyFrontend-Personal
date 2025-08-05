@@ -1,7 +1,6 @@
 import Clients from "../modules/clients";
-import { SectionProps } from "../types";
 
-function ClientesSection({ dateRange }: SectionProps) {
+function ClientesSection() {
   return (
     <section className="space-y-4">
       <header className="border-b border-gray-200 dark:border-gray-700 pb-4">

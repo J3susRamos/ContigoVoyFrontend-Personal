@@ -1,7 +1,6 @@
 import Performance from "../modules/performance";
-import { SectionProps } from "../types";
 
-function RendimientoSection({ dateRange }: SectionProps) {
+function RendimientoSection() {
   return (
     <section className="space-y-4">
       <header className="border-b border-gray-200 dark:border-gray-700 pb-4">

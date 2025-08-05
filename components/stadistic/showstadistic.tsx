@@ -9,6 +9,7 @@ import CitasSection from "./sections/CitasSection";
 import VentasSection from "./sections/VentasSection";
 import RendimientoSection from "./sections/RendimientoSection";
 import useStadistics from "./hooks/useStadistics";
+import { user } from "@heroui/react";
 
 export default function ShowStadistic() {
   const {
@@ -40,7 +41,7 @@ export default function ShowStadistic() {
     } catch (error) {
       console.error("Error parsing user data from localStorage:", error);
     }
-  }, [setUserRole, setView, setIsLoading]);
+  }, [setUserRole, setView, setIsLoading, userRole]);
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -90,10 +91,10 @@ export default function ShowStadistic() {
 
               {/* Contenido real */}
               <div className={`transition-opacity duration-300 ${isViewLoading ? 'opacity-0' : 'opacity-100 delay-100'}`}>
-                {view === "clientes" && <ClientesSection dateRange={dateRange} />}
-                {view === "citas" && <CitasSection dateRange={dateRange} />}
-                {view === "ventas" && <VentasSection dateRange={dateRange} />}
-                {view === "rendimiento" && <RendimientoSection dateRange={dateRange} />}
+                {view === "clientes" && <ClientesSection />}
+                {view === "citas" && <CitasSection />}
+                {view === "ventas" && <VentasSection />}
+                {view === "rendimiento" && <RendimientoSection />}
               </div>
             </div>
           </div>
