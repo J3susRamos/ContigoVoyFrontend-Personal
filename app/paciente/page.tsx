@@ -169,7 +169,7 @@ const Paciente = () => {
 
   const joinVideoCall = (citaId: number) => {
     // Lógica para unirse a la videollamada
-    //hola
+    
     console.log("Unirse a videollamada de cita:", citaId);
     window.open(`/videocall/${citaId}`, '_blank');
   };
