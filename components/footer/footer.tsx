@@ -61,7 +61,8 @@ export default function Footer() {
 
                       >
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                        {/* Línea debajo del texto */}
+                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full dark:bg-white group-hover:dark:bg-white inline-block duration-500"></span>
                       </a>
                     </Link>
                   </li>
@@ -79,7 +80,8 @@ export default function Footer() {
 
                       >
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                        {/* Línea debajo del texto */}
+                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full dark:bg-white group-hover:dark:bg-white inline-block duration-300"></span>
                       </a>
                     </Link>
                   </li>
@@ -121,6 +123,8 @@ export default function Footer() {
                   <span className="text-[12px] mt-1 sm:mt-0 dark:text-white">
                     +51 983 027 828
                   </span>
+
+
                 </div>
 
                 {/* Argentina */}
@@ -150,6 +154,8 @@ export default function Footer() {
                   <span className="text-[12px] mt-1 sm:mt-0 dark:text-white">
                     +54 922 130 326 75
                   </span>
+
+
                 </div>
               </div>
             </div>
