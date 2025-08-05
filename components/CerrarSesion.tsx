@@ -24,6 +24,12 @@ export default function CerrarSesion() {
     }
   }, []);
 
+  // Función para actualizar el usuario global
+  const handleUpdateUser = (updatedUser: UsuarioLocalStorageUpdate) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   if (!isClient) {
     return (
       <div className="flex-row justify-end items-center gap-x-5 mr-8 hidden md:flex">
@@ -71,7 +77,11 @@ export default function CerrarSesion() {
       >
         Cerrar sesión
       </Button>
-      <Editar isEditOpen={isEditOpen} setIsEditOpen={setIsEditOpen} />
+      <Editar
+        isEditOpen={isEditOpen}
+        setIsEditOpen={setIsEditOpen}
+        onUpdateUser={handleUpdateUser}
+      />
     </div>
   );
 }

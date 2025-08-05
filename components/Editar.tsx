@@ -15,9 +15,11 @@ type Especialidad = { idEspecialidad: number; nombre: string };
 function Editar({
   isEditOpen,
   setIsEditOpen,
+  onUpdateUser, // <-- nuevo prop
 }: {
   isEditOpen: boolean;
   setIsEditOpen: (open: boolean) => void;
+  onUpdateUser: (user: UsuarioLocalStorageUpdate) => void;
 }) {
   const [user, setUser] = useState<UsuarioLocalStorageUpdate | null>(null);
 
@@ -116,7 +118,7 @@ function Editar({
       showToast("success", "Psicólogo actualizado correctamente");
       setIsEditOpen(false);
 
-      // Actualiza el estado user y el localStorage
+      // Actualiza el estado user y el localStorage en el componente padre
       const updatedUser: UsuarioLocalStorageUpdate = {
         ...user,
         nombre,
@@ -130,20 +132,14 @@ function Editar({
       };
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
+      onUpdateUser(updatedUser); // <-- actualiza el avatar en CerrarSesion
 
       // Recarga especialidades del psicólogo desde el backend
       if (id) {
-        const especialidadesPsicologo = await GetEspecialidadesPsicologos(
-          id as number
-        );
-        let nombres: string[] = [];
-        if (Array.isArray(especialidadesPsicologo)) {
-          nombres = especialidadesPsicologo.map(
-            (esp: string | { nombre: string }) =>
-              typeof esp === "string" ? esp : esp.nombre
-          );
+        const especialidadesPsicologo = await GetEspecialidadesPsicologos(id as number);
+        if (especialidadesPsicologo && Array.isArray(especialidadesPsicologo.result)) {
+          setEspecialidades(especialidadesPsicologo.result);
         }
-        setEspecialidades(nombres);
       }
     } catch (err) {
       showToast("error", "Error al actualizar el psicólogo");
