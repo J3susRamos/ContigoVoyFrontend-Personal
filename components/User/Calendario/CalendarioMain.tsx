@@ -52,7 +52,7 @@ export default function CalendarioMain({citas}: CalProps) {
         setView(nuevaVista);
     }
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpenChange} = useDisclosure();
 
     const citasPorDia = useMemo(() => {
         const agrupadas: Record<string, Citas[]> = {};

@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React from "react";
 import { DesktopNav } from "./DesktopNav";
-import Image from "next/image";
 import { MobileNav } from "./MobileNav";
 import { NavLink, NavItem } from "./types/navBar.types";
 import { ReactSVG } from "react-svg";

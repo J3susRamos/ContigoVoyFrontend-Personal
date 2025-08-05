@@ -1,7 +1,6 @@
 import Sales from "../modules/sales";
-import { SectionProps } from "../types";
 
-function VentasSection({ dateRange }: SectionProps) {
+function VentasSection() {
   return (
     <section className="space-y-4">
       <header className="border-b border-gray-200 dark:border-gray-700 pb-4">
