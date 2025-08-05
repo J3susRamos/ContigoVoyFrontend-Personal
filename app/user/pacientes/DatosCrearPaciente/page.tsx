@@ -190,12 +190,13 @@ export default function App() {
   };
 
   return (
-    <div className="p-4 bg-[#eaeded] dark:bg-background min-h-screen">
+    <div className="p-4 bg-[#eaeded] dark:bg-card min-h-screen">
       <HeaderUser title="Datos del paciente" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid lg:grid-cols-2 gap-6 text-[#634AE2] font-bold text-normal">
           {/* Primera columna */}
-          <div className="bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4">
+          <div className="bg-[#eaeded] dark:bg-[#1e1e23] rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4">
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormFieldInput label="Nombre" name="nombre" register={register} errors={errors} />
               <FormFieldInput label="DNI" name="DNI" maxLenght={8} register={register} errors={errors} />
@@ -319,7 +320,8 @@ export default function App() {
           </div>
 
           {/* Segunda columna */}
-          <div className="bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4 mt-6 lg:mt-0">
+          <div className="bg-[#eaeded] dark:bg-[#1e1e23] rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4 mt-6 lg:mt-0">
+
             <FormFieldInput label="Correo electrónico" name="email" register={register} errors={errors} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
