@@ -5,7 +5,6 @@ import { Authors, BlogPreviewData, Categoria } from "@/interface";
 import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft, Search, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import "./styles/blogStyles.css";
 
 export default function BlogPageComponent({
   Datos,
@@ -181,15 +180,16 @@ export default function BlogPageComponent({
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-          <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left">
               <h1 className="text-4xl lg:text-6xl font-bold text-[#634AE2] dark:text-primary pb-1 lg:pb-2 mb-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] bg-clip-text text-transparent">
                 Blog
               </h1>
               <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl">
-                Descubre artículos sobre bienestar mental, desarrollo personal y salud emocional escritos por nuestros especialistas.
+                Descubre artículos sobre bienestar mental, desarrollo personal y
+                salud emocional escritos por nuestros especialistas.
               </p>
             </div>
-            
+
             {/* Search Bar */}
             <div className="relative lg:w-96">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -201,19 +201,29 @@ export default function BlogPageComponent({
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-          </div>          {/* Filter Tags */}
-          {(activeCategories.length > 0 || activeAuthors.length > 0 || searchTerm) && (
+          </div>{" "}
+          {/* Filter Tags */}
+          {(activeCategories.length > 0 ||
+            activeAuthors.length > 0 ||
+            searchTerm) && (
             <div className="flex flex-wrap items-center gap-3 mt-6 p-4 bg-white/50 dark:bg-gray-800/50 rounded-2xl backdrop-blur-sm">
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Filtros activos:</span>
-              
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                Filtros activos:
+              </span>
+
               {/* Category filters */}
-              {activeCategories.map(categoryId => {
-                const category = Categories.find(cat => cat.idCategoria === categoryId);
+              {activeCategories.map((categoryId) => {
+                const category = Categories.find(
+                  (cat) => cat.idCategoria === categoryId
+                );
                 return category ? (
-                  <span key={categoryId} className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
+                  <span
+                    key={categoryId}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg"
+                  >
                     {category.nombre}
-                    <button 
-                      onClick={() => handleCategoryFilter(categoryId)} 
+                    <button
+                      onClick={() => handleCategoryFilter(categoryId)}
                       className="hover:bg-white/20 rounded-full p-1 transition-colors"
                     >
                       ×
@@ -221,35 +231,38 @@ export default function BlogPageComponent({
                   </span>
                 ) : null;
               })}
-              
+
               {/* Author filters */}
-              {activeAuthors.map(authorId => {
-                const author = Authors.find(a => a.id === authorId);
+              {activeAuthors.map((authorId) => {
+                const author = Authors.find((a) => a.id === authorId);
                 return author ? (
-                  <span key={authorId} className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
+                  <span
+                    key={authorId}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg"
+                  >
                     {author.name}
-                    <button 
-                      onClick={() => handleAuthorFilter(authorId)} 
+                    <button
+                      onClick={() => handleAuthorFilter(authorId)}
                       className="hover:bg-white/20 rounded-full p-1 transition-colors"
                     >
                       ×
                     </button>
                   </span>
                 ) : null;
-              })}              
+              })}
               {/* Search filter */}
               {searchTerm && (
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-full text-sm font-medium shadow-lg">
                   &ldquo;{searchTerm}&rdquo;
-                  <button 
-                    onClick={() => handleSearch("")} 
+                  <button
+                    onClick={() => handleSearch("")}
                     className="hover:bg-white/20 rounded-full p-1 transition-colors"
                   >
                     ×
                   </button>
                 </span>
               )}
-              
+
               <button
                 onClick={clearAllFilters}
                 className="text-sm text-[#634AE2] hover:text-[#4f46e5] underline font-medium transition-colors"
@@ -258,7 +271,6 @@ export default function BlogPageComponent({
               </button>
             </div>
           )}
-
           {/* Mobile Filter Toggle */}
           <div className="lg:hidden mt-4">
             <button
@@ -284,7 +296,7 @@ export default function BlogPageComponent({
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               <span className="font-medium">Volver al blog</span>
             </button>
-            
+
             <article className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden">
               {/* Article Header */}
               <div className="bg-gradient-to-r from-[#634AE2] via-[#7c3aed] to-[#8b7cf6] p-8 lg:p-12 text-white">
@@ -301,18 +313,23 @@ export default function BlogPageComponent({
                       {selectedBlog.psicologo} {selectedBlog.psicologApellido}
                     </p>
                     <p className="text-white/80 text-sm">
-                      Publicado el {new Date(selectedBlog.fecha).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                      Publicado el{" "}
+                      {new Date(selectedBlog.fecha).toLocaleDateString(
+                        "es-ES",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
                     </p>
                   </div>
                 </div>
                 <h1 className="text-2xl lg:text-5xl font-bold leading-tight">
                   {selectedBlog.tema}
                 </h1>
-              </div>              {/* Article Image(s) - Carrusel */}
+              </div>{" "}
+              {/* Article Image(s) - Carrusel */}
               <div className="relative overflow-hidden">
                 {selectedBlog.imagenes && selectedBlog.imagenes.length > 1 ? (
                   // Carrusel de múltiples imágenes
@@ -321,7 +338,9 @@ export default function BlogPageComponent({
                     <div className="relative h-full">
                       <Image
                         src={selectedBlog.imagenes[currentImageIndex]}
-                        alt={`Imagen ${currentImageIndex + 1} de ${selectedBlog.tema}`}
+                        alt={`Imagen ${currentImageIndex + 1} de ${
+                          selectedBlog.tema
+                        }`}
                         title={selectedBlog.tema}
                         fill
                         className="object-contain bg-gray-100 dark:bg-gray-800 transition-opacity duration-500"
@@ -330,7 +349,6 @@ export default function BlogPageComponent({
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
                     </div>
-
                     {/* Controles del carrusel */}
                     <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
                       {/* Botón anterior */}
@@ -340,7 +358,7 @@ export default function BlogPageComponent({
                       >
                         <ChevronLeft className="w-7 h-7" />
                       </button>
-                      
+
                       {/* Botón siguiente */}
                       <button
                         onClick={nextImage}
@@ -349,7 +367,6 @@ export default function BlogPageComponent({
                         <ChevronRight className="w-7 h-7" />
                       </button>
                     </div>
-
                     {/* Indicadores de página */}
                     <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
                       {selectedBlog.imagenes.map((_, index) => (
@@ -357,20 +374,23 @@ export default function BlogPageComponent({
                           key={index}
                           onClick={() => goToImage(index)}
                           className={`transition-all duration-300 ${
-                            index === currentImageIndex 
-                              ? 'w-4 h-4 bg-white scale-110 shadow-lg' 
-                              : 'w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105'
+                            index === currentImageIndex
+                              ? "w-4 h-4 bg-white scale-110 shadow-lg"
+                              : "w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105"
                           } rounded-full backdrop-blur-sm`}
                         />
                       ))}
                     </div>
-
                     {/* Control de play/pause */}
                     <div className="absolute top-6 right-6">
                       <button
                         onClick={toggleCarousel}
                         className="bg-black/60 hover:bg-black/80 text-white rounded-full p-3 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:scale-110"
-                        title={isCarouselPlaying ? 'Pausar carrusel' : 'Reproducir carrusel'}
+                        title={
+                          isCarouselPlaying
+                            ? "Pausar carrusel"
+                            : "Reproducir carrusel"
+                        }
                       >
                         {isCarouselPlaying ? (
                           <div className="w-5 h-5 flex items-center justify-center">
@@ -384,11 +404,11 @@ export default function BlogPageComponent({
                         )}
                       </button>
                     </div>
-
                     {/* Contador de imágenes */}
                     <div className="absolute top-6 left-6 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm shadow-lg">
                       {currentImageIndex + 1} de {selectedBlog.imagenes.length}
-                    </div>                    {/* Botón para ver imagen completa */}
+                    </div>{" "}
+                    {/* Botón para ver imagen completa */}
                     <div className="absolute bottom-6 right-6">
                       <button
                         onClick={() => openImageModal(currentImageIndex)}
@@ -411,7 +431,7 @@ export default function BlogPageComponent({
                       priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
-                      {/* Botón para ver imagen completa */}
+                    {/* Botón para ver imagen completa */}
                     <div className="absolute bottom-6 right-6">
                       <button
                         onClick={() => openImageModal(0)}
@@ -423,11 +443,10 @@ export default function BlogPageComponent({
                   </div>
                 )}
               </div>
-
               {/* Article Content */}
               <div className="p-8 lg:p-12">
-                <div 
-                  className="blog-preview prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
+                <div
+                  className="blog-preview [&_a]:text-[#6228cb] [&_a]:font-bold dark:[&_a]:text-[#3498db] prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: selectedBlog.contenido }}
                 />
               </div>
@@ -437,9 +456,15 @@ export default function BlogPageComponent({
           /* Blog List View */
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Sidebar - Desktop */}
-            <div className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden'} lg:block`}>
+            <div
+              className={`lg:col-span-1 ${
+                showFilters ? "block" : "hidden"
+              } lg:block`}
+            >
               <div className="sticky top-6">
-                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-[#634AE2]/10">                  <BlogAside
+                <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-[#634AE2]/10">
+                  {" "}
+                  <BlogAside
                     Categories={Categories}
                     Authors={Authors}
                     onCategoryClick={handleCategoryFilter}
@@ -456,7 +481,10 @@ export default function BlogPageComponent({
               {filteredData.length > 0 ? (
                 <div className="space-y-8">
                   {filteredData.map((item) => (
-                    <div key={item.idBlog} className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] border border-[#634AE2]/10">
+                    <div
+                      key={item.idBlog}
+                      className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] border border-[#634AE2]/10"
+                    >
                       <BlogPreview Data={item} onSelect={handleSelectBlog} />
                     </div>
                   ))}
@@ -469,7 +497,8 @@ export default function BlogPageComponent({
                       No se encontraron artículos
                     </h3>
                     <p className="text-gray-500 dark:text-gray-400 mb-8 text-lg">
-                      No hay artículos que coincidan con los filtros seleccionados.
+                      No hay artículos que coincidan con los filtros
+                      seleccionados.
                     </p>
                     <button
                       onClick={clearAllFilters}
@@ -481,7 +510,8 @@ export default function BlogPageComponent({
                 </div>
               )}
             </div>
-          </div>        )}
+          </div>
+        )}
       </div>
 
       {/* Modal para ver imagen completa */}
@@ -506,8 +536,18 @@ export default function BlogPageComponent({
               onClick={closeImageModal}
               className="absolute top-6 right-6 bg-black/60 hover:bg-red-600/80 text-white rounded-full p-3 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl z-10"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
 
@@ -542,9 +582,9 @@ export default function BlogPageComponent({
                       key={index}
                       onClick={() => setModalImageIndex(index)}
                       className={`transition-all duration-300 ${
-                        index === modalImageIndex 
-                          ? 'w-4 h-4 bg-white scale-110 shadow-lg' 
-                          : 'w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105'
+                        index === modalImageIndex
+                          ? "w-4 h-4 bg-white scale-110 shadow-lg"
+                          : "w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105"
                       } rounded-full backdrop-blur-sm`}
                     />
                   ))}
@@ -559,10 +599,7 @@ export default function BlogPageComponent({
           </div>
 
           {/* Overlay para cerrar */}
-          <div 
-            className="absolute inset-0 -z-10" 
-            onClick={closeImageModal}
-          />
+          <div className="absolute inset-0 -z-10" onClick={closeImageModal} />
         </div>
       )}
     </div>
