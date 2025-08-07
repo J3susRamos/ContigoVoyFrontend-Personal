@@ -1,68 +1,32 @@
 'use client';
-import { GetPsicologos, GetPsicologosInactivos } from "@/app/apiRoutes";
-import CerrarSesion from "@/components/CerrarSesion";
 import AllPsicologos from "@/components/User/psicologos/AllPsicologos";
-import { PsicologoApiResponse } from "@/interface";
-import { useEffect, useState } from "react";
+import PsicologoFilterSelect from "@/components/User/psicologos/filter/PsicologoFilterSelect";
+import PsicologoHeader from "@/components/User/psicologos/header/PsicologoHeader";
+import { usePsicologosData } from "@/components/User/psicologos/hooks/usePsicologosData";
 
 export default function Psicologos() {
-  const [data, setData] = useState<PsicologoApiResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [filterStatus, setFilterStatus] = useState<'activos' | 'inactivos'>('activos');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let response;
-        if (filterStatus === 'activos') {
-          response = await GetPsicologos();
-        } else {
-          response = await GetPsicologosInactivos();
-        }
-        setData(response);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch psychologists');
-        console.error('Error fetching psychologists:', err);
-      }
-    };
-
-    fetchData().catch(error => {
-      console.error("Error in fetchData:", error);
-    });
-  }, [filterStatus]);
-
-  const handleFilterChange = (newStatus: 'activos' | 'inactivos') => {
-    setFilterStatus(newStatus);
-  };
+  const { data, error, loading, filterStatus, fetchData, handleFilterChange } = usePsicologosData();
 
   return (
     <section className="bg-[#f8f8ff] dark:bg-background min-h-screen">
-      <div className="flex flex-col md:flex-row justify-between">
-        <div className="m-5">
-          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-            Gestión de Psicólogos
-          </h1>
-          <p className="text-base md:text-xl font-normal text-primary dark:text-primary-foreground mt-2">
-            Administra el equipo de profesionales de la salud mental.
-          </p>
-        </div>
-        <div className="m-5">
-          <CerrarSesion />
-        </div>
+      <PsicologoHeader />
+      <div className="mx-5 flex justify-end items-center">
+        <PsicologoFilterSelect filterStatus={filterStatus} onFilterChange={handleFilterChange} />
       </div>
-
       {error && (
-          <div className="p-4 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg mx-5">
-            <h2>Error loading psychologists</h2>
-            <p>{error}</p>
-          </div>
+        <div className="p-4 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg mx-5">
+          <h2>Error loading psychologists</h2>
+          <p>{error}</p>
+        </div>
       )}
-        <div className="mx-5">
-        {data?.result?.data && data.result.data.length > 0 ? (
+      <div className="mx-5">
+        {loading ? (
+          <div className="text-center py-8 text-primary dark:text-primary-foreground">Cargando...</div>
+        ) : data?.result?.data && data.result.data.length > 0 ? (
           <AllPsicologos 
             Data={data.result.data} 
             filterStatus={filterStatus}
-            onFilterChange={handleFilterChange}
+            refreshData={fetchData}
           />
         ) : (
           <div className="text-center py-8 text-primary dark:text-primary-foreground">

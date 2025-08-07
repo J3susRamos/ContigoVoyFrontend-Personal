@@ -391,12 +391,11 @@ export async function estadoPsicologo(
       }
     );
 
-    const data = await response.json();
-    if (response.ok) {
-      return { result: data.description, state: 2 };
-    } else {
-      return { result: data.description, state: 1 };
+    if (!response.ok) {
+      throw new Error("Error al actualizar el estado del psicólogo");
     }
+
+    return await response.json();
   } catch (error) {
     console.error(error);
     return { result: {}, state: 0 };
