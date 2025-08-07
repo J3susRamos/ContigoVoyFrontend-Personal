@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { GetCitasTotalesConFecha, GetPsicologoDashboard } from "@/app/apiRoutes";
 import { Icons } from "@/icons";
 import { CitaMensual, DashboardResult } from "@/interface";
-import PieChartGrafic from "./grafics/PieChartGrafic";
-import LineChartGrafic from "./grafics/LineChartGrafic";
+import PieChartGrafic from "../grafics/PieChartGrafic";
+import LineChartGrafic from "../grafics/LineChartGrafic";
 
 const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
 

@@ -7,10 +7,10 @@ import {
     XAxis,
     YAxis,
 } from "recharts";
-import {CustomTooltip} from "./CustomTooltipComponent";
+import {CustomTooltip} from "../custom/CustomTooltipComponent";
 import {GetPsicologoDashboard} from "@/app/apiRoutes";
 import {DashboardResult} from "@/interface";
-import PieChartGrafic from "./grafics/PieChartGrafic";
+import PieChartGrafic from "../grafics/PieChartGrafic";
 
 const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
 
