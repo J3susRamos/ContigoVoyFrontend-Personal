@@ -15,7 +15,7 @@ type Especialidad = { idEspecialidad: number; nombre: string };
 function Editar({
   isEditOpen,
   setIsEditOpen,
-  onUpdateUser, // <-- nuevo prop
+  onUpdateUser,
 }: {
   isEditOpen: boolean;
   setIsEditOpen: (open: boolean) => void;
@@ -132,7 +132,7 @@ function Editar({
       };
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      onUpdateUser(updatedUser); // <-- actualiza el avatar en CerrarSesion
+      onUpdateUser(updatedUser); //
 
       // Recarga especialidades del psicólogo desde el backend
       if (id) {
