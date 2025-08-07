@@ -56,24 +56,23 @@ export const GetPsicologos = async (
   perPage?: number
 ): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
-  if (filters){
+  if (filters) {
     if (filters.pais && filters.pais.length) params.append("pais", filters.pais.join(","));
     if (filters.genero && filters.genero.length) params.append("genero", filters.genero.join(","));
     if (filters.idioma && filters.idioma.length) params.append("idioma", filters.idioma.join(","));
     if (filters.enfoque && filters.enfoque.length)
       params.append("enfoque", filters.enfoque.join(","));
   }
-  
+
 
   if (search) params.append("search", search);
   params.append("paginate", "true");
 
-  if(perPage && page){
+  if (perPage && page) {
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
-  }  const url = `${
-    process.env.NEXT_PUBLIC_API_URL
-  }api/psicologos?${params.toString()}`;
+  } const url = `${process.env.NEXT_PUBLIC_API_URL
+    }api/psicologos?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -81,11 +80,67 @@ export const GetPsicologos = async (
         Accept: "application/json",
       },
     });
-    
+
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
-    
+
+    const data = await res.json();
+
+    if (data.status_message === "OK") {
+      return data; // Retornar toda la respuesta
+    } else {
+      throw new Error(data.message || "Error al obtener psicólogos");
+    }
+  } catch (error) {
+    console.error("Error al obtener psicólogos:", error);
+    throw error;
+  }
+};
+
+export const GetPsicologosInactivos = async (
+  filters?: {
+    pais: string[];
+    genero: string[];
+    idioma: string[];
+    enfoque: string[];
+  },
+  search?: string,
+  page?: number,
+  perPage?: number
+): Promise<PsicologoApiResponse> => {
+  const params = new URLSearchParams();
+  if (filters) {
+    if (filters.pais && filters.pais.length) params.append("pais", filters.pais.join(","));
+    if (filters.genero && filters.genero.length) params.append("genero", filters.genero.join(","));
+    if (filters.idioma && filters.idioma.length) params.append("idioma", filters.idioma.join(","));
+    if (filters.enfoque && filters.enfoque.length)
+      params.append("enfoque", filters.enfoque.join(","));
+  }
+
+
+  if (search) params.append("search", search);
+  params.append("paginate", "true");
+
+  if (perPage && page) {
+    params.append("per_page", perPage.toString());
+    params.append("page", page.toString());
+  } const url = `${process.env.NEXT_PUBLIC_API_URL
+    }api/psicologos/inactivo?${params.toString()}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
     const data = await res.json();
 
     if (data.status_message === "OK") {
@@ -316,6 +371,35 @@ export async function actualizarPsicologo(
 
   if (!res.ok) {
     throw new Error("Error al actualizar el psicologo");
+  }
+}
+
+export async function estadoPsicologo(
+  id: number | null,
+) {
+  try {
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/estado/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+    if (response.ok) {
+      return { result: data.description, state: 2 };
+    } else {
+      return { result: data.description, state: 1 };
+    }
+  } catch (error) {
+    console.error(error);
+    return { result: {}, state: 0 };
   }
 }
 

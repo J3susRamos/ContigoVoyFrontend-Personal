@@ -1,5 +1,5 @@
 'use client';
-import { GetPsicologos } from "@/app/apiRoutes";
+import { GetPsicologos, GetPsicologosInactivos } from "@/app/apiRoutes";
 import CerrarSesion from "@/components/CerrarSesion";
 import AllPsicologos from "@/components/User/psicologos/AllPsicologos";
 import { PsicologoApiResponse } from "@/interface";
@@ -8,11 +8,17 @@ import { useEffect, useState } from "react";
 export default function Psicologos() {
   const [data, setData] = useState<PsicologoApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<'activos' | 'inactivos'>('activos');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await GetPsicologos();
+        let response;
+        if (filterStatus === 'activos') {
+          response = await GetPsicologos();
+        } else {
+          response = await GetPsicologosInactivos();
+        }
         setData(response);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch psychologists');
@@ -23,7 +29,12 @@ export default function Psicologos() {
     fetchData().catch(error => {
       console.error("Error in fetchData:", error);
     });
-  }, []);
+  }, [filterStatus]);
+
+  const handleFilterChange = (newStatus: 'activos' | 'inactivos') => {
+    setFilterStatus(newStatus);
+  };
+
   return (
     <section className="bg-[#f8f8ff] dark:bg-background min-h-screen">
       <div className="flex flex-col md:flex-row justify-between">
@@ -48,10 +59,14 @@ export default function Psicologos() {
       )}
         <div className="mx-5">
         {data?.result?.data && data.result.data.length > 0 ? (
-          <AllPsicologos Data={data.result.data} />
+          <AllPsicologos 
+            Data={data.result.data} 
+            filterStatus={filterStatus}
+            onFilterChange={handleFilterChange}
+          />
         ) : (
           <div className="text-center py-8 text-primary dark:text-primary-foreground">
-            <p>No se encontraron psicólogos</p>
+            <p>No se encontraron psicólogos {filterStatus === 'inactivos' ? 'inactivos' : 'activos'}</p>
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 "use client";
 import {
   DeletePsycologo,
+  estadoPsicologo,
   GetPsicologosById,
   UpdatePsicologo,
 } from "@/app/apiRoutes";
@@ -37,8 +38,12 @@ import Row from "@/components/ui/Table/Row";
 
 export default function AllPsicologos({
   Data,
+  filterStatus,
+  onFilterChange,
 }: {
   Data: PsicologoPreviewData[];
+  filterStatus: 'activos' | 'inactivos';
+  onFilterChange: (status: 'activos' | 'inactivos') => void;
 }) {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -74,6 +79,16 @@ export default function AllPsicologos({
     const { name, value } = e.target;
     setFormData((prev) => (prev ? { ...prev, [name]: value } : null));
   };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === '1') {
+      onFilterChange('activos');
+    } else if (value === '2') {
+      onFilterChange('inactivos');
+    }
+  };
+
   const handleUpdate = async (id: number | null) => {
     if (!formData) {
       console.error("Error: formData es null");
@@ -83,7 +98,8 @@ export default function AllPsicologos({
     try {
       await UpdatePsicologo(id, formData);
       showToast("success", "El psicólogo se actualizó correctamente");
-      router.refresh();
+      // recargar la página para reflejar los cambios
+      window.location.reload();
       onClose();
     } catch (error) {
       console.error("Error al actualizar el psicólogo:", error);
@@ -115,6 +131,7 @@ export default function AllPsicologos({
     }
   };
 
+
   const headers = ["Apellido", "Nombre", "País", "Correo", "ID", "Más"];
 
   return (
@@ -123,12 +140,16 @@ export default function AllPsicologos({
         <div className="w-full h-16 bg-[#6364F4] dark:bg-primary flex items-center justify-between px-10">
           <div className="flex items-center">
             <h1 className="text-bold text-medium text-white dark:text-primary-foreground">
-              Listado de Todos los Psicólogos
+              Listado de Psicólogos {filterStatus === 'inactivos' ? 'Inactivos' : 'Activos'}
             </h1>
           </div>
-          <select className="px-2 py-1 rounded">
-            <option value="1">Activos</option>
-            <option value="2">Inactivos</option>
+          <select 
+            className="px-4 py-2 rounded-lg border-2 border-white/20 bg-white/10 text-white font-medium shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/30 transition-all duration-200 backdrop-blur-sm"
+            value={filterStatus === 'activos' ? '1' : '2'}
+            onChange={handleFilterChange}
+          >
+            <option value="1" className="bg-white text-gray-800 font-medium">Activos</option>
+            <option value="2" className="bg-white text-gray-800 font-medium">Inactivos</option>
           </select>
         </div>
 
@@ -160,7 +181,6 @@ export default function AllPsicologos({
                 ]}
                 onEdit={() => handleEdit(psicologo.idPsicologo)}
                 onDelete={() => openDeleteModal(psicologo.idPsicologo)}
-                onClick={() => handleEdit(psicologo.idPsicologo)}
               />
             )}
           />

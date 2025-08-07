@@ -20,7 +20,7 @@ interface Props {
 const DataCard = ({ onEdit, onDelete, paciente, info, children, onClick}: Props) => {
   return (
     <div>
-      <div className="flex items-center justify-between mb-4 cursor-pointer hover:bg-[#2e2e31] p-6" onClick={onClick}>
+      <div className="flex items-center justify-between mb-4 cursor-pointer p-6" onClick={onClick}>
         <div>
           <h3 className="font-semibold text-lg text-gray-900 dark:text-foreground">
             {paciente.nombre}
