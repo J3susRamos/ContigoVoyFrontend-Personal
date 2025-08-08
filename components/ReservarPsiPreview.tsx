@@ -252,8 +252,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "border-[#d8dceb] bg-white dark:bg-gray-900 text-[#a8b0d3]",
           header: "border-b-[1px] border-[#d8dceb]",
           footer: "border-t-[1px] border-[#d8dceb]",
           closeButton: "hover:bg-white/5 active:bg-white/10",
@@ -319,8 +319,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "border-[#d8dceb] bg-white dark:bg-gray-900 text-[#a8b0d3]",
           header: "border-b-[1px] border-[#d8dceb]",
           footer: "border-t-[1px] border-[#d8dceb]",
           closeButton: "hover:bg-white/5 active:bg-white/10",
@@ -338,11 +338,13 @@ export default function ReservarPsiPreview({
                 onClose={() => setIsScheduleOpen(false)}
                 onOpenConfirm={() => setIsConfirmOpen(true)}
                 onSelectHorario={handleSelectHorario}
-              />
+              /> 
               <div className="w-full flex justify-center">
                 <Button
                   onPress={() => setIsScheduleOpen(false)}
-                  className="rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light"
+                  className="rounded-3xl px-6 sm:px-8 py-1 sm:py-0 transition-colors duration-200 font-bold
+                              bg-[#E7E7FF] text-[#634AE2] hover:bg-[#3d1fd1] hover:text-white 
+                              dark:bg-[#2A2A38] dark:text-[#634AE2] dark:hover:bg-[#634AE2] dark:hover:text-[#111827] "
                 >
                   Cancelar
                 </Button>
@@ -359,8 +361,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "bg-[#F5F5FF] dark:bg-[#1E1E2F] text-[#634AE2] dark:text-[#ffffff]",
         }}
       >
         <ModalContent>
@@ -448,8 +450,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "bg-[#634AE2] text-white rounded-3xl",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "bg-[#F5F5FF] dark:bg-[#1E1E2F] text-[#634AE2] dark:text-[#ffffff]",
           header: "border-b-[1px] border-[#d8dceb]",
           footer: "border-t-[1px] border-[#d8dceb]",
           closeButton: "hover:bg-white/5 active:bg-white/10",

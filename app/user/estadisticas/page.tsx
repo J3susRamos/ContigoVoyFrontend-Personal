@@ -4,8 +4,8 @@ import Showstadistic from "@/components/stadistic/showstadistic";
 
 export default function stadistic() {
   return (
-    <div className="bg-[#f8f8ff] dark:bg-[#121212] min-h-screen flex flex-col">
 
+    <div className="bg-[#f8f8ff] dark:bg-[#121212] min-h-screen flex flex-col">
 
       {/* Header responsivo */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">

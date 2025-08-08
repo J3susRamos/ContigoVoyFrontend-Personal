@@ -3,6 +3,7 @@ import RedesSociales from "@/components/footer/RedesSociales";
 import { Image } from "@heroui/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { ReactSVG } from "react-svg";
 
 export default function Footer() {
   const leftLinks = [
@@ -33,6 +34,7 @@ export default function Footer() {
               transition={{ delay: 0.6 }}
               className="flex-shrink-0"
             >
+
               <div className="bg-[#634AE2] dark:bg-transparent p-2 rounded-lg inline-block">
                 <Image
                   src="/LogoBlanco.webp"

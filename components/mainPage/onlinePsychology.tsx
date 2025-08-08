@@ -5,17 +5,18 @@ import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { ReactSVG } from "react-svg";
 
 const features = [
   {
     icon: (
-      <Image
-        src={"/OnlinePsychologyImages/terapiaonline.webp"}
-        alt="Psicología online Beneficios Terapia en casa"
-        width={70}
-        height={60}
+      <ReactSVG
+        src={"/ImgsInicio/ImgsPsicoOnline/terapiaonline.svg"}
         title="Terapia en casa Online Contigo Voy"
-        className="w-[50px] mw:w-[70px]"
+        className="w-[110px]"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
       />
     ),
     title: "Recibe terapia en casa",
@@ -26,13 +27,13 @@ const features = [
   },
   {
     icon: (
-      <Image
-        src={"/OnlinePsychologyImages/listapsicologo.webp"}
-        alt="Psicología online Beneficios Elige a tu Psicologo"
+      <ReactSVG
+        src={"/ImgsInicio/ImgsPsicoOnline/listapsicologo.svg"}
         title="Elige a tu Psicólogo Contigo Voy Terapia Psicológica"
-        width={70}
-        height={60}
-        className="w-[50px] mw:w-[70px]"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+        className="w-[110px]"
       />
     ),
     title: "Elige a tu psicólogo",
@@ -44,13 +45,13 @@ const features = [
   },
   {
     icon: (
-      <Image
-        src={"/OnlinePsychologyImages/terapiaencasa.webp"}
-        alt="Psicología online Beneficios tu terapia en línea"
+      <ReactSVG
+        src={"/ImgsInicio/ImgsPsicoOnline/terapiaencasa.svg"}
         title="Elige tu terapia en línea - Terapia Psicológica Online"
-        width={70}
-        height={60}
-        className="w-[50px] mw:w-[70px]"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+        className="w-[90px]"
       />
     ),
     title: "Elige tu terapia en línea - Terapia Psicológica Online",
@@ -61,13 +62,13 @@ const features = [
   },
   {
     icon: (
-      <Image
-        src={"/OnlinePsychologyImages/agendahorario.webp"}
-        alt="Psicología online Beneficios elige tu horario ideal"
+      <ReactSVG
+        src={"/ImgsInicio/ImgsPsicoOnline/agendahorario.svg"}
         title="Horario ideal - Terapia Psicológica Online"
-        width={70}
-        height={60}
-        className="w-[50px] mw:w-[70px]"
+        beforeInjection={(svg) => {
+          svg.classList.add("fill-gray-300");
+        }}
+        className="w-[90px]"
       />
     ),
     title: "Horario ideal - Terapia Psicológica Online",
@@ -160,7 +161,7 @@ export default function ChooseUs() {
                     <div className="flex-1 md:pl-40">
                         <div className="flex flex-col justify-center p-6">
                           <div className="flex flex-col items-center justify-center w-28 h-28 rounded-full bg-[#9494F3] backdrop-blur-sm transition-all duration-300">
-                            <div className="bg-transparent rounded-full transition-colors duration-300 w-14">
+                            <div className="bg-transparent rounded-full transition-colors duration-300 w-[75px] flex justify-center items-center">
                               {feature.icon}
                             </div>
                           </div>

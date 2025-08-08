@@ -227,6 +227,19 @@ export interface PsicologoApiResponse {
   };
 }
 
+export interface PacienteDisabled {
+  idPaciente: number,
+  codigo: string,
+  DNI: string,
+  nombre: string,
+  email: string,
+  celular: string,
+  genero: string,
+  fecha_nacimiento: string,
+  edad: number,
+  ultima_cita_fecha: string
+}
+
 export interface PsicologoApiResponseAlone {
   status_code: number;
   status_message: string;
