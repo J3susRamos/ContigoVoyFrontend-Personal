@@ -169,7 +169,8 @@ export default function App() {
   }
 
   return (
-    <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-[#f6f7f7] dark:bg-[#121212] min-h-screen flex flex-col">
+
       <HeaderUser title="Historial de pacientes" />
       <Navbar
         filterValue={filterValue}

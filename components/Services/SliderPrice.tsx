@@ -44,9 +44,8 @@ export default function SliderPrice({
                 ]}
               >
                 <CarouselContent
-                  className={`${
-                    promotions.length <= 2 ? "justify-center" : ""
-                  }`}
+                  className={`${promotions.length <= 2 ? "justify-center" : ""
+                    }`}
                 >
                   {promotions.map((item, index) => (
                     <CarouselItem
@@ -104,21 +103,27 @@ export default function SliderPrice({
                       </div>
                     </CarouselItem>
                   ))}
+
+                  {/* Solo muestra las flechas si hay más de 2 promociones */}
                 </CarouselContent>
-                <CarouselPrevious
-                  variant="ghost"
-                  className="text-white hover:bg-violet-300 bg-inherit border-none hidden min-[490px]:block "
-                  defaultIcon={false}
-                >
-                  <ArrowLeft strokeWidth={4} className="!w-scv6 !h-scv6" />
-                </CarouselPrevious>
-                <CarouselNext
-                  variant="ghost"
-                  defaultIcon={false}
-                  className="text-white hover:bg-violet-300 bg-inherit border-none hidden min-[490px]:block  "
-                >
-                  <ArrowRight strokeWidth={4} className="!w-scv6 !h-scv6" />
-                </CarouselNext>
+                {promotions.length > 2 && (
+                  <>
+                    <CarouselPrevious
+                      variant="ghost"
+                      className="text-white hover:bg-violet-300 bg-inherit border-none hidden min-[490px]:block "
+                      defaultIcon={false}
+                    >
+                      <ArrowLeft strokeWidth={4} className="!w-scv6 !h-scv6" />
+                    </CarouselPrevious>
+                    <CarouselNext
+                      variant="ghost"
+                      defaultIcon={false}
+                      className="text-white hover:bg-violet-300 bg-inherit border-none hidden min-[490px]:block  "
+                    >
+                      <ArrowRight strokeWidth={4} className="!w-scv6 !h-scv6" />
+                    </CarouselNext>
+                  </>
+                )}
               </Carousel>
             </div>
           </div>
