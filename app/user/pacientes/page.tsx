@@ -1,53 +1,40 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
-import ListarPacientes from "@/components/User/Pacientes/ListarPacientes";
-import HeaderUser from "@/components/User/HeaderUser";
-import {NavbarPacientes} from "@/components/User/Pacientes/NavbarPacientesComponent";
-import {FiltersInitialState, FiltersPaciente} from "@/interface";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import AdminPacienteSection from "@/components/User/Pacientes/Admin/section/AdminPacienteSection";
+import PsicoPacienteSection from "@/components/User/Pacientes/Psicologo/section/PsicoPacienteSection";
+import LoadingSpinner from "@/components/User/Marketing/LoadingSpinner";
 
 export default function Pacientes() {
     const router = useRouter();
     const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-    const [filterValue, setFilterValue] = useState("");
-    const [filters, setFilters] = useState<FiltersPaciente>(FiltersInitialState);
-    const [menuAbierto, setMenuAbierto] = useState(false);
-
-    const onSearchChange = (value?: string) => {
-        setFilterValue(value || "");
-    };
+    const [role, setRole] = useState<string | null>(null);
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem("user") || "{}");
-        if (userData.rol !== "PSICOLOGO") {
-            router.push("/unauthorized");
-        } else {
+        if (userData.rol === "PSICOLOGO" || userData.rol === "ADMIN") {
             setIsAuthorized(true);
+            setRole(userData.rol);
+        } else {
+            router.push("/unauthorized");
         }
     }, [router]);
 
     if (isAuthorized === null) {
         return (
             <div className="flex justify-center items-center h-screen">
+                <LoadingSpinner />
             </div>
         );
     }
 
     return (
-        <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
-            <HeaderUser title="Lista de pacientes"/>
-            <NavbarPacientes
-                filterValue={filterValue}
-                onSearchChange={onSearchChange}
-                filters={filters}
-                setFilters={setFilters}
-                menuAbierto={menuAbierto}
-                setMenuAbierto={setMenuAbierto}
-            />
-            <section className={`${menuAbierto && 'opacity-50'}`}>
-                <ListarPacientes filters={filters} filterValue={filterValue}/>
-            </section>
-        </div>
+        <>
+            {role === "PSICOLOGO" && <PsicoPacienteSection />}
+
+            {role === "ADMIN" && <AdminPacienteSection />}
+        </>
     );
+
 }

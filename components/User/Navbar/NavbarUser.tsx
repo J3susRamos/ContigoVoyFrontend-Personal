@@ -105,7 +105,6 @@ const NavbarUser = () => {
       
       if (user.rol === "ADMIN") {
         items = items.filter(item =>
-          item.name !== "Pacientes" &&
           item.name !== "Citas" &&
           item.name !== "Historial"
         );

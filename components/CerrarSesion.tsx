@@ -6,12 +6,16 @@ import { useEffect, useState } from "react";
 import { UsuarioLocalStorageUpdate } from "@/interface";
 import Image from "next/image";
 import Editar from "./Editar";
+import { ChevronDown } from "lucide-react";
+import EditarIcon from "@/icons/EditarIcon";
+import LogOutIcon from "@/icons/LogOutIcon";
 
 export default function CerrarSesion() {
   const { logout } = useAuth();
   const [user, setUser] = useState<UsuarioLocalStorageUpdate | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -24,7 +28,6 @@ export default function CerrarSesion() {
     }
   }, []);
 
-  // Función para actualizar el usuario global
   const handleUpdateUser = (updatedUser: UsuarioLocalStorageUpdate) => {
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -64,19 +67,48 @@ export default function CerrarSesion() {
           <path d="M480-481q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42ZM160-220v-34q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5T731-360q31 14 50 41t19 65v34q0 25-17.5 42.5T740-160H220q-25 0-42.5-17.5T160-220Z" />
         </svg>
       )}
-      <button
-        className="border-primary border-2 min-w-fit dark:border-primary-foreground rounded-3xl text-primary dark:text-primary-foreground bg-background dark:bg-background hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-200 h-10 px-6 text-medium font-semibold shadow-md hover:shadow-lg"
-        onClick={() => setIsEditOpen(true)}
+      <div
+        className={`relative`}
+        onMouseEnter={() => setMenuOpen(true)}
+        onMouseLeave={() => setMenuOpen(false)}
       >
-        Editar Perfil
-      </button>
-      <Button
-        radius="full"
-        className="border-primary border-2 min-w-fit dark:border-primary-foreground text-primary-foreground dark:text-primary-foreground bg-[#634AE2] dark:bg-background hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-200 h-10 px-6 text-medium font-semibold shadow-md hover:shadow-lg"
-        onPress={logout}
-      >
-        Cerrar sesión
-      </Button>
+        <button
+          className={`flex items-center gap-2 border-primary border-2 min-w-fit dark:border-primary-foreground rounded-3xl text-primary dark:text-primary-foreground  transition-all duration-200 h-10 px-6 text-medium font-semibold shadow-md hover:shadow-lg ${
+            menuOpen ? "bg-[#634AE2] text-white dark:bg-[#634AE2]" : ""
+          }`}
+        >
+          Opciones
+          <ChevronDown
+            className={`transition-transform duration-200 ${
+              menuOpen ? "rotate-180" : ""
+            }`}
+            size={20}
+          />
+        </button>
+        {menuOpen && (
+          <div className="absolute right-0 w-48 z-50 py-2">
+            <div className="w-48 bg-[#634AE2] rounded-xl shadow-lg py-2 text-base flex flex-col">
+              <Button
+                className="text-white px-4 py-2 text-center flex justify-start text-base bg-[#634AE2] hover:bg-[#4b36b3] hover:text-yellow-300 transition-colors rounded-t-xl"
+                onPress={() => {
+                  setIsEditOpen(true);
+                  setMenuOpen(false);
+                }}
+              >
+                <EditarIcon/>
+                <p className="text-white">Editar Perfil</p>
+              </Button>
+              <Button
+                className="text-white px-4 py-2 text-center text-base flex justify-start  bg-[#634AE2] hover:bg-[#4b36b3] hover:text-red-600 transition-colors rounded-t-xl"
+                onPress={logout}
+              >
+                <LogOutIcon/>
+                <p className="text-white">Cerrar sesión</p>
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
       <Editar
         isEditOpen={isEditOpen}
         setIsEditOpen={setIsEditOpen}
