@@ -16,19 +16,18 @@ import FilterTags from "./components/FilterTags";
 import BlogCarousel from "./components/BlogCarousel";
 import ImageModal from "./components/ImageModal";
 
-// Styles
-import "./styles/blogStyles.css";
-
 export default function BlogPageComponent({
   Datos,
   Categories,
-  Authors
+  Authors,
 }: {
   Datos: BlogPreviewData[];
   Categories: Categoria[];
   Authors: Authors[];
 }) {
-  const [selectedBlog, setSelectedBlog] = useState<BlogPreviewData | null>(null);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPreviewData | null>(
+    null
+  );
   const [showFilters, setShowFilters] = useState(false);
 
   // Custom hooks
@@ -40,7 +39,7 @@ export default function BlogPageComponent({
     handleCategoryFilter,
     handleAuthorFilter,
     handleSearch,
-    clearAllFilters
+    clearAllFilters,
   } = useBlogFilters(Datos, Categories, Authors);
 
   const {
@@ -56,7 +55,7 @@ export default function BlogPageComponent({
     closeImageModal,
     nextModalImage,
     prevModalImage,
-    setModalImageIndex
+    setModalImageIndex,
   } = useImageCarousel(selectedBlog);
 
   const handleSelectBlog = (blog: BlogPreviewData) => {
@@ -76,7 +75,7 @@ export default function BlogPageComponent({
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               <span className="font-medium">Volver al blog</span>
             </button>
-            
+
             <article className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden">
               {/* Article Header */}
               <div className="bg-gradient-to-r from-[#634AE2] via-[#7c3aed] to-[#8b7cf6] p-8 lg:p-12 text-white">
@@ -93,11 +92,15 @@ export default function BlogPageComponent({
                       {selectedBlog.psicologo} {selectedBlog.psicologApellido}
                     </p>
                     <p className="text-white/80 text-sm">
-                      Publicado el {new Date(selectedBlog.fecha).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
+                      Publicado el{" "}
+                      {new Date(selectedBlog.fecha).toLocaleDateString(
+                        "es-ES",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
                     </p>
                   </div>
                 </div>
@@ -120,8 +123,8 @@ export default function BlogPageComponent({
 
               {/* Article Content */}
               <div className="p-8 lg:p-12">
-                <div 
-                  className="blog-preview prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
+                <div
+                  className="blog-preview  [&_a]:text-[#6228cb] [&_a]:font-bold dark:[&_a]:text-[#3498db] prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: selectedBlog.contenido }}
                 />
               </div>
@@ -160,7 +163,11 @@ export default function BlogPageComponent({
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Sidebar - Desktop */}
-              <div className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden'} lg:block`}>
+              <div
+                className={`lg:col-span-1 ${
+                  showFilters ? "block" : "hidden"
+                } lg:block`}
+              >
                 <div className="sticky top-6">
                   <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl p-6 border border-[#634AE2]/10">
                     <BlogAside
@@ -180,7 +187,10 @@ export default function BlogPageComponent({
                 {filteredData.length > 0 ? (
                   <div className="space-y-8">
                     {filteredData.map((item) => (
-                      <div key={item.idBlog} className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] border border-[#634AE2]/10">
+                      <div
+                        key={item.idBlog}
+                        className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] border border-[#634AE2]/10"
+                      >
                         <BlogPreview Data={item} onSelect={handleSelectBlog} />
                       </div>
                     ))}
@@ -193,7 +203,8 @@ export default function BlogPageComponent({
                         No se encontraron artículos
                       </h3>
                       <p className="text-gray-500 dark:text-gray-400 mb-8 text-lg">
-                        No hay artículos que coincidan con los filtros seleccionados.
+                        No hay artículos que coincidan con los filtros
+                        seleccionados.
                       </p>
                       <button
                         onClick={clearAllFilters}

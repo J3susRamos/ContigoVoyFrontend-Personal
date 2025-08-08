@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plantilla } from "@/interface";
 import Image from "next/image";
-import { tr } from "date-fns/locale";
 
 interface Props {
   onBack: () => void;

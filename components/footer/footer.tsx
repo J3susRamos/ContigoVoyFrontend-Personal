@@ -3,6 +3,7 @@ import RedesSociales from "@/components/footer/RedesSociales";
 import { Image } from "@heroui/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { ReactSVG } from "react-svg";
 
 export default function Footer() {
   const leftLinks = [
@@ -31,12 +32,11 @@ export default function Footer() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6 }}
               className="flex-shrink-0"
-            >              <Image
-                src="/LogoBlanco.webp"
+            >
+              <ReactSVG
+                src="/logofooter.svg"
                 title="Contigo Voy - Terapia Psicológica"
-                alt="Eligenos - Confidencialidad Contigo Voy"
-                width={150}
-                height={60}
+                className="w-[150px] h-[60px]"
               />
             </motion.div>
 
@@ -105,16 +105,22 @@ export default function Footer() {
                     href="https://w.app/dvwynv"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 border border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                    className="group flex items-center space-x-1 border border-white hover:border-[#634AE2] rounded-full px-2 py-0.5 hover:bg-gray-100/80 transition-colors w-fit"
                   >
-                    <span className="text-white text-[10px]">Perú</span>
-                    <Image
-                      src="/WSP.webp"
+                    <span className="text-white  group-hover:text-[#634AE2] duration-250  text-[10px]">
+                      Perú
+                    </span>
+                    <ReactSVG
+                      src="/WSP.svg"
+                      className="flex-shrink-0 w-[14px] h-[14px]"
                       title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
-                      alt="WhatsApp Terapia Peru Psicológica Online"
-                      width={14}
-                      height={14}
-                      className="flex-shrink-0"
+                      beforeInjection={(svg) => {
+                        svg.classList.add(
+                          "fill-gray-100",
+                          "group-hover:fill-[#634AE2]",
+                          "duration-250"
+                        );
+                      }}
                     />
                   </a>
                   <span className="text-[12px] mt-1 sm:mt-0">
@@ -128,16 +134,22 @@ export default function Footer() {
                     href="https://w.app/qv4uqn"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 border border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                    className="group flex items-center space-x-1 border border-white hover:border-[#634AE2] rounded-full px-2 py-0.5 hover:bg-gray-100/80 transition-colors w-fit"
                   >
-                    <span className="text-white text-[10px]">Argentina</span>
-                    <Image
-                      src="/WSP.webp"
-                      title="Whatsapp Terapia Psicológica Argentina Online Contigo Voy"
-                      alt="WhatsApp Terapia Argentina Psicológica Online"
-                      width={14}
-                      height={14}
-                      className="flex-shrink-0"
+                    <span className="text-white  group-hover:text-[#634AE2] duration-250  text-[10px]">
+                      Argentina
+                    </span>
+                    <ReactSVG
+                      src="/WSP.svg"
+                      className="flex-shrink-0 w-[14px] h-[14px]"
+                      title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
+                      beforeInjection={(svg) => {
+                        svg.classList.add(
+                          "fill-gray-100",
+                          "group-hover:fill-[#634AE2]",
+                          "duration-250"
+                        );
+                      }}
                     />
                   </a>
                   <span className="text-[12px] mt-1 sm:mt-0">

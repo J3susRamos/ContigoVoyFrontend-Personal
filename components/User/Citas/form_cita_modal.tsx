@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Input,
@@ -13,7 +13,7 @@ import {
     SelectItem,
     Textarea
 } from "@heroui/react";
-import {parseCookies} from "nookies";
+import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import { Citas } from "@/interface";
 
@@ -46,14 +46,20 @@ const INITIAL_FORM_DATA: FormData = {
     hora_cita: "",
     duracion: "60",
     motivo_Consulta: "",
-    estado_Cita: "Pendiente"
+    estado_Cita: "Sin pagar"
 };
 
 const APPOINTMENT_STATES = [
-    {key: "Pendiente", label: "Pendiente"},
-    {key: "Confirmada", label: "Confirmada"},
-    {key: "Completada", label: "Completada"},
-    {key: "Cancelada", label: "Cancelada"}
+    { key: "Sin pagar", label: "Sin pagar" },
+];
+
+const APPOINTMENT_STATES_EDITING = [
+    { key: "Sin pagar", label: "Sin pagar" },
+    { key: "Pendiente", label: "Pendiente" },
+    { key: "Confirmada", label: "Confirmada" },
+    { key: "Cancelada", label: "Cancelada" },
+    { key: "Reprogramada", label: "Reprogramada" },
+
 ];
 
 const DURATION_LIMITS = {
@@ -135,13 +141,13 @@ const useFormValidation = () => {
 
     const clearFieldError = (field: string) => {
         if (errors[field]) {
-            setErrors(prev => ({...prev, [field]: ""}));
+            setErrors(prev => ({ ...prev, [field]: "" }));
         }
     };
 
     const clearAllErrors = () => setErrors({});
 
-    return {errors, validateForm, clearFieldError, clearAllErrors};
+    return { errors, validateForm, clearFieldError, clearAllErrors };
 };
 
 const useApiRequest = () => {
@@ -166,7 +172,7 @@ const useApiRequest = () => {
         }
     };
 
-    return {loading, makeRequest};
+    return { loading, makeRequest };
 };
 
 // Utility functions
@@ -205,15 +211,15 @@ const mapCitaToFormData = (cita: Citas): FormData => ({
 });
 
 export const FormCita: React.FC<FormCitaProps> = ({
-                                                      isOpen,
-                                                      onCloseAction,
-                                                      onCitaCreatedAction,
-                                                      editingCita = null
-                                                  }) => {
+    isOpen,
+    onCloseAction,
+    onCitaCreatedAction,
+    editingCita = null
+}) => {
     const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
     const pacientes = usePacientes(isOpen);
-    const {errors, validateForm, clearFieldError, clearAllErrors} = useFormValidation();
-    const {loading, makeRequest} = useApiRequest();
+    const { errors, validateForm, clearFieldError, clearAllErrors } = useFormValidation();
+    const { loading, makeRequest } = useApiRequest();
     const isEditing = !!editingCita;
 
     // Effect to populate form when editing
@@ -236,10 +242,10 @@ export const FormCita: React.FC<FormCitaProps> = ({
             const requestBody = prepareRequestData(formData);
             console.log("Sending request body:", requestBody);
 
-            const url = isEditing 
+            const url = isEditing
                 ? `${process.env.NEXT_PUBLIC_API_URL}api/citas/${editingCita.idCita}`
                 : `${process.env.NEXT_PUBLIC_API_URL}api/citas`;
-            
+
             const method = isEditing ? "PUT" : "POST";
 
             const response = await makeRequest(url, {
@@ -272,7 +278,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
     };
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({...prev, [field]: value}));
+        setFormData(prev => ({ ...prev, [field]: value }));
         clearFieldError(field);
     };
 
@@ -311,10 +317,10 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                         errorMessage={errors.idPaciente}
                                         isDisabled={isEditing} // Disable patient selection when editing
                                     >
-                                        
+
                                         {pacientes.map((paciente) => (
                                             <SelectItem
-                                            className="bg-[#634AE2] text-white"
+                                                className="bg-[#634AE2] text-white"
                                                 key={paciente.idPaciente.toString()}
                                             >
                                                 {`${paciente.nombre} (${paciente.codigo})`}
@@ -360,7 +366,7 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                             handleInputChange("estado_Cita", selectedKey);
                                         }}
                                     >
-                                        {APPOINTMENT_STATES.map((state) => (
+                                        {(isEditing ? APPOINTMENT_STATES_EDITING : APPOINTMENT_STATES).map((state) => (
                                             <SelectItem className="bg-[#634AE2] text-white" key={state.key}>
                                                 {state.label}
                                             </SelectItem>
@@ -386,8 +392,8 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                     isLoading={loading}
                                     disabled={loading}
                                 >
-                                    {loading 
-                                        ? (isEditing ? "Actualizando..." : "Creando...") 
+                                    {loading
+                                        ? (isEditing ? "Actualizando..." : "Creando...")
                                         : (isEditing ? "Actualizar Cita" : "Crear Cita")
                                     }
                                 </Button>

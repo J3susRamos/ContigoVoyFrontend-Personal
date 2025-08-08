@@ -11,6 +11,7 @@ interface RowProps {
   onDisable?: () => void;
   children?: ReactNode;
   showActions?: boolean;
+  llave?: boolean;
 }
 
 const Row: React.FC<RowProps> = ({
@@ -19,7 +20,8 @@ const Row: React.FC<RowProps> = ({
   onEdit,
   onDisable,
   children,
-  showActions = true
+  showActions = true,
+  llave = false,
 }) => {
   return (
     <>
@@ -47,7 +49,7 @@ const Row: React.FC<RowProps> = ({
                 {onDisable && (
                   <ActionButton
                     icon={Ban}
-                    label="Deshabilitar"
+                    label={!llave ? "Deshabilitar" : "Habilitar"}
                     onClick={onDisable}
                   />
                 )}
