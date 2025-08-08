@@ -32,13 +32,13 @@ const AdminPacienteTable: React.FC<AdminPacienteTableProps> = ({ data, onDisable
       renderCard={(paciente) => (
         <DataCard
           paciente={{
-            nombre: `Sr. ${paciente.nombre}`,
-            codigo: `ID: ${paciente.idPaciente}`
+            nombre: `${paciente.nombre}`,
+            codigo: `${paciente.idPaciente}`
           }}
           info={[
             { label: "DNI", value: paciente.DNI },
             { label: "Correo", value: paciente.email },
-            { label: "Email", value: paciente.email },
+            { label: "Género", value: paciente.genero },
             { label: "Celular", value: paciente.celular },
           ]}
           onDisable={() => onDisable(paciente.idPaciente)}
