@@ -40,7 +40,8 @@ export default function App() {
   if (isAuthorized === null) return null;
 
   return (
-    <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-[#f6f7f7] dark:bg-[#121212] min-h-screen flex flex-col">
+
       <HeaderUser title="Lista de citas" />
       <Navbar
         filterValue={filterValue}

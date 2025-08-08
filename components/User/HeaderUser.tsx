@@ -28,7 +28,7 @@ const HeaderUser = ({title}: Props) => {
             }}
           />
           </Link>
-        <h1 className="text-2xl md:text-4xl font-bold text-[#634be3]">
+        <h1 className="text-2xl md:text-4xl font-bold text-[#634be3] dark:text-white">
           {title}
         </h1>
         </div>
