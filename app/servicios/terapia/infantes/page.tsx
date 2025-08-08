@@ -71,8 +71,8 @@ const NinosTerapias: ServicesStructureProps = {
     {
       id: 3,
       title: "Terapia en frustración infantil Contigo Voy Psicología Online",
-      text: "Manejo de la frustración Contigo Voy | Centro Psicológico",
-      iconImage: "/Services/ninos/frustracion.svg",
+      text: "Manejo de la frustración",
+      iconImage: "/Services/ninos/frustracion.webp",
     },
     {
       id: 4,
