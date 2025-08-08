@@ -62,34 +62,34 @@ const TeenTerapias: ServicesStructureProps = {
       title:
         "Ayuda con manejo de emociones en Adolescentes Contigo Voy Psicología Online",
       text: "Manejo de emociones",
-      iconImage: "/Services/teen/emociones.webp",
+      iconImage: "/Services/teen/emociones.svg",
     },
     {
       id: 2,
       title:
         "Ayuda en el control de estrés en adolescentes  Contigo Voy Psicología Online",
       text: "Estrés académico",
-      iconImage: "/Services/teen/estres.webp",
+      iconImage: "/Services/teen/estres.svg",
     },
     {
       id: 3,
       title: "Autoestima en Adolescentes Contigo Voy Psicología Online",
       text: "Fortalecimiento del autoestima",
-      iconImage: "/Services/teen/autoestima.webp",
+      iconImage: "/Services/teen/autoestima.svg",
     },
     {
       id: 4,
       title:
         "Creando habilidades sociales en adolescentes Contigo Voy Psicología Online",
       text: "Habilidades sociales",
-      iconImage: "/Services/teen/sociales.webp",
+      iconImage: "/Services/teen/sociales.svg",
     },
     {
       id: 5,
       title:
         "Orientación Vocacional para Adolescentes Secundaria Contigo Voy Psicología Online",
       text: "Orientación vocacional",
-      iconImage: "/Services/teen/vocacional.webp",
+      iconImage: "/Services/teen/vocacional.svg",
     },
   ],
   tittlecards: "Beneficios de la terapia para adolescentes",
@@ -98,33 +98,33 @@ const TeenTerapias: ServicesStructureProps = {
       id: 1,
       title: "Frustraciones en adolescentes Contigo Voy Psicología Online",
       text: "Ayuda a manejar la frustración y transformar emociones difíciles en acciones positivas.",
-      icon: "/Services/teen/therapy/frustraciones.webp",
-    },    {
+      icon: "/Services/teen/therapy/frustraciones.svg",
+    },
+    {
       id: 2,
-      title:
-        "Equilibrio en Adolescentes Contigo Voy Psicología Online",
+      title: "Equilibrio en Adolescentes Contigo Voy Psicología Online",
       text: "Fomenta un equilibrio saludable entre sus responsabilidades y su bienestar emocional",
-      icon: "/Services/teen/therapy/equilibrio.webp",
+      icon: "/Services/teen/therapy/equilibrio.svg",
     },
     {
       id: 3,
       title:
         "Habilidades comunicativas en Adolescentes Contigo Voy Psicología Online",
       text: "Mejora las habilidades para comunicarse y relacionarse con los demás.",
-      icon: "/Services/teen/therapy/comunicacion.webp",
+      icon: "/Services/teen/therapy/comunicacion.svg",
     },
     {
       id: 4,
       title: "Seguridad en adolescentes Contigo Voy Psicología Online",
       text: "Les brinda herramientas para enfrentar decisiones importantes con seguridad.",
-      icon: "/Services/teen/therapy/seguridad.webp",
+      icon: "/Services/teen/therapy/seguridad.svg",
     },
     {
       id: 5,
       title:
         "Construye el autoestima de tu adolescente Contigo Voy Psicología Online",
       text: "Impulsa su autoestima, ayudándoles a construir una imagen positiva de sí mismos.",
-      icon: "/Services/teen/therapy/construir.webp",
+      icon: "/Services/teen/therapy/construir.svg",
     },
   ],
   textfooter:
