@@ -47,6 +47,7 @@ const TablePacientes = ({ filteredPacientes, onDisableInit }: Props) => {
           ]}
           onClick={() => redirectToPaciente(p.idPaciente)}
           onEdit={() => redirectToPaciente(p.idPaciente)}
+          onDisable={() => onDisableInit(p.idPaciente)}
         >
           <FamiliaButton idPaciente={p.idPaciente}/>
         </DataCard>
