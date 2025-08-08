@@ -8,11 +8,12 @@ interface PsicologoTableProps {
   data: PsicologoPreviewData[];
   onEdit: (id: number) => void;
   onDisable: (id: number) => void;
+  llave?: boolean;
 }
 
 const headers = ["Apellido", "Nombre", "País", "Correo", "ID", "Más"];
 
-const PsicologoTable: React.FC<PsicologoTableProps> = ({ data, onEdit, onDisable }) => {
+const PsicologoTable: React.FC<PsicologoTableProps> = ({ data, onEdit, onDisable, llave }) => {
   return (
     <DataTable
       headers={headers}
@@ -28,6 +29,7 @@ const PsicologoTable: React.FC<PsicologoTableProps> = ({ data, onEdit, onDisable
           ]}
           onEdit={() => onEdit(psicologo.idPsicologo)}
           onDisable={() => onDisable(psicologo.idPsicologo)}
+          llave={llave}
         />
       )}
       renderCard={(psicologo) => (
@@ -44,6 +46,7 @@ const PsicologoTable: React.FC<PsicologoTableProps> = ({ data, onEdit, onDisable
           ]}
           onEdit={() => onEdit(psicologo.idPsicologo)}
           onDisable={() => onDisable(psicologo.idPsicologo)}
+          llave={llave}
         />
       )}
     />

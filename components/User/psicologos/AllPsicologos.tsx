@@ -26,6 +26,8 @@ export default function AllPsicologos({
     closeEstadoModal,
   } = useModalState();
 
+  const llave = true ? filterStatus === 'inactivos' : false;
+
   return (
     <>
       <div className="flex flex-col w-full">
@@ -34,6 +36,7 @@ export default function AllPsicologos({
             data={Data}
             onEdit={openEditModal}
             onDisable={openEstadoModal}
+            llave={llave}
           />
         </div>
       </div>
