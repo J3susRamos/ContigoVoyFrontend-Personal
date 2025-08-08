@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { ReactSVG } from "react-svg";
 import { DesktopNavUser } from "./DesktopNavUser";
 import { Icons } from "@/icons";
 import { MobileNavUserHamburger } from "./MobileNavUserHamburger";
@@ -16,7 +16,7 @@ const navItemsBase = [
   {
     name: "Registro de personal",
     link: "/user/personal",
-    icono:Icons.personal,
+    icono: Icons.personal,
   },
   {
     name: "Pacientes",
@@ -70,7 +70,7 @@ const NavbarUser = () => {
   const [navItems, setNavItems] = useState(navItemsBase);
   const panelRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
-  
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       panelRef.current &&
@@ -97,40 +97,41 @@ const NavbarUser = () => {
       let items = [...navItemsBase];
 
       if (user.rol === "PSICOLOGO") {
-        items = items.filter(item =>
-          item.name !== "Registro de personal" &&
-          item.name !== "Psicologos"
+        items = items.filter(
+          (item) =>
+            item.name !== "Registro de personal" && item.name !== "Psicologos"
         );
       }
-      
+
       if (user.rol === "ADMIN") {
-        items = items.filter(item =>
-          item.name !== "Citas" &&
-          item.name !== "Historial"
+        items = items.filter(
+          (item) => item.name !== "Citas" && item.name !== "Historial"
         );
       }
-      
+
       setNavItems(items);
     }
-  }, []);  return (
+  }, []);
+  return (
     <div className="flex flex-row bg-[#E7E7FF] dark:bg-[#1f1e22]">
       {/* Mobile Navbar - Menú hamburguesa para pantallas menores a 1024px */}
       <div className="lg:hidden bg-[#E7E7FF] dark:bg-[#1f1e22] flex-1">
         <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
           <div className="w-full p-6 flex items-center justify-between">
             <Link href="/" className="ml-[60px] z-0">
-              <Image
-                src="/LOGO.webp"
-                title="Contigo Voy | Centro Psicologico Online"
-                alt="Servicio Terapia para Niños Contigo Voy Online"
+              <ReactSVG
+                src="/logoHeader.svg"
+                title="Contigo Voy Psicología | Centro Psicologico Online"
                 width={143}
                 height={50}
-                priority
-                style={{height: 'auto' }}
-                className="w-[143px] h-auto"
-                suppressHydrationWarning
+                style={{ height: "auto" }}
+                className="w-[143px] lg:max-w-[160px] h-auto"
+                beforeInjection={(svg) => {
+                  svg.classList.add("fill-[#5d4bdd]", "dark:fill-gray-100");
+                }}
               />
             </Link>
+
             <div className="flex items-center gap-x-5">
               <MobileNavUserHamburger navItems={navItems} />
             </div>
@@ -143,7 +144,15 @@ const NavbarUser = () => {
         <div className="bg-card dark:bg-[#1f1e22] w-full h-full rounded-tr-3xl pt-7 flex flex-col">
           <Link href="/">
             <h1 className="font-normal text-3xl flex justify-center items-center">
-              <Image src={"/LOGO.webp"} priority={true} width={200} height={150} alt="logo" />
+              <ReactSVG
+                src="/logoHeader.svg"
+                title="Contigo Voy Psicología | Centro Psicologico Online"
+                style={{ height: "auto" }}
+                className="w-[163px] -ml-scv5"
+                beforeInjection={(svg) => {
+                  svg.classList.add("fill-[#5d4bdd]", "dark:fill-gray-100");
+                }}
+              />
             </h1>
           </Link>
           <div className="flex flex-col items-center mt-8 pt-7 mr-7">
