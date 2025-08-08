@@ -16,9 +16,10 @@ interface Props {
   onDisable?: () => void;
   info?: InfoItem[];
   children?: ReactNode;
+  llave?: boolean;
 }
 
-const DataCard = ({ onEdit, onDisable, paciente, info, children, onClick}: Props) => {
+const DataCard = ({ onEdit, onDisable, paciente, info, children, onClick, llave = false }: Props) => {
   return (
     <div>
       <div className="flex items-center justify-between mb-4 cursor-pointer p-6" onClick={onClick}>
@@ -66,7 +67,7 @@ const DataCard = ({ onEdit, onDisable, paciente, info, children, onClick}: Props
           className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-muted transition-colors"
         >
           <Ban className="text-primary dark:text-[#bbbafe]" size={30} />
-          <span className="text-xs text-primary dark:text-[#bbbafe] mt-1">Deshabilitar</span>
+          <span className="text-xs text-primary dark:text-[#bbbafe] mt-1">{!llave ? "Deshabilitar" : "Habilitar"}</span>
         </button>
       </div>
     </div>

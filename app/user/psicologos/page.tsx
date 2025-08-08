@@ -15,7 +15,7 @@ export default function Psicologos() {
       </div>
       {error && (
         <div className="p-4 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg mx-5">
-          <h2>Error loading psychologists</h2>
+          <h2>Error cargando psicologos</h2>
           <p>{error}</p>
         </div>
       )}

@@ -13,6 +13,7 @@ import {
   FormCita,
   actulizarPsicologo,
   EspecialidadesPsicologoResponse,
+  PacienteDisabled,
 } from "@/interface";
 import { parseCookies } from "nookies";
 
@@ -153,6 +154,51 @@ export const GetPsicologosInactivos = async (
     throw error;
   }
 };
+
+export async function GetPacientesDisabled(): Promise<PacienteDisabled[]> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/deshabilitados`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener los pacientes deshabilitados");
+  }
+  return await res.json().then((data) => {
+    if (data.status_message === "OK") {
+      return data.result;
+    }
+  });
+}
+
+export async function ActivarPaciente(
+  id: number | null,
+  idPsicologo: number | null
+) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/activar/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ idPsicologo })
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al activar el paciente");
+  }
+}
 
 export async function DeletePsycologo(id: number | null): Promise<void> {
   const res = await fetch(
