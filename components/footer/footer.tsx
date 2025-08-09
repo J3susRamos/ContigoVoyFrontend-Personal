@@ -34,16 +34,6 @@ export default function Footer() {
               className="flex-shrink-0"
             >
 
-              <div className="bg-[#634AE2] dark:bg-transparent p-2 rounded-lg inline-block">
-                <Image
-                  src="/LogoBlanco.webp"
-                  title="Contigo Voy - Terapia Psicológica"
-                  alt="Eligenos - Confidencialidad Contigo Voy"
-                  width={150}
-                  height={60}
-                />
-              </div>
-
             </motion.div>
 
             {/* Redes sociales debajo del logo */}
@@ -114,10 +104,13 @@ export default function Footer() {
                       src="/WSP.svg"
                       className="flex-shrink-0 w-[14px] h-[14px]"
                       title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
-                      alt="WhatsApp Terapia Peru Psicológica Online"
-                      width={14}
-                      height={14}
-                      className="flex-shrink-0 bg-[#634AE2] p-0.5 rounded-full dark:bg-transparent"
+                      beforeInjection={(svg) => {
+                        svg.classList.add(
+                          "fill-gray-100",
+                          "group-hover:fill-[#634AE2]",
+                          "duration-250"
+                        );
+                      }}
                     />
                   </a>
                   <span className="text-[12px] mt-1 sm:mt-0 dark:text-white">
