@@ -35,7 +35,7 @@ export const TableComponent: React.FC<TableProps> = ({
 
 
   return (
-    <div className="w-full min-h-[600px] bg-gradient-to-br from-[#f6f7f7] to-[#e8eaed] py-8 dark:bg-gradient-to-br dark:from-[#7f7fee]/30 dark:to-[#23234a]">
+    <div className="w-full my-4">
       {atencion.length > 0 ? (
         <>
           {/* Vista de tabla para pantallas grandes (xl en adelante) */}
