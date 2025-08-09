@@ -30,11 +30,13 @@ export default function Pacientes() {
     }
 
     return (
+
         <>
             {role === "PSICOLOGO" && <PsicoPacienteSection />}
 
             {role === "ADMIN" && <AdminPacienteSection />}
         </>
+
     );
 
 }
