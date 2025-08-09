@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ListaAtencion } from "@/interface";
-import CardsView from "./views/CardsView";
-import EmptyState from "./views/EmptyView";
-import PatientModal from "./modal/PatientModal";
-import TableView from "./views/TableView";
+import CardsView from "../views/CardsView";
+import EmptyState from "../views/EmptyView";
+import PatientModal from "../modal/PatientModal";
+import TableView from "../views/TableView";
 
 interface TableProps {
   atencion: ListaAtencion[];
@@ -17,13 +17,9 @@ export const TableComponent: React.FC<TableProps> = ({
   headerColumns,
   renderCellAction,
 }) => {
-  const [isClient, setIsClient] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedPacienteId, setSelectedPacienteId] = useState<string | null>(null);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const handleVerMas = (item: ListaAtencion) => {
     if (item.idPaciente) {
@@ -37,20 +33,7 @@ export const TableComponent: React.FC<TableProps> = ({
     setSelectedPacienteId(null);
   };
 
-  if (!isClient) {
-    return (
-      <div className="w-full min-h-[400px] bg-[#f6f7f7] flex items-center justify-center">
-        <div className="animate-pulse">
-          <div className="bg-gray-300 h-8 w-48 rounded mb-4"></div>
-          <div className="space-y-3">
-            <div className="bg-gray-300 h-4 w-full rounded"></div>
-            <div className="bg-gray-300 h-4 w-5/6 rounded"></div>
-            <div className="bg-gray-300 h-4 w-4/6 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
   return (
     <div className="w-full min-h-[600px] bg-gradient-to-br from-[#f6f7f7] to-[#e8eaed] py-8 dark:bg-gradient-to-br dark:from-[#7f7fee]/30 dark:to-[#23234a]">
       {atencion.length > 0 ? (

@@ -7,7 +7,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "@heroui/react";
-import { Icons } from "@/icons";
+import { ArrowDownAZ, ChevronDown, Search } from "lucide-react";
 
 interface NavbarProps {
   filterValue: string;
@@ -32,20 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="bg-[#6364F4] w-full min-h-[8vh] flex flex-col md:flex-row justify-start items-center py-4 md:py-0">
         <div className="flex flex-col md:flex-row gap-3 md:gap-4 w-full items-center px-4 md:pl-8 lg:py-4">
           {/* Icono de lupa */}
-          <span
-            className="text-[#fff] transition-colors pl-0 md:pl-3 hidden md:block"
-            dangerouslySetInnerHTML={{
-              __html: Icons.loup.replace(
-                /<svg /,
-                '<svg fill="currentColor" '
-              ),
-            }}
-            style={{
-              width: "1.2em",
-              height: "1.2em",
-            }}
-          />
-
+          <Search className="w-5"/>
           {/* Input de búsqueda */}
           <Input
             type="text"
@@ -54,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             size="sm"
             radius="full"
             variant="bordered"
-            className="rounded-full bg-[#EAEAFF] w-full md:w-48 ml-0 md:ml-4"
+            className="rounded-full bg-[#EAEAFF] w-full md:w-48"
             classNames={{
               input: "placeholder:text-[#9494F3]",
             }}
@@ -71,15 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <DropdownTrigger className="bg-[#EAEAFF] rounded-full h-8 text-[#634AE2] text-base font-normal w-full md:w-auto">
               <Button variant="bordered" className="w-full md:w-auto">
                 Ordenar por{" "}
-                <span
-                  className="pl-3"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.arrow.replace(
-                      /<svg /,
-                      '<svg fill="#634AE2"'
-                    ),
-                  }}
-                />
+                <ChevronDown className="inline h-4 w-4 ml-1" />
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Ordenar por">
@@ -90,16 +69,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 onPress={onSortByName}
               >
+                <ArrowDownAZ className="inline h-6 w-6 mr-2" />
                 Nombre
-                <span
-                  className="inline-flex items-center ml-10"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.alpharrow.replace(
-                      /<svg /,
-                      '<svg fill="#634AE2"'
-                    ),
-                  }}
-                />
               </DropdownItem>
               <DropdownItem
                 key="fecha"
@@ -108,15 +79,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 onPress={onSortByDate}
               >
-                Fecha <span
-                  className="inline-flex items-center ml-12"
-                  dangerouslySetInnerHTML={{
-                    __html: Icons.alpharrow.replace(
-                      /<svg /,
-                      '<svg fill="#634AE2"'
-                    ),
-                  }}
-                />
+                <ArrowDownAZ className="inline h-6 w-6 mr-2" />
+                Fecha
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

@@ -1,12 +1,10 @@
 "use client";
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { Navbar } from "@/components/User/Historial/SearchNavbar";
-import { TableComponent } from "@/components/User/Historial/TableComponent";
-import { ListaAtencion } from "@/interface";
-import { parseCookies } from "nookies";
-import showToast from "@/components/ToastStyle";
-import { useRouter } from "next/navigation";
+import React, { useMemo, useCallback } from "react";
+import { Navbar } from "@/components/User/Historial/header/SearchNavbar";
+import { TableComponent } from "@/components/User/Historial/table/TableComponent";
 import HeaderUser from "@/components/User/HeaderUser";
+import { ListaAtencion } from "@/interface";
+import { useHistorialPacientes } from "@/components/User/Historial/hooks/useHistorialPacientes";
 
 const columns = [
   { name: "Código", uid: "codigo", sortable: true },
@@ -15,34 +13,19 @@ const columns = [
   { name: "Diagnóstico", uid: "diagnostico", sortable: true },
 ];
 
-const INITIAL_VISIBLE_COLUMNS = ["codigo", "paciente", "fecha_inicio", "diagnostico"];
-
 export default function App() {
-  const [filterValue, setFilterValue] = useState("");
-  const [atencion, setAtencion] = useState<ListaAtencion[]>([]);
-  const [visibleColumns, setVisibleColumns] = useState<Set<string>>(new Set(INITIAL_VISIBLE_COLUMNS));
-  const [sortDescriptor, setSortDescriptor] = useState({
-    column: "fecha_inicio",
-    direction: "ascending",
-  });
-
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
-
-  // Verificar el rol
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user") || "{}");
-
-    if (userData.rol === "PSICOLOGO") {
-      setIsAuthorized(true);
-    } else {
-      setIsAuthorized(false);
-      router.push("/unauthorized");
-    }
-  }, [router]);
-
-  const hasSearchFilter = Boolean(filterValue);
+  const {
+    filterValue,
+    atencion,
+    visibleColumns,
+    setVisibleColumns,
+    isAuthorized,
+    isLoading,
+    onSearchChange,
+    onClear,
+    handleSortByDate,
+    handleSortByName,
+  } = useHistorialPacientes();
 
   const headerColumns = useMemo(() => {
     return columns.filter((column) =>
@@ -50,25 +33,7 @@ export default function App() {
     );
   }, [visibleColumns]);
 
-  const filteredItems = useMemo(() => {
-    let filteredData = [...atencion];
-    if (hasSearchFilter) {
-      filteredData = filteredData.filter((item) =>
-        item.nombre_completo.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-    return filteredData;
-  }, [atencion, filterValue, hasSearchFilter]);
-
-  const sortedItems = useMemo(() => {
-    return [...filteredItems].sort((a, b) => {
-      const first = a[sortDescriptor.column as keyof typeof a] as string;
-      const second = b[sortDescriptor.column as keyof typeof b] as string;
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
-    });
-  }, [sortDescriptor, filteredItems]);
-
+  // Renderizado de celda (lógica de presentación en el componente)
   const renderCell = useCallback((atencion: ListaAtencion, columnKey: React.Key) => {
     const cellValue = atencion[columnKey as keyof typeof atencion];
 
@@ -83,7 +48,9 @@ export default function App() {
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
-            {atencion.hora_inicio && <p className="text-bold text-small capitalize">{atencion.hora_inicio}</p>}
+            {atencion.hora_inicio && (
+              <p className="text-bold text-small capitalize">{atencion.hora_inicio}</p>
+            )}
           </div>
         );
       default:
@@ -91,79 +58,10 @@ export default function App() {
     }
   }, []);
 
-  const onSearchChange = useCallback((value?: string) => {
-    setFilterValue(value || "");
-  }, []);
-
-  const onClear = useCallback(() => {
-    setFilterValue("");
-  }, []);
-
-  const handleSortByDate = () => {
-    setSortDescriptor((prev) => ({
-      column: "fecha_inicio",
-      direction: prev.direction === "ascending" ? "descending" : "ascending",
-    }));
-  };
-
-  const handleSortByName = () => {
-    setSortDescriptor((prev) => ({
-      column: "paciente",
-      direction: prev.direction === "ascending" ? "descending" : "ascending",
-    }));
-  };
-
-  const handleGetCitas = async () => {
-    try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/atenciones`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        if (Array.isArray(data.result)) {
-          setAtencion(data.result.flat());
-        } else {
-          console.error("La propiedad 'result' no es un array:", data);
-          showToast("error", "Formato de respuesta inválido");
-          setAtencion([]);
-        }
-      } else {
-        showToast("error", data.message || "Error al obtener las citas");
-        setAtencion([]);
-      }
-    } catch (error) {
-      console.error(error);
-      showToast("error", "Error de conexión. Intenta nuevamente.");
-      setAtencion([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const fetchAtenciones = async () => {
-      if (isAuthorized) {
-        await handleGetCitas();
-      }
-    };
-
-    fetchAtenciones().catch((error) => {
-      console.error('Error fetching atenciones:', error);
-      showToast("error", "Error al cargar las atenciones");
-    });
-  }, [isAuthorized]);
-
   if (isAuthorized === null || isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
+        {/* Aquí puedes agregar un spinner o loading component */}
       </div>
     );
   }
@@ -182,9 +80,9 @@ export default function App() {
         onSortByDate={handleSortByDate}
         onSortByName={handleSortByName}
       />
-      <section className={`"opacitiy-50"`}>
+      <section>
         <TableComponent
-          atencion={sortedItems}
+          atencion={atencion}
           headerColumns={headerColumns}
           renderCellAction={renderCell}
         />

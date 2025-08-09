@@ -4,8 +4,8 @@ import {
     DatePacienteProps,
     UltimaAtencion,
 } from "@/interface";
-import {HistorialPaciente} from "./HistorialPaciente";
 import {getUltimaAtencion} from "@/components/User/Pacientes/getUltimaAtencionData";
+import { HistorialPaciente } from "./HistorialPaciente";
 
 export const DatePaciente: React.FC<DatePacienteProps> = ({idPaciente}) => {
     const [showCart, setShowCart] = useState(false);
