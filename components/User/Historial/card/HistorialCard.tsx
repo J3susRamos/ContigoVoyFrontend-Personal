@@ -2,7 +2,6 @@ import React from "react";
 import { PatientHeader } from "../patientCard/PatientHeader";
 import { PatientInfo } from "../patientCard/PatientInfo";
 import { HistorialCardProps } from "../types/types";
-import ActionButton from "../buttons/ActionButton";
 import ActionButtons from "../buttons/ActionButtons";
 
 export const HistorialCard: React.FC<HistorialCardProps> = ({

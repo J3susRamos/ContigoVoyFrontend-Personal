@@ -10,8 +10,6 @@ import React, {
 import showToastFunction from "../../ToastStyle";
 import { Citas, FiltersCitas } from "@/interface";
 import { parseCookies } from "nookies";
-import showToast from "@/components/ToastStyle";
-import ConfirmDeleteModal from "@/components/ui/confirm-delete-modal";
 import EmptyTable from "@/components/ui/Table/EmptyTable";
 import { TableCitas } from "./TableCitas";
 import { FormCita } from "./form_cita_modal";
@@ -32,8 +30,6 @@ const ListarCitas = ({
 }: Props) => {
   const [citas, setCitas] = useState<Citas[]>([]);
   const toastShownRef = useRef(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const cookies = useMemo(() => parseCookies(), []);
   const [currentPage, setCurrentPage] = useState(1);
@@ -159,50 +155,6 @@ const ListarCitas = ({
     [cookies]
   );
 
-const handleDelete = async (idCita: number) => {
-  setIsDeleting(true);
-  try {
-    const cookies = parseCookies();
-    const token = cookies["session"];
-    const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/${idCita}`;
-    
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      showToastFunction("error", "Error al eliminar la cita");
-      return false;
-    }
-
-    const citaData = await response.json();
-    console.log("Delete response:", citaData);
-
-    // Update this condition to match your Laravel response structure
-    if (citaData.status_code === 200) {
-      showToastFunction("success", "Cita eliminada correctamente");
-      await handleGetCitas({ showToast: false });
-      return true;
-    } else {
-      const errorMessage = citaData.status_message || "Error de conexión. Intenta nuevamente.";
-      showToastFunction("error", errorMessage);
-      return false;
-    }
-  } catch (error) {
-    console.error("Delete error:", error);
-    showToast("error", "Error de conexión. Intenta nuevamente");
-    return false;
-  } finally {
-    setIsDeleting(false);
-  }
-};
-
   // Handle edit function
   const handleEdit = (cita: Citas) => {
     setEditingCita(cita);
@@ -261,7 +213,6 @@ const handleDelete = async (idCita: number) => {
         <>
           <TableCitas
             filteredCitas={citas}
-            onDeleteAction={(id) => setDeleteId(id)}
             onEditAction={handleEdit}
           />
           <Pagination
@@ -295,22 +246,6 @@ const handleDelete = async (idCita: number) => {
           }}
         />
       )}
-      <ConfirmDeleteModal
-        isOpen={deleteId !== null}
-        onClose={() => setDeleteId(null)}
-        onConfirm={() => {
-          if (deleteId) {
-            handleDelete(deleteId).then((success) => {
-              if (success) setDeleteId(null);
-            }).catch((error) => {
-              console.error("Error deleting cita:", error);
-              showToastFunction("error", "Error al eliminar la cita");
-            });
-          }
-        }}
-        isProcessing={isDeleting}
-        message="¿Estás seguro de eliminar esta cita?"
-      />
     </>
   );
 };
