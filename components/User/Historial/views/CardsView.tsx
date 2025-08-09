@@ -12,7 +12,7 @@ const CardsView: React.FC<{
       {atencion.map((item, idx) => (
         <div
           key={idx}
-          className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+          className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-400"
           style={{ color: "#634AE2" }}
         >
           <HistorialCard

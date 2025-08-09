@@ -41,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             size="sm"
             radius="full"
             variant="bordered"
-            className="rounded-full bg-[#EAEAFF] w-full md:w-48"
+            className="rounded-full bg-[#EAEAFF] w-full md:w-48 text-[#634AE2]"
             classNames={{
               input: "placeholder:text-[#9494F3]",
             }}
