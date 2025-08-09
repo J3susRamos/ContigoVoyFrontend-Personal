@@ -1,7 +1,7 @@
 "use client";
 import { ListaAtencion } from "@/interface";
-import ActionButton from "../buttons/ActionButton";
 import HistorialCard from "../card/HistorialCard";
+import ActionButton from "../buttons/ButtonVerMas";
 
 const CardsView: React.FC<{
   atencion: ListaAtencion[];

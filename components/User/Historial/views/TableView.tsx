@@ -1,6 +1,6 @@
 "use client";
 import { ListaAtencion } from "@/interface";
-import ActionButton from "../buttons/ActionButton";
+import ActionButton from "../buttons/ButtonVerMas";
 
 interface TableProps {
   atencion: ListaAtencion[];

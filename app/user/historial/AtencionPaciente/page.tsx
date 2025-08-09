@@ -1,6 +1,6 @@
 "use client";
 
-import CreateAtencion from "@/components/User/Historial/CreateAtencion";
+import CreateAtencion from "@/components/User/Atencion/CreateAtencion";
 
 export default function App() {
   return (
