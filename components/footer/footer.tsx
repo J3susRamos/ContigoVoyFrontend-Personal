@@ -1,6 +1,5 @@
 "use client";
 import RedesSociales from "@/components/footer/RedesSociales";
-import { Image } from "@heroui/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ReactSVG } from "react-svg";
@@ -21,7 +20,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="h-auto bg-[#634AE2] dark:bg-gray-900 text-[#634AE2] dark:text-white isolate">
+    <footer className="h-auto bg-[#634AE2] dark:bg-gray-900 dark:text-white text-white isolate">
 
       <div className="lg:max-w-6xl p-10 md:px-11 mx-auto">
         {/* Contenido Principal */}
@@ -55,17 +54,16 @@ export default function Footer() {
 
           {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h3 className="text-2xl font-semibold mb-4 text-white dark:text-white">Enlaces</h3>
-
+            <h3 className="text-2xl font-semibold mb-4 dark:text-white">Enlaces</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-2 sm:gap-y-4">
               {/* Columna izquierda */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-[#634AE2] dark:text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs dark:text-white">
                 {leftLinks.map((link) => (
                   <li key={link.text}>
                     <Link href={link.href} passHref legacyBehavior>
                       <a
                         title={link.title}
-                        className="relative group text-white dark:text-white transition-colors duration-300 cursor-pointer"
+                        className="relative group dark:text-white transition-colors duration-300 cursor-pointer"
                       >
                         {link.text}
                         {/* Línea debajo del texto */}
@@ -77,13 +75,13 @@ export default function Footer() {
               </ul>
 
               {/* Columna derecha */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-white dark:text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs dark:text-white">
                 {rightLinks.map((link) => (
                   <li key={link.text}>
                     <Link href={link.href} passHref legacyBehavior>
                       <a
                         title={link.title}
-                        className="relative group text-white dark:text-white transition-colors duration-300 cursor-pointer"
+                        className="relative group dark:text-white transition-colors duration-300  cursor-pointer"
                       >
                         {link.text}
                         {/* Línea debajo del texto */}
@@ -99,9 +97,7 @@ export default function Footer() {
           {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-2xl font-semibold mb-4 text-white">Contacto</h3>
-
-
+              <h3 className="text-2xl font-semibold mb-4 dark:text-white">Contacto</h3>
               <div className="flex flex-col space-y-3 items-start">
                 {/* Perú */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 text-start w-full">
@@ -111,9 +107,12 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="flex items-center space-x-1 border border-white dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
                   >
-                    <span className="text-[10px] text-white dark:text-white dark:text-shadow-md text-shadow-[0px_0px_2px_#fff]">Perú</span>
-                    <Image
-                      src="/WSP.webp"
+                    <span className="text-white duration-250  text-[10px]">
+                      Perú
+                    </span>
+                    <ReactSVG
+                      src="/WSP.svg"
+                      className="flex-shrink-0 w-[14px] h-[14px]"
                       title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
                       alt="WhatsApp Terapia Peru Psicológica Online"
                       width={14}
@@ -121,11 +120,9 @@ export default function Footer() {
                       className="flex-shrink-0 bg-[#634AE2] p-0.5 rounded-full dark:bg-transparent"
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0 text-white">
+                  <span className="text-[12px] mt-1 sm:mt-0 dark:text-white">
                     +51 983 027 828
                   </span>
-
-
                 </div>
 
                 {/* Argentina */}
@@ -136,21 +133,25 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="flex items-center space-x-1 border border-white dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
                   >
-                    <span className="text-[10px] text-white dark:text-white dark:text-shadow-md text-shadow-[0px_0px_2px_#fff]">Argentina</span>
-                    <Image
-                      src="/WSP.webp"
-                      title="Whatsapp Terapia Psicológica Argentina Online Contigo Voy"
-                      alt="WhatsApp Terapia Argentina Psicológica Online"
-                      width={14}
-                      height={14}
-                      className="flex-shrink-0 bg-[#634AE2] p-0.5 rounded-full dark:bg-transparent"
+                    <span className="text-white duration-250  text-[10px]">
+                      Argentina
+                    </span>
+                    <ReactSVG
+                      src="/WSP.svg"
+                      className="flex-shrink-0 w-[14px] h-[14px]"
+                      title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
+                      beforeInjection={(svg) => {
+                        svg.classList.add(
+                          "fill-gray-100",
+                          "group-hover:fill-[#634AE2]",
+                          "duration-250"
+                        );
+                      }}
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0 text-white">
+                  <span className="text-[12px] mt-1 sm:mt-0 dark:text-white">
                     +54 922 130 326 75
                   </span>
-
-
                 </div>
               </div>
             </div>
