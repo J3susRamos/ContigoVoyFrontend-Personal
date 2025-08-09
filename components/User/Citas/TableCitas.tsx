@@ -11,7 +11,6 @@ import { Citas } from "@/interface";
 
 interface TableCitasProps {
     filteredCitas: Citas[];
-    onDeleteAction: (id: number) => void;
     onEditAction: (cita: Citas) => void;
 }
 
@@ -27,12 +26,8 @@ const HEADERS = [
 
 export const TableCitas: React.FC<TableCitasProps> = ({
     filteredCitas,
-    onDeleteAction,
     onEditAction,
 }) => {
-    const handleDelete = (cita: Citas) => {
-        onDeleteAction(Number(cita.idCita));
-    };
 
     const handleEdit = (cita: Citas) => {
         if (canEditCita(cita)) {
@@ -73,7 +68,6 @@ export const TableCitas: React.FC<TableCitasProps> = ({
                 { label: "Hora", value: formatCitaTime(cita.fecha_inicio) },
                 { label: "Duración", value: cita.duracion },
             ]}
-            onDelete={() => handleDelete(cita)}
             onEdit={() => handleEdit(cita)}
         >
             <CitaActionButtons

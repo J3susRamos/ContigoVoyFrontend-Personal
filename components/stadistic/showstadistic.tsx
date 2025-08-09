@@ -60,7 +60,7 @@ export default function ShowStadistic() {
                   className={getButtonClasses(view === btn.key)}
                   onClick={() => handleViewChange(btn.key)}
                   aria-pressed={view === btn.key}
-                  role="tab"
+                  role="button"
                 >
                   {btn.name}
                 </Button>

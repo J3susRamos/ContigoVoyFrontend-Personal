@@ -10,8 +10,7 @@ export const useAdminPacienteData = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      let response;
-      response = await GetPacientesDisabled();
+      const response = await GetPacientesDisabled();
       setData(response);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch psychologists');
