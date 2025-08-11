@@ -2,19 +2,28 @@ import { useState } from "react";
 import { ThemeToggle } from "../../Themetoggle";
 import { Icons } from "@/icons";
 import Link from "next/link";
-import { NavItems } from "@/interface";
+import { NavItems, UsuarioLocalStorageUpdate } from "@/interface";
 import { Button } from "@heroui/react";
 import { useAuth } from "@/components/auth/loginsec";
 import { useEffect } from "react";
 import { UsuarioLocalStorage } from "@/interface";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import Editar from "@/components/Editar";
+import EditarIcon from "@/icons/EditarIcon";
 
 export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { logout } = useAuth();
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
   const pathname = usePathname();
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const handleUpdateUser = (updatedUser: UsuarioLocalStorageUpdate) => {
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -131,6 +140,16 @@ export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
               </svg>
             )}
             <Button
+                className="text-white px-4 py-6 flex justify-center text-base bg-[#634AE2] hover:bg-[#4b36b3] hover:text-yellow-300 transition-colors rounded-full w-full h-12"
+                onPress={() => {
+                  setIsEditOpen(true);
+                  closeMenu();
+                }}
+              >
+                <EditarIcon/>
+                <p className="text-white">Editar Perfil</p>
+            </Button>
+            <Button
               radius="full"
               className="w-full border-primary border-2 dark:border-primary-foreground text-primary dark:text-primary-foreground bg-background dark:bg-background hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary-foreground dark:hover:text-primary transition-all duration-200 h-12 px-6 text-medium font-semibold shadow-lg hover:shadow-xl"
               onPress={() => {
@@ -143,7 +162,11 @@ export function MobileNavUserHamburger({ navItems }: { navItems: NavItems[] }) {
           </div>
         </div>
       </div>
-
+      <Editar
+        isEditOpen={isEditOpen}
+        setIsEditOpen={setIsEditOpen}
+        onUpdateUser={handleUpdateUser}
+      />
       {/* Overlay para cerrar el menú al hacer clic fuera */}
       {isMenuOpen && (
         <div
