@@ -195,7 +195,7 @@ export default function ReservarPsiPreview({
                   ))}
                 {psicologo.especialidades.length > 3 && (
                   <span className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">
-                    +{psicologo.especialidades.length - 3} más
+                    +{psicologo.especialidades.length - 3}
                   </span>
                 )}
               </div>
