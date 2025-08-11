@@ -1,6 +1,6 @@
 "use client";
 import { ListaAtencion } from "@/interface";
-import ActionButton from "../buttons/ActionButton";
+import ActionButton from "../buttons/ButtonVerMas";
 
 interface TableProps {
   atencion: ListaAtencion[];
@@ -43,7 +43,7 @@ const TableView: React.FC<{
                 <td
                   key={column.uid}
                   className={`
-                    bg-white text-[#634AE2] font-medium text-sm lg:text-base text-center align-middle py-6 px-3 
+                  bg-background dark:text-white text-[#634AE2] font-medium text-sm lg:text-base text-center align-middle py-6 px-3 
                     transition-all duration-200 group-hover:shadow-lg
                     ${idx === 0 ? 'rounded-l-2xl' : ''}
                     ${idx === headerColumns.length - 1 ? 'rounded-r-2xl' : ''}

@@ -41,7 +41,6 @@ const defaultValues = {
 export default function App() {
   const router = useRouter();
   const [base64Image, setBase64Image] = useState<string | null>(null);
-  const [url, setUrl] = useState("");
   const [country, setCountry] = useState<Country | null>(null);
   const [prefix, setPrefix] = useState("+51");
 
@@ -67,7 +66,6 @@ export default function App() {
       const webpImage = await convertImageToWebP(file);
       const base64 = await convertToBase64(webpImage);
       setBase64Image(base64);
-      setUrl("");
     } catch (error) {
       console.error("Error processing image:", error);
       showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
@@ -80,7 +78,6 @@ export default function App() {
     if (value) {
       const formattedDate = `${value.day.toString().padStart(2, "0")}/${value.month.toString().padStart(2, "0")}/${value.year}`;
       onChange(formattedDate);
-      console.log(formattedDate);
     } else {
       onChange("");
     }
@@ -126,7 +123,7 @@ export default function App() {
         email: data.email,
         celular: `${prefix} ${data.celular}` ,
         fecha_nacimiento: data.fecha_nacimiento,
-        imagen: base64Image || url,
+        imagen: data.imagen || base64Image || '',
         genero: data.genero,
         ocupacion: data.ocupacion,
         estadoCivil: data.estadoCivil,
@@ -135,7 +132,8 @@ export default function App() {
         departamento: data.departamento,
         password: data.password,
       };
-  
+      console.log(pacienteData)
+
       const cookies = parseCookies();
       const token = cookies["session"];
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -164,9 +162,7 @@ export default function App() {
         showToast("success", "Paciente creado correctamente");
         reset(defaultValues);
         setBase64Image(null);
-        setUrl("");
         setCountry(null);
-        // eliminar el idCita de la sesion
         sessionStorage.removeItem('idCita');
         
         router.push('/user/pacientes/');
@@ -190,12 +186,13 @@ export default function App() {
   };
 
   return (
-    <div className="p-4 bg-[#eaeded] dark:bg-background min-h-screen">
+    <div className="p-4 bg-[#eaeded] dark:bg-card min-h-screen">
       <HeaderUser title="Datos del paciente" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid lg:grid-cols-2 gap-6 text-[#634AE2] font-bold text-normal">
           {/* Primera columna */}
-          <div className="bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4">
+          <div className="bg-[#eaeded] dark:bg-[#1e1e23] rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4">
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormFieldInput label="Nombre" name="nombre" register={register} errors={errors} />
               <FormFieldInput label="DNI" name="DNI" maxLenght={8} register={register} errors={errors} />
@@ -280,7 +277,7 @@ export default function App() {
                 ]}
               />
             </div>
-            <div className="flex gap-2 items-end justify-center">
+            <div className="grid grid-cols-2 gap-4 items-end justify-center">
               <select
                 value={prefix}
                 onChange={e => setPrefix(e.target.value)}
@@ -319,7 +316,8 @@ export default function App() {
           </div>
 
           {/* Segunda columna */}
-          <div className="bg-card dark:bg-card rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4 mt-6 lg:mt-0">
+          <div className="bg-[#eaeded] dark:bg-[#1e1e23] rounded-2xl p-4 border dark:border-border shadow-lg dark:shadow-xl flex flex-col gap-4 mt-6 lg:mt-0">
+
             <FormFieldInput label="Correo electrónico" name="email" register={register} errors={errors} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -374,7 +372,7 @@ export default function App() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+            className={`bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold ${isSubmitting? "cursor-not-allowed": "cursor-pointer"}`}
             >
             {isSubmitting ? "Enviando..." : "Registrar"}
           </button>

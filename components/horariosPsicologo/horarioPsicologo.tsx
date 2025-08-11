@@ -37,8 +37,11 @@ const obtenerEtiquetaDia = (fecha: Date, hoyISO: string, mananaISO: string, form
 
 const BotonHorario: React.FC<BotonHorarioProps> = ({ hora, ocupada, onClick }) => (
   <button
-    className={`w-full p-3 rounded-full font-semibold ${ocupada ? "line-through bg-[#EDEDED] text-[#CACACB]" : "bg-[#EAEAFF] text-[#634AE2]"
-      }`}
+    className={`w-full p-3 rounded-full font-semibold transition-colors duration-200 ${
+      ocupada
+        ? "line-through bg-[#EDEDED] dark:bg-[#3C3C4A] text-[#CACACB] dark:text-[#666]"
+        : "bg-[#EAEAFF] dark:bg-[#2A2A38]  text-[#634AE2] dark:text-[#634AE2]"
+    }`}
     disabled={ocupada}
     onClick={onClick}
   >
@@ -86,7 +89,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
   const formateadorFecha = new Intl.DateTimeFormat("es-ES", { day: "2-digit", month: "short" });
 
   return (
-    <div className="p-5 bg-white w-full max-w-4xl mx-auto">
+    <div className="p-5 bg-white dark:bg-gray-900 text-black dark:text-white w-full max-w-4xl mx-auto rounded-xl">
       <h2 className="text-xl font-bold text-center text-[#634AE2]">¡Escoge el mejor horario que se adapte a ti!</h2>
       <div className="flex justify-center mt-2">
         <ZonaHorariaSelect onChange={setZonaHoraria} />
@@ -96,7 +99,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
         <button
           onClick={() => cambiarSemana(-1)}
           disabled={semanaOffset === 0}
-          className={`mt-5 text-4xl font-bold text-[#634AE2] ${semanaOffset === 0 ? "opacity-50" : ""}`}
+          className={`mt-5 text-4xl font-bold text-[#634AE2] dark:text-[#AFAFFC] ${semanaOffset === 0 ? "opacity-50" : ""}`}
         >
           &lt;
         </button>
@@ -117,7 +120,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
               const diaCapitalizado = diaNombre.charAt(0).toUpperCase() + diaNombre.slice(1);
 
               return (
-                <div key={fecha.toISOString()} className="text-center p-3 w-full rounded-full bg-[#9494F3] text-white">
+                <div key={fecha.toISOString()} className="text-center p-3 w-full rounded-full bg-[#634AE2] text-white dark:text-[#111827] dark:bg-[#634AE2]" >
                   <p>{diaCapitalizado}</p>
                   <p className="text-md">{obtenerEtiquetaDia(fecha, hoyISO, mananaISO, formateadorFecha)}</p>
                 </div>
@@ -166,7 +169,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
                         }}
                       />
                     ) : (
-                      <button key={`empty-${idx}`} className="w-full p-3 rounded-full bg-[#EDEDED] text-[#CACACB]" disabled>-</button>
+                      <button key={`empty-${idx}`} className="w-full p-3 rounded-full bg-[#F0F0F0] dark:bg-[#3C3C4A] text-[#CACACB] dark:text-[#888]" disabled>-</button>
                     )
                   )}
                 </div>

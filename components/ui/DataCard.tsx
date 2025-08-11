@@ -1,3 +1,4 @@
+import { Ban } from "lucide-react";
 import React, { ReactNode } from "react";
 
 type InfoItem = {
@@ -12,15 +13,16 @@ interface Props {
   };
   onClick?: () => void;
   onEdit?: () => void;
-  onDelete?: () => void;
+  onDisable?: () => void;
   info?: InfoItem[];
   children?: ReactNode;
+  llave?: boolean;
 }
 
-const DataCard = ({ onEdit, onDelete, paciente, info, children, onClick}: Props) => {
+const DataCard = ({ onEdit, onDisable, paciente, info, children, onClick, llave = false }: Props) => {
   return (
     <div>
-      <div className="flex items-center justify-between mb-4 cursor-pointer hover:bg-[#2e2e31] p-6" onClick={onClick}>
+      <div className="flex items-center justify-between mb-4 cursor-pointer p-6" onClick={onClick}>
         <div>
           <h3 className="font-semibold text-lg text-gray-900 dark:text-foreground">
             {paciente.nombre}
@@ -61,19 +63,11 @@ const DataCard = ({ onEdit, onDelete, paciente, info, children, onClick}: Props)
           </span>
         </button>
         <button
-          onClick={onDelete}
+          onClick={onDisable}
           className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-muted transition-colors"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="30px"
-            viewBox="0 -960 960 960"
-            width="30px"
-            fill="#B158FF"
-          >
-            <path d="M282.98-140q-25.79 0-44.18-18.39t-18.39-44.18v-532.05H180v-50.25h174.05v-30.51h251.9v30.51H780v50.25h-40.41v532.05q0 25.79-18.39 44.18T677.02-140H282.98Zm96.56-133.23h50.25v-379.08h-50.25v379.08Zm150.67 0h50.25v-379.08h-50.25v379.08Z" />
-          </svg>
-          <span className="text-xs text-[#B158FF] mt-1">Eliminar</span>
+          <Ban className="text-primary dark:text-[#bbbafe]" size={30} />
+          <span className="text-xs text-primary dark:text-[#bbbafe] mt-1">{!llave ? "Deshabilitar" : "Habilitar"}</span>
         </button>
       </div>
     </div>

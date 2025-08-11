@@ -8,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { CitaMensual } from "@/interface";
-import { CustomTooltip } from "../CustomTooltipComponent";
+import { CustomTooltip } from "../custom/CustomTooltipComponent";
 
 function LineChartGrafic({ datastadistics }: { datastadistics: CitaMensual[] }) {
   const data = datastadistics.map(item => ({

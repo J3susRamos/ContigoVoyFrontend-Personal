@@ -198,6 +198,20 @@ export interface PsicologoPreviewData {
   };
 }
 
+export interface actulizarPsicologo{
+  nombre: string,
+  apellido: string,
+  imagen: string,
+  especialidades: string[]
+}
+export interface EspecialidadesPsicologoResponse {
+  status_code: number;
+  status_message: string;
+  description: string;
+  result: string[];
+  errorBag: never[];
+}
+
 export interface PsicologoApiResponse {
   status_code: number;
   status_message: string;
@@ -211,6 +225,19 @@ export interface PsicologoApiResponse {
       last_page: number;
     };
   };
+}
+
+export interface PacienteDisabled {
+  idPaciente: number,
+  codigo: string,
+  DNI: string,
+  nombre: string,
+  email: string,
+  celular: string,
+  genero: string,
+  fecha_nacimiento: string,
+  edad: number,
+  ultima_cita_fecha: string
 }
 
 export interface PsicologoApiResponseAlone {
@@ -239,6 +266,16 @@ export interface UsuarioLocalStorage {
   rol: string,
   imagen: string,
   idpsicologo?: number,
+}
+export interface UsuarioLocalStorageUpdate {
+  id: number,
+  nombre: string,
+  apellido: string,
+  email: string,
+  rol: string,
+  imagen: string,
+  idpsicologo?: number,
+  especialidades: string[]
 }
 
 //Usuario LocalStorage

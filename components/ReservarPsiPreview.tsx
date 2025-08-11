@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
 import Image from "next/image";
 import { User } from "lucide-react";
+import { countryPrefixes } from "@/utils/CountryPrefixes";
 
 export default function ReservarPsiPreview({
   psicologo,
@@ -20,6 +21,7 @@ export default function ReservarPsiPreview({
   const [horaSeleccionada, setHoraSeleccionada] = useState("");
   const [fechaSeleccionada, setFechaSeleccionada] = useState("");
   // Estados para los campos del formulario
+  const [prefix, setPrefix] = useState(countryPrefixes[0].code);
   const [error, setError] = useState<string | null>(null);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -71,17 +73,6 @@ export default function ReservarPsiPreview({
       return;
     }
 
-    // Validación de número
-    const telefonoRegex = /^[0-9]{9,}$/;
-    if (!telefonoRegex.test(data.celular)) {
-      setError(
-        "El número de celular debe contener solo números y tener al menos 9 dígitos."
-      );
-      setLoading(false);
-      return;
-    }
-
-    // Validación de correo electrónico
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!correoRegex.test(data.correo)) {
       setError("Por favor, ingresa un correo electrónico válido.");
@@ -90,7 +81,8 @@ export default function ReservarPsiPreview({
     }
 
     if (data.celular) {
-      data.celular = String(data.celular);
+      const cleanNumber = data.celular.replace(/\D/g, "");
+      data.celular = `${prefix} ${cleanNumber}`;
     }
 
     try {
@@ -260,8 +252,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "border-[#d8dceb] bg-white dark:bg-gray-900 text-[#a8b0d3]",
           header: "border-b-[1px] border-[#d8dceb]",
           footer: "border-t-[1px] border-[#d8dceb]",
           closeButton: "hover:bg-white/5 active:bg-white/10",
@@ -327,8 +319,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "border-[#d8dceb] bg-white dark:bg-gray-900 text-[#a8b0d3]",
           header: "border-b-[1px] border-[#d8dceb]",
           footer: "border-t-[1px] border-[#d8dceb]",
           closeButton: "hover:bg-white/5 active:bg-white/10",
@@ -346,11 +338,13 @@ export default function ReservarPsiPreview({
                 onClose={() => setIsScheduleOpen(false)}
                 onOpenConfirm={() => setIsConfirmOpen(true)}
                 onSelectHorario={handleSelectHorario}
-              />
+              /> 
               <div className="w-full flex justify-center">
                 <Button
                   onPress={() => setIsScheduleOpen(false)}
-                  className="rounded-3xl bg-[#E7E7FF] px-6 sm:px-8 py-1 sm:py-0 text-[#634AE2] font-light"
+                  className="rounded-3xl px-6 sm:px-8 py-1 sm:py-0 transition-colors duration-200 font-bold
+                              bg-[#E7E7FF] text-[#634AE2] hover:bg-[#3d1fd1] hover:text-white 
+                              dark:bg-[#2A2A38] dark:text-[#634AE2] dark:hover:bg-[#634AE2] dark:hover:text-[#111827] "
                 >
                   Cancelar
                 </Button>
@@ -367,8 +361,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "border-[#d8dceb] bg-[#ffffff] dark:bg-[#ffffff] text-[#a8b0d3]",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "bg-[#F5F5FF] dark:bg-[#1E1E2F] text-[#634AE2] dark:text-[#ffffff]",
         }}
       >
         <ModalContent>
@@ -394,14 +388,29 @@ export default function ReservarPsiPreview({
                 <label className="block text-[#634AE2] text-sm mb-1">
                   Número de celular
                 </label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-full px-4 py-2 outline-none focus:border-[#634AE2]"
-                  placeholder="Número de celular"
-                  name="celular"
-                  value={formData.celular}
-                  onChange={handleChange}
-                />
+                <div className="flex">
+                  <select
+                    value={prefix}
+                    onChange={(e) => setPrefix(e.target.value)}
+                    className="rounded-l-full border border-gray-300 px-2 py-2  focus:border-[#634AE2] outline-none"
+                    style={{ minWidth: 80 }}
+                  >
+                    {countryPrefixes.map((prefix, index) => (
+                      <option key={index} value={prefix.code}>
+                        {prefix.name} ({prefix.code})
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 rounded-r-full px-4 py-2 outline-none focus:border-[#634AE2]"
+                    placeholder="Número de celular"
+                    name="celular"
+                    value={formData.celular}
+                    onChange={handleChange}
+                    style={{ borderLeft: "none" }}
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-[#634AE2] text-sm mb-1">
@@ -441,8 +450,8 @@ export default function ReservarPsiPreview({
         backdrop="opaque"
         classNames={{
           body: "py-6",
-          backdrop: "bg-[#d8dceb]/50 backdrop-opacity-40",
-          base: "bg-[#634AE2] text-white rounded-3xl",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "bg-[#F5F5FF] dark:bg-[#1E1E2F] text-[#634AE2] dark:text-[#ffffff]",
           header: "border-b-[1px] border-[#d8dceb]",
           footer: "border-t-[1px] border-[#d8dceb]",
           closeButton: "hover:bg-white/5 active:bg-white/10",

@@ -1,107 +1,104 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import Clients from "./clients";
-import Appointments from "./appointments";
-import Sales from "./sales";
-import Performance from "./performance";
-import { DateRangeFilter } from "../ui/Filters/DateRangeFilter"
+import { DateRangeFilter } from "../ui/Filters/DateRangeFilter";
+import LoadingSkeleton from "./skeletons/LoadingSkeleton";
+import ViewLoadingSkeleton from "./skeletons/ViewLoadingSkeleton";
+import ClientesSection from "./sections/ClientesSection";
+import CitasSection from "./sections/CitasSection";
+import VentasSection from "./sections/VentasSection";
+import RendimientoSection from "./sections/RendimientoSection";
+import useStadistics from "./hooks/useStadistics";
+
 export default function ShowStadistic() {
-  const [view, setView] = useState("clientes");
-  const [, setRol] = useState(""); // rol del usuario
-  const [allowedViews, setAllowedViews] = useState<string[]>([]); // vistas permitidas
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const {
+    view,
+    setView,
+    userRole,
+    setUserRole,
+    dateRange,
+    setDateRange,
+    isLoading,
+    setIsLoading,
+    isViewLoading,
+    visibleButtons,
+    handleViewChange,
+    getButtonClasses,
+  } = useStadistics();
 
   useEffect(() => {
-    const userJson = localStorage.getItem("user");
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      setRol(user.rol);
-
-      if (user.rol === "ADMIN") {
-        setAllowedViews(["clientes", "citas", "ventas", "rendimiento"]);
-      } else if (user.rol === "PSICOLOGO") {
-        setAllowedViews(["clientes", "citas", "ventas"]);
-        setView("clientes");
-      } else {
-        setAllowedViews(["clientes"]);
-        setView("clientes");
+    try {
+      const userJson = localStorage.getItem("user");
+      if (userJson) {
+        const user = JSON.parse(userJson);
+        setUserRole(user.rol);
+        if (userRole !== "ADMIN") {
+          setView("clientes");
+          setIsLoading(false);
+        }
       }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
     }
-  }, []);
+  }, [setUserRole, setView, setIsLoading, userRole]);
 
-  const allButtons = [
-    { name: "Clientes", key: "clientes" },
-    { name: "Citas", key: "citas" },
-    { name: "Ventas", key: "ventas" },
-    { name: "Rendimiento", key: "rendimiento" },
-  ];
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
-  const visibleButtons = allButtons.filter(btn =>
-    allowedViews.includes(btn.key)
-  );
   return (
-    <div className="bg-[#f8f8ff] dark:bg-background min-h-screen">
-      {/* Botones - Responsivos */}
-      <div className="w-full bg-primary dark:bg-primary p-4">
-        <div className="flex flex-wrap justify-center md:justify-start items-center gap-2 md:gap-4 max-w-7xl mx-auto">
-          {visibleButtons.map((btn, index) => (
-            <Button
-              key={index}
-              className={`${
-                view === btn.key
-                  ? "bg-white dark:bg-background text-primary dark:text-primary hover:bg-white hover:text-primary/80 dark:hover:bg-background dark:hover:text-primary/80"
-                  : "bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground hover:bg-primary/80 hover:text-white dark:hover:bg-primary/80 dark:hover:text-white"
-              } text-sm md:text-base font-bold rounded-full px-4 md:px-8 py-2 transition-colors whitespace-nowrap`}
-              onClick={() => setView(btn.key)}
-            >
-              {btn.name}
-            </Button>
-          ))}
-          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
+    <div className="bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+      {/* Header con botones de navegación */}
+      <header className="w-full bg-gradient-to-r from-primary to-primary/90 dark:from-primary dark:to-primary/80 shadow-lg">
+        <div className="max-w-7xl mx-auto p-4 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            {/* Botones de navegación */}
+            <nav className="flex flex-wrap justify-center md:justify-start items-center gap-2 md:gap-3">
+              {visibleButtons.map((btn) => (
+                <Button
+                  key={btn.key}
+                  className={getButtonClasses(view === btn.key)}
+                  onClick={() => handleViewChange(btn.key)}
+                  aria-pressed={view === btn.key}
+                  role="button"
+                >
+                  {btn.name}
+                </Button>
+              ))}
+            </nav>
+
+            {/* Filtro de fechas */}
+            <div className="flex justify-center md:justify-end">
+              <DateRangeFilter
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Contenido */}
-      <div className="bg-[#f8f8ff] dark:bg-background px-2 md:px-4">
-        {view === "clientes" && allowedViews.includes("clientes") && <Clientes />}
-        {view === "citas" && allowedViews.includes("citas") && <Citas />}
-        {view === "ventas" && allowedViews.includes("ventas") && <Ventas />}
-        {view === "rendimiento" && allowedViews.includes("rendimiento") && <Rendimiento />}
-      </div>
-    </div>
-  );
-}
+      {/* Contenido principal */}
+      <main className="px-4 md:px-6 py-6 md:py-8 max-w-7xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 min-h-[600px] overflow-hidden">
+          <div role="tabpanel" className="p-6 md:p-8">
+            <div className="relative min-h-[500px]">
+              {/* Skeleton */}
+              <div className={`absolute inset-0 transition-opacity duration-300 ${isViewLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                <ViewLoadingSkeleton viewKey={view} />
+              </div>
 
-// Componentes
-function Clientes() {
-  return (
-    <div className="text-xl font-bold text-primary dark:text-primary-foreground">
-      <Clients />
-    </div>
-  );
-}
-
-function Citas() {
-  return (
-    <div className="text-xl font-bold text-primary dark:text-primary-foreground">
-      <Appointments />
-    </div>
-  );
-}
-
-function Ventas() {
-  return (
-    <div className="text-xl font-bold text-primary dark:text-primary-foreground">
-      <Sales />
-    </div>
-  );
-}
-
-function Rendimiento() {
-  return (
-    <div className="text-xl font-bold text-primary dark:text-primary-foreground">
-      <Performance />
+              {/* Contenido real */}
+              <div className={`transition-opacity duration-300 ${isViewLoading ? 'opacity-0' : 'opacity-100 delay-100'}`}>
+                {view === "clientes" && <ClientesSection />}
+                {view === "citas" && <CitasSection />}
+                {view === "ventas" && <VentasSection />}
+                {view === "rendimiento" && <RendimientoSection />}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

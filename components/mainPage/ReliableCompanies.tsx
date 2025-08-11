@@ -84,7 +84,7 @@ export default function RealiableCompanies() {
                 src={company.icon}
                 alt={company.alt}
                 fill
-                className="object-contain"
+                className="object-contain dark:brightness-0 dark:saturate-100 dark:invert"
               />
             </div>
           ))}
@@ -103,7 +103,7 @@ export default function RealiableCompanies() {
                     src={company.icon}
                     alt={company.alt}
                     fill
-                    className="object-contain"
+                    className="object-contain dark:brightness-0 dark:saturate-100 dark:invert"
                   />
                 </div>
               </div>

@@ -6,7 +6,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { renderCustomizedLabel, CustomTooltip } from "../CustomTooltipComponent";
+import { renderCustomizedLabel, CustomTooltip } from "../custom/CustomTooltipComponent";
 import { DashboardResult } from "@/interface";
 
 const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];

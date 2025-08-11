@@ -1,4 +1,5 @@
-import { DatePaciente } from "../DatePaciente";
+import { DatePaciente } from "../modalComponents/DatePaciente";
+
 
 const PatientModal: React.FC<{
   isOpen: boolean;

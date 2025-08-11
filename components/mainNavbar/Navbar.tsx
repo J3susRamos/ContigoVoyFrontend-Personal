@@ -2,9 +2,9 @@
 import Link from "next/link";
 import React from "react";
 import { DesktopNav } from "./DesktopNav";
-import Image from "next/image";
 import { MobileNav } from "./MobileNav";
 import { NavLink, NavItem } from "./types/navBar.types";
+import { ReactSVG } from "react-svg";
 
 const serviciosLinks: NavLink[] = [
   { name: "Terapia para Niños", link: "/servicios/terapia/infantes" },
@@ -89,22 +89,22 @@ const navItemsMobil : NavItem[]= [
 
 const Navbar = () => {
   return (
-    <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
+    <nav className="bg-white dark:bg-gray-900 h-[80px] flex items-center sticky w-full z-40 top-0 border-b-2 border-gray-300 dark:border-gray-700">
       <div className="w-full px-4 lg:px-6 flex items-center justify-between relative">
         <Link
           href="/"
           className="ml-16  xl:ml-[60px] min-[1450px]:ml-[58px] z-10"
         >
-          <Image
-            src="/LOGO.webp"
+          <ReactSVG
+            src="/logoHeader.svg"
             title="Contigo Voy Psicología | Centro Psicologico Online"
-            alt="Centro Psicológico Contigo Voy Online"
             width={143}
             height={50}
-            priority
             style={{ height: "auto" }}
             className="w-[143px] lg:max-w-[160px] h-auto"
-            suppressHydrationWarning
+            beforeInjection={(svg) => {
+              svg.classList.add("fill-[#5d4bdd]", "dark:fill-gray-100");
+            }}
           />
         </Link>
         <div className="flex items-center gap-x-5">
