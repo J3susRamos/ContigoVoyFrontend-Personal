@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Paciente, UltimaAtencion } from "@/interface";
 import showToast from "@/components/ToastStyle";
 import { parseCookies } from "nookies";
-import DetallesPaciente from "../Historial/DetallesPaciente";
+import DetallesPaciente from "../Historial/modalComponents/DetallesPaciente";
 import { getPaciente } from "@/components/User/Pacientes/getPacienteData";
 import { getUltimaAtencion } from "@/components/User/Pacientes/getUltimaAtencionData";
 

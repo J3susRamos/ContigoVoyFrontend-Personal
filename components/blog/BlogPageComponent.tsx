@@ -59,6 +59,7 @@ export default function BlogPageComponent({
   } = useImageCarousel(selectedBlog);
 
   const handleSelectBlog = (blog: BlogPreviewData) => {
+    document.body.scrollTop = 0;
     setSelectedBlog(blog);
   };
 

@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Icons} from "@/icons";
 import {HistorialPacienteProps, ListaAtencion} from "@/interface";
 import {parseCookies} from "nookies";
-import {DetallesPaciente} from "./DetallesPaciente";
+import DetallesPaciente from "./DetallesPaciente";
 
 const headerColumns = [
     {uid: 1, name: "#"},

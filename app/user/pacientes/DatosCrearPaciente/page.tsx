@@ -41,7 +41,6 @@ const defaultValues = {
 export default function App() {
   const router = useRouter();
   const [base64Image, setBase64Image] = useState<string | null>(null);
-  const [url, setUrl] = useState("");
   const [country, setCountry] = useState<Country | null>(null);
   const [prefix, setPrefix] = useState("+51");
 
@@ -67,7 +66,6 @@ export default function App() {
       const webpImage = await convertImageToWebP(file);
       const base64 = await convertToBase64(webpImage);
       setBase64Image(base64);
-      setUrl("");
     } catch (error) {
       console.error("Error processing image:", error);
       showToast("error", "Error al procesar la imagen. Intenta nuevamente.");
@@ -80,7 +78,6 @@ export default function App() {
     if (value) {
       const formattedDate = `${value.day.toString().padStart(2, "0")}/${value.month.toString().padStart(2, "0")}/${value.year}`;
       onChange(formattedDate);
-      console.log(formattedDate);
     } else {
       onChange("");
     }
@@ -118,7 +115,7 @@ export default function App() {
   const onSubmit = async (data: FormPaciente) => {
   
     try {
-      const pacienteData: Omit<Paciente2, "idPaciente"> = {
+      const pacienteData: Omit<Paciente2, "idPaciente" | "password"> = {
         DNI: data.DNI,
         nombre: data.nombre,
         apellidoPaterno: data.apellidoPaterno,
@@ -126,16 +123,15 @@ export default function App() {
         email: data.email,
         celular: `${prefix} ${data.celular}` ,
         fecha_nacimiento: data.fecha_nacimiento,
-        imagen: base64Image || url,
+        imagen: base64Image || '',
         genero: data.genero,
         ocupacion: data.ocupacion,
         estadoCivil: data.estadoCivil,
         direccion: data.direccion,
         pais: data.pais,
         departamento: data.departamento,
-        password: data.password,
       };
-  
+
       const cookies = parseCookies();
       const token = cookies["session"];
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -164,9 +160,7 @@ export default function App() {
         showToast("success", "Paciente creado correctamente");
         reset(defaultValues);
         setBase64Image(null);
-        setUrl("");
         setCountry(null);
-        // eliminar el idCita de la sesion
         sessionStorage.removeItem('idCita');
         
         router.push('/user/pacientes/');
@@ -216,7 +210,7 @@ export default function App() {
                   render={({ field: { onChange, value } }) => (
                     <DatePicker
                       showMonthAndYearPickers
-                      label=""
+                      aria-label="Fecha de nacimiento"
                       selectorButtonPlacement="start"
                       classNames={{
                         inputWrapper:
@@ -281,7 +275,7 @@ export default function App() {
                 ]}
               />
             </div>
-            <div className="flex gap-2 items-end justify-center">
+            <div className="grid grid-cols-2 gap-4 items-end justify-center">
               <select
                 value={prefix}
                 onChange={e => setPrefix(e.target.value)}
@@ -311,7 +305,7 @@ export default function App() {
                   type="button"
                   className="absolute top-2 right-2 bg-white/80 dark:bg-white/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-100 transition-colors"
                   onClick={() => setBase64Image('')}
-                  aria-label="Eliminar imagen"
+                  aria-label="Limpiar imagen"
                   >
                   <X className="w-5 h-5 text-primary dark:bg-text-primary" />
                 </button>
@@ -376,7 +370,7 @@ export default function App() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+            className={`bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold ${isSubmitting? "cursor-not-allowed": "cursor-pointer"}`}
             >
             {isSubmitting ? "Enviando..." : "Registrar"}
           </button>
