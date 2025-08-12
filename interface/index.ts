@@ -204,6 +204,20 @@ export interface actulizarPsicologo{
   imagen: string,
   especialidades: string[]
 }
+
+export interface ActualizarPerfilCompletoPsicologo {
+  nombre: string,
+  apellido: string,
+  email: string,
+  fecha_nacimiento: string,
+  imagen: string,
+  titulo: string,
+  introduccion: string,
+  pais: string,
+  genero: string,
+  experiencia: number,
+  especialidades: string[]
+}
 export interface EspecialidadesPsicologoResponse {
   status_code: number;
   status_message: string;

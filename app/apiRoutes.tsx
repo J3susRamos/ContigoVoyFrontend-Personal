@@ -12,6 +12,7 @@ import {
   CitaMensual,
   FormCita,
   actulizarPsicologo,
+  ActualizarPerfilCompletoPsicologo,
   EspecialidadesPsicologoResponse,
   PacienteDisabled,
 } from "@/interface";
@@ -417,6 +418,29 @@ export async function actualizarPsicologo(
 
   if (!res.ok) {
     throw new Error("Error al actualizar el psicologo");
+  }
+}
+
+//Para que los psicologos actualicen su perfil completo con todos los datos profesionales
+export async function actualizarPerfilCompletoPsicologo(
+  id: number | null,
+  data: ActualizarPerfilCompletoPsicologo
+): Promise<void> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/update/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al actualizar el perfil del psicólogo");
   }
 }
 
