@@ -195,7 +195,7 @@ export default function ReservarPsiPreview({
                   ))}
                 {psicologo.especialidades.length > 3 && (
                   <span className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">
-                    +{psicologo.especialidades.length - 3} más
+                    +{psicologo.especialidades.length - 3}
                   </span>
                 )}
               </div>
@@ -248,7 +248,7 @@ export default function ReservarPsiPreview({
       <Modal
         isOpen={isProfileOpen}
         onOpenChange={setIsProfileOpen}
-        size={"2xl"}
+        size={"4xl"}
         backdrop="opaque"
         classNames={{
           body: "py-6",
@@ -259,56 +259,59 @@ export default function ReservarPsiPreview({
           closeButton: "hover:bg-white/5 active:bg-white/10",
         }}
       >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalContent className="w-[695px] h-[416px] bg-background rounded-3xl  overflow-hidden  mt-8">
-                <div className="grid grid-cols-[0.8fr_1.6fr] items-center">
-                  <div className="h-full w-full flex ">
-                    {" "}
-                    <Avatar className="w-[208px] h-[416px] rounded-2xl overflow-hidden">
-                      <AvatarImage
-                        src={psicologo.imagen}
-                        className="w-full h-full object-cover"
-                      />{" "}
-                      <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800 w-full h-full">
-                        <User className="w-24 h-24 text-purple-600 dark:text-purple-300" />
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
+        <ModalContent className="max-w-[90vw] md:w-[695px] h-auto md:h-[416px] bg-background rounded-3xl overflow-hidden my-4 md:mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-[0.8fr_1.6fr] items-start md:items-center gap-4 md:gap-0">
+            {/* Sección de Avatar */}
+            <div className="w-full flex justify-center md:justify-start md:h-full">
+              <Avatar className="w-full max-w-[250px] h-[250px] md:w-[208px] md:h-[416px] rounded-2xl overflow-hidden shadow-lg">
+                <AvatarImage
+                  src={psicologo.imagen}
+                  className="w-full h-full object-cover"
+                />
+                <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800 w-full h-full flex items-center justify-center">
+                  <User className="w-24 h-24 text-purple-600 dark:text-purple-300" />
+                </AvatarFallback>
+              </Avatar>
+            </div>
 
-                  <div className="text-[#634AE2] text-start ">
-                    <div className="space-y-1 px-1">
-                      <div className="text-[#634AE2] text-2xl font-semibold">
-                        {psicologo.nombre} {psicologo.apellido}
-                      </div>
-                    </div>
-                    <hr className="my-2.5 border-t border-[#9494F3] w-64" />
-                    <ModalBody className="py-2 px-1 gap-0.5">
-                      <p className="text-[#634AE2] font-normal text-base">
-                        Especialidades:
-                      </p>
-                      <div className="flex flex-wrap gap-2 mt-1.5 mb-1 ">
-                        {psicologo.especialidades.map((item, index) => (
-                          <span
-                            key={index}
-                            className="px-4 py-1 bg-[#E7E7FF] text-[#634AE2] rounded-full text-sm"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
+            {/* Sección de Información */}
+            <div className="px-4 md:px-6 text-[#634AE2]">
+              <div className="space-y-2">
+                <h2 className="text-2xl md:text-3xl font-bold text-[#634AE2] dark:text-purple-400">
+                  {psicologo.nombre} {psicologo.apellido}
+                </h2>
+                <hr className="border-t border-[#9494F3] w-full md:w-64" />
+              </div>
 
-                      <hr className="my-2.5 border-t border-[#9494F3] w-11/12" />
-                      <p className="text-[#634AE2] text-sm  leading-[22px] content-normal mr-1">
-                        {psicologo.introduccion}
-                      </p>
-                    </ModalBody>
+              <ModalBody className="py-2 px-0 space-y-4">
+                {/* Especialidades */}
+                <div>
+                  <p className="text-[#634AE2] dark:text-purple-300 font-semibold text-base mb-2">
+                    Especialidades:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {psicologo.especialidades.map((item, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-[#E7E7FF] dark:bg-purple-900/30 text-[#634AE2] dark:text-purple-300 rounded-full text-xs md:text-sm font-medium shadow-sm"
+                      >
+                        {item}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              </ModalContent>
-            </>
-          )}
+
+                <hr className="border-t border-[#9494F3]/50 w-full" />
+
+                {/* Introducción */}
+                <div>
+                  <p className="text-[#634AE2] dark:text-purple-200 text-sm md:text-base leading-relaxed">
+                    {psicologo.introduccion}
+                  </p>
+                </div>
+              </ModalBody>
+            </div>
+          </div>
         </ModalContent>
       </Modal>
       {/* Horarios */}
@@ -338,12 +341,12 @@ export default function ReservarPsiPreview({
                 onClose={() => setIsScheduleOpen(false)}
                 onOpenConfirm={() => setIsConfirmOpen(true)}
                 onSelectHorario={handleSelectHorario}
-              /> 
+              />
               <div className="w-full flex justify-center">
                 <Button
                   onPress={() => setIsScheduleOpen(false)}
                   className="rounded-3xl px-6 sm:px-8 py-1 sm:py-0 transition-colors duration-200 font-bold
-                              bg-[#E7E7FF] text-[#634AE2] hover:bg-[#3d1fd1] hover:text-white 
+                              bg-[#E7E7FF] text-[#634AE2] hover:bg-[#3d1fd1] hover:text-white
                               dark:bg-[#2A2A38] dark:text-[#634AE2] dark:hover:bg-[#634AE2] dark:hover:text-[#111827] "
                 >
                   Cancelar
