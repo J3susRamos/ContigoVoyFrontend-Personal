@@ -3,9 +3,10 @@ import { Button } from "@heroui/react";
 import { ThemeToggle } from "./Themetoggle";
 import { useAuth } from "@/components/auth/loginsec";
 import { useEffect, useState } from "react";
-import { UsuarioLocalStorage } from "@/interface";
+import { UsuarioLocalStorage, UsuarioLocalStorageUpdate } from "@/interface";
 import Image from "next/image";
 import { ChevronDown, LogOut, Edit } from "lucide-react";
+import Editar from "./Editar";
 
 export default function CerrarSesion() {
   const { logout } = useAuth();
@@ -33,7 +34,7 @@ export default function CerrarSesion() {
     };
   }, [hoverTimeout]);
 
-  const handleUpdateUser = (updatedUser: UsuarioLocalStorage) => {
+  const handleUpdateUser = (updatedUser: UsuarioLocalStorageUpdate) => {
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
     setIsEditOpen(false);
@@ -240,84 +241,11 @@ export default function CerrarSesion() {
       </div>
 
       {/* Modal de Edición de Perfil */}
-      {isEditOpen && user && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999999] flex items-center justify-center p-4 min-h-screen">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-md mx-auto my-8">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Editar Perfil
-            </h2>
-            
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              const updatedUser = {
-                ...user,
-                nombre: formData.get('nombre') as string,
-                apellido: formData.get('apellido') as string,
-                email: formData.get('email') as string,
-              };
-              handleUpdateUser(updatedUser);
-            }}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    name="nombre"
-                    defaultValue={user.nombre}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#634AE2] focus:border-transparent dark:bg-gray-700 dark:text-white"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Apellido
-                  </label>
-                  <input
-                    type="text"
-                    name="apellido"
-                    defaultValue={user.apellido}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#634AE2] focus:border-transparent dark:bg-gray-700 dark:text-white"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    defaultValue={user.email}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#634AE2] focus:border-transparent dark:bg-gray-700 dark:text-white"
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div className="flex gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={() => setIsEditOpen(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 bg-[#634AE2] text-white rounded-lg hover:bg-[#4b36b3] transition-colors"
-                >
-                  Guardar
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <Editar
+        isEditOpen={isEditOpen}
+        setIsEditOpen={setIsEditOpen}
+        onUpdateUser={handleUpdateUser}
+      />
     </>
   );
 }
