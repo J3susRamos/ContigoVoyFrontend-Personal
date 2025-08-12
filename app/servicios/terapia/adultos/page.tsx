@@ -74,19 +74,19 @@ const AdultoTerapias: ServicesStructureProps = {
       title:
         "Dificultades para manejar emociones en adultos Contigo Voy Psicología Online",
       text: "Dificultades emocionales",
-      iconImage: "/Services/adult/dificultades.webp",
+      iconImage: "/Services/adult/dificultades.svg",
     },
     {
       id: 4,
       title: "Acompañamiento en el duelo Adultos Contigo Voy Psicología Online",
       text: "Proceso de duelo",
-      iconImage: "/Services/adult/duelo.webp",
+      iconImage: "/Services/adult/duelo.svg",
     },
     {
       id: 5,
       title: "Crecimiento personal en Adultos Contigo Voy Psicología Online",
       text: "Crecimiento personal",
-      iconImage: "/Services/adult/personal.webp",
+      iconImage: "/Services/adult/personal.svg",
     },
   ],
   tittlecards: "Beneficios de la terapia para adultos",
