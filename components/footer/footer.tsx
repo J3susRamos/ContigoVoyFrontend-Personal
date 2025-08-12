@@ -34,12 +34,13 @@ export default function Footer() {
             >
               <div className="bg-[#634AE2] dark:bg-transparent p-2 rounded-lg inline-block">
                 <Image
-                  src="/LogoBlanco.webp"
-                  title="Contigo Voy - Terapia Psicológica"
+                  src="/logoapp/LogoBlanco.webp"
                   alt="Eligenos - Confidencialidad Contigo Voy"
+                  title="Contigo Voy - Terapia Psicológica"
                   width={150}
                   height={60}
                 />
+
               </div>
 
             </motion.div>
@@ -66,7 +67,8 @@ export default function Footer() {
 
                       >
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
+
                       </a>
                     </Link>
                   </li>
@@ -84,7 +86,8 @@ export default function Footer() {
 
                       >
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                       <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
+
                       </a>
                     </Link>
                   </li>
@@ -105,8 +108,9 @@ export default function Footer() {
                     href="https://w.app/dvwynv"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 border border-[#634AE2] dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                    className="flex items-center space-x-1 border border-[#634AE2] dark:border-white rounded-full px-2 py-0.5 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors w-fit"
                   >
+
                     <span className="text-[10px] text-[#634AE2] dark:text-white">Perú</span>
                     <Image
                       src="/WSP.webp"
@@ -128,8 +132,9 @@ export default function Footer() {
                     href="https://w.app/qv4uqn"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 border border-[#634AE2] dark:border-white rounded-full px-2 py-0.5 hover:bg-green-600/80 transition-colors w-fit"
+                    className="flex items-center space-x-1 border border-[#634AE2] dark:border-white rounded-full px-2 py-0.5 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors w-fit"
                   >
+
                     <span className="text-[10px] text-[#634AE2] dark:text-white">Argentina</span>
                     <Image
                       src="/WSP.webp"
