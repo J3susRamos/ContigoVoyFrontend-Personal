@@ -46,7 +46,7 @@ const fetchDashboard = async () => {
   return (
     <>
       <div className="space-y-6 md:max-w-xl w-full">
-        <div className="bg-white dark:bg-[#4B4B4B] rounded-3xl pt-8">
+        <div className="bg-white dark:bg-[#19191a] rounded-3xl pt-8">
           <div className="flex rounded-r-full py-6 text-[#fff] bg-[#6364F4] justify-center font-normal text-2xl w-3/4 ">
             Resumen
           </div>
@@ -60,12 +60,12 @@ const fetchDashboard = async () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#4B4B4B] justify-items-center p-6 rounded-3xl text-[#634AE2] dark:text-white">
+        <div className="bg-white dark:bg-[#19191a] justify-items-center p-6 rounded-3xl text-[#634AE2] dark:text-white">
           <div className="font-normal text-xl">Total Pacientes</div>
           <div className="font-bold text-6xl">{citasPsicologo.total_pacientes}</div>
         </div>
 
-        <div className="bg-white dark:bg-[#4B4B4B] justify-items-center p-6 rounded-3xl text-[#634AE2] dark:text-white">
+        <div className="bg-white dark:bg-[#19191a] justify-items-center p-6 rounded-3xl text-[#634AE2] dark:text-white">
           <div className="font-normal text-xl">Nuevos Pacientes</div>
           <div className="font-bold text-6xl">{citasPsicologo.nuevos_pacientes}</div>
         </div>
