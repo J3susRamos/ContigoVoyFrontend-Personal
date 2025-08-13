@@ -635,6 +635,13 @@ export interface FiltersCitas extends GenericFilters {
   codigo: string[];
 }
 
+export interface FiltersCitasSinPagar extends GenericFilters {
+  genero: string[];
+  edad: string[];
+  fechaInicio: string[];
+  codigo: string[];
+}
+
 export interface EmailBlock {
     id: string;
     type: "divider" | "image" | "header" | "text" | "columns";
