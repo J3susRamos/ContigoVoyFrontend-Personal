@@ -204,6 +204,20 @@ export interface actulizarPsicologo{
   imagen: string,
   especialidades: string[]
 }
+
+export interface ActualizarPerfilCompletoPsicologo {
+  nombre: string,
+  apellido: string,
+  email: string,
+  fecha_nacimiento: string,
+  imagen: string,
+  titulo: string,
+  introduccion: string,
+  pais: string,
+  genero: string,
+  experiencia: number,
+  especialidades: string[]
+}
 export interface EspecialidadesPsicologoResponse {
   status_code: number;
   status_message: string;
@@ -630,6 +644,13 @@ export const FiltersInitialState: FiltersPaciente = {
 export interface FiltersCitas extends GenericFilters {
   genero: string[];
   estado: string[];
+  edad: string[];
+  fechaInicio: string[];
+  codigo: string[];
+}
+
+export interface FiltersCitasSinPagar extends GenericFilters {
+  genero: string[];
   edad: string[];
   fechaInicio: string[];
   codigo: string[];
