@@ -40,7 +40,7 @@ const PageHome = () => {
   }
 
   return (
-    <section className="bg-white dark:bg-[#1A1A1A] min-h-screen">
+    <section className="bg-white dark:bg-[#020202] min-h-screen">
 
       <div className="flex flex-col md:flex-row justify-between">
         <div className="m-5">
