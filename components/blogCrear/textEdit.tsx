@@ -61,8 +61,8 @@ const MenuBar = () => {
   }
   const buttonClass =
     "px-3 py-1.5 rounded text-sm font-medium transition-colors";
-  const activeClass = "bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground";
-  const inactiveClass = "bg-muted dark:bg-muted text-muted-foreground dark:text-muted-foreground hover:bg-muted/80 dark:hover:bg-muted/80";
+  const activeClass = "bg-primary dark:bg-gray-500 text-primary-foreground dark:text-primary-foreground";
+  const inactiveClass = "bg-muted dark:bg-gray-800 text-muted-foreground dark:text-muted-foreground hover:bg-muted/80 dark:hover:bg-muted/80";
 
   return (
     <div className="pb-4 border-b border-border dark:border-border">
@@ -76,6 +76,7 @@ const MenuBar = () => {
               ? activeClass
               : inactiveClass
           }`}
+          title="Encabezado 1"
         >
           H1
         </button>
@@ -88,6 +89,7 @@ const MenuBar = () => {
               ? activeClass
               : inactiveClass
           }`}
+          title="Encabezado 2"
         >
           H2
         </button>
@@ -100,6 +102,7 @@ const MenuBar = () => {
               ? activeClass
               : inactiveClass
           }`}
+          title="Encabezado 3"
         >
           H3
         </button>
@@ -108,6 +111,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive("paragraph") ? activeClass : inactiveClass
           }`}
+          title="Párrafo"
         >
           <Pilcrow className="h-4 w-4" />
         </button>
@@ -116,6 +120,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive("bold") ? activeClass : inactiveClass
           }`}
+          title="Negrita"
         >
           <Bold className="h-4 w-4" />
         </button>
@@ -124,6 +129,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive("italic") ? activeClass : inactiveClass
           }`}
+          title="Cursiva"
         >
           <Italic className="h-4 w-4" />
         </button>
@@ -132,6 +138,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive("Underline") ? activeClass : inactiveClass
           }`}
+          title="Subrayado"
         >
           <UnderlineIcon className="h-4 w-4" />
         </button>
@@ -140,6 +147,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive("highlight") ? activeClass : inactiveClass
           }`}
+          title="Marcador"
         >
           <Highlighter className="h-4 w-4" />
         </button>
@@ -148,6 +156,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive("strike") ? activeClass : inactiveClass
           }`}
+          title="Tachado"
         >
           <Strikethrough className="h-4 w-4" />
         </button>
@@ -156,6 +165,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive({ textAlign: "left" }) ? activeClass : inactiveClass
           }`}
+          title="Alinear a la izquierda"
         >
           <AlignLeft className="h-4 w-4" />
         </button>
@@ -166,6 +176,7 @@ const MenuBar = () => {
               ? activeClass
               : inactiveClass
           }`}
+          title="Centrar"
         >
           <AlignCenter className="h-4 w-4" />
         </button>
@@ -176,6 +187,7 @@ const MenuBar = () => {
               ? activeClass
               : inactiveClass
           }`}
+          title="Alinear a la derecha"
         >
           <AlignRight className="h-4 w-4" />
         </button>
@@ -184,6 +196,7 @@ const MenuBar = () => {
           className={`${buttonClass} ${
             editor.isActive({ textAlign: "link" }) ? activeClass : inactiveClass
           }`}
+          title="Agregar enlace"
         >
           <Link2 className="h-4 w-4" />
         </button>
@@ -195,6 +208,7 @@ const MenuBar = () => {
               ? activeClass
               : `${inactiveClass} opacity-50 cursor-not-allowed`
           }`}
+          title="Quitar enlace"
         >
           <Link2Off className="h-4 w-4" />
         </button>
@@ -208,6 +222,11 @@ const extensions = [
   TextStyle.configure({}),
   Underline,
   Link.configure({
+    HTMLAttributes: {
+      class: "text-[#6364F4] underline hover:text-[#8484ed] cursor-pointer",
+      target: "_blank",
+      rel: "noopener noreferrer",
+    },
     openOnClick: true,
     autolink: true,
     defaultProtocol: "https",
@@ -278,7 +297,11 @@ const extensions = [
       }
     },
   }),
-  Highlight.configure({ multicolor: true }),
+  Highlight.configure({
+    HTMLAttributes: {
+      class: "bg-[rgba(186,76,216,0.59)] ",
+    },
+  }),
   TextAlign.configure({
     types: ["heading", "paragraph"],
   }),
@@ -308,7 +331,7 @@ export const Tiptap = ({
   };
   
   return (
-    <div className="w-full p-4 mx-auto bg-card dark:bg-card text-card-foreground dark:text-card-foreground rounded-lg shadow-md">
+    <div className="[&>*:nth-child(2)]:grow min-h-0 [&>*:nth-child(2)]:flex [&>*:nth-child(2)]:flex-col flex flex-col w-full grow border-2 border-[#6364F4] p-4 mx-auto bg-card dark:bg-gray-700 text-card-foreground dark:text-gray-100 rounded-lg shadow-md">
       <EditorProvider
         slotBefore={<MenuBar />}
         extensions={extensions}
@@ -320,10 +343,17 @@ export const Tiptap = ({
         <div className="prose prose-sm sm:prose lg:prose-lg mx-auto p-6 dark:prose-invert">
           <style>{`
           .ProseMirror {
-            height: 384px; /* equivalent to h-96 */
+            flex-grow: 1;
+            min-height: 384px; /* equivalent to h-96 */
             overflow-y: auto;
             outline: none;
             color: hsl(var(--foreground));
+            max-width: 100%;
+            overflow-x: hidden;
+            white-space: pre-wrap;   
+            word-break: break-word; 
+            max-height: 100%;
+            height: 0px;
           }
           .ProseMirror > * + * {
             margin-top: 0.75em;
@@ -343,7 +373,7 @@ export const Tiptap = ({
             font-size: 1.25em;
           }
           .ProseMirror mark {
-            background-color: hsl(var(--warning) / 0.2);
+            color: inherit !important;
           }
         `}</style>
         </div>

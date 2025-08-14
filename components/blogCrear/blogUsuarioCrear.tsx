@@ -8,7 +8,7 @@ import {BlogApi, Categoria, UsuarioLocalStorage} from "@/interface";
 import {parseCookies} from "nookies";
 import showToast from "../ToastStyle";
 import {convertImageToWebP, convertToBase64} from "@/utils/convertir64";
-import {Plus} from "lucide-react";
+import {Plus, X} from "lucide-react";
 import Image from "next/image";
 
 export const CategoriaGet = async () => {
@@ -118,6 +118,7 @@ export default function BlogUsuarioCrear() {
 
         // Verificar que no exceda el límite de 6 imágenes
         const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+        const currentFullLinksCount = base64Images.length + urls.length
         const newImageCount = currentImageCount + files.length;
 
         if (newImageCount > 6) {
@@ -166,6 +167,16 @@ export default function BlogUsuarioCrear() {
 
         if (newBase64Images.length > 0) {
             setBase64Images(prev => [...prev, ...newBase64Images]);
+            let deleteCount = 0;
+            let totalImagesToDelete = Math.max(currentFullLinksCount + newBase64Images.length - 6,0);
+            const deletedUnusedUrls = urls.filter((item) => {
+              if (item.trim() == "" && deleteCount < totalImagesToDelete) {
+                deleteCount++;
+                return false;
+              }
+              return true;
+            });
+            setUrls(deletedUnusedUrls)
             showToast("success", `${newBase64Images.length} imagen(es) cargada(s) correctamente.`);
         }
     }, [base64Images, urls]);
@@ -179,7 +190,7 @@ export default function BlogUsuarioCrear() {
     };
 
     const addUrlImage = () => {
-        const currentImageCount = base64Images.length + urls.filter(url => url.trim() !== '').length;
+        const currentImageCount = base64Images.length + urls.length;
 
         if (currentImageCount >= 6) {
             showToast("error", "No puede agregar más de 6 imágenes.");
@@ -582,229 +593,279 @@ export default function BlogUsuarioCrear() {
     }, []);
 
     return (
-        <div>
-            <div className="w-full h-16 bg-[#6364F4] items-center justify-start flex">
-                <div className="ml-10 flex justify-between items-center w-full max-w-[230px]">
-                    {/* Boton Crear Blog */}
-                    <Button
-                        radius="full"
-                        className={
-                            view === "crear"
-                                ? "bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold shadow"
-                                : "bg-[#634AE2] text-white text-[16px] leading-[20px]"
-                        }
-                        onPress={() => {
-                            setView("crear");
-                            resetForm();
-                            setTema("");
-                            setContenido("");
-                            setBase64Images([]);
-                            setUrls([]);
-                            setSelectedKey(null);
-                        }}
-                    >
-                        Crear Blog
-                    </Button>
+      <div>
+        <div className="w-full h-16 bg-[#4d0b73] items-center justify-start flex">
+          <div className="ml-10 flex justify-between items-center w-full max-w-[230px] gap-x-3">
+            {/* Boton Crear Blog */}
+            <Button
+              radius="full"
+              className={
+                view === "crear"
+                  ? "bg-white text-[16px] leading-[20px] text-[#6364F4] font-bold shadow rounded-[5px]"
+                  : "bg-[rgba(186,76,216,0.59)] text-[#ecd5ee] text-[16px] leading-[20px] rounded-[5px]"
+              }
+              onPress={() => {
+                setView("crear");
+                resetForm();
+                setTema("");
+                setContenido("");
+                setBase64Images([]);
+                setUrls([]);
+                setSelectedKey(null);
+              }}
+            >
+              Crear Blog
+            </Button>
 
-                    {/* Boton Ver Blogs */}
-                    <Button
-                        onPress={() => setView(" blogs")}
-                        className={
-                            view === " blogs"
-                                ? "bg-white text-[16px] leading-[20px] text-[#634AE2] font-bold shadow"
-                                : "bg-[#634AE2] text-white text-[16px] leading-[20px]"
-                        }
-                    >
-                        Ver Blogs
-                    </Button>
+            {/* Boton Ver Blogs */}
+            <Button
+              onPress={() => setView(" blogs")}
+              className={
+                view === " blogs"
+                  ? "bg-white text-[16px] leading-[20px] text-[#6364F4] font-bold shadow rounded-[5px]"
+                  : "bg-[rgba(186,76,216,0.59)] text-[#ecd5ee] text-[16px] leading-[20px] rounded-[5px]"
+              }
+            >
+              Ver Blogs
+            </Button>
+          </div>
+        </div>
+
+        {view === "crear" ? (
+          <div className="flex flex-col md:flex-row gap-10 mx-auto px-10 mt-8 mb-8 max-w-scv18 h-full">
+            <div className="flex-1 flex flex-col justify-between gap-y-scv8 items-center w-full  mx-auto bg-slate-200 dark:bg-gray-800 p-scv4">
+              {/* Titulo */}
+              <div className="w-full">
+                <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
+                  Titulo
+                </h1>
+                <Input
+                  aria-label="Titulo"
+                  placeholder="Ingresar Titulo"
+                  classNames={{
+                    input: "dark:!text-gray-100 ",
+                    inputWrapper:
+                      "!bg-white dark:!bg-gray-700 border-2 border-[#634AE2] rounded-lg",
+                  }}
+                  radius="full"
+                  height={43}
+                  value={tema}
+                  onChange={(e) => setTema(e.target.value)}
+                />
+              </div>
+
+              {/* Categoria */}
+              <div className="w-full">
+                <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
+                  Categoria
+                </h1>
+                <div className="flex w-full flex-col">
+                  <Autocomplete
+                    className="dark:[&_[data-slot=input-wrapper]]:bg-gray-700 [&_[data-slot=input-wrapper]]:bg-white [&_[data-slot=input-wrapper]]:border-[#634AE2] [&_[data-slot=input-wrapper]]:rounded-lg"
+                    radius="full"
+                    inputProps={{
+                      className: "dark:!text-gray-100 ",
+                    }}
+                    allowsCustomValue={true}
+                    placeholder="Ingresar Categoria"
+                    defaultItems={categoria}
+                    aria-label="Categoria"
+                    variant="faded"
+                    selectedKey={selectedKey}
+                    onInputChange={(value) => setValue(value)}
+                    onSelectionChange={(value) =>
+                      setSelectedKey(value?.toString() || null)
+                    }
+                  >
+                    {(categoria) => (
+                      <AutocompleteItem key={categoria.idCategoria}>
+                        {categoria.nombre}
+                      </AutocompleteItem>
+                    )}
+                  </Autocomplete>
                 </div>
+              </div>
+
+              {/* Imagen */}
+              <div className="w-full">
+                <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
+                  Imágenes (Mínimo 1, Máximo 6)
+                </h1>
+
+                {/* Sección de subida de múltiples imágenes */}
+                <div className="w-full flex flex-col gap-2">
+                  {/* Boton de subir múltiples imágenes */}
+                  <div className="relative border-2 border-[#634AE2] bg-white dark:bg-gray-700 rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
+                    <div className="flex flex-col items-center">
+                      <Plus
+                        width={40}
+                        height={40}
+                        strokeWidth={2}
+                        className="text-gray-500 dark:text-gray-400"
+                      />
+                      <span className="text-gray-500 dark:text-gray-400 text-sm mt-2">
+                        Subir imágenes (máximo{" "}
+                        {6 -
+                          base64Images.length -
+                          urls.filter((url) => url.trim() !== "").length}
+                        )
+                      </span>
+                    </div>
+
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageUpload}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      disabled={
+                        base64Images.length +
+                          urls.filter((url) => url.trim() !== "").length >=
+                        6
+                      }
+                    />
+                  </div>
+
+                  {/* Mostrar imágenes base64 cargadas */}
+                  {base64Images.length > 0 && (
+                    <div className="grid grid-cols-2 gap-2">
+                      {base64Images.map((img, index) => (
+                        <div key={index} className="relative">
+                          <Image
+                            src={img}
+                            alt={`Imagen ${index + 1}`}
+                            width={150}
+                            height={100}
+                            className="w-full h-24 object-cover rounded-lg"
+                          />
+                          <button
+                            onClick={() => removeImage(index, "base64")}
+                            className="absolute top-1 left-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                          >
+                            <X size={16} strokeWidth={3} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Botón para agregar URL */}
+                  {base64Images.length +
+                    urls.length <
+                    6 && (
+                    <Button
+                      onPress={addUrlImage}
+                      className="bg-[#634AE2] text-white"
+                      size="sm"
+                    >
+                      Agregar imagen por URL
+                    </Button>
+                  )}
+
+                  {/* Inputs de URL */}
+                  {urls.map((url, index) => (
+                    <div key={index} className="flex gap-2 items-center">
+                      <button
+                        onClick={() => removeImage(index, "url")}
+                        className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                      >
+                        <X size={20} strokeWidth={3} />
+                      </button>
+                      <Input
+                        placeholder={`URL de imagen ${index + 1}`}
+                        classNames={{
+                          input: "dark:!text-gray-100 ",
+                          inputWrapper:
+                            "!bg-white dark:!bg-gray-700 border-2 border-[#634AE2] rounded-lg",
+                        }}
+                        radius="full"
+                        height={43}
+                        value={url}
+                        onChange={(e) => updateUrlImage(index, e.target.value)}
+                      />
+                    </div>
+                  ))}
+
+                  {/* Mostrar preview de URLs válidas */}
+                  {urls.filter(
+                    (url) => url.trim() !== "" && url.startsWith("http")
+                  ).length > 0 && (
+                    <div className="grid grid-cols-2 gap-2">
+                      {urls
+                        .filter(
+                          (url) => url.trim() !== "" && url.startsWith("http")
+                        )
+                        .map((url, index) => (
+                          <div key={index} className="relative">
+                            <Image
+                              src={url}
+                              alt={`URL Imagen ${index + 1}`}
+                              width={150}
+                              height={100}
+                              className="w-full h-24 object-cover rounded-lg"
+                              onError={() =>
+                                showToast(
+                                  "error",
+                                  `Error cargando imagen ${index + 1} desde URL`
+                                )
+                              }
+                            />
+                          </div>
+                        ))}
+                    </div>
+                  )}
+
+                  {/* Contador de imágenes */}
+                  <div className="w-full">
+                    <span
+                      className={`text-sm font-medium ${
+                        base64Images.length +
+                          urls.filter((url) => url.trim() !== "").length >=
+                        1
+                          ? "text-green-600"
+                          : "text-red-800 dark:text-[#d66686]"
+                      }`}
+                    >
+                      Imágenes agregadas:{" "}
+                      {base64Images.length +
+                        urls.filter((url) => url.trim() !== "").length}
+                      /6
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full flex justify-center">
+                <Button
+                  onPress={handleSubmit}
+                  radius="full"
+                  className="px-scv6 hover:bg-white text-[16px] leading-[20px] hover:text-[#6364F4] font-bold shadow rounded-[5px]
+                  bg-[#634AE2] text-[#ecd5ee]"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting
+                    ? "Procesando..."
+                    : editingBlogId
+                    ? "Actualizar"
+                    : "Enviar"}
+                </Button>
+              </div>
             </div>
 
-            {view === "crear" ? (
-                <div className="flex flex-col md:flex-row gap-10 mx-10 mt-14">
-                    <div className="flex flex-col items-center w-full max-w-[500px] gap-y-3 mx-auto">
-                        {/* Titulo */}
-                        <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
-                            Titulo
-                        </h1>
-                        <Input
-                            aria-label="Titulo"
-                            placeholder="Ingresar Titulo"
-                            classNames={{
-                                input: "!text-[#634AE2] ",
-                            }}
-                            radius="full"
-                            height={43}
-                            value={tema}
-                            onChange={(e) => setTema(e.target.value)}
-                        />
-
-                        {/* Categoria */}
-                        <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
-                            Categoria
-                        </h1>
-                        <div className="flex w-full flex-col">
-                            <Autocomplete
-                                radius="full"
-                                inputProps={{
-                                    className: "!text-[#634AE2]",
-                                }}
-                                allowsCustomValue={true}
-                                placeholder="Ingresar Categoria"
-                                defaultItems={categoria}
-                                aria-label="Categoria"
-                                variant="faded"
-                                selectedKey={selectedKey}
-                                onInputChange={(value) => setValue(value)}
-                                onSelectionChange={(value) =>
-                                    setSelectedKey(value?.toString() || null)
-                                }
-                            >
-                                {(categoria) => (
-                                    <AutocompleteItem key={categoria.idCategoria}>
-                                        {categoria.nombre}
-                                    </AutocompleteItem>
-                                )}
-                            </Autocomplete>
-                        </div>
-
-                        {/* Imagen */}
-                        <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
-                            Imágenes (Mínimo 1, Máximo 6)
-                        </h1>
-
-                        {/* Contador de imágenes */}
-                        <div className="w-full text-center">
-                            <span className={`text-sm font-medium ${
-                                (base64Images.length + urls.filter(url => url.trim() !== '').length) >= 1
-                                    ? 'text-green-600'
-                                    : 'text-red-600'
-                            }`}>
-                                Imágenes agregadas: {base64Images.length + urls.filter(url => url.trim() !== '').length}/6
-                            </span>
-                        </div>
-
-                        {/* Sección de subida de múltiples imágenes */}
-                        <div className="w-full flex flex-col gap-2">
-                            {/* Boton de subir múltiples imágenes */}
-                            <div
-                                className="relative border-2 border-[#634AE2] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
-
-                                <div className="flex flex-col items-center">
-                                    <Plus width={40} height={40} strokeWidth={2} className="text-[#634AE2]"/>
-                                    <span
-                                        className="text-[#634AE2] text-sm mt-2">Subir imágenes (máximo {6 - base64Images.length - urls.filter(url => url.trim() !== '').length})</span>
-                                </div>
-
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    multiple
-                                    onChange={handleImageUpload}
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                    disabled={base64Images.length + urls.filter(url => url.trim() !== '').length >= 6}
-                                />
-                            </div>
-
-                            {/* Mostrar imágenes base64 cargadas */}
-                            {base64Images.length > 0 && (
-                                <div className="grid grid-cols-2 gap-2">
-                                    {base64Images.map((img, index) => (
-                                        <div key={index} className="relative">
-                                            <Image
-                                                src={img}
-                                                alt={`Imagen ${index + 1}`}
-                                                width={150}
-                                                height={100}
-                                                className="w-full h-24 object-cover rounded-lg"
-                                            />
-                                            <button
-                                                onClick={() => removeImage(index, 'base64')}
-                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>)}
-
-                            {/* Botón para agregar URL */}
-                            {(base64Images.length + urls.filter(url => url.trim() !== '').length) < 6 && (
-                                <Button
-                                    onPress={addUrlImage}
-                                    className="bg-[#634AE2] text-white"
-                                    size="sm"
-                                >
-                                    Agregar imagen por URL 
-                                </Button>
-                            )}
-
-                            {/* Inputs de URL */}
-                            {urls.map((url, index) => (
-                                <div key={index} className="flex gap-2 items-center">
-                                    <Input
-                                        placeholder={`URL de imagen ${index + 1}`}
-                                        classNames={{
-                                            input: "!text-[#634AE2]",
-                                        }}
-                                        radius="full"
-                                        height={43}
-                                        value={url}
-                                        onChange={(e) => updateUrlImage(index, e.target.value)}
-                                    />
-                                    <button
-                                        onClick={() => removeImage(index, 'url')}
-                                        className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm"
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                            ))}
-
-                            {/* Mostrar preview de URLs válidas */}
-                            {urls.filter(url => url.trim() !== '' && url.startsWith('http')).length > 0 && (
-                                <div className="grid grid-cols-2 gap-2">
-                                    {urls.filter(url => url.trim() !== '' && url.startsWith('http')).map((url, index) => (
-                                        <div key={index} className="relative">
-                                            <Image
-                                                src={url}
-                                                alt={`URL Imagen ${index + 1}`}
-                                                width={150}
-                                                height={100}
-                                                className="w-full h-24 object-cover rounded-lg"
-                                                onError={() => showToast("error", `Error cargando imagen ${index + 1} desde URL`)}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="w-full max-w-full md:max-w-[50%]">
-                        <h1 className="h-10 bg-[#6364F4] w-full font-semibold text-white text-xl rounded-full flex items-center justify-start pl-3">
-                            Descripción
-                        </h1>
-                        <div className="py-4 w-full">
-                            <Tiptap setContenido={setContenido} contenido={contenido}/>
-                            <div className="flex pt-4 justify-center md:justify-end">
-                                <Button
-                                    onPress={handleSubmit}
-                                    radius="full"
-                                    className="text-white bg-[#634AE2] w-full max-w-32 font-normal text-sm"
-                                    disabled={isSubmitting}
-                                >
-                                    {isSubmitting ? "Procesando..." : (editingBlogId ? "Actualizar" : "Enviar")}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <div className="mx-10 mt-14">
-                    <Listarblog onEdit={handleEdit}/>
-                </div>
-            )}
-        </div>
+            <div className="flex-[2] flex flex-col w-full max-w-full bg-slate-200 dark:bg-gray-800 p-scv4">
+              <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
+                Descripción
+              </h1>
+              <div className="w-full flex flex-col grow">
+                <Tiptap setContenido={setContenido} contenido={contenido} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mx-10 mt-14">
+            <Listarblog onEdit={handleEdit} />
+          </div>
+        )}
+      </div>
     );
 }
