@@ -115,7 +115,7 @@ export default function App() {
   const onSubmit = async (data: FormPaciente) => {
   
     try {
-      const pacienteData: Omit<Paciente2, "idPaciente"> = {
+      const pacienteData: Omit<Paciente2, "idPaciente" | "password"> = {
         DNI: data.DNI,
         nombre: data.nombre,
         apellidoPaterno: data.apellidoPaterno,
@@ -123,16 +123,14 @@ export default function App() {
         email: data.email,
         celular: `${prefix} ${data.celular}` ,
         fecha_nacimiento: data.fecha_nacimiento,
-        imagen: data.imagen || base64Image || '',
+        imagen: base64Image || '',
         genero: data.genero,
         ocupacion: data.ocupacion,
         estadoCivil: data.estadoCivil,
         direccion: data.direccion,
         pais: data.pais,
         departamento: data.departamento,
-        password: data.password,
       };
-      console.log(pacienteData)
 
       const cookies = parseCookies();
       const token = cookies["session"];
@@ -212,7 +210,7 @@ export default function App() {
                   render={({ field: { onChange, value } }) => (
                     <DatePicker
                       showMonthAndYearPickers
-                      label=""
+                      aria-label="Fecha de nacimiento"
                       selectorButtonPlacement="start"
                       classNames={{
                         inputWrapper:
@@ -307,7 +305,7 @@ export default function App() {
                   type="button"
                   className="absolute top-2 right-2 bg-white/80 dark:bg-white/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-100 transition-colors"
                   onClick={() => setBase64Image('')}
-                  aria-label="Eliminar imagen"
+                  aria-label="Limpiar imagen"
                   >
                   <X className="w-5 h-5 text-primary dark:bg-text-primary" />
                 </button>

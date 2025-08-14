@@ -14,6 +14,11 @@ const navItemsBase = [
     icono: Icons.dashboard,
   },
   {
+    name: "Citas Sin Pagar",
+    link: "/user/citas-sin-pagar",
+    icono: Icons.citas,
+  },
+  {
     name: "Registro de personal",
     link: "/user/personal",
     icono: Icons.personal,
@@ -99,7 +104,7 @@ const NavbarUser = () => {
       if (user.rol === "PSICOLOGO") {
         items = items.filter(
           (item) =>
-            item.name !== "Registro de personal" && item.name !== "Psicologos"
+            item.name !== "Registro de personal" && item.name !== "Psicologos" && item.name !== "Citas Sin Pagar"
         );
       }
 
