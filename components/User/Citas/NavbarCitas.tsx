@@ -303,25 +303,25 @@ export const Navbar: React.FC<NavbarProps> = ({
                     />
 
                     {/* Grupo de icono de agregar y botón */}
-                    <div className="ml-auto flex items-center gap-4 mr-12">
-            <span
-                className="text-primary transition-colors"
-                dangerouslySetInnerHTML={{
-                    __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
-                }}
-                style={{
-                    background: "white",
-                    borderRadius: "9999px",
-                    borderColor: "hsl(var(--primary))",
-                }}
-            />
-
+                    <div className="ml-auto mr-12 text-white">
                         {/* Botón de agregar nueva cita */}
                         <button
-                            className="text-primary-foreground font-light text-xl border-1 dark:border-white rounded-full px-4"
-                            onClick={onAddNew}
-                        >
-                            Agregar nueva cita
+                        className="bg-accent dark:bg-accent flex items-center gap-2 text-accent-foreground dark:text-primary-foreground rounded-full text-base px-4 py-1 font-normal hover:scale-105 transition-transform"
+                        onClick={onAddNew}>
+                        <div>
+                            Agregar nueva cita 
+                        </div>   
+                        <span
+                            className="text-primary transition-colors"
+                            dangerouslySetInnerHTML={{
+                                __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
+                            }}
+                            style={{
+                                background: "white",
+                                borderRadius: "9999px",
+                                borderColor: "hsl(var(--primary))",
+                            }}
+                        />
                         </button>
                     </div>
                 </div>
