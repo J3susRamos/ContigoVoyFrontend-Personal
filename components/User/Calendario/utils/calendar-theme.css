@@ -1,0 +1,83 @@
+/* calendar-theme.css */
+
+
+.calendar-component {
+  /* Mejora legibilidad general usando los tokens del sistema */
+  --cal-bg: var(--background);        /* Fondo del calendario */
+  --cal-fg: var(--foreground);        /* Texto por defecto */
+  --cal-border: var(--border);        /* Bordes y divisores */
+  --cal-primary: var(--primary);      /* Morado principal */
+  --cal-secondary: var(--secondary);  /* Fondo sutil (hoy) */
+  --cal-muted: var(--muted);          /* Celdas fuera de rango */
+  --cal-ring: var(--ring);            /* Anillo de enfoque */
+}
+
+/* 🔧 CAMBIO: Fondo y texto base del calendario */
+.calendar-component .rbc-calendar {
+  background: var(--cal-bg);
+  color: var(--cal-fg);
+}
+
+/* 🔧 CAMBIO: Color de headers (Lun, Mar, etc.) y líneas divisorias */
+.calendar-component .rbc-header,
+.calendar-component .rbc-time-header,
+.calendar-component .rbc-time-content,
+.calendar-component .rbc-month-row,
+.calendar-component .rbc-day-bg,
+.calendar-component .rbc-time-gutter,
+.calendar-component .rbc-time-slot,
+.calendar-component .rbc-timeslot-group {
+  border-color: var(--cal-border) !important;
+  color: var(--cal-fg);
+}
+
+/* 🔧 CAMBIO: Día “hoy” con contraste sutil (usa secondary como fallback + mezcla con primary si el navegador soporta) */
+.calendar-component .rbc-today {
+  background: var(--cal-secondary);
+  /* Mejora: tinte leve de primary para dar feedback visual del día actual */
+  background: color-mix(in srgb, var(--cal-primary) 12%, var(--cal-bg));
+}
+
+/* 🔧 CAMBIO: Celdas fuera de rango (otra semana/mes) con contraste más bajo pero legible */
+.calendar-component .rbc-off-range-bg {
+  background: var(--cal-muted);
+}
+
+/* 🔧 CAMBIO: Etiquetas de días fuera de rango (mes) atenuadas */
+.calendar-component .rbc-off-range .rbc-button-link {
+  color: color-mix(in srgb, var(--cal-fg) 55%, var(--cal-bg));
+}
+
+/* 🔧 CAMBIO: Evento con alto contraste sobre ambos temas */
+.calendar-component .rbc-event,
+.calendar-component .rbc-event.rbc-selected {
+  background: var(--cal-primary);
+  border: 1px solid var(--cal-primary);
+  color: var(--primary-foreground, #fff);
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
+}
+
+/* 🔧 CAMBIO: Hover de evento (levemente más claro, conserva paleta) */
+.calendar-component .rbc-event:hover {
+  filter: brightness(1.06);
+}
+
+/* 🔧 CAMBIO: Indicador de hora actual (línea verde por defecto de RBC) -> morado de tu sistema */
+.calendar-component .rbc-current-time-indicator {
+  background-color: var(--cal-primary);
+}
+
+/* 🔧 CAMBIO: Popups y overlays alineados al tema */
+.calendar-component .rbc-overlay,
+.calendar-component .rbc-overlay .rbc-event {
+  background: var(--cal-bg);
+  color: var(--cal-fg);
+  border: 1px solid var(--cal-border);
+}
+
+/* 🔧 CAMBIO: Botones internos de RBC (si se usan) con ring accesible */
+.calendar-component .rbc-btn:focus-visible,
+.calendar-component .rbc-toolbar button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--cal-ring);
+}

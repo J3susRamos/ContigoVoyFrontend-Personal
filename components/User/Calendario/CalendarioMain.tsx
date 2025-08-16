@@ -1,204 +1,287 @@
 "use client";
 
-import {useState} from "react";
+import { useState, useMemo } from "react";
 import CerrarSesion from "@/components/CerrarSesion";
-import {View} from "react-big-calendar";
-import {Button, useDisclosure} from "@heroui/react";
+import { View } from "react-big-calendar";
+import { Button, useDisclosure } from "@heroui/react";
 import Week from "./SelectorDate";
 import Calendario from "./Calendar";
-import {Citas} from "@/interface";
-import {useMemo} from "react";
-import {ChevronLeft, ChevronRight} from "lucide-react";
+import { Citas } from "@/interface";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import ModalCitaExample from "./modal/ModalCitaExample";
-import {addDays, addMonths, addWeeks, subDays, subMonths, subWeeks} from "date-fns";
+import { addDays, addMonths, addWeeks, subDays, subMonths, subWeeks } from "date-fns";
 
 interface CalProps {
-    citas: Citas[];
+  citas: Citas[];
 }
 
-export default function CalendarioMain({citas}: CalProps) {
-    const [vistaActual, setVistaActual] = useState("calendario");
-    const [view, setView] = useState<View>("week");
-    const [currentDate, setCurrentDate] = useState(new Date());
+//establecer constantes que van a ir cambiando de acuerdo a estados
+export default function CalendarioMain({ citas }: CalProps) {
+  const [vistaActual, setVistaActual] = useState("calendario");
+  const [view, setView] = useState<View>("week");
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-    // Funciones para navegación
-    const goToToday = () => setCurrentDate(new Date());
-    const goToPrev = () => {
-        if (view === "month") setCurrentDate(subMonths(currentDate, 1));
-        else if (view === "week") setCurrentDate(subWeeks(currentDate, 1));
-        else setCurrentDate(subDays(currentDate, 1));
-    };
-    const goToNext = () => {
-        if (view === "month") setCurrentDate(addMonths(currentDate, 1));
-        else if (view === "week") setCurrentDate(addWeeks(currentDate, 1));
-        else setCurrentDate(addDays(currentDate, 1));
-    };
+  // Navegación
+  const goToToday = () => setCurrentDate(new Date());
+  const goToPrev = () => {
+    if (view === "month") setCurrentDate(subMonths(currentDate, 1));
+    else if (view === "week") setCurrentDate(subWeeks(currentDate, 1));
+    else setCurrentDate(subDays(currentDate, 1));
+  };
+  const goToNext = () => {
+    if (view === "month") setCurrentDate(addMonths(currentDate, 1));
+    else if (view === "week") setCurrentDate(addWeeks(currentDate, 1));
+    else setCurrentDate(addDays(currentDate, 1));
+  };
 
+  const nombreMes = currentDate.toLocaleString("es-ES", { month: "long" });
+  const anio = currentDate.getFullYear();
 
+  const cambiarVista = (vista: string) => setVistaActual(vista);
 
-    const nombreMes = currentDate.toLocaleString(
-        "es-ES",
-        {
-            month: "long"});
-        const anio = currentDate.getFullYear(
-    );
+  const cambiarVistaGlobal = (vistaActual: string, nuevaVista: View) => {
+    setVistaActual(vistaActual);
+    setView(nuevaVista);
+  };
 
-    const cambiarVista = (vista: string) => {
-        setVistaActual(vista);
-    };
+  const { isOpen, onOpenChange } = useDisclosure();
 
-    const cambiarVistaGlobal = (vistaActual: string, nuevaVista: View) => {
-        setVistaActual(vistaActual);
-        setView(nuevaVista);
-    }
+  const citasPorDia = useMemo(() => {
+    const agrupadas: Record<string, Citas[]> = {};
+    citas.forEach((cita) => {
+      const fecha = cita.fecha_inicio.split(" ")[0];
+      if (!agrupadas[fecha]) agrupadas[fecha] = [];
+      agrupadas[fecha].push(cita);
+    });
+    return agrupadas;
+  }, [citas]);
 
-    const {isOpen, onOpenChange} = useDisclosure();
+  return (
+    // 🔧 CAMBIO: fondo usa tokens; mejor contraste en dark (no usar #000 directo)
+    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
 
-    const citasPorDia = useMemo(() => {
-        const agrupadas: Record<string, Citas[]> = {};
-        citas.forEach((cita) => {
-            const fecha = cita.fecha_inicio.split(" ")[0]; // "2025-04-01"
-            if (!agrupadas[fecha]) agrupadas[fecha] = [];
-            agrupadas[fecha].push(cita);
-        });
-        return agrupadas;
-    }, [citas]);
-
-    return (
-        <div className="bg-[#f8f8ff] dark:bg-black min-h-screen flex flex-col">
-
-            {/* Header principal */}
+      {/* Header principal */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
-        {/* Título y botón juntos */}
-                <div className="flex flex-col md:flex-row items-center gap-4">
-                    <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-primary dark:text-primary-foreground text-center md:text-left">
-                        Calendario de citas
-                    </h1><div className="">
-                </div></div>
-        {/* Otros controles a la derecha */}
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <h1
+            className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px]
+                       text-title dark:text-title" // 🔧 CAMBIO: usa --title para mayor consistencia
+          >
+            Calendario de citas
+          </h1>
+        </div>
         <div className="flex items-center gap-4 justify-center md:justify-end">
-          {/* Aquí puedes poner el switch de tema, avatar, etc */}
-                <CerrarSesion/>
-            </div>
-            </div>
-      {/* Barra de navegación */}
-      <div className="w-full h-auto md:h-16 bg-primary dark:bg-primary items-center justify-start flex flex-col md:flex-row px-2 md:px-8 py-4 md:py-0 gap-2 md:gap-0">
-        {/* Título y navegación en mobile */}
-                <div className="flex w-full items-center justify-center md:hidden mb-2">
+          <CerrarSesion />
+        </div>
+      </div>
+
+      {/* 🔧 CAMBIO: Barra morada con mejor contraste, sticky ring para accesibilidad */}
+      <div
+        className="w-full h-auto md:h-16 bg-primary dark:bg-primary
+                   items-center justify-start flex flex-col md:flex-row px-2 md:px-8 py-4 md:py-0 gap-2 md:gap-0"
+      >
+        {/* Mobile: flechas + mes */}
+        <div className="flex w-full items-center justify-center md:hidden mb-2">
+          {/* 🔧 CAMBIO: botones icon-only con feedback hover/active/focus y etiqueta accesible */}
           <Button
             isIconOnly
             size="sm"
-            className="bg-transparent hover:bg-primary-foreground"
+            aria-label="Anterior"
+            title="Anterior"
+            className="
+              bg-transparent text-primary-foreground
+              hover:bg-primary/80
+              active:scale-95
+              transition-transform duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            "
             onPress={goToPrev}
           >
-            <ChevronLeft className="w-6 h-6 text-white" />
+            <ChevronLeft className="w-6 h-6" />
           </Button>
-          <span className="flex-1 text-center text-primary-foreground font-semibold text-lg">
+
+          <span className="flex-1 text-center text-primary-foreground font-semibold text-lg select-none">
             {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {anio}
           </span>
+
           <Button
             isIconOnly
             size="sm"
-            className="bg-transparent hover:bg-primary-foreground"
+            aria-label="Siguiente"
+            title="Siguiente"
+            className="
+              bg-transparent text-primary-foreground
+              hover:bg-primary/80
+              active:scale-95
+              transition-transform duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            "
             onPress={goToNext}
           >
-            <ChevronRight className="w-6 h-6 text-white" />
+            <ChevronRight className="w-6 h-6" />
           </Button>
         </div>
-        <div className="flex ">
-          {/* Navegación en desktop */}
-          <div className="hidden md:flex gap-2 items-center w-full max-w-full md:max-w-[230px] justify-center md:justify-start">
-          <span
-              className="w-10 h-10 p-0 shadow-lg border-0 flex items-center justify-center"
-              onClick={goToPrev}
+
+        {/* Desktop: flechas a la izquierda */}
+        <div className="hidden md:flex gap-2 items-center w-full max-w-full md:max-w-[230px] justify-center md:justify-start">
+          {/* 🔧 CAMBIO: reemplazo <span> por Button para estados activos/hover accesibles */}
+          <Button
+            isIconOnly
+            radius="full"
+            aria-label="Anterior"
+            title="Anterior"
+            className="
+              bg-transparent text-primary-foreground
+              hover:bg-primary/80
+              active:scale-95
+              transition-transform duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+              w-10 h-10
+            "
+            onPress={goToPrev}
           >
-            <ChevronLeft className="w-5 h-5 text-white"/>
-          </span>
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
 
-                    <span
-                        className="w-10 h-10 p-0 shadow-lg border-0 flex items-center justify-center"
-                        onClick={goToNext}
-                    >
-            <ChevronRight className="w-5 h-5 text-white"/>
-          </span>
-                    </div>
-          {/* Botones de navegación de vista */}
-          <div className="flex gap-2 items-center w-full max-w-full md:max-w-[730px] justify-center md:justify-start mt-2 md:mt-0">
-            <Button
-                        radius="full"
-                        className="text-[15px] md:text-[16px] leading-[20px] border-4 font-bold bg-transparent  border-background text-background dark:text-primary-foreground"
-                        onPress={goToToday}
-                    >
-                        Hoy
-                    </Button>
-                    <Button
-                        radius="full"
-                        className={`hidden text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario"
-                            ? "text-primary dark:text-primary bg-background dark:bg-background"
-                            : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
-                        }`}
-                        onPress={() => cambiarVista("calendario")}
-                    >
-                        Calendario
-                    </Button>
-                    <Button
-                        radius="full"
-                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "horarios"
-                            ? "text-primary dark:text-primary bg-background dark:bg-background"
-                            : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
-                        }`}
-                        onPress={() => cambiarVista("horarios")}
-                    >
-                        Mis Horarios
-                    </Button>
-                </div>
-                </div>
-        {/* Título en desktop */}
-            <div className="text-primary-foreground font-semibold text-[clamp(12px,2.5vw,18px)] text-left whitespace-nowrap md:ml-4 hidden md:block">
-                    {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {currentDate.getFullYear()}
-                </div>{/* Botones de cambio de vista */}
-                <div className="flex gap-2 items-center w-full max-w-full md:max-w-[530px] justify-center md:justify-end mt-2 md:mt-0">
-                    <Button
-                        radius="full"
-                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "month"
-                            ? "text-primary dark:text-primary bg-background dark:bg-background"
-                            : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
-                        }`}
-                        onPress={() => cambiarVistaGlobal("calendario", "month")}
-                    >
-                        Mes
-                    </Button>
-                    <Button
-                        radius="full"
-                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "week"
-                            ? "text-primary dark:text-primary bg-background dark:bg-background"
-                            : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
-                        }`}
-                        onPress={() => cambiarVistaGlobal("calendario", "week")}
-                    >
-                        Semana
-                    </Button>
-                    <Button
-                        radius="full"
-                        className={`text-[15px] md:text-[16px] leading-[20px] border-4 font-bold ${vistaActual === "calendario" && view === "day"
-                            ? "text-primary dark:text-primary bg-background dark:bg-background"
-                            : "bg-transparent border border-background text-background dark:text-primary-foreground font-light"
-                        }`}
-                        onPress={() => cambiarVistaGlobal("calendario", "day")}
-                    >
-                        Dia
-                    </Button>
-                </div>
-            </div>
-
-            <div className="bg-[#f8f8ff] dark:bg-background ">
-                {vistaActual === "horarios"
-          ? <Week/>
-          :
-                    <Calendario vista={view} citasPorDia={citasPorDia} date={currentDate}/>}
-            </div>
-
-            <ModalCitaExample isOpen={isOpen} onOpenChange={onOpenChange}/>
+          <Button
+            isIconOnly
+            radius="full"
+            aria-label="Siguiente"
+            title="Siguiente"
+            className="
+              bg-transparent text-primary-foreground
+              hover:bg-primary/80
+              active:scale-95
+              transition-transform duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+              w-10 h-10
+            "
+            onPress={goToNext}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </Button>
         </div>
-    );
+
+        {/* Botones de navegación de vista izquierda */}
+        <div className="flex gap-2 items-center w-full max-w-full md:max-w-[730px] justify-center md:justify-start mt-2 md:mt-0">
+          {/* 🔧 CAMBIO: botón “Hoy” con pastilla clara (alto contraste sobre bg morado) */}
+          <Button
+            radius="full"
+            aria-label="Ir a hoy"
+            className="
+              text-[15px] md:text-[16px] leading-[20px] font-semibold
+              bg-background text-primary
+              hover:brightness-105
+              active:scale-95 transition duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            "
+            onPress={goToToday}
+          >
+            Hoy
+          </Button>
+
+          {/* 🔧 CAMBIO: los tabs usan estado seleccionado con pill clara y no-seleccionado transparente con borde legible */}
+          <Button
+            radius="full"
+            className={`hidden text-[15px] md:text-[16px] leading-[20px] font-medium
+              ${vistaActual === "calendario"
+                ? "bg-background text-primary"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+              }
+              hover:brightness-105 active:scale-95 transition duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            `}
+            onPress={() => cambiarVista("calendario")}
+          >
+            Calendario
+          </Button>
+
+          <Button
+            radius="full"
+            className={`text-[15px] md:text-[16px] leading-[20px] font-medium
+              ${vistaActual === "horarios"
+                ? "bg-background text-primary"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+              }
+              hover:brightness-105 active:scale-95 transition duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            `}
+            onPress={() => cambiarVista("horarios")}
+          >
+            Mis Horarios
+          </Button>
+        </div>
+
+        {/* Título de mes en desktop */}
+        <div className="text-primary-foreground font-semibold text-[clamp(12px,2.5vw,18px)] text-left whitespace-nowrap md:ml-4 hidden md:block select-none">
+          {nombreMes[0].toUpperCase() + nombreMes.slice(1)} de {anio}
+        </div>
+
+        {/* Botones de cambio de vista (Mes/Semana/Día) a la derecha */}
+        <div className="flex gap-2 items-center w-full max-w-full md:max-w-[530px] justify-center md:justify-end mt-2 md:mt-0">
+          <Button
+            radius="full"
+            aria-label="Vista mes"
+            className={`
+              text-[15px] md:text-[16px] leading-[20px] font-medium
+              ${vistaActual === "calendario" && view === "month"
+                ? "bg-background text-primary"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+              }
+              hover:brightness-105 active:scale-95 transition duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            `}
+            onPress={() => cambiarVistaGlobal("calendario", "month")}
+          >
+            Mes
+          </Button>
+
+          <Button
+            radius="full"
+            aria-label="Vista semana"
+            className={`
+              text-[15px] md:text-[16px] leading-[20px] font-medium
+              ${vistaActual === "calendario" && view === "week"
+                ? "bg-background text-primary"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+              }
+              hover:brightness-105 active:scale-95 transition duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            `}
+            onPress={() => cambiarVistaGlobal("calendario", "week")}
+          >
+            Semana
+          </Button>
+
+          <Button
+            radius="full"
+            aria-label="Vista día"
+            className={`
+              text-[15px] md:text-[16px] leading-[20px] font-medium
+              ${vistaActual === "calendario" && view === "day"
+                ? "bg-background text-primary"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+              }
+              hover:brightness-105 active:scale-95 transition duration-150
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+            `}
+            onPress={() => cambiarVistaGlobal("calendario", "day")}
+          >
+            Día
+          </Button>
+        </div>
+      </div>
+
+      {/* Contenido */}
+      <div className="bg-background dark:bg-background">
+        {vistaActual === "horarios" ? (
+          <Week />
+        ) : (
+          <Calendario vista={view} citasPorDia={citasPorDia} date={currentDate} />
+        )}
+      </div>
+
+      <ModalCitaExample isOpen={isOpen} onOpenChange={onOpenChange} />
+    </div>
+  );
 }
