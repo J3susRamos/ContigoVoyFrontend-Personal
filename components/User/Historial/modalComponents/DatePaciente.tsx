@@ -5,10 +5,9 @@ import {
     UltimaAtencion,
 } from "@/interface";
 import { getUltimaAtencion } from "@/components/User/Pacientes/getUltimaAtencionData";
-import { HistorialPaciente } from "./HistorialPaciente";
+
 
 export const DatePaciente: React.FC<DatePacienteProps> = ({ idPaciente }) => {
-    const [showCart, setShowCart] = useState(false);
     const [ultimaAtencion, setUltimaAtencion] = useState<UltimaAtencion | null>(null);
     const HandleGetUltimaAtencion = async (idPaciente: number) => {
         const result = await getUltimaAtencion(idPaciente);
@@ -24,8 +23,8 @@ export const DatePaciente: React.FC<DatePacienteProps> = ({ idPaciente }) => {
     }, [idPaciente]);
 
     return (
-        <div className="w-full p-4 md:p-6">
-            <div className="bg-white text-[#634AE2] rounded-3xl shadow-lg overflow-hidden">
+        <div className="w-full p-4 md:p-6 bg-white dark:bg-gray-900 text-[#634AE2]">
+            <div className="bg-white text-[#634AE2] dark:bg-gray-900 rounded-3xl shadow-lg overflow-hidden">
                 {/* Sección Superior */}
                 <div className="flex flex-col md:flex-row p-6">
                     {/* Información del Paciente */}
@@ -64,12 +63,7 @@ export const DatePaciente: React.FC<DatePacienteProps> = ({ idPaciente }) => {
                             <div className="text-sm md:text-base opacity-90">última atención</div>
                         </div>
 
-                        <button
-                            onClick={() => setShowCart(true)}
-                            className="border-2 border-[#634AE2] rounded-full py-2 px-4 text-[#634AE2] font-medium hover:bg-[#634AE2] hover:text-white transition-colors duration-200 text-center"
-                        >
-                            Ver historial clínico
-                        </button>
+                    
                     </div>
                 </div>
 
@@ -129,38 +123,6 @@ export const DatePaciente: React.FC<DatePacienteProps> = ({ idPaciente }) => {
                     </div>
                 </div>
             </div>
-
-            {/* Comentarios */}
-            <div className="mt-6">
-                <textarea
-                    className="bg-white w-full border border-[#9494F3] rounded-2xl p-4 text-[#634AE2] placeholder-[#634AE2]/50 focus:outline-none focus:ring-2 focus:ring-[#634AE2] focus:border-transparent shadow-sm resize-none h-32"
-                    placeholder={ultimaAtencion?.comentario ? "" : "Aún no hay comentarios"}
-                    value={ultimaAtencion?.comentario || ""}
-                    readOnly
-                />
-                <div className="flex justify-center mt-4">
-                    <button className="border-2 rounded-full border-[#634AE2] text-[#634AE2] px-8 py-2 hover:bg-[#634AE2] hover:text-white transition-colors duration-200 font-medium">
-                        Actualizar
-                    </button>
-                </div>
-            </div>
-            {/* Modal de Historial */}
-            {showCart && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start pt-10 md:pt-20 z-50 p-4 overflow-y-auto">
-                    <div
-                        className="relative bg-white rounded-2xl w-full overflow-y-auto shadow-xl"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            onClick={() => setShowCart(false)}
-                            className="absolute top-4 right-4 text-gray-500 hover:text-[#634AE2]"
-                        >
-                            ✕
-                        </button>
-                        <HistorialPaciente idPaciente={idPaciente} ultimaAtencion={ultimaAtencion} />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
