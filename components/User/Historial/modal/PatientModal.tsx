@@ -14,10 +14,10 @@ const PatientModal: React.FC<{
       onClick={onClose}
     >
       <div
-        className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform animate-in zoom-in-95 duration-200"
+        className="relative bg-white  dark:bg-gray-900 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 rounded-t-3xl">
+        <div className="sticky top-0 bg-white dark:bg-gray-900 p-4 rounded-t-3xl">
           <button
             onClick={onClose}
             className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition-colors p-2 rounded-full hover:bg-gray-100"
@@ -27,7 +27,7 @@ const PatientModal: React.FC<{
             </svg>
           </button>
         </div>
-        <div className="p-6">
+        <div className="p-6 dark:bg-gray-900 text-black dark:text-white">
           <DatePaciente idPaciente={Number(pacienteId)} />
         </div>
       </div>
