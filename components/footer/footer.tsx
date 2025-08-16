@@ -48,7 +48,9 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="h-auto bg-[#634AE2] dark:bg-gray-900 text-white isolate ">
+    <footer className="h-auto bg-white dark:bg-gray-900 text-black dark:text-white isolate">
+
+
       <div className="lg:max-w-6xl p-10 md:px-11 mx-auto">
         {/* Contenido Principal */}
         <div className="flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
@@ -61,10 +63,11 @@ export default function Footer() {
               className="flex-shrink-0"
             >
               <ReactSVG
-                src="/logofooter.svg"
+                src="/logofooter.svg/"
+                className="w-[150px] h-[60px] text-[#634AE2] dark:text-white"
                 title="Contigo Voy - Terapia Psicológica"
-                className="w-[150px] h-[60px]"
               />
+
             </motion.div>
 
             {/* Redes sociales debajo del logo */}
@@ -75,11 +78,15 @@ export default function Footer() {
 
           {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h3 className="text-2xl font-semibold mb-4 text-white">Enlaces</h3>
+            <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</h3>
+
+
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-2 sm:gap-y-4">
               {/* Columna izquierda */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-[#634AE2] dark:text-white">
+
+
                 {leftLinks.map((link) => (
                   <li key={link.text}>
                     <Link
@@ -90,7 +97,8 @@ export default function Footer() {
                     >
                       <a title={link.title} className="relative group">
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
+
                       </a>
                     </Link>
                   </li>
@@ -98,7 +106,9 @@ export default function Footer() {
               </ul>
 
               {/* Columna derecha */}
-              <ul className="space-y-2 sm:space-y-3 text-xs text-white">
+              <ul className="space-y-2 sm:space-y-3 text-xs text-[#634AE2] dark:text-white">
+
+
                 {rightLinks.map((link) => (
                   <li key={link.text}>
                     <Link
@@ -109,7 +119,8 @@ export default function Footer() {
                     >
                       <a title={link.title} className="relative group">
                         {link.text}
-                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white group-hover:w-full inline-block duration-500"></span>
+                        <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
+
                       </a>
                     </Link>
                   </li>
@@ -121,9 +132,8 @@ export default function Footer() {
           {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-2xl font-semibold mb-4 text-white">
-                Contacto
-              </h3>
+              <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</h3>
+
 
               <div className="flex flex-col space-y-3 items-start">
                 {/* Perú */}
@@ -132,9 +142,10 @@ export default function Footer() {
                     href="https://w.app/dvwynv"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center space-x-1 border border-white hover:border-[#634AE2] rounded-full px-2 py-0.5 hover:bg-gray-100/80 transition-colors w-fit"
+                    className="group flex items-center space-x-1 border border-[#634AE2] dark:border-white hover:border-[#634AE2] rounded-full px-2 py-0.5 hover:bg-gray-200 dark:hover:bg-gray-800/80 transition-colors w-fit"
                   >
-                    <span className="text-white  group-hover:text-[#634AE2] duration-250  text-[10px]">
+
+                    <span className="text-[#634AE2] dark:text-white group-hover:text-[#634AE2] duration-250 text-[10px]">
                       Perú
                     </span>
                     <ReactSVG
@@ -143,14 +154,15 @@ export default function Footer() {
                       title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
                       beforeInjection={(svg) => {
                         svg.classList.add(
-                          "fill-gray-100",
-                          "group-hover:fill-[#634AE2]",
+                          "fill-[#634AE2]",     // modo claro
+                          "dark:fill-white",    // modo oscuro como está ahora
                           "duration-250"
                         );
                       }}
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
+
                     +51 983 027 828
                   </span>
                 </div>
@@ -158,12 +170,13 @@ export default function Footer() {
                 {/* Argentina */}
                 <div className="flex flex-col sm:flex-row  sm:items-center sm:gap-2 text-start">
                   <a
-                    href="https://w.app/qv4uqn"
+                    href="https://w.app/dvwynv"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center space-x-1 border border-white hover:border-[#634AE2] rounded-full px-2 py-0.5 hover:bg-gray-100/80 transition-colors w-fit"
+                    className="group flex items-center space-x-1 border border-[#634AE2] dark:border-white hover:border-[#634AE2] rounded-full px-2 py-0.5 hover:bg-gray-200 dark:hover:bg-gray-800/80 transition-colors w-fit"
                   >
-                    <span className="text-white  group-hover:text-[#634AE2] duration-250  text-[10px]">
+
+                    <span className="text-[#634AE2] dark:text-white group-hover:text-[#634AE2] duration-250 text-[10px]">
                       Argentina
                     </span>
                     <ReactSVG
@@ -172,14 +185,15 @@ export default function Footer() {
                       title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
                       beforeInjection={(svg) => {
                         svg.classList.add(
-                          "fill-gray-100",
-                          "group-hover:fill-[#634AE2]",
+                          "fill-[#634AE2]",     // modo claro
+                          "dark:fill-white",    // modo oscuro como está ahora
                           "duration-250"
                         );
                       }}
                     />
                   </a>
-                  <span className="text-[12px] mt-1 sm:mt-0">
+                  <span className="text-[12px] mt-1 sm:mt-0 text-[#634AE2] dark:text-white">
+
                     +54 922 130 326 75
                   </span>
                 </div>

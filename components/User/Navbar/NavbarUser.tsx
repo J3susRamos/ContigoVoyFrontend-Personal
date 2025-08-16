@@ -118,9 +118,9 @@ const NavbarUser = () => {
     }
   }, []);
   return (
-    <div className="flex flex-row bg-[#E7E7FF] dark:bg-[#1f1e22]">
+    <div className="flex flex-row bg-[#E7E7FF] dark:bg-[#19191a]">
       {/* Mobile Navbar - Menú hamburguesa para pantallas menores a 1024px */}
-      <div className="lg:hidden bg-[#E7E7FF] dark:bg-[#1f1e22] flex-1">
+      <div className="lg:hidden bg-[#E7E7FF] dark:bg-[#19191a] flex-1">
         <nav className="bg-background h-[80px] flex items-center sticky w-full z-40 top-0 border-gray-500 border-b-2">
           <div className="w-full p-6 flex items-center justify-between">
             <Link href="/" className="ml-[60px] z-0">
@@ -146,7 +146,8 @@ const NavbarUser = () => {
 
       {/* Desktop Navbar - Solo para pantallas de 1024px o más */}
       <div className="hidden lg:flex w-72 h-screen fixed bg-[#f8f8ff] dark:bg-background">
-        <div className="bg-card dark:bg-[#1f1e22] w-full h-full rounded-tr-3xl pt-7 flex flex-col">
+        <div className="bg-card dark:bg-[#19191a] w-full h-full pt-7 flex flex-col">
+
           <Link href="/">
             <h1 className="font-normal text-3xl flex justify-center items-center">
               <ReactSVG

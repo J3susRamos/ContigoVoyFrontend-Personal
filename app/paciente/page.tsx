@@ -20,7 +20,7 @@ import { Separator } from "@/components/ui/separator"; // Línea separadora
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Imagen de perfil
 
 // Íconos de lucide-react usados en la UI
-import { 
+import {
   CalendarDays, // Ícono de calendario (día)
   Video, // Ícono de videollamada
   UploadCloud, // Ícono de subir a la nube
@@ -216,6 +216,21 @@ const Paciente = () => { // Declara el componente funcional Paciente
     });
   };
 
+  const getEstadoColor = (estado: string): string => {
+    switch (estado) {
+      case 'confirmada':
+      case 'aprobado':
+      case 'completada':
+        return 'text-green-700 bg-green-100 border-green-200 dark:text-green-400 dark:bg-green-900/20 dark:border-green-800';
+      case 'pendiente':
+        return 'text-yellow-700 bg-yellow-100 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-900/20 dark:border-yellow-800';
+      case 'rechazado':
+        return 'text-red-700 bg-red-100 border-red-200 dark:text-red-400 dark:bg-red-900/20 dark:border-red-800';
+      default:
+        return 'text-gray-700 bg-gray-100 border-gray-200 dark:text-gray-400 dark:bg-gray-900/20 dark:border-gray-800';
+    }
+  };
+
   const joinVideoCall = (citaId: number) => { // Abre la videollamada correspondiente
     window.open(`/videocall/${citaId}`, '_blank'); // Abre en nueva pestaña la ruta /videocall/:id
   };
@@ -236,29 +251,15 @@ const Paciente = () => { // Declara el componente funcional Paciente
     );
   };
 
-  const getEstadoColor = (estado: string) => { // Devuelve clases según estado para estilos
-    switch (estado) { // Compara estado
-      case 'confirmada': // Cita confirmada
-      case 'aprobado': // Pago aprobado
-        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'; // Verde
-      case 'pendiente': // En espera
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500'; // Amarillo
-      case 'rechazado': // Rechazado
-        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-500'; // Rojo
-      default: // Otro estado
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'; // Gris neutro
-    }
-  };
-
   // --------------------------
   // Render (JSX)
   // --------------------------
-  return ( // Devuelve el árbol JSX a renderizar
-    // Contenedor principal con gradiente de fondo y soporte para dark mode
+
+  return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
       {/* Contenedor central con padding y separación entre secciones */}
       <div className="container mx-auto px-4 py-6 lg:py-8 space-y-6">
-        
+
         {/* Header superior con avatar y acciones */}
         <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
           {/* Padding interno del header */}
@@ -307,7 +308,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
               </div>
             </CardContent>
           </Card>
-          
+
           {/* Tarjeta 2: pagos aprobados */}
           <Card className="border-l-4 border-l-green-500">
             <CardContent className="p-4 flex justify-between items-center">
@@ -322,7 +323,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
               </div>
             </CardContent>
           </Card>
-          
+
           {/* Tarjeta 3: total invertido */}
           <Card className="border-l-4 border-l-purple-500">
             <CardContent className="p-4 flex justify-between items-center">
@@ -348,13 +349,13 @@ const Paciente = () => { // Declara el componente funcional Paciente
             </div>
             <h2 className="text-xl font-bold">Tus próximas citas</h2>
           </div>
-          
+
           {/* Lista de tarjetas de citas con acordeón */}
           <div className="space-y-3">
             {citasProximas.map((cita) => (
               <Card key={cita.id} className="overflow-hidden">
                 {/* Cabecera clickable del acordeón */}
-                <div 
+                <div
                   className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
                   onClick={() => toggleExpandCita(cita.id)}
                 >
@@ -378,7 +379,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
                     )}
                   </div>
                 </div>
-                
+
                 {/* Contenido expandido de la cita */}
                 {expandedCitas.includes(cita.id) && (
                   <CardContent className="p-4 pt-0 space-y-4">
@@ -399,7 +400,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <Button 
+                      <Button
                         className="w-full"
                         onClick={() => joinVideoCall(cita.id)}
                         disabled={cita.estado !== 'confirmada'}
@@ -407,9 +408,9 @@ const Paciente = () => { // Declara el componente funcional Paciente
                         <Video className="w-4 h-4 mr-2" />
                         {cita.estado === 'confirmada' ? 'Ingresar a videollamada' : 'Cita pendiente'}
                       </Button>
-                      
-                      <Button 
-                        variant="outline" 
+
+                      <Button
+                        variant="outline"
                         className="w-full"
                         onClick={() => handleReagendar(cita)}
                       >
@@ -440,7 +441,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
             <CardContent className="p-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Citas</label>
-                <select 
+                <select
                   className="w-full p-2 border rounded-md bg-white dark:bg-gray-800"
                   value={selectedPaymentType || ''}
                   onChange={(e) => setSelectedPaymentType(e.target.value)}
@@ -457,9 +458,9 @@ const Paciente = () => { // Declara el componente funcional Paciente
                   <div>
                     <label className="block text-sm font-medium mb-1">Comprobante</label>
                     <div className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                      <input 
-                        type="file" 
-                        className="hidden" 
+                      <input
+                        type="file"
+                        className="hidden"
                         id="file-upload"
                         onChange={handleFileSelect}
                         accept="image/*,.pdf"
@@ -483,7 +484,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
                         <FileImage className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         <span className="text-sm truncate max-w-xs">{selectedFile.name}</span>
                       </div>
-                      <button 
+                      <button
                         onClick={() => setSelectedFile(null)}
                         className="text-red-500 hover:text-red-700"
                       >
@@ -492,7 +493,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
                     </div>
                   )}
 
-                  <Button 
+                  <Button
                     className="w-full mt-2"
                     onClick={handleFileUpload}
                     disabled={!selectedFile || isUploading}
@@ -531,7 +532,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
             {historialPagos.map((pago) => (
               <Card key={pago.id}>
                 {/* Cabecera clickable del pago */}
-                <div 
+                <div
                   className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
                   onClick={() => toggleExpandPago(pago.id)}
                 >
@@ -557,7 +558,7 @@ const Paciente = () => { // Declara el componente funcional Paciente
                     )}
                   </div>
                 </div>
-                
+
                 {/* Contenido expandido del pago */}
                 {expandedPagos.includes(pago.id) && (
                   <CardContent className="p-4 pt-0 space-y-4">
@@ -569,22 +570,22 @@ const Paciente = () => { // Declara el componente funcional Paciente
                         className="object-contain"
                       />
                     </div>
-                    
+
                     <div className="flex justify-between items-center">
                       <span className="text-xl font-bold text-green-600 dark:text-green-400">
                         S/ {pago.monto.toFixed(2)}
                       </span>
                       <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           onClick={() => window.open(pago.voucher, '_blank')}
                         >
                           <Eye className="w-4 h-4 mr-1" />
                           Ver
                         </Button>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
                           onClick={() => {
                             const link = document.createElement('a'); // Crea un elemento <a>
