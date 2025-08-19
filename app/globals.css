@@ -35,6 +35,52 @@ body {
   .animate-fade-exit-active {
     @apply opacity-0 transition-opacity duration-300;
   }
+
+  /* Animaciones para el detalle del paciente */
+  .patient-card {
+    @apply transition-all duration-300 ease-in-out;
+    animation: slideUpFade 0.6s ease-out;
+  }
+
+  .patient-info-item {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .patient-info-item:hover {
+    @apply scale-[1.02] shadow-sm;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--primary) / 0.05) 50%, transparent 100%);
+  }
+
+  .dark .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.2) 0%, hsl(var(--primary) / 0.1) 50%, transparent 100%);
+  }
+
+  @keyframes slideUpFade {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .status-indicator {
+    animation: pulse-subtle 2s infinite;
+  }
 }
 
 .embla {
