@@ -16,6 +16,7 @@ import {
 import { parseCookies } from "nookies";
 import showToast from "@/components/ToastStyle";
 import { Citas } from "@/interface";
+import { token } from "@/app/apiRoutes";
 
 interface FormCitaProps {
     isOpen: boolean;
@@ -250,6 +251,11 @@ export const FormCita: React.FC<FormCitaProps> = ({
 
             const response = await makeRequest(url, {
                 method,
+                headers: {
+                      "Content-Type": "application/json",
+                      Accept: "application/json",
+                      Authorization: `Bearer ${token}`
+                    },
                 body: JSON.stringify(requestBody),
             });
 
