@@ -3,7 +3,7 @@ import React from "react";
 export type GenericFilters = Record<string, string[]>;
 
 interface Props {
-  filters: boolean;
+  filters?: boolean;
   messages: {
     noResultsTitle?: string;
     noResultsDescription?: string;
@@ -69,15 +69,11 @@ const EmptyTable = ({
         </div>
 
         <h3 className="text-xl font-semibold text-gray-900 dark:text-foreground mb-2">
-          {filters
-            ? noResultsTitle
-            : emptyTitle}
+          {filters ? noResultsTitle : emptyTitle}
         </h3>
 
         <p className="text-gray-600 dark:text-muted-foreground">
-          {filters
-            ? noResultsDescription
-            : emptyDescription}
+          {filters ? noResultsDescription : emptyDescription}
         </p>
       </div>
     </div>

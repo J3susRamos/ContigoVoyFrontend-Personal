@@ -1,6 +1,6 @@
 import { DateValue } from "@heroui/react";
 import React from "react";
-import {GenericFilters} from "@/components/ui/Table/EmptyTable";
+import { GenericFilters } from "@/components/ui/Table/EmptyTable";
 
 export interface CardServicesProps {
   title: string;
@@ -59,7 +59,6 @@ export interface ServicesStructureProps {
     title?: string;
     text: string;
     iconImage: string;
-    
   }[];
   tittlecards: string;
   cards: {
@@ -67,10 +66,9 @@ export interface ServicesStructureProps {
     title?: string;
     text: string;
     icon: string;
-  
   }[];
   textfooter: string;
-  textfootermobile:string;
+  textfootermobile: string;
   promotionCards?: PromotionCardProps[];
 }
 
@@ -83,7 +81,7 @@ export interface PromotionCardProps {
   list: {
     id: number;
     text: string;
-  }[]
+  }[];
 }
 
 //Quienes Somos
@@ -120,7 +118,7 @@ export interface FormData {
   imagen: string;
   experiencia: number;
   especialidades: number[];
-  horario: { 
+  horario: {
     [key: string]: string[][];
   };
 }
@@ -131,44 +129,42 @@ export interface Especialidad {
 }
 
 export interface Contact {
-  nombre: string,
-  apellido: string,
-  celular: string,
-  email: string,
-  comentario: string,
+  nombre: string;
+  apellido: string;
+  celular: string;
+  email: string;
+  comentario: string;
 }
 
 export interface BlogApi {
-
-  idCategoria: number | null,
-  tema: string,
-  contenido: string,
-  imagenes: string[], // Array de imágenes
+  idCategoria: number | null;
+  tema: string;
+  contenido: string;
+  imagenes: string[]; // Array de imágenes
   idPsicologo: number | null;
-
 }
 
 export interface BlogApiGEt {
-  idBlog: number | null,
-  categoria: string,
-  tema: string,
-  contenido: string,
-  imagen: string, // Mantener para compatibilidad
-  imagenes?: string[], // Nuevo campo opcional
-  idPsicologo: number,
+  idBlog: number | null;
+  categoria: string;
+  tema: string;
+  contenido: string;
+  imagen: string; // Mantener para compatibilidad
+  imagenes?: string[]; // Nuevo campo opcional
+  idPsicologo: number;
 }
 //BLogs Preview Data
 export interface BlogPreviewData {
-  idBlog: number,
-  tema: string,
-  contenido: string,
-  imagen: string, // Mantener para compatibilidad
-  imagenes?: string[], // Nuevo campo opcional
-  psicologo: string,
-  psicologApellido: string,
-  psicologoImagenId: string,
-  categoria: string,
-  fecha: string,
+  idBlog: number;
+  tema: string;
+  contenido: string;
+  imagen: string; // Mantener para compatibilidad
+  imagenes?: string[]; // Nuevo campo opcional
+  psicologo: string;
+  psicologApellido: string;
+  psicologoImagenId: string;
+  categoria: string;
+  fecha: string;
 }
 
 export interface ApiResponseBLogAlone {
@@ -180,43 +176,43 @@ export interface ApiResponse {
 }
 
 export interface PsicologoPreviewData {
-  idPsicologo: number,
-  titulo:string,
-  nombre: string,
-  apellido: string,
-  pais: string,
-  introduccion: string,
-  genero: string,
-  experiencia: number,
-  correo: string,
-  contrasena: string,
-  fecha_nacimiento: string,
-  especialidades: string[],
-  imagen: string,
+  idPsicologo: number;
+  titulo: string;
+  nombre: string;
+  apellido: string;
+  pais: string;
+  introduccion: string;
+  genero: string;
+  experiencia: number;
+  correo: string;
+  contrasena: string;
+  fecha_nacimiento: string;
+  especialidades: string[];
+  imagen: string;
   horario: {
     [key: string]: [string, string][];
   };
 }
 
-export interface actulizarPsicologo{
-  nombre: string,
-  apellido: string,
-  imagen: string,
-  especialidades: string[]
+export interface actulizarPsicologo {
+  nombre: string;
+  apellido: string;
+  imagen: string;
+  especialidades: string[];
 }
 
 export interface ActualizarPerfilCompletoPsicologo {
-  nombre: string,
-  apellido: string,
-  email: string,
-  fecha_nacimiento: string,
-  imagen: string,
-  titulo: string,
-  introduccion: string,
-  pais: string,
-  genero: string,
-  experiencia: number,
-  especialidades: string[]
+  nombre: string;
+  apellido: string;
+  email: string;
+  fecha_nacimiento: string;
+  imagen: string;
+  titulo: string;
+  introduccion: string;
+  pais: string;
+  genero: string;
+  experiencia: number;
+  especialidades: string[];
 }
 export interface EspecialidadesPsicologoResponse {
   status_code: number;
@@ -230,7 +226,8 @@ export interface PsicologoApiResponse {
   status_code: number;
   status_message: string;
   description: string;
-  errorBag: never[];  result: {
+  errorBag: never[];
+  result: {
     data: PsicologoPreviewData[];
     pagination: {
       current_page: number;
@@ -242,16 +239,16 @@ export interface PsicologoApiResponse {
 }
 
 export interface PacienteDisabled {
-  idPaciente: number,
-  codigo: string,
-  DNI: string,
-  nombre: string,
-  email: string,
-  celular: string,
-  genero: string,
-  fecha_nacimiento: string,
-  edad: number,
-  ultima_cita_fecha: string
+  idPaciente: number;
+  codigo: string;
+  DNI: string;
+  nombre: string;
+  email: string;
+  celular: string;
+  genero: string;
+  fecha_nacimiento: string;
+  edad: number;
+  ultima_cita_fecha: string;
 }
 
 export interface PsicologoApiResponseAlone {
@@ -273,23 +270,23 @@ export interface PsicologoFilters {
 }
 
 export interface UsuarioLocalStorage {
-  id: number,
-  nombre: string,
-  apellido: string,
-  email: string,
-  rol: string,
-  imagen: string,
-  idpsicologo?: number,
+  id: number;
+  nombre: string;
+  apellido: string;
+  email: string;
+  rol: string;
+  imagen: string;
+  idpsicologo?: number;
 }
 export interface UsuarioLocalStorageUpdate {
-  id: number,
-  nombre: string,
-  apellido: string,
-  email: string,
-  rol: string,
-  imagen: string,
-  idpsicologo?: number,
-  especialidades: string[]
+  id: number;
+  nombre: string;
+  apellido: string;
+  email: string;
+  rol: string;
+  imagen: string;
+  idpsicologo?: number;
+  especialidades: string[];
 }
 
 //Usuario LocalStorage
@@ -355,56 +352,56 @@ export interface CitasPendientesApiResponse {
   status_message: string;
   description: string;
   errorBag: never[];
-  result: CitasPendientes[]; 
+  result: CitasPendientes[];
 }
 
 export interface PrePaciente {
-  nombre: string,
-  celular: string,
-  correo: string,
-  fecha_cita: string,
-  hora_cita: string,
-  idPsicologo: number,
+  nombre: string;
+  celular: string;
+  correo: string;
+  fecha_cita: string;
+  hora_cita: string;
+  idPsicologo: number;
 }
 
 export interface Paciente {
-  idPaciente: number,
-  DNI: string,
-  codigo: string,
-  nombre: string,
-  apellido:string,
-  email: string,
-  celular: string,
-  fecha_nacimiento: Date,
-  edad: number,
-  imagen: string,
-  genero: string,
-  ocupacion: string,
-  estadoCivil: string,
-  direccion: string,
-  idPsicologo: number
-  ultima_cita_fecha: Date,
-  password: string,
+  idPaciente: number;
+  DNI: string;
+  codigo: string;
+  nombre: string;
+  apellido: string;
+  email: string;
+  celular: string;
+  fecha_nacimiento: Date;
+  edad: number;
+  imagen: string;
+  genero: string;
+  ocupacion: string;
+  estadoCivil: string;
+  direccion: string;
+  idPsicologo: number;
+  ultima_cita_fecha: Date;
+  password: string;
 }
 
 export interface Paciente2 {
-  idPaciente: number,
-  DNI: string,
-  nombre: string,
-  apellido?:string,
-  apellidoPaterno?:string,
-  apellidoMaterno?:string,
-  email: string,
-  celular: string,
-  fecha_nacimiento: string,
-  imagen: string,
-  genero: string,
-  ocupacion: string,
-  estadoCivil: string,
-  direccion: string,
-  pais: string | null,
-  departamento: string | null,
-  password: string | null,
+  idPaciente: number;
+  DNI: string;
+  nombre: string;
+  apellido?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  email: string;
+  celular: string;
+  fecha_nacimiento: string;
+  imagen: string;
+  genero: string;
+  ocupacion: string;
+  estadoCivil: string;
+  direccion: string;
+  pais: string | null;
+  departamento: string | null;
+  password: string | null;
 }
 
 export interface FormPaciente {
@@ -420,31 +417,31 @@ export interface FormPaciente {
   estadoCivil: string;
   ocupacion: string;
   direccion: string;
-  departamento: string| null;
+  departamento: string | null;
   // provincia?: string| null;
-  pais: string| null;
+  pais: string | null;
   antecedentesMedicos: string;
   medicamentosPrescritos: string;
   password: string;
 }
 
 export interface FormFamilia {
-  nombre_madre: string,
-  estado_madre: string,
-  nombre_padre: string,
-  estado_padre: string,
-  nombre_apoderado: string,
-  estado_apoderado: string,
-  cantidad_hijos: number,
-  cantidad_hermanos: number,
-  integracion_familiar: string,
-  historial_familiar: string,
+  nombre_madre: string;
+  estado_madre: string;
+  nombre_padre: string;
+  estado_padre: string;
+  nombre_apoderado: string;
+  estado_apoderado: string;
+  cantidad_hijos: number;
+  cantidad_hermanos: number;
+  integracion_familiar: string;
+  historial_familiar: string;
   paciente?: {
-      idPaciente: string,
-      nombre: string,
-      apellido: string,
-      codigo: string,
-  } 
+    idPaciente: string;
+    nombre: string;
+    apellido: string;
+    codigo: string;
+  };
 }
 
 export interface DatosPacienteProps {
@@ -496,6 +493,26 @@ export interface Citas {
   fecha_nacimiento: string;
 }
 
+export interface CitaSinPagar {
+  idCita: string;
+  motivo_Consulta: string;
+  estado_Cita: string;
+  duracion: number;
+  fecha_cita: string;
+  hora_cita: string;
+  imagenes?: string[];
+  paciente: {
+    idPaciente: number;
+    nombre: string;
+    apellido: string;
+  };
+  psicologo: {
+    idPsicologo: number;
+    nombre: string;
+    apellido: string;
+  };
+}
+
 export interface CitasApiResponse {
   status_code: number;
   status_message: string;
@@ -516,7 +533,7 @@ export interface DatePacienteProps {
 
 export interface HistorialPacienteProps {
   idPaciente: number;
-  ultimaAtencion : UltimaAtencion | null;
+  ultimaAtencion: UltimaAtencion | null;
 }
 
 export interface AtencionFormData {
@@ -534,7 +551,7 @@ export interface AtencionFormData {
   idCita?: number;
 }
 
-export interface ListaAtencion{
+export interface ListaAtencion {
   hora_inicio: string;
   nombre_completo: string;
   diagnostico: string;
@@ -543,7 +560,7 @@ export interface ListaAtencion{
   idAtencion: string;
   idPaciente: string;
   codigo: string;
-  age:string;
+  age: string;
 }
 
 export interface Enfermedad {
@@ -604,8 +621,8 @@ export interface DashboardApiResponse {
 }
 
 export interface CitaMensual {
-  fecha: string,
-  total: number
+  fecha: string;
+  total: number;
 }
 export interface CitaMensualResponse {
   result: CitaMensual;
@@ -649,51 +666,44 @@ export interface FiltersCitas extends GenericFilters {
   codigo: string[];
 }
 
-export interface FiltersCitasSinPagar extends GenericFilters {
-  genero: string[];
-  edad: string[];
-  fechaInicio: string[];
-  codigo: string[];
-}
-
 export interface EmailBlock {
-    id: string;
-    type: "divider" | "image" | "header" | "text" | "columns";
-    imageUrl?: string;
-    imageUrls?: string[];
-    content?: string;
-    styles: { color?: string; bold?: boolean; italic?: boolean };
+  id: string;
+  type: "divider" | "image" | "header" | "text" | "columns";
+  imageUrl?: string;
+  imageUrls?: string[];
+  content?: string;
+  styles: { color?: string; bold?: boolean; italic?: boolean };
 }
 
 export interface Plantilla {
-    id: number;
-    nombre: string;
-    asunto: string;
-    remitente: string;
-    destinatarios: string;
-    bloques: EmailBlock[];
+  id: number;
+  nombre: string;
+  asunto: string;
+  remitente: string;
+  destinatarios: string;
+  bloques: EmailBlock[];
 }
 
 export interface MarketingApiResponse {
-    result: Plantilla[];
+  result: Plantilla[];
 }
 
 export interface SelectItemI {
-  textValue: string,
-  showLabel: string,
+  textValue: string;
+  showLabel: string;
 }
 
 export interface FormCita {
-    idPaciente: string;
-    fecha_cita: string;
-    hora_cita: string;
-    duracion: string;
-    motivo_Consulta: string;
-    estado_Cita: string;
+  idPaciente: string;
+  fecha_cita: string;
+  hora_cita: string;
+  duracion: string;
+  motivo_Consulta: string;
+  estado_Cita: string;
 }
 export interface PacienteCita {
-    idPaciente : number,
-    nombre : string,
-    apellido: string,
-    codigo: string
+  idPaciente: number;
+  nombre: string;
+  apellido: string;
+  codigo: string;
 }
