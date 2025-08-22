@@ -127,274 +127,303 @@ export const DataView = ({
   };
   
   return (
-    <div className="text-[#634AE2] h-auto p-10 pt-15 sm:pt-10 items-center bg-background rounded-3xl">
-      <div className="relative flex flex-col items-center mb-10">
-        <h1 className="font-semibold text-4xl">¡Hola {formData.name}!</h1>
-        <small>Ya casi acabamos</small>
-      </div>
-      <Form validationBehavior="native" onSubmit={handleSubmit}>
-        {/* Layout Mobile - Columna vertical */}
-        <div className="flex flex-col gap-8 sm:hidden">
-          {/* Foto en mobile */}
-          <div>
-            <h3 className="font-bold text-base mb-2">Foto</h3>
-            <div className="relative border-2 border-primary dark:border-primary rounded-lg h-36 w-full flex justify-center items-center cursor-pointer overflow-hidden">
-              {base64Image ? (
-                <Image
-                  src={formData.imagen}
-                  alt="Imagen seleccionada"
-                  width={300}
-                  height={150}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Plus
-                  width={40}
-                  height={40}
-                  strokeWidth={2}
-                  className="text-primary dark:text-primary"
-                />
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  try {
-                    await handleImageUpload(e);
-                  } catch (error) {
-                    console.error("Error processing image:", error);
-                    toast.error("Error processing image. Please try again.", {
-                      position: "top-center",
-                      autoClose: 1300,
-                    });
-                  }
-                }}
-                className="absolute inset-0 w-42 h-full opacity-0 cursor-pointer"
-              />
-            </div>
-          </div>
-          
-          {/* Introducción en mobile */}
-          <div>
-            <Textarea
-              isRequired
-              value={formData.introduccion ?? ""}
-              minLength={100}
-              maxLength={350}
-              classNames={{
-                label: "!text-primary dark:!text-primary font-bold text-base",
-                inputWrapper:
-                  "border-2 border-primary dark:border-primary bg-background dark:bg-background w-full h-full",
-                innerWrapper: "min-h-[120px]",
-              }}
-              onChange={(e) => {
-                const value = e.target.value;
-                setFormData({
-                  ...formData,
-                  introduccion: value,
-                });
-              }}
-              label="Introducción"
-              labelPlacement="outside"
-              description={`${
-                formData.introduccion?.length || 0
-              }/350 caracteres (mínimo 100)`}
-            />
-          </div>
-          
-          {/* Experiencia en mobile */}
-          <div>
-            <Input
-              label="Experiencia"
-              isRequired
-              min={0}
-              placeholder=" Experiencia en años"
-              labelPlacement="outside"
-              radius="full"
-              value={formData.experiencia.toString()}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  experiencia: parseInt(e.target.value),
-                })
-              }
-              classNames={{
-                label: "!text-primary dark:!text-primary font-bold text-base",
-                inputWrapper:
-                  "border-2 border-primary dark:border-primary bg-background dark:bg-background",
-              }}
-              type="number"
-            />
-          </div>
-          
-          {/* Especialidades en mobile */}
-          <div>
-            <CheckboxGroup
-              isRequired
-              orientation="vertical"
-              description="Selecciona las especialidades que domina"
-              isInvalid={isInvalid}
-              label="Especialidades"
-              classNames={{
-                label: "!text-primary dark:!text-primary font-bold text-base",
-              }}
-              onValueChange={handleEspecialidadesChange}
-              defaultValue={[Object.keys(especialidadesMap)[0]]}
-            >
-              <div className="grid grid-cols-1 gap-4 w-full mb-scv2 my-scv1">
-                {Object.keys(especialidadesMap).map((clave) => (
-                  <Checkbox
-                    color="secondary"
-                    classNames={{
-                      label: "text-primary dark:text-primary",
-                    }}
-                    key={clave}
-                    value={clave}
-                  >
-                    {clave}
-                  </Checkbox>
-                ))}
-              </div>
-            </CheckboxGroup>
-          </div>
-        </div>
-
-        {/* Layout Desktop - Grid original */}
-        <div className="hidden sm:grid gap-8 sm:grid-cols-6 sm:grid-rows-5">
-          <div className="sm:col-span-2 sm:row-span-2">
-            <h3 className="font-bold text-base">Foto</h3>
-            <div className="relative border-2 border-primary dark:border-primary rounded-lg h-36 w-full flex justify-center items-center cursor-pointer overflow-hidden">
-              {base64Image ? (
-                <Image
-                  src={formData.imagen}
-                  alt="Imagen seleccionada"
-                  width={300}
-                  height={150}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Plus
-                  width={40}
-                  height={40}
-                  strokeWidth={2}
-                  className="text-primary dark:text-primary"
-                />
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  try {
-                    await handleImageUpload(e);
-                  } catch (error) {
-                    console.error("Error processing image:", error);
-                    toast.error("Error processing image. Please try again.", {
-                      position: "top-center",
-                      autoClose: 1300,
-                    });
-                  }
-                }}
-                className="absolute inset-0 w-42 h-full opacity-0 cursor-pointer"
-              />
-            </div>
-          </div>
-          <div className="sm:col-start-3 sm:col-span-4 sm:max-w-96 sm:max-h-52 sm:row-span-2 relative">
-            <Textarea
-              isRequired
-              value={formData.introduccion ?? ""}
-              minLength={100}
-              maxLength={350}
-              classNames={{
-                label: "!text-primary dark:!text-primary font-bold text-base",
-                inputWrapper:
-                  "border-2 border-primary dark:border-primary bg-background dark:bg-background w-full h-full",
-                innerWrapper: "min-h-[120px]",
-              }}
-              onChange={(e) => {
-                const value = e.target.value;
-                setFormData({
-                  ...formData,
-                  introduccion: value,
-                });
-              }}
-              label="Introducción"
-              labelPlacement="outside"
-              description={`${
-                formData.introduccion?.length || 0
-              }/350 caracteres (mínimo 100)`}
-            />
-          </div>
-          <div className="col-span-3 row-start-3">
-            <Input
-              label="Experiencia"
-              isRequired
-              min={0}
-              placeholder=" Experiencia en años"
-              labelPlacement="outside"
-              radius="full"
-              value={formData.experiencia.toString()}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  experiencia: parseInt(e.target.value),
-                })
-              }
-              classNames={{
-                label: "!text-primary dark:!text-primary font-bold text-base",
-                inputWrapper:
-                  "border-2 border-primary dark:border-primary bg-background dark:bg-background",
-              }}
-              type="number"
-            />
-          </div>
-          <div className="col-span-6 row-start-4 row-span-2">
-            <CheckboxGroup
-              isRequired
-              orientation="vertical"
-              description="Selecciona las especialidades que domina"
-              isInvalid={isInvalid}
-              label="Especialidades"
-              classNames={{
-                label: "!text-primary dark:!text-primary font-bold text-base",
-              }}
-              onValueChange={handleEspecialidadesChange}
-              defaultValue={[Object.keys(especialidadesMap)[0]]}
-            >
-              <div className="grid grid-cols-2 gap-4 w-full mb-scv2 my-scv1">
-                {Object.keys(especialidadesMap).map((clave) => (
-                  <Checkbox
-                    color="secondary"
-                    classNames={{
-                      label: "text-primary dark:text-primary",
-                    }}
-                    key={clave}
-                    value={clave}
-                  >
-                    {clave}
-                  </Checkbox>
-                ))}
-              </div>
-            </CheckboxGroup>
-          </div>
+    <div className="max-w-6xl mx-auto">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl border border-gray-200 dark:border-gray-700 p-8 md:p-10">
+        <div className="text-center mb-10 pb-6 border-b border-gray-100 dark:border-gray-700">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-3">
+            ¡Hola {formData.name}!
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Complete la información profesional
+          </p>
         </div>
         
-        <div className="flex flex-col sm:flex-row w-full justify-center gap-4 mt-10 items-center">
-          <Button
-            radius="full"
-            className="bg-background dark:bg-background border-1 border-primary dark:border-primary text-primary dark:text-primary"
-            onPress={onBack}
-          >
-            Retroceder
-          </Button>
-          <Button
-            radius="full"
-            type="submit"
-            className="min-w-32 bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground"
-          >
-            Siguiente
-          </Button>
-        </div>
-      </Form>
+        <Form validationBehavior="native" onSubmit={handleSubmit}>
+          {/* Layout Mobile - Columna vertical */}
+          <div className="flex flex-col gap-8 md:hidden">
+            {/* Foto en mobile */}
+            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+              <h3 className="font-semibold text-gray-800 dark:text-white text-base mb-4">Foto de perfil</h3>
+              <div className="relative border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary rounded-xl h-48 w-full flex justify-center items-center cursor-pointer overflow-hidden bg-white dark:bg-gray-700 transition-all duration-200 shadow-sm">
+                {base64Image ? (
+                  <Image
+                    src={formData.imagen}
+                    alt="Imagen seleccionada"
+                    width={300}
+                    height={200}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                ) : (
+                  <div className="text-center">
+                    <Plus className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-3" />
+                    <p className="text-base text-gray-600 dark:text-gray-400 font-medium">Haga clic para subir foto</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Formato JPG, PNG o WebP</p>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    try {
+                      await handleImageUpload(e);
+                    } catch (error) {
+                      console.error("Error processing image:", error);
+                      toast.error("Error processing image. Please try again.", {
+                        position: "top-center",
+                        autoClose: 1300,
+                      });
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+            </div>
+            
+            {/* Introducción en mobile */}
+            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+              <Textarea
+                isRequired
+                value={formData.introduccion ?? ""}
+                minLength={100}
+                maxLength={350}
+                classNames={{
+                  label: "text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base",
+                  inputWrapper: "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm",
+                  input: "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3",
+                  innerWrapper: "min-h-[120px]",
+                }}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData({
+                    ...formData,
+                    introduccion: value,
+                  });
+                }}
+                label="Introducción profesional"
+                labelPlacement="outside"
+                placeholder="Describe tu experiencia y enfoque profesional..."
+                variant="bordered"
+                radius="lg"
+                description={`${
+                  formData.introduccion?.length || 0
+                }/350 caracteres (mínimo 100)`}
+              />
+            </div>
+            
+            {/* Experiencia en mobile */}
+            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+              <Input
+                label="Años de experiencia"
+                isRequired
+                min={0}
+                placeholder="Ingrese los años de experiencia"
+                labelPlacement="outside"
+                radius="lg"
+                value={formData.experiencia.toString()}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    experiencia: parseInt(e.target.value) || 0,
+                  })
+                }
+                classNames={{
+                  label: "text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base",
+                  inputWrapper: "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm",
+                  input: "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3",
+                }}
+                type="number"
+                variant="bordered"
+              />
+            </div>
+            
+            {/* Especialidades en mobile */}
+            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+              <CheckboxGroup
+                isRequired
+                orientation="vertical"
+                description="Seleccione las especialidades que domina"
+                isInvalid={isInvalid}
+                label="Especialidades"
+                classNames={{
+                  label: "text-gray-800 dark:text-gray-200 font-semibold text-base mb-2",
+                  description: "text-gray-600 dark:text-gray-400 mb-4",
+                }}
+                onValueChange={handleEspecialidadesChange}
+                defaultValue={[Object.keys(especialidadesMap)[0]]}
+              >
+                <div className="grid grid-cols-1 gap-3 w-full mt-3">
+                  {Object.keys(especialidadesMap).map((clave) => (
+                    <div key={clave} className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <Checkbox
+                        color="primary"
+                        classNames={{
+                          label: "text-gray-900 dark:text-white font-medium capitalize",
+                          wrapper: "before:border-gray-300 dark:before:border-gray-600",
+                        }}
+                        value={clave}
+                      >
+                        {clave.replace(/-/g, ' ')}
+                      </Checkbox>
+                    </div>
+                  ))}
+                </div>
+              </CheckboxGroup>
+            </div>
+          </div>
+
+          {/* Layout Desktop - Grid mejorado */}
+          <div className="hidden md:grid gap-8 lg:gap-12 grid-cols-1 lg:grid-cols-2">
+            <div className="space-y-8">
+              <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+                <h3 className="font-semibold text-gray-800 dark:text-white text-base mb-4">Foto de perfil</h3>
+                <div className="relative border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary rounded-xl h-56 w-full flex justify-center items-center cursor-pointer overflow-hidden bg-white dark:bg-gray-700 transition-all duration-200 shadow-sm">
+                  {base64Image ? (
+                    <Image
+                      src={formData.imagen}
+                      alt="Imagen seleccionada"
+                      width={300}
+                      height={200}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <Plus className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-3" />
+                      <p className="text-base text-gray-600 dark:text-gray-400 font-medium">Haga clic para subir foto</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">Formato JPG, PNG o WebP</p>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      try {
+                        await handleImageUpload(e);
+                      } catch (error) {
+                        console.error("Error processing image:", error);
+                        toast.error("Error processing image. Please try again.", {
+                          position: "top-center",
+                          autoClose: 1300,
+                        });
+                      }
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
+                <Input
+                  label="Años de experiencia"
+                  isRequired
+                  min={0}
+                  placeholder="Ingrese los años de experiencia"
+                  labelPlacement="outside"
+                  radius="lg"
+                  value={formData.experiencia.toString()}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      experiencia: parseInt(e.target.value) || 0,
+                    })
+                  }
+                  classNames={{
+                    label: "text-gray-800 dark:text-gray-200 font-medium mb-1 pl-1",
+                    inputWrapper: "border-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-colors",
+                    input: "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400",
+                  }}
+                  type="number"
+                  variant="bordered"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <Textarea
+                  isRequired
+                  value={formData.introduccion ?? ""}
+                  minLength={100}
+                  maxLength={350}
+                  classNames={{
+                    label: "text-gray-800 dark:text-gray-200 font-medium mb-1 pl-1",
+                    inputWrapper: "border-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-colors",
+                    input: "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400",
+                    innerWrapper: "min-h-[100px]",
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setFormData({
+                      ...formData,
+                      introduccion: value,
+                    });
+                  }}
+                  label="Introducción profesional"
+                  labelPlacement="outside"
+                  placeholder="Describe tu experiencia y enfoque profesional..."
+                  variant="bordered"
+                  radius="lg"
+                  description={`${
+                    formData.introduccion?.length || 0
+                  }/350 caracteres (mínimo 100)`}
+                />
+              </div>
+              
+              <div>
+                <CheckboxGroup
+                  isRequired
+                  orientation="vertical"
+                  description="Seleccione las especialidades que domina"
+                  isInvalid={isInvalid}
+                  label="Especialidades"
+                  classNames={{
+                    label: "text-gray-800 dark:text-gray-200 font-medium text-base pl-1",
+                    description: "text-gray-600 dark:text-gray-400 pl-1",
+                  }}
+                  onValueChange={handleEspecialidadesChange}
+                  defaultValue={[Object.keys(especialidadesMap)[0]]}
+                >
+                  <div className="grid grid-cols-1 gap-3 w-full mt-3">
+                    {Object.keys(especialidadesMap).map((clave) => (
+                      <div key={clave} className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <Checkbox
+                          color="primary"
+                          classNames={{
+                            label: "text-gray-900 dark:text-white font-medium capitalize",
+                            wrapper: "before:border-gray-300 dark:before:border-gray-600",
+                          }}
+                          value={clave}
+                        >
+                          {clave.replace(/-/g, ' ')}
+                        </Checkbox>
+                      </div>
+                    ))}
+                  </div>
+                </CheckboxGroup>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row w-full justify-between items-center gap-6 mt-12 pt-8 border-t border-gray-100 dark:border-gray-700">
+            <Button
+              radius="lg"
+              variant="bordered"
+              size="lg"
+              className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold transition-all duration-200"
+              onPress={onBack}
+            >
+              Volver Atrás
+            </Button>
+            <Button
+              radius="lg"
+              type="submit"
+              size="lg"
+              className="px-12 py-4 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Registrar Psicólogo
+            </Button>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 };
