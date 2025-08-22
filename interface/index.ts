@@ -505,6 +505,7 @@ export interface CitaSinPagar {
     idPaciente: number;
     nombre: string;
     apellido: string;
+    celular: string;
   };
   psicologo: {
     idPsicologo: number;
