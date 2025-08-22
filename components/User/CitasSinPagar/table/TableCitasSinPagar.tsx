@@ -8,6 +8,7 @@ import { CitaSinPagar } from "@/interface";
 import { formatCitaDate } from "../../Citas/citas";
 import { CitaSinPagarModal } from "../modal/CitaSinPagarModal";
 import { useCitasSinPagar } from "../hooks/useCitasSinPagar";
+import  useWhatsAppServices  from "../hooks/useWhatsAppServices";
 
 interface TableCitasProps {
   filteredCitas: CitaSinPagar[];
@@ -21,6 +22,7 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
   const [selectedCita, setSelectedCita] = useState<CitaSinPagar | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { aceptarCita, rechazarCita } = useCitasSinPagar();
+  const { aceptarCitaMessage, rechazarCitaMessage } = useWhatsAppServices();
 
   const handleOpenModal = (cita: CitaSinPagar) => {
     setSelectedCita(cita);
@@ -32,10 +34,11 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
     setIsModalOpen(false);
   };
 
-  const handleAceptarCita = async (citaId: string, comentario: string) => {
+  const handleAceptarCita = async (citaId: string, comentario: string, celular: string) => {
     try {
+      const whatsappResult = await aceptarCitaMessage(celular, comentario);
+      console.log("mensaje enviado:", whatsappResult);
       await aceptarCita(citaId, comentario);
-      // Opcional: Refrescar la lista de citas o actualizar el estado
       handleCloseModal();
     } catch (error) {
       // El error ya se maneja en el hook
@@ -43,10 +46,11 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
     }
   };
 
-  const handleRechazarCita = async (citaId: string, comentario: string) => {
+  const handleRechazarCita = async (citaId: string, comentario: string, celular:string) => {
     try {
-      await rechazarCita(citaId, comentario);
-      // Opcional: Refrescar la lista de citas o actualizar el estado
+      const whatsappResult = rechazarCita(citaId, comentario);
+      console.log("mensaje enviado:", whatsappResult);
+      await rechazarCitaMessage(celular, comentario)
       handleCloseModal();
     } catch (error) {
       // El error ya se maneja en el hook
