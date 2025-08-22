@@ -11,16 +11,27 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, AlertTriangle } from "lucide-react";
 import { CitaSinPagar } from "@/interface";
+import { toast } from "react-toastify";
 
 interface CitaSinPagarModalProps {
   isOpen: boolean;
   onClose: () => void;
   cita: CitaSinPagar | null;
   imagenes?: string[];
-  onAceptar: (citaId: string, comentario: string) => void;
-  onRechazar: (citaId: string, comentario: string) => void;
+  onAceptar: (
+    codigo: string,
+    idCita: string,
+    comentario: string,
+    numero: string,
+  ) => void;
+  onRechazar: (
+    idBoucher: string,
+    idCita: string,
+    comentario: string,
+    numero: string,
+  ) => void;
 }
 
 export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
@@ -51,9 +62,29 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
 
   const handleAceptar = async () => {
     if (!cita) return;
+
+    // Verificar que tengamos la información del boucher
+    if (!cita.boucher?.codigo) {
+      toast.error("No se encontró información del boucher para aceptar");
+      return;
+    }
+
+    // Verificar que el boucher esté en estado pendiente
+    if (cita.boucher.estado !== "pendiente") {
+      toast.error(
+        `El boucher debe estar en estado pendiente. Estado actual: ${cita.boucher.estado}`,
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
-      onAceptar(cita.idCita, comentario);
+      await onAceptar(
+        cita.boucher.codigo,
+        cita.idCita,
+        comentario,
+        cita.paciente.numero,
+      );
       handleClose();
     } catch (error) {
       console.error("Error al aceptar la cita:", error);
@@ -64,9 +95,29 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
 
   const handleRechazar = async () => {
     if (!cita) return;
+
+    // Verificar que tengamos la información del boucher
+    if (!cita.boucher?.idBoucher) {
+      toast.error("No se encontró información del boucher para rechazar");
+      return;
+    }
+
+    // Verificar que el boucher esté en estado pendiente
+    if (cita.boucher.estado !== "pendiente") {
+      toast.error(
+        `Solo se pueden rechazar bouchers pendientes. Estado actual: ${cita.boucher.estado}`,
+      );
+      return;
+    }
+
     setIsLoading(true);
     try {
-      onRechazar(cita.idCita, comentario);
+      await onRechazar(
+        cita.boucher.idBoucher,
+        cita.idCita,
+        comentario,
+        cita.paciente.numero,
+      );
       handleClose();
     } catch (error) {
       console.error("Error al rechazar la cita:", error);
@@ -89,6 +140,20 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
 
   if (!cita) return null;
 
+  // Verificar si hay problemas con la información del boucher
+  const boucherProblems = [];
+  if (!cita.boucher) {
+    boucherProblems.push("No se encontró información del boucher");
+  } else {
+    if (!cita.boucher.codigo) boucherProblems.push("Falta código del boucher");
+    if (!cita.boucher.idBoucher) boucherProblems.push("Falta ID del boucher");
+    if (cita.boucher.estado !== "pendiente") {
+      boucherProblems.push(
+        `El boucher no está pendiente (Estado: ${cita.boucher.estado})`,
+      );
+    }
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -107,6 +172,27 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
         </DialogHeader>
 
         <div className="space-y-6">
+          {/* Alertas de problemas con el boucher */}
+          {boucherProblems.length > 0 && (
+            <Card className="border-orange-200 bg-orange-50">
+              <CardContent className="p-4">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="font-medium text-orange-800 mb-2">
+                      Advertencias sobre el Boucher
+                    </h4>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-orange-700">
+                      {boucherProblems.map((problem, index) => (
+                        <li key={index}>{problem}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Información de la Cita */}
           <Card>
             <CardContent className="p-4">
@@ -121,7 +207,7 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
                 </div>
                 <div>
                   <Label className="text-sm font-medium text-gray-600">
-                    Código
+                    Código Paciente
                   </Label>
                   <p className="text-lg font-semibold">
                     {cita.paciente.idPaciente}
@@ -146,6 +232,85 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
                   <p className="text-lg">{cita.motivo_Consulta}</p>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Información del Boucher */}
+          <Card>
+            <CardContent className="p-4">
+              <Label className="text-sm font-medium text-gray-600 mb-3 block">
+                Información del Boucher
+              </Label>
+              {cita.boucher ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">
+                      Código Boucher
+                    </Label>
+                    <p className="text-lg font-semibold text-blue-600">
+                      {cita.boucher.codigo || "No disponible"}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">
+                      ID Boucher
+                    </Label>
+                    <p className="text-lg font-semibold">
+                      {cita.boucher.idBoucher || "No disponible"}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-600">
+                      Estado
+                    </Label>
+                    <p
+                      className={`text-lg font-semibold ${
+                        cita.boucher.estado === "pendiente"
+                          ? "text-yellow-600"
+                          : cita.boucher.estado === "aceptado"
+                            ? "text-green-600"
+                            : "text-red-600"
+                      }`}
+                    >
+                      {cita.boucher.estado?.charAt(0).toUpperCase() +
+                        cita.boucher.estado?.slice(1) || "Desconocido"}
+                    </p>
+                  </div>
+                  {cita.boucher.monto && (
+                    <div>
+                      <Label className="text-sm font-medium text-gray-600">
+                        Monto
+                      </Label>
+                      <p className="text-lg font-semibold text-green-600">
+                        ${cita.boucher.monto}
+                      </p>
+                    </div>
+                  )}
+                  {cita.boucher.fecha_creacion && (
+                    <div>
+                      <Label className="text-sm font-medium text-gray-600">
+                        Fecha Creación
+                      </Label>
+                      <p className="text-lg">
+                        {new Date(
+                          cita.boucher.fecha_creacion,
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <AlertTriangle className="h-12 w-12 mx-auto mb-3 text-orange-400" />
+                  <p className="text-lg font-medium">
+                    No hay información del boucher
+                  </p>
+                  <p className="text-sm">
+                    No se puede procesar esta cita sin la información del
+                    boucher
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -245,19 +410,26 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button
               onClick={handleRechazar}
-              disabled={isLoading}
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white"
+              disabled={isLoading || boucherProblems.length > 0}
+              className="flex-1 bg-red-500 hover:bg-red-600 text-white disabled:bg-gray-400"
             >
               {isLoading ? "Procesando..." : "Rechazar Cita"}
             </Button>
             <Button
               onClick={handleAceptar}
-              disabled={isLoading}
-              className="flex-1 bg-green-500 hover:bg-green-600 text-white"
+              disabled={isLoading || boucherProblems.length > 0}
+              className="flex-1 bg-green-500 hover:bg-green-600 text-white disabled:bg-gray-400"
             >
               {isLoading ? "Procesando..." : "Aceptar Cita"}
             </Button>
           </div>
+
+          {boucherProblems.length > 0 && (
+            <p className="text-sm text-center text-gray-500">
+              Los botones están deshabilitados debido a problemas con la
+              información del boucher
+            </p>
+          )}
         </div>
       </DialogContent>
     </Dialog>
