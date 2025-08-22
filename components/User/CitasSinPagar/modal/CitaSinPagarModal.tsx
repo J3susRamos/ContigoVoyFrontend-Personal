@@ -19,8 +19,8 @@ interface CitaSinPagarModalProps {
   onClose: () => void;
   cita: CitaSinPagar | null;
   imagenes?: string[];
-  onAceptar: (citaId: string, comentario: string) => void;
-  onRechazar: (citaId: string, comentario: string) => void;
+  onAceptar: (citaId: string, comentario: string, celular:string) => void;
+  onRechazar: (citaId: string, comentario: string, celular:string) => void;
 }
 
 export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
@@ -53,7 +53,7 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
     if (!cita) return;
     setIsLoading(true);
     try {
-      onAceptar(cita.idCita, comentario);
+      onAceptar(cita.idCita, comentario, cita.paciente.celular);
       handleClose();
     } catch (error) {
       console.error("Error al aceptar la cita:", error);
@@ -66,7 +66,7 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
     if (!cita) return;
     setIsLoading(true);
     try {
-      onRechazar(cita.idCita, comentario);
+      onRechazar(cita.idCita, comentario, cita.paciente.celular);
       handleClose();
     } catch (error) {
       console.error("Error al rechazar la cita:", error);
