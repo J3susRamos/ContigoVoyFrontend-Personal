@@ -1,12 +1,9 @@
-"use client";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/mainNavbar/Navbar";
-import { usePathname } from "next/navigation";
 import { Lexend } from "next/font/google";
 import { ToastContainer } from "react-toastify";
-import Footer from "@/components/footer/footer";
 import React from "react";
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
@@ -15,15 +12,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const getBaseRoute = () => {
-    const pathParts = pathname.split("/");
-    return `/${pathParts[1]}`;
-  };
-
-  const baseRoute = getBaseRoute();
-  const hideLayout = ["/user", "/admin", "/paciente"].includes(baseRoute);
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${lexend.className} antialiased`}>
@@ -33,13 +21,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {!hideLayout && <Navbar />}
-
-          <div className={`${baseRoute !== "/user" ? " min-h-[90vh]" : ""}`}>
+          <ClientLayoutWrapper>
             {children}
-          </div>
-
-          {!hideLayout && <Footer />}
+          </ClientLayoutWrapper>
         </ThemeProvider>
         <ToastContainer />
       </body>
