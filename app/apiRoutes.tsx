@@ -342,7 +342,7 @@ export async function GetPlantillas(): Promise<MarketingApiResponse> {
 //Traer citas totales por fecha
 export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales`,
     {
       method: "GET",
       headers: {
