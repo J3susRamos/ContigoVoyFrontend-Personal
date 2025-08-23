@@ -604,13 +604,15 @@ export interface UltimaAtencion {
 
 export interface DashboardResult {
   total_citas: number;
-  citas_completadas: number;
+  citas_sin_pagar: number;
+  citas_realizadas: number;
   citas_pendientes: number;
+  citas_ausentes: number;
   citas_canceladas: number;
+  citas_reprogramadas: number;
   total_minutos_reservados: number | string;
   total_pacientes: number;
   nuevos_pacientes: number;
-  citas_confirmadas: number;
 }
 
 export interface DashboardApiResponse {
