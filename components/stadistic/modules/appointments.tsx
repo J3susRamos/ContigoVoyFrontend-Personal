@@ -14,21 +14,23 @@ const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
 export default function Appointments() {
   const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
     total_citas: 0,
-    citas_completadas: 0,
+    citas_sin_pagar: 0,
+    citas_realizadas: 0,
     citas_pendientes: 0,
     citas_canceladas: 0,
+    citas_reprogramadas: 0,
     total_minutos_reservados: 0,
     total_pacientes: 0,
     nuevos_pacientes: 0,
-    citas_confirmadas: 0,
+    citas_ausentes: 0
   });
 
   const [citasMensuales, setCitasMensuales] = useState<CitaMensual[]>([]);
   //Estado de carga para
   const [loading, setLoading] = useState<boolean>(true);
   // Datos para el gráfico de pastel
-  const genero = [
-    { name: "Citas completadas"},
+  const estados = [
+    { name: "Citas realizadas"},
     { name: "Citas canceladas"},
     { name: "Citas pendientes"},
     { name: "Ausencias"},
@@ -60,13 +62,15 @@ export default function Appointments() {
 
       setCitasPsicologo({
         total_citas: result?.total_citas ?? 0,
-        citas_completadas: result?.citas_completadas ?? 0,
+        citas_sin_pagar: result?.citas_sin_pagar ?? 0,
+        citas_realizadas: result?.citas_realizadas ?? 0,
         citas_pendientes: result?.citas_pendientes ?? 0,
         citas_canceladas: result?.citas_canceladas ?? 0,
+        citas_ausentes: result?.citas_ausentes ?? 0,
+        citas_reprogramadas: result?.citas_reprogramadas ?? 0,
         total_minutos_reservados: result?.total_minutos_reservados ?? 0,
         total_pacientes: result?.total_pacientes ?? 0,
-        nuevos_pacientes: result?.nuevos_pacientes ?? 0,
-        citas_confirmadas: result?.citas_confirmadas ?? 0,
+        nuevos_pacientes: result?.nuevos_pacientes ?? 0
       });
       setLoading(false);    };
     loadData();
@@ -87,7 +91,7 @@ console.log(citasMensuales)
             />
           </div>
           <span className="text-sm md:text-base font-medium text-card-foreground dark:text-card-foreground ">
-            {citasPsicologo["citas_confirmadas"]} citas reservadas
+            {citasPsicologo["citas_pendientes"]} citas reservadas
           </span>
         </div>
         
@@ -151,7 +155,7 @@ console.log(citasMensuales)
           </div>
             {/* Leyenda */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 place-items-center">
-            {genero.map((entry, index) => (
+            {estados.map((entry, index) => (
                 <div key={index} className="flex items-center gap-2">
                   <div
                       className="w-3 h-3 rounded-full flex-shrink-0"
