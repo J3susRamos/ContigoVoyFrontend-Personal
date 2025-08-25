@@ -12,7 +12,10 @@ export const metadata: Metadata = {
     "Conecta con tu bienestar. Psicólogos online, comienza tu terapia hoy. Contigo Voy te acompaña desde el primer paso. Agenda tu cita, la primera es gratis.",
   authors: [{ name: "Contigo Voy" }],
   verification: {
-    google: "ddLU23MMNVC0iknLLV3PFXxVUN5RHLSJkQLzEbg4t8s",
+    google: [
+      "ddLU23MMNVC0iknLLV3PFXxVUN5RHLSJkQLzEbg4t8s",
+      "6u5qZ6pA6QPGpgHB4x1FIAjK83idrgJDfRRwU1wNSQE",
+    ],
   },
   keywords: [
     "psicología",
