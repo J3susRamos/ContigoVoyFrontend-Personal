@@ -71,7 +71,11 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
         cita.motivo_Consulta,
         cita.fecha_cita,
       ]}
-      onBoucher={() => handleOpenModal(cita)}
+      {...(cita.boucher && {
+        onBoucher: () => {
+          handleOpenModal(cita);
+        },
+      })}
     ></Row>
   );
 
