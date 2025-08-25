@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { Edit3, Ban, XCircle, CheckCircle, Ticket } from "lucide-react";
+import { Edit3, Ban, Ticket } from "lucide-react";
 import { ActionButton } from "./ActionButton";
 
 interface RowProps {
@@ -55,6 +55,7 @@ const Row: React.FC<RowProps> = ({
                   <ActionButton
                     icon={Ticket}
                     label={!llave ? "Boucher" : "Deshabilitar"}
+                    className=""
                     onClick={onBoucher}
                   />
                 )}

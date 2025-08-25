@@ -505,12 +505,19 @@ export interface CitaSinPagar {
     idPaciente: number;
     nombre: string;
     apellido: string;
-    celular: string;
+    numero: string;
   };
   psicologo: {
     idPsicologo: number;
     nombre: string;
     apellido: string;
+  };
+  boucher?: {
+    idBoucher: string;
+    codigo: string;
+    estado: string;
+    fecha_creacion?: string;
+    monto?: number;
   };
 }
 

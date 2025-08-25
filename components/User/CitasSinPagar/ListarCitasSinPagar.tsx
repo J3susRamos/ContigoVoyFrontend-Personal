@@ -72,7 +72,7 @@ const ListarCitasSinPagar = ({ filterValue }: Props) => {
               idPaciente: cita.paciente.idPaciente,
               nombre: cita.paciente.nombre,
               apellido: cita.paciente.apellido,
-              celular: cita.paciente.celular,
+              numero: cita.paciente.numero,
             },
             psicologo: {
               idPsicologo: cita.psicologo.idPsicologo,

@@ -22,7 +22,6 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
   const [selectedCita, setSelectedCita] = useState<CitaSinPagar | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { aceptarCita, rechazarCita } = useCitasSinPagar();
-  const { aceptarCitaMessage, rechazarCitaMessage } = useWhatsAppServices();
 
   const handleOpenModal = (cita: CitaSinPagar) => {
     setSelectedCita(cita);
@@ -34,11 +33,15 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
     setIsModalOpen(false);
   };
 
-  const handleAceptarCita = async (citaId: string, comentario: string, celular: string) => {
+  const handleAceptarCita = async (
+    codigo: string,
+    idCita: string,
+    comentario: string,
+    numero: string,
+  ) => {
     try {
-      const whatsappResult = await aceptarCitaMessage(celular, comentario);
-      console.log("mensaje enviado:", whatsappResult);
-      await aceptarCita(citaId, comentario);
+      await aceptarCita(codigo, idCita, comentario, numero);
+      // Opcional: Refrescar la lista de citas o actualizar el estado
       handleCloseModal();
     } catch (error) {
       // El error ya se maneja en el hook
@@ -46,11 +49,14 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
     }
   };
 
-  const handleRechazarCita = async (citaId: string, comentario: string, celular:string) => {
+  const handleRechazarCita = async (
+    idBoucher: string,
+    comentario: string,
+    numero: string,
+  ) => {
     try {
-      const whatsappResult = rechazarCita(citaId, comentario);
-      console.log("mensaje enviado:", whatsappResult);
-      await rechazarCitaMessage(celular, comentario)
+      await rechazarCita(idBoucher, comentario, numero);
+      // Opcional: Refrescar la lista de citas o actualizar el estado
       handleCloseModal();
     } catch (error) {
       // El error ya se maneja en el hook
@@ -66,7 +72,11 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
         cita.motivo_Consulta,
         cita.fecha_cita,
       ]}
-      onBoucher={() => handleOpenModal(cita)}
+      {...(cita.boucher && {
+        onBoucher: () => {
+          handleOpenModal(cita);
+        },
+      })}
     ></Row>
   );
 
