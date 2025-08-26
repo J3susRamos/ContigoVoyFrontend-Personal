@@ -8,7 +8,6 @@ import { CitaSinPagar } from "@/interface";
 import { formatCitaDate } from "../../Citas/citas";
 import { CitaSinPagarModal } from "../modal/CitaSinPagarModal";
 import { useCitasSinPagar } from "../hooks/useCitasSinPagar";
-import  useWhatsAppServices  from "../hooks/useWhatsAppServices";
 
 interface TableCitasProps {
   filteredCitas: CitaSinPagar[];
