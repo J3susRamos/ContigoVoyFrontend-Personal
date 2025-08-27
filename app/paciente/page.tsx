@@ -1,24 +1,17 @@
-"use client"; // Indica a Next.js que este componente se renderiza en el cliente (usa hooks)
+"use client";
 
-// Import de hooks de React para manejar estado, efectos y referencias a nodos DOM
-import { useEffect, useState, useRef } from "react"; // useEffect: efectos; useState: estado; useRef: referencia mutable
+import { useEffect, useState, useRef } from "react";
+import CerrarSesion from "@/components/CerrarSesion"; 
+import { Button } from "@/components/ui/button";
+import Input from "@/components/ui/input"; 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator"; 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; 
+import showToast from "@/components/ToastStyle";
+import { parseCookies } from "nookies";
+import { CitasConteo } from "@/interface";
+import HeaderPaciente from "./components/HeaderPaciente";
 
-// Import del componente para cerrar sesión (parte de tu librería interna)
-import CerrarSesion from "@/components/CerrarSesion"; // Botón/acción de logout ya existente en el proyecto
-
-// Import de componentes UI reutilizables (Shadcn/UI o equivalente)
-import { Button } from "@/components/ui/button"; // Botón estilizado
-
-// Import de componentes Card para agrupar contenido
-import { Card, CardContent } from "@/components/ui/card"; // Contenedores/estructuras visuales
-
-// Separador visual entre secciones
-import { Separator } from "@/components/ui/separator"; // Línea separadora
-
-// Avatar para mostrar imagen o iniciales del paciente
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"; // Imagen de perfil
-
-// Íconos de lucide-react usados en la UI
 import {
   CalendarDays, // Ícono de calendario (día)
   Video, // Ícono de videollamada
@@ -30,8 +23,11 @@ import {
   Activity, // Ícono de actividad/estadística
   History, // Ícono de historial
   Settings, // Ícono de ajustes
+  Bell, // Ícono de notificaciones (no se usa en este snippet, pero disponible)
   Download, // Ícono de descarga
   Eye, // Ícono de ver/preview
+  Phone, // Ícono de teléfono (no se usa aquí)
+  Mail, // Ícono de correo (no se usa aquí)
   ChevronDown, // Ícono de desplegar hacia abajo
   ChevronUp, // Ícono de desplegar hacia arriba
   RefreshCw, // Ícono de recargar/rehacer (reagendar)
@@ -42,12 +38,14 @@ import {
 // Componente de imagen optimizada de Next.js
 import Image from "next/image"; // Gestiona lazy-loading y optimización
 
+
 // --------------------------
 // Definición de tipos (TypeScript)
 // --------------------------
 
 // Interfaz del paciente: describe la forma de los datos que esperamos
 interface Paciente {
+  id: number,
   nombre: string; // Nombre del paciente
   apellido: string; // Apellido del paciente
   email?: string; // Email opcional
@@ -79,35 +77,54 @@ interface Pago {
   metodoPago: string; // Método (Yape, Plin, transferencia, etc.)
 }
 
-// --------------------------
-// Componente principal
-// --------------------------
+
 const Paciente = () => {
-  // Declara el componente funcional Paciente
-  // Estado con los datos del paciente; inicia como null hasta cargar
-  const [paciente, setPaciente] = useState<Paciente | null>(null); // useState para guardar el paciente
 
-  // Estado que guarda el archivo seleccionado (comprobante)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // null si no hay archivo
-
-  // Indicador de si hay una subida en progreso
-  const [isUploading, setIsUploading] = useState(false); // true mientras se "sube" el archivo
-
-  // Tipo de servicio/pago elegido para el comprobante
+  const [loading, setLoading] = useState(true);
+  const [paciente, setPaciente] = useState<Paciente | null>(null); 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false); 
   const [selectedPaymentType, setSelectedPaymentType] = useState<string | null>(
-    null,
-  ); // selecciona el tipo
+    null
+  ); 
+  const [citas, setCitas] = useState<CitasConteo>({
+      pendientes: 0,
+      canceladas: 0,
+      confirmadas: 0,
+  });
+  console.log(citas);
+  const [expandedCitas, setExpandedCitas] = useState<number[]>([]); 
+  const [expandedPagos, setExpandedPagos] = useState<number[]>([]); 
+  const fileInputRef = useRef<HTMLInputElement | null>(null); 
 
-  // IDs de citas/pagos actualmente expandidos (acordeón)
-  const [expandedCitas, setExpandedCitas] = useState<number[]>([]); // lista de IDs de citas abiertas
-  const [expandedPagos, setExpandedPagos] = useState<number[]>([]); // lista de IDs de pagos abiertos
+  const HandleGetCitas = async (idPaciente: number) => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["session"];
+      const url = `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/citas/${idPaciente}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
 
-  // Referencia a input type=file para poder abrirlo desde un botón si se desea
-  const fileInputRef = useRef<HTMLInputElement | null>(null); // referencia mutable al input oculto
+      if (response.ok) {
+        setCitas(data.result);
+        showToast("success", "Citas obtenidas correctamente");
+      } else {
+        showToast("error", data.message || "Error al obtener las citas");
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("error", "Error de conexión. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // --------------------------
-  // Datos de ejemplo (mock) — normalmente vendrían de una API
-  // --------------------------
   const citasProximas: Cita[] = [
     // Array de próximas citas simuladas
     {
@@ -156,36 +173,25 @@ const Paciente = () => {
     },
   ];
 
-  // --------------------------
-  // Efectos (useEffect)
-  // --------------------------
   useEffect(() => {
-    // Efecto que corre al montar el componente
-    initializePaciente(); // Carga datos del paciente desde localStorage
-  }, []); // [] asegura que solo se ejecute una vez (montaje)
-
-  // --------------------------
-  // Funciones auxiliares
-  // --------------------------
+    initializePaciente(); 
+  }, []); 
 
   const initializePaciente = () => {
-    // Lee localStorage y popula 'paciente'
     if (typeof window !== "undefined") {
-      // Asegura que se ejecute en cliente
-      const storedUser = localStorage.getItem("user"); // Obtiene la cadena JSON guardada
+      const storedUser = localStorage.getItem("user"); 
       if (storedUser) {
-        // Si existe
-        const user = JSON.parse(storedUser); // Parsea a objeto
+        const user = JSON.parse(storedUser); 
         if (user.rol === "PACIENTE") {
-          // Verifica rol
           setPaciente({
-            // Guarda en estado con valores por defecto
+            id: +user.id,
             nombre: user.nombre,
             apellido: user.apellido,
             email: user.email || "paciente@contigo.voy",
             telefono: user.telefono || "+51 999 888 777",
             fechaNacimiento: user.fechaNacimiento || "1990-01-01",
           });
+          HandleGetCitas(+user.id);
         }
       }
     }
@@ -230,21 +236,6 @@ const Paciente = () => {
     });
   };
 
-  const getEstadoColor = (estado: string): string => {
-    switch (estado) {
-      case "confirmada":
-      case "aprobado":
-      case "completada":
-        return "text-green-700 bg-green-100 border-green-200 dark:text-green-400 dark:bg-green-900/20 dark:border-green-800";
-      case "pendiente":
-        return "text-yellow-700 bg-yellow-100 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-900/20 dark:border-yellow-800";
-      case "rechazado":
-        return "text-red-700 bg-red-100 border-red-200 dark:text-red-400 dark:bg-red-900/20 dark:border-red-800";
-      default:
-        return "text-gray-700 bg-gray-100 border-gray-200 dark:text-gray-400 dark:bg-gray-900/20 dark:border-gray-800";
-    }
-  };
-
   const joinVideoCall = (citaId: number) => {
     // Abre la videollamada correspondiente
     window.open(`/videocall/${citaId}`, "_blank"); // Abre en nueva pestaña la ruta /videocall/:id
@@ -253,7 +244,7 @@ const Paciente = () => {
   const handleReagendar = (cita: Cita) => {
     // Acción para reagendar (placeholder)
     alert(
-      `Preparando para reagendar cita con ${cita.doctor} el ${cita.fecha} a las ${cita.hora}`,
+      `Preparando para reagendar cita con ${cita.doctor} el ${cita.fecha} a las ${cita.hora}`
     ); // Mensaje informativo
   };
 
@@ -261,9 +252,9 @@ const Paciente = () => {
     // Alterna expansión de la cita (acordeón)
     setExpandedCitas(
       (
-        prev, // Usa estado previo
+        prev // Usa estado previo
       ) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id], // Quita si estaba, agrega si no
+        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id] // Quita si estaba, agrega si no
     );
   };
 
@@ -271,57 +262,38 @@ const Paciente = () => {
     // Alterna expansión del pago (acordeón)
     setExpandedPagos(
       (
-        prev, // Usa estado previo
+        prev // Usa estado previo
       ) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id], // Quita/agrega id
+        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id] // Quita/agrega id
     );
+  };
+
+  const getEstadoColor = (estado: string) => {
+    // Devuelve clases según estado para estilos
+    switch (
+      estado // Compara estado
+    ) {
+      case "confirmada": // Cita confirmada
+      case "aprobado": // Pago aprobado
+        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"; // Verde
+      case "pendiente": // En espera
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500"; // Amarillo
+      case "rechazado": // Rechazado
+        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-500"; // Rojo
+      default: // Otro estado
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"; // Gris neutro
+    }
   };
 
   // --------------------------
   // Render (JSX)
   // --------------------------
-
   return (
+    // Devuelve el árbol JSX a renderizar
+    // Contenedor principal con gradiente de fondo y soporte para dark mode
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
-      {/* Contenedor central con padding y separación entre secciones */}
       <div className="container mx-auto px-4 py-6 lg:py-8 space-y-6">
-        {/* Header superior con avatar y acciones */}
-        <header className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-sm">
-          {/* Padding interno del header */}
-          <div className="p-4 sm:p-6">
-            {/* Layout del header: a la izquierda perfil, a la derecha acciones */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              {/* Bloque de perfil */}
-              <div className="flex items-center gap-4">
-                {/* Avatar con fallback a iniciales si no hay imagen */}
-                <Avatar className="w-16 h-16 border-4 border-white dark:border-gray-700">
-                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold">
-                    {paciente?.nombre?.charAt(0)}
-                    {paciente?.apellido?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                {/* Nombre y apellidos del paciente */}
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                    Bienvenido{paciente ? `, ${paciente.nombre}` : ""}
-                  </h1>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {paciente?.apellido}
-                  </p>
-                </div>
-              </div>
-              {/* Acciones: configuración y cerrar sesión */}
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Configuración
-                </Button>
-                <CerrarSesion />
-              </div>
-            </div>
-          </div>
-        </header>
-
+        <HeaderPaciente paciente={paciente} />
         {/* Tarjetas de métricas rápidas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Tarjeta 1: próximas citas */}
@@ -399,7 +371,9 @@ const Paciente = () => {
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-2 rounded-lg ${getEstadoColor(cita.estado)}`}
+                      className={`p-2 rounded-lg ${getEstadoColor(
+                        cita.estado
+                      )}`}
                     >
                       <CalendarDays className="w-5 h-5" />
                     </div>
@@ -412,7 +386,9 @@ const Paciente = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs ${getEstadoColor(cita.estado)}`}
+                      className={`px-3 py-1 rounded-full text-xs ${getEstadoColor(
+                        cita.estado
+                      )}`}
                     >
                       {cita.estado.charAt(0).toUpperCase() +
                         cita.estado.slice(1)}
@@ -592,7 +568,9 @@ const Paciente = () => {
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-2 rounded-lg ${getEstadoColor(pago.estado)}`}
+                      className={`p-2 rounded-lg ${getEstadoColor(
+                        pago.estado
+                      )}`}
                     >
                       <CheckCircle className="w-5 h-5" />
                     </div>
@@ -605,7 +583,9 @@ const Paciente = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs ${getEstadoColor(pago.estado)}`}
+                      className={`px-3 py-1 rounded-full text-xs ${getEstadoColor(
+                        pago.estado
+                      )}`}
                     >
                       {pago.estado.charAt(0).toUpperCase() +
                         pago.estado.slice(1)}
@@ -649,7 +629,9 @@ const Paciente = () => {
                           onClick={() => {
                             const link = document.createElement("a"); // Crea un elemento <a>
                             link.href = pago.voucher; // Asigna el origen del archivo
-                            link.download = `comprobante-${pago.id}.${pago.voucher.split(".").pop()}`; // Sugiere nombre de descarga
+                            link.download = `comprobante-${
+                              pago.id
+                            }.${pago.voucher.split(".").pop()}`; // Sugiere nombre de descarga
                             link.click(); // Dispara la descarga
                           }}
                         >
