@@ -23,11 +23,49 @@ export default function BlogCarousel({
   onToggle,
   onOpenModal
 }: BlogCarouselProps) {
-  if (!blog.imagenes || blog.imagenes.length <= 1) {
+  // Función para obtener una imagen válida
+  const getValidImageSrc = (imageUrl: string | undefined): string | null => {
+    if (!imageUrl || imageUrl.trim() === '') return null;
+    return imageUrl;
+  };
+
+  // Validar si hay imágenes válidas
+  const validImages = blog.imagenes?.filter(img => getValidImageSrc(img) !== null) || [];
+  const fallbackImage = getValidImageSrc(blog.imagen);
+  
+  // Si no hay imágenes válidas, mostrar placeholder
+  if (validImages.length === 0 && !fallbackImage) {
+    return (
+      <div className="relative h-80 lg:h-[500px] overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+        <div className="text-center text-gray-500 dark:text-gray-400">
+          <div className="text-6xl mb-4">📷</div>
+          <p className="text-lg font-medium">Sin imagen disponible</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si solo hay una imagen válida o menos
+  const imagesToShow = validImages.length > 0 ? validImages : [fallbackImage].filter(Boolean);
+  
+  if (imagesToShow.length <= 1) {
+    const imageUrl = imagesToShow[0] || fallbackImage;
+    
+    if (!imageUrl) {
+      return (
+        <div className="relative h-80 lg:h-[500px] overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+          <div className="text-center text-gray-500 dark:text-gray-400">
+            <div className="text-6xl mb-4">📷</div>
+            <p className="text-lg font-medium">Sin imagen disponible</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="relative h-80 lg:h-[500px] overflow-hidden">
         <Image
-          src={blog.imagenes?.[0] || blog.imagen}
+          src={imageUrl}
           alt={`Imagen de ${blog.tema}`}
           title={blog.tema}
           fill
@@ -48,17 +86,32 @@ export default function BlogCarousel({
     );
   }
 
+  // Validar currentImageIndex
+  const safeCurrentIndex = Math.min(currentImageIndex, imagesToShow.length - 1);
+  const currentImageUrl = imagesToShow[safeCurrentIndex];
+
+  if (!currentImageUrl) {
+    return (
+      <div className="relative h-80 lg:h-[500px] overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+        <div className="text-center text-gray-500 dark:text-gray-400">
+          <div className="text-6xl mb-4">📷</div>
+          <p className="text-lg font-medium">Error al cargar imagen</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative h-80 lg:h-[500px] overflow-hidden">
       <div className="relative h-full">
         <Image
-          src={blog.imagenes[currentImageIndex]}
-          alt={`Imagen ${currentImageIndex + 1} de ${blog.tema}`}
+          src={currentImageUrl}
+          alt={`Imagen ${safeCurrentIndex + 1} de ${blog.tema}`}
           title={blog.tema}
           fill
           className="object-contain bg-gray-100 dark:bg-gray-800 transition-opacity duration-500"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
-          priority={currentImageIndex === 0}
+          priority={safeCurrentIndex === 0}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
       </div>
@@ -80,12 +133,12 @@ export default function BlogCarousel({
       </div>
 
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
-        {blog.imagenes.map((_, index) => (
+        {imagesToShow.map((_, index) => (
           <button
             key={index}
             onClick={() => onGoTo(index)}
             className={`transition-all duration-300 ${
-              index === currentImageIndex 
+              index === safeCurrentIndex 
                 ? 'w-4 h-4 bg-white scale-110 shadow-lg' 
                 : 'w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105'
             } rounded-full backdrop-blur-sm`}
@@ -113,12 +166,12 @@ export default function BlogCarousel({
       </div>
 
       <div className="absolute top-6 left-6 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm shadow-lg">
-        {currentImageIndex + 1} de {blog.imagenes.length}
+        {safeCurrentIndex + 1} de {imagesToShow.length}
       </div>
 
       <div className="absolute bottom-6 right-6">
         <button
-          onClick={() => onOpenModal(currentImageIndex)}
+          onClick={() => onOpenModal(safeCurrentIndex)}
           className="bg-black/60 hover:bg-black/80 text-white rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl"
         >
           Ver completa
@@ -126,4 +179,4 @@ export default function BlogCarousel({
       </div>
     </div>
   );
-} 
+}

@@ -4,7 +4,7 @@ import {
   GetBlogsPreviewApi,
   GetCagetories,
 } from "@/app/apiRoutes";
-import BlogPageComponent from "@/components/blog/BlogPageComponent";
+import BlogPageComponentOptimized from "@/components/blog/BlogPageComponentOptimized";
 import BlogPageLoading from "@/components/blog/BlogPageLoading";
 import {
   ApiResponse,
@@ -13,7 +13,7 @@ import {
 } from "@/interface";
 import { useEffect, useState } from "react";
 
-export default  function BlogPage() {
+export default function BlogPage() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [categoria, setCategoria] = useState<CategoriaApi | null>(null);
   const [authors, setAuthors] = useState<AuthorsApi | null>(null);
@@ -22,9 +22,12 @@ export default  function BlogPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const dato = await BlogsWebSite();
-        const category = await GetCagetories();
-        const author = await GetBlogsPreviewApi();
+        const [dato, category, author] = await Promise.all([
+          BlogsWebSite(),
+          GetCagetories(),
+          GetBlogsPreviewApi()
+        ]);
+        
         setData(dato);
         setCategoria(category);
         setAuthors(author);
@@ -33,9 +36,8 @@ export default  function BlogPage() {
         console.error(error);
       }
     }
-    fetchData().catch(error => {
-      console.error("Error in fetchData:", error);
-    });
+    
+    fetchData();
   }, []);
 
   return (
@@ -43,13 +45,15 @@ export default  function BlogPage() {
       {error && (
         <p className="flex items-center justify-center h-screen">{error}</p>
       )}
-      { (data && categoria && authors) ?
-        <BlogPageComponent
+      {(data && categoria && authors) ? (
+        <BlogPageComponentOptimized
           Datos={data.result}
           Categories={categoria.result}
           Authors={authors.result}
-        /> : <BlogPageLoading/>
-      }
+        />
+      ) : (
+        <BlogPageLoading />
+      )}
     </div>
   );
 }
