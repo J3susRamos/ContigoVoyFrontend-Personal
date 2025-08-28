@@ -9,32 +9,35 @@ import {
 import { renderCustomizedLabel, CustomTooltip } from "../custom/CustomTooltipComponent";
 import { DashboardResult } from "@/interface";
 
-const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
+const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF", "#b9cd38"];
 
-type GeneroData = {
+type citasData = {
   name: string;
   Total: number;
 };
 
 function PieChartGrafic({ data }: { data: DashboardResult }) {
-  const [genero, setGenero] = useState<GeneroData[]>([]);
-
+  const [citas, setCitas] = useState<citasData[]>([]);
+ 
   useEffect(() => {
     if (
-      data.citas_completadas > 0 ||
+      data.citas_realizadas > 0 ||
+      data.citas_realizadas > 0 ||
       data.citas_pendientes > 0 ||
       data.citas_canceladas > 0
     ) {
-        setGenero([
-          { name: "Citas completadas", Total: data.citas_completadas },
+        setCitas([
+          { name: "Citas realizadas", Total: data.citas_realizadas },
           { name: "Citas canceladas", Total: data.citas_canceladas },
           { name: "Citas pendientes", Total: data.citas_pendientes },
-          { name: "Ausencias", Total: 0 },
+          { name: "Citas Sin Pagar", Total: data.citas_sin_pagar },
+          { name: "Ausencias", Total: data.citas_ausentes },
         ]);
     }
   }, [data]);
 
-  if (genero.length === 0) return null;
+  if (citas.length === 0) return null;
+  if (citas.length === 0) return null;
 
   return (
     <div className="w-full h-[200px] sm:h-[300px] md:h-[400px]">
@@ -42,7 +45,7 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
         <PieChart>
           <Pie
             dataKey="Total"
-            data={genero}
+            data={citas}
             cx="50%"
             cy="50%"
             innerRadius={50}
@@ -53,7 +56,8 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
             isAnimationActive={true}
             animationDuration={1200}
           >
-            {genero.map((_, index) => (
+            
+            {citas.map((_, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
@@ -73,7 +77,8 @@ function areEqual(
   nextProps: { data: DashboardResult }
 ) {
   return (
-    prevProps.data.citas_completadas === nextProps.data.citas_completadas &&
+    prevProps.data.citas_realizadas === nextProps.data.citas_realizadas &&
+    prevProps.data.citas_realizadas === nextProps.data.citas_realizadas &&
     prevProps.data.citas_pendientes === nextProps.data.citas_pendientes &&
     prevProps.data.citas_canceladas === nextProps.data.citas_canceladas
   );
