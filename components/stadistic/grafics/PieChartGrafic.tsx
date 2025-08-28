@@ -18,9 +18,10 @@ type citasData = {
 
 function PieChartGrafic({ data }: { data: DashboardResult }) {
   const [citas, setCitas] = useState<citasData[]>([]);
-
+ 
   useEffect(() => {
     if (
+      data.citas_realizadas > 0 ||
       data.citas_realizadas > 0 ||
       data.citas_pendientes > 0 ||
       data.citas_canceladas > 0
@@ -35,6 +36,7 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
     }
   }, [data]);
 
+  if (citas.length === 0) return null;
   if (citas.length === 0) return null;
 
   return (
@@ -54,6 +56,7 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
             isAnimationActive={true}
             animationDuration={1200}
           >
+            
             {citas.map((_, index) => (
               <Cell
                 key={`cell-${index}`}
@@ -74,6 +77,7 @@ function areEqual(
   nextProps: { data: DashboardResult }
 ) {
   return (
+    prevProps.data.citas_realizadas === nextProps.data.citas_realizadas &&
     prevProps.data.citas_realizadas === nextProps.data.citas_realizadas &&
     prevProps.data.citas_pendientes === nextProps.data.citas_pendientes &&
     prevProps.data.citas_canceladas === nextProps.data.citas_canceladas

@@ -93,7 +93,7 @@ console.log(citasMensuales)
             />
           </div>
           <span className="text-sm md:text-base font-medium text-card-foreground dark:text-card-foreground ">
-            {citasPsicologo["citas_pendientes"]} citas reservadas ( pendientes )
+            {citasPsicologo["citas_pendientes"]} citas reservadas
           </span>
         </div>
         
