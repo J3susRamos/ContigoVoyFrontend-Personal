@@ -9,7 +9,7 @@ import {
 import { renderCustomizedLabel, CustomTooltip } from "../custom/CustomTooltipComponent";
 import { DashboardResult } from "@/interface";
 
-const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
+const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF", "#b9cd38"];
 
 type citasData = {
   name: string;
@@ -29,6 +29,7 @@ function PieChartGrafic({ data }: { data: DashboardResult }) {
           { name: "Citas realizadas", Total: data.citas_realizadas },
           { name: "Citas canceladas", Total: data.citas_canceladas },
           { name: "Citas pendientes", Total: data.citas_pendientes },
+          { name: "Citas Sin Pagar", Total: data.citas_sin_pagar },
           { name: "Ausencias", Total: data.citas_ausentes },
         ]);
     }
