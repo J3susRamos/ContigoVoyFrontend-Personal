@@ -6,7 +6,7 @@ import { CitaMensual, DashboardResult } from "@/interface";
 import PieChartGrafic from "../grafics/PieChartGrafic";
 import LineChartGrafic from "../grafics/LineChartGrafic";
 
-const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
+const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF", "#197a50", "#b9cd38"];
 
 // Datos para el LineChart
 
@@ -33,6 +33,8 @@ export default function Appointments() {
     { name: "Citas realizadas"},
     { name: "Citas canceladas"},
     { name: "Citas pendientes"},
+    { name: "Citas sin pagar"},
+    { name: "Citas Reprogramadas"},
     { name: "Ausencias"},
   ];
   const fetchDashboard = async () => {
