@@ -12,7 +12,7 @@ import {GetPsicologoDashboard} from "@/app/apiRoutes";
 import {DashboardResult} from "@/interface";
 import PieChartGrafic from "../grafics/PieChartGrafic";
 
-const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF"];
+const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF", "#197a50", "#b9cd38"];
 
 // Datos para el LineChart
 const data = [
@@ -45,6 +45,8 @@ export default function Sales() {
         {name: "Citas realizadas"},
         {name: "Citas canceladas"},
         {name: "Citas pendientes"},
+        { name: "Citas sin pagar"},
+        { name: "Citas Reprogramadas"},
         {name: "Ausencias"},
     ];
 
