@@ -89,7 +89,7 @@ export default function Clients() {
       const data = [
         { name: "Masculino", Total: result?.Masculino?.cantidad ?? 0 },
         { name: "Femenino", Total: result?.Femenino?.cantidad ?? 0},
-
+        { name: "Otro", Total: result?.Otro?.cantidad ?? 0},
       ];
       setGenero(data);
     });
