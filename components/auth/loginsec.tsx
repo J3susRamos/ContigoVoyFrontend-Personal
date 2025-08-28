@@ -74,7 +74,7 @@ export const useAuth = () => {
       }
 
       if (userDataToStore.rol === "ADMIN") {
-        window.location.assign("/user/home");
+        window.location.assign("/user/citas-sin-pagar");
       }
 
     } catch (error: unknown) {
