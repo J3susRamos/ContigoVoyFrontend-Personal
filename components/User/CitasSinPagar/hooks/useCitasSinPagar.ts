@@ -44,7 +44,7 @@ export const useCitasSinPagar = () => {
       if (result.status_code === 200) {
         // Si el boucher fue aceptado exitosamente, enviar el comentario si existe
         if (comentario.trim()) {
-          await enviarComentario(numero, comentario, "/send-message-accept");
+          await enviarComentario(numero, comentario, "api/send-message-accept");
         }
 
         toast.success("Cita aceptada exitosamente");
@@ -93,7 +93,7 @@ export const useCitasSinPagar = () => {
       if (result.message === "Boucher cancelado correctamente.") {
         // Enviar comentario si existe
         if (comentario.trim()) {
-          await enviarComentario(numero, comentario, "/send-message-reject");
+          await enviarComentario(numero, comentario, "api/send-message-reject");
         }
 
         toast.success("Cita rechazada exitosamente");

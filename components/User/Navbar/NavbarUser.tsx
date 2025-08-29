@@ -110,7 +110,7 @@ const NavbarUser = () => {
 
       if (user.rol === "ADMIN") {
         items = items.filter(
-          (item) => item.name !== "Citas" && item.name !== "Historial"
+          (item) => item.name !== "Citas" && item.name !== "Historial" && item.name !== "Dashboard"
         );
       }
 
