@@ -49,7 +49,7 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
   };
 
   const handleRechazarCita = async (
-    idBoucher: string,
+    idBoucher: number,
     comentario: string,
     numero: string,
   ) => {
@@ -91,7 +91,11 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
         { label: "Hora", value: cita.hora_cita },
         { label: "Duración", value: cita.duracion.toString() + " minutos" },
       ]}
-      onBoucher={() => handleOpenModal(cita)}
+      {...(cita.boucher && {
+        onBoucher: () => {
+          handleOpenModal(cita);
+        },
+      })}
     ></DataCard>
   );
 
@@ -108,7 +112,7 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         cita={selectedCita}
-        imagenes={selectedCita?.imagenes || []}
+        imagen={selectedCita?.boucher?.imagen}
         onAceptar={handleAceptarCita}
         onRechazar={handleRechazarCita}
       />

@@ -22,17 +22,20 @@ export const useCitasSinPagar = () => {
     setIsLoading(true);
     try {
       // Primero llamamos al endpoint para habilitar el boucher
-      const response = await fetch("/api/citas/habilitar-boucher", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}api/citas/habilitar-boucher`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            codigo: codigo,
+            idCita: idCita,
+          }),
         },
-        body: JSON.stringify({
-          codigo: codigo,
-          idCita: idCita,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Error al habilitar el boucher");
@@ -64,23 +67,26 @@ export const useCitasSinPagar = () => {
   };
 
   const rechazarCita = async (
-    idBoucher: string,
+    idBoucher: number,
     comentario: string,
     numero: string,
   ) => {
     setIsLoading(true);
     try {
       // Usar el endpoint cancelarBoucher existente
-      const response = await fetch("/api/boucher/rechazar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}api/citas/habilitar-boucher`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            idBoucher: idBoucher,
+          }),
         },
-        body: JSON.stringify({
-          idBoucher: idBoucher,
-        }),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

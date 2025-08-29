@@ -513,11 +513,12 @@ export interface CitaSinPagar {
     apellido: string;
   };
   boucher?: {
-    idBoucher: string;
+    idBoucher: number;
     codigo: string;
     estado: string;
     fecha_creacion?: string;
     monto?: number;
+    imagen?: string;
   };
 }
 
