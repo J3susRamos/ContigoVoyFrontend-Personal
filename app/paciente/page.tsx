@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import CerrarSesion from "@/components/CerrarSesion"; 
+import CerrarSesion from "@/components/CerrarSesion";
 import { Button } from "@/components/ui/button";
-import Input from "@/components/ui/input"; 
+import Input from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator"; 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; 
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import showToast from "@/components/ToastStyle";
-import { parseCookies } from "nookies";
 import { CitasConteo } from "@/interface";
 import HeaderPaciente from "./components/HeaderPaciente";
+
+import { GetCitas } from "./apiRoutes";
+import { formatDate } from "./utils/formatDate";
+import { Cita } from "./types/pacienteInterfaces";
+import Link from "next/link";
 
 import {
   CalendarDays, // Ícono de calendario (día)
@@ -33,38 +37,18 @@ import {
   RefreshCw, // Ícono de recargar/rehacer (reagendar)
   Loader2, // Ícono spinner (cargando)
   X, // Ícono de cerrar/eliminar
+  ChevronRight,
 } from "lucide-react"; // Paquete de íconos
 
 // Componente de imagen optimizada de Next.js
 import Image from "next/image"; // Gestiona lazy-loading y optimización
-
+import usePaciente from "./hooks/usePaciente";
 
 // --------------------------
 // Definición de tipos (TypeScript)
 // --------------------------
 
-// Interfaz del paciente: describe la forma de los datos que esperamos
-interface Paciente {
-  id: number,
-  nombre: string; // Nombre del paciente
-  apellido: string; // Apellido del paciente
-  email?: string; // Email opcional
-  telefono?: string; // Teléfono opcional
-  fechaNacimiento?: string; // Fecha de nacimiento opcional
-  avatar?: string; // URL de avatar opcional
-}
 
-// Interfaz de una cita
-interface Cita {
-  id: number; // ID único de la cita
-  fecha: string; // Fecha (YYYY-MM-DD)
-  hora: string; // Hora (HH:mm)
-  doctor: string; // Nombre del profesional
-  especialidad: string; // Especialidad
-  estado: "confirmada" | "pendiente" | "completada"; // Estado de la cita
-  tipo: "online"; // Tipo de cita (en este caso solo online)
-  ubicacion?: string; // Ubicación opcional (p.ej. "Videollamada")
-}
 
 // Interfaz de un pago
 interface Pago {
@@ -77,77 +61,53 @@ interface Pago {
   metodoPago: string; // Método (Yape, Plin, transferencia, etc.)
 }
 
+const getEstadoColor = (estado: string) => {
+  switch (estado) {
+    case "confirmada": // Cita confirmada
+    case "aprobado": // Pago aprobado
+      return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"; // Verde
+    case "pendiente": // En espera
+      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500"; // Amarillo
+    case "rechazado": // Rechazado
+      return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-500"; // Rojo
+    default: // Otro estado
+      return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"; // Gris neutro
+  }
+};
 
 const Paciente = () => {
-
   const [loading, setLoading] = useState(true);
-  const [paciente, setPaciente] = useState<Paciente | null>(null); 
+  const paciente = usePaciente();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false); 
+  const [isUploading, setIsUploading] = useState(false);
   const [selectedPaymentType, setSelectedPaymentType] = useState<string | null>(
     null
-  ); 
-  const [citas, setCitas] = useState<CitasConteo>({
-      pendientes: 0,
-      canceladas: 0,
-      confirmadas: 0,
-  });
-  console.log(citas);
-  const [expandedCitas, setExpandedCitas] = useState<number[]>([]); 
-  const [expandedPagos, setExpandedPagos] = useState<number[]>([]); 
-  const fileInputRef = useRef<HTMLInputElement | null>(null); 
+  );
+  const [citas, setCitas] = useState<Cita[] | null>(null);
+  const [expandedCitas, setExpandedCitas] = useState<number[]>([]);
+  const [expandedPagos, setExpandedPagos] = useState<number[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const HandleGetCitas = async (idPaciente: number) => {
+  const HandleGetCitas = async (signal: AbortSignal) => {
     try {
-      const cookies = parseCookies();
-      const token = cookies["session"];
-      const url = `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/citas/${idPaciente}`;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-
-      if (response.ok) {
-        setCitas(data.result);
-        showToast("success", "Citas obtenidas correctamente");
-      } else {
-        showToast("error", data.message || "Error al obtener las citas");
-      }
-    } catch (error) {
-      console.error(error);
-      showToast("error", "Error de conexión. Intenta nuevamente.");
+      const dataCitas = await GetCitas(1, 5, "", "", null, null, signal);
+      console.log(dataCitas);
+      const citasResponse = dataCitas.citas;
+      const citasInfo = citasResponse.data as Cita[];
+      const formatCitas = citasInfo.map((c) => ({
+        ...c,
+        fecha_cita: formatDate(c.fecha_cita),
+      }));
+      setCitas(formatCitas);
+      showToast("success", "Citas obtenidas correctamente");
+    } catch (error: any) {
+      if (error.name != "AbortError")
+        showToast("error", "Error al obtener las citas");
     } finally {
       setLoading(false);
     }
   };
 
-  const citasProximas: Cita[] = [
-    // Array de próximas citas simuladas
-    {
-      id: 1, // ID único
-      fecha: "2025-07-28", // Fecha de la cita
-      hora: "16:00", // Hora de la cita
-      doctor: "Dra. María López", // Nombre del profesional
-      especialidad: "Psicología Clínica", // Especialidad
-      estado: "confirmada", // Estado actual
-      tipo: "online", // Tipo (videollamada)
-      ubicacion: "Videollamada", // Etiqueta de ubicación
-    },
-    {
-      id: 2, // Segundo item de ejemplo
-      fecha: "2025-08-02",
-      hora: "10:30",
-      doctor: "Dr. Carlos Mendoza",
-      especialidad: "Terapia Familiar",
-      estado: "pendiente",
-      tipo: "online",
-      ubicacion: "Videollamada",
-    },
-  ];
 
   // Historial de pagos de ejemplo (simulado)
   const historialPagos: Pago[] = [
@@ -174,34 +134,17 @@ const Paciente = () => {
   ];
 
   useEffect(() => {
-    initializePaciente(); 
-  }, []); 
+    const abortController = new AbortController();
+    const signal = abortController.signal;
 
-  const initializePaciente = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user"); 
-      if (storedUser) {
-        const user = JSON.parse(storedUser); 
-        if (user.rol === "PACIENTE") {
-          setPaciente({
-            id: +user.id,
-            nombre: user.nombre,
-            apellido: user.apellido,
-            email: user.email || "paciente@contigo.voy",
-            telefono: user.telefono || "+51 999 888 777",
-            fechaNacimiento: user.fechaNacimiento || "1990-01-01",
-          });
-          HandleGetCitas(+user.id);
-        }
-      }
-    }
-  };
+    HandleGetCitas(signal);
+
+    return () => abortController.abort();
+  }, []);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Maneja selección de archivo
     const file = event.target.files?.[0]; // Toma el primer archivo
     if (file) {
-      // Si hay archivo
       setSelectedFile(file); // Lo guarda en estado
     }
   };
@@ -224,86 +167,43 @@ const Paciente = () => {
     }
   };
 
-  const formatDate = (dateString: string): string => {
-    // Convierte fecha a formato legible ES
-    const date = new Date(dateString); // Crea objeto Date
-    return date.toLocaleDateString("es-ES", {
-      // Formatea en español
-      weekday: "long", // Día de la semana
-      year: "numeric", // Año
-      month: "long", // Mes
-      day: "numeric", // Día
-    });
-  };
-
   const joinVideoCall = (citaId: number) => {
-    // Abre la videollamada correspondiente
-    window.open(`/videocall/${citaId}`, "_blank"); // Abre en nueva pestaña la ruta /videocall/:id
+    window.open(`/videocall/${citaId}`, "_blank");
   };
 
   const handleReagendar = (cita: Cita) => {
-    // Acción para reagendar (placeholder)
     alert(
-      `Preparando para reagendar cita con ${cita.doctor} el ${cita.fecha} a las ${cita.hora}`
-    ); // Mensaje informativo
+      `Preparando para reagendar cita con ${
+        cita.apellidoPsicologo + " " + cita.nombrePsicologo
+      } el ${cita.fecha_cita} a las ${cita.hora_cita}`
+    );
   };
 
   const toggleExpandCita = (id: number) => {
-    // Alterna expansión de la cita (acordeón)
-    setExpandedCitas(
-      (
-        prev // Usa estado previo
-      ) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id] // Quita si estaba, agrega si no
+    setExpandedCitas((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
   const toggleExpandPago = (id: number) => {
-    // Alterna expansión del pago (acordeón)
-    setExpandedPagos(
-      (
-        prev // Usa estado previo
-      ) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id] // Quita/agrega id
+    setExpandedPagos((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  const getEstadoColor = (estado: string) => {
-    // Devuelve clases según estado para estilos
-    switch (
-      estado // Compara estado
-    ) {
-      case "confirmada": // Cita confirmada
-      case "aprobado": // Pago aprobado
-        return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"; // Verde
-      case "pendiente": // En espera
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500"; // Amarillo
-      case "rechazado": // Rechazado
-        return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-500"; // Rojo
-      default: // Otro estado
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"; // Gris neutro
-    }
-  };
-
-  // --------------------------
-  // Render (JSX)
-  // --------------------------
   return (
-    // Devuelve el árbol JSX a renderizar
-    // Contenedor principal con gradiente de fondo y soporte para dark mode
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-6 lg:py-8 space-y-6">
         <HeaderPaciente paciente={paciente} />
-        {/* Tarjetas de métricas rápidas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Tarjeta 1: próximas citas */}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
           <Card className="border-l-4 border-l-blue-500">
             <CardContent className="p-4 flex justify-between items-center">
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Próximas Citas
                 </p>
-                <p className="text-2xl font-bold">{citasProximas.length}</p>
+                <p className="text-2xl font-bold">{citas?.length}</p>
               </div>
               <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-full">
                 <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -311,7 +211,6 @@ const Paciente = () => {
             </CardContent>
           </Card>
 
-          {/* Tarjeta 2: pagos aprobados */}
           <Card className="border-l-4 border-l-green-500">
             <CardContent className="p-4 flex justify-between items-center">
               <div>
@@ -328,7 +227,6 @@ const Paciente = () => {
             </CardContent>
           </Card>
 
-          {/* Tarjeta 3: total invertido */}
           <Card className="border-l-4 border-l-purple-500">
             <CardContent className="p-4 flex justify-between items-center">
               <div>
@@ -352,48 +250,55 @@ const Paciente = () => {
 
         {/* -------------------- SECCIÓN: Citas -------------------- */}
         <section>
-          {/* Encabezado de la sección de citas */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-              <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4 mt-7">
+            <div className="flex gap-3 items-center">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h2 className="text-xl font-bold">Tus próximas citas</h2>
             </div>
-            <h2 className="text-xl font-bold">Tus próximas citas</h2>
+
+            <Link href="/paciente/citas" className="sm:w-scv10">
+              <button className=" flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 px-4 py-2">
+                Más citas
+                <ChevronRight strokeWidth={4} />
+              </button>
+            </Link>
           </div>
 
-          {/* Lista de tarjetas de citas con acordeón */}
           <div className="space-y-3">
-            {citasProximas.map((cita) => (
-              <Card key={cita.id} className="overflow-hidden">
+            {citas?.map((cita) => (
+              <Card key={cita.idCita} className="overflow-hidden">
                 {/* Cabecera clickable del acordeón */}
                 <div
                   className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
-                  onClick={() => toggleExpandCita(cita.id)}
+                  onClick={() => toggleExpandCita(cita.idCita)}
                 >
                   <div className="flex items-center gap-4">
                     <div
                       className={`p-2 rounded-lg ${getEstadoColor(
-                        cita.estado
+                        cita.estado_Cita
                       )}`}
                     >
                       <CalendarDays className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-medium">{cita.doctor}</h3>
+                      <h3 className="font-medium">{cita.fecha_cita}</h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {cita.especialidad}
+                        {cita.apellidoPsicologo + " " + cita.apellidoPsicologo}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span
                       className={`px-3 py-1 rounded-full text-xs ${getEstadoColor(
-                        cita.estado
+                        cita.estado_Cita
                       )}`}
                     >
-                      {cita.estado.charAt(0).toUpperCase() +
-                        cita.estado.slice(1)}
+                      {cita.estado_Cita.charAt(0).toUpperCase() +
+                        cita.estado_Cita.slice(1)}
                     </span>
-                    {expandedCitas.includes(cita.id) ? (
+                    {expandedCitas.includes(cita.idCita) ? (
                       <ChevronUp className="w-5 h-5 text-gray-500" />
                     ) : (
                       <ChevronDown className="w-5 h-5 text-gray-500" />
@@ -402,16 +307,16 @@ const Paciente = () => {
                 </div>
 
                 {/* Contenido expandido de la cita */}
-                {expandedCitas.includes(cita.id) && (
-                  <CardContent className="p-4 pt-0 space-y-4">
+                {expandedCitas.includes(cita.idCita) && (
+                  <CardContent className="p-4 pt-3 space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2 text-sm">
                         <CalendarDays className="w-4 h-4 text-blue-500" />
-                        <span>{formatDate(cita.fecha)}</span>
+                        <span>{cita.fecha_cita}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <Clock className="w-4 h-4 text-green-500" />
-                        <span>{cita.hora}</span>
+                        <span>{cita.hora_cita}</span>
                       </div>
                     </div>
 
@@ -423,11 +328,11 @@ const Paciente = () => {
                     <div className="flex flex-col gap-2">
                       <Button
                         className="w-full"
-                        onClick={() => joinVideoCall(cita.id)}
-                        disabled={cita.estado !== "confirmada"}
+                        //onClick={() => joinVideoCall(cita.id)}
+                        disabled={cita.estado_Cita !== "confirmada"}
                       >
                         <Video className="w-4 h-4 mr-2" />
-                        {cita.estado === "confirmada"
+                        {cita.estado_Cita === "confirmada"
                           ? "Ingresar a videollamada"
                           : "Cita pendiente"}
                       </Button>
@@ -438,7 +343,7 @@ const Paciente = () => {
                         onClick={() => handleReagendar(cita)}
                       >
                         <RefreshCw className="w-4 h-4 mr-2" />
-                        Volver a agendar
+                        Subir voucher
                       </Button>
                     </div>
                   </CardContent>
@@ -446,104 +351,6 @@ const Paciente = () => {
               </Card>
             ))}
           </div>
-        </section>
-
-        <Separator className="my-6" />
-
-        {/* -------------------- SECCIÓN: Subir comprobante -------------------- */}
-        <section>
-          {/* Encabezado de sección */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-              <UploadCloud className="w-5 h-5 text-green-600 dark:text-green-400" />
-            </div>
-            <h2 className="text-xl font-bold">Subir comprobante de pago</h2>
-          </div>
-
-          <Card>
-            <CardContent className="p-4 space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Citas</label>
-                <select
-                  className="w-full p-2 border rounded-md bg-white dark:bg-gray-800"
-                  value={selectedPaymentType || ""}
-                  onChange={(e) => setSelectedPaymentType(e.target.value)}
-                >
-                  <option value="">Seleccionar...</option>
-                  <option value="consulta">Consulta Psicológica</option>
-                  <option value="terapia">Terapia de Pareja</option>
-                  <option value="evaluacion">Evaluación Psicológica</option>
-                </select>
-              </div>
-
-              {selectedPaymentType && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Comprobante
-                    </label>
-                    <div className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                      <input
-                        type="file"
-                        className="hidden"
-                        id="file-upload"
-                        onChange={handleFileSelect}
-                        accept="image/*,.pdf"
-                        ref={fileInputRef}
-                      />
-                      <label htmlFor="file-upload" className="cursor-pointer">
-                        <UploadCloud className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          <span className="font-medium">
-                            Haz clic para subir
-                          </span>{" "}
-                          o arrastra el archivo
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                          PNG, JPG o PDF (MAX. 5MB)
-                        </p>
-                      </label>
-                    </div>
-                  </div>
-
-                  {selectedFile && (
-                    <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <div className="flex items-center gap-3">
-                        <FileImage className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                        <span className="text-sm truncate max-w-xs">
-                          {selectedFile.name}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => setSelectedFile(null)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <X className="w-5 h-5" />
-                      </button>
-                    </div>
-                  )}
-
-                  <Button
-                    className="w-full mt-2"
-                    onClick={handleFileUpload}
-                    disabled={!selectedFile || isUploading}
-                  >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Subiendo...
-                      </>
-                    ) : (
-                      <>
-                        <UploadCloud className="w-4 h-4 mr-2" />
-                        Subir comprobante
-                      </>
-                    )}
-                  </Button>
-                </>
-              )}
-            </CardContent>
-          </Card>
         </section>
 
         <Separator className="my-6" />
@@ -651,4 +458,4 @@ const Paciente = () => {
   );
 };
 
-export default Paciente; // Exporta el componente como default para poder importarlo en otras rutas
+export default Paciente; 

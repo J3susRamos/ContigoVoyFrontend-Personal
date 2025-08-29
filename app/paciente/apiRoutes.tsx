@@ -3,6 +3,34 @@ import { parseCookies } from "nookies";
 
 const token = parseCookies()["session"];
 
+export const GetCita = async (id: number) => {
+  const url = `${
+    process.env.NEXT_PUBLIC_API_URL
+  }api/citas/paciente/${id}`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      }    
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data = await res.json();
+    if (data.status_message === "OK") {
+      return data;
+    } else {
+      throw new Error(data.message || "Error al obtener cita");
+    }
+  } catch (error : any) {
+    console.error("Error al obtener cita:", error);
+    throw error;
+  }
+}
+
+
 export const GetCitas = async (
   currentPage: number,
   pageSize: number,
@@ -12,8 +40,7 @@ export const GetCitas = async (
   fecha_fin: DateValue | null,
   signal: AbortSignal
 ) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
+  
   const params = new URLSearchParams();
   if (estado_cita) params.append("estado_cita", estado_cita);
   if (estado_boucher) params.append("estado_boucher", estado_boucher);

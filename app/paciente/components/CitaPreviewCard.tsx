@@ -1,5 +1,8 @@
+'use client'
+
 import { Cita } from "../types/pacienteInterfaces";
 import { CalendarClock, ChevronRight } from "lucide-react"; 
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import React from "react";
 
 const getEstadoColor = (estado: string) => {
@@ -18,7 +21,12 @@ const getEstadoColor = (estado: string) => {
   }
 };
 
-const CitaPreviewCard = ({cita} : {cita: Cita}) => {
+const onClick = (cita: Cita, router : AppRouterInstance) => {
+    sessionStorage.setItem("miCita",JSON.stringify(cita));
+    router.push('/paciente/citas/detalleCita');
+}
+
+const CitaPreviewCard = ({cita, router} : {cita: Cita, router : AppRouterInstance}) => {
     return (
         <div
         key={cita.idCita}
@@ -68,7 +76,7 @@ const CitaPreviewCard = ({cita} : {cita: Cita}) => {
                     </div>
                 </div>
 
-                <button className="h-[24px] lg:h-[44px] flex items-center justify-center gap-1 lg:gap-2 whitespace-nowrap rounded-md text-cv1 lg:text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 lg:px-4 lg:py-2">
+                <button onClick={() => onClick(cita,router)} className="h-[24px] lg:h-[44px] flex items-center justify-center gap-1 lg:gap-2 whitespace-nowrap rounded-md text-cv1 lg:text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 lg:px-4 lg:py-2">
                     Ver más  
                     <ChevronRight strokeWidth={4} />
                 </button>

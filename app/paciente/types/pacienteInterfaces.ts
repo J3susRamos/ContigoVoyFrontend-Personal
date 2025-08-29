@@ -8,8 +8,19 @@ export interface Paciente {
   avatar?: string;
 }
 
+export interface Boucher{
+  codigo: string,
+  created_at: string,
+  updated_at: string,
+  imagen: string,
+  idCita: string,
+  idBoucher: string,
+  fecha: string,
+  estado: string
+}
+
 export interface Cita {
-  boucher: null;
+  bouchers: null | Boucher[];
   colores: string;
   duracion: number;
   estado_Cita: string;
