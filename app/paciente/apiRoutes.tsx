@@ -118,4 +118,5 @@ export const PostBoucher = async (idCita: number | undefined, image64: string) =
   if (!res.ok) {
     throw new Error("Error al crear la cita");
   }
+  return true;
 };
