@@ -10,6 +10,7 @@ import showToast from "@/components/ToastStyle";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import { GetCita } from "../../apiRoutes";
 import usePaciente from "../../hooks/usePaciente";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const imageToBase64 = async (file: File) => {
   try {
@@ -49,6 +50,27 @@ const validateImageFile = async (file: File) => {
   return imageToBase64(file);
 };
 
+const setCitaQuery = (setCita: Dispatch<SetStateAction<Cita | null>>, router : AppRouterInstance) => {
+  const citaStorage = sessionStorage.getItem("miCita");
+  if (citaStorage) {
+    const getMyCita = async (id: number) => {
+      const data = await GetCita(id);
+      setCita(data.citas);
+    };
+
+    try {
+      const formatCita = JSON.parse(citaStorage) as Cita;
+      const idCita = formatCita.idCita;
+      getMyCita(idCita);
+    } catch (error) {
+      console.error("Error al parsear la cita:", error);
+      router.push("/paciente");
+    }
+  } else {
+    router.push("/paciente");
+  }
+};
+
 const DetalleCita = () => {
   const router = useRouter();
   const [cita, setCita] = useState<Cita | null>(null);
@@ -56,24 +78,7 @@ const DetalleCita = () => {
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    const citaStorage = sessionStorage.getItem("miCita");
-    if (citaStorage) {
-      const getMyCita = async (id: number) => {
-        const data = await GetCita(id);
-        setCita(data.citas);
-      };
-
-      try {
-        const formatCita = JSON.parse(citaStorage) as Cita;
-        const idCita = formatCita.idCita;
-        getMyCita(idCita);
-      } catch (error) {
-        console.error("Error al parsear la cita:", error);
-        router.push("/paciente");
-      }
-    } else {
-      router.push("/paciente");
-    }
+    setCitaQuery(setCita,router)
   }, []);
 
   const canNotUpload = Boolean(
@@ -158,7 +163,8 @@ const DetalleCita = () => {
                   const formData = new FormData(e.currentTarget);
                   const fileImg = formData.get("files") as File;
                   const img64 = await validateImageFile(fileImg);
-                  await PostBoucher(cita?.idCita, img64);
+                  const state = await PostBoucher(cita?.idCita, img64);
+                  if (state) setCitaQuery(setCita,router);
                 }}
               >
                 <input
