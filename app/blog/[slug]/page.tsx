@@ -10,7 +10,7 @@ async function getBlog(slug: string): Promise<BlogPreviewData | null> {
     const response = await fetch(
       `${apiUrl}api/blogs/${slug}`,
       {
-        next: { revalidate: 3600 }, // Revalidar cada hora
+        cache: 'force-cache', // Usar cache forzado para generación estática
         headers: {
           'Content-Type': 'application/json',
         },
@@ -106,33 +106,33 @@ export default async function BlogPage({
   return <BlogIndividualView blog={blog} />;
 }
 
-// Generar páginas estáticas en build time para blogs populares (opcional)
+// Generar páginas estáticas en build time para todos los blogs
 export async function generateStaticParams() {
-  // En modo desarrollo, retornamos array vacío para evitar problemas
-  if (process.env.NODE_ENV === 'development') {
-    return [];
-  }
-  
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/';
+    console.log('Fetching blogs for static generation from:', apiUrl);
+    
     const response = await fetch(
-      `${apiUrl}api/blogs/all`,
+      `${apiUrl}api/blogs`,
       {
-        next: { revalidate: 86400 }, // Revalidar diariamente
+        cache: 'force-cache', // Forzar cache para build time
       }
     );
     
     if (!response.ok) {
+      console.warn('Failed to fetch blogs for static generation, status:', response.status);
       return [];
     }
     
     const data = await response.json();
     const blogs: BlogPreviewData[] = data.result || [];
     
-    // Generar slugs para los primeros 20 blogs más recientes
-    return blogs.slice(0, 20).map((blog) => ({
+    console.log(`Generating static params for ${blogs.length} blogs`);
+    
+    // Generar slugs para todos los blogs usando el campo idBlog
+    return blogs.map((blog) => ({
       slug: blog.idBlog.toString(),
-    }));
+    })).filter(item => item.slug !== '');
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];

@@ -1,7 +1,9 @@
 import type {NextConfig} from "next";
 
 const nextConfig: NextConfig = {
-  // Removemos output: "export" para permitir rutas dinámicas
+  // Habilitamos output export para generar sitio estático
+  // Las rutas dinámicas funcionan con generateStaticParams
+  output: "export",
   images: {
     unoptimized: true,
   },
