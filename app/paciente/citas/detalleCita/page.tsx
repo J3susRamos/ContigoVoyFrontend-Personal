@@ -2,7 +2,7 @@
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import HeaderPaciente from "../../components/HeaderPaciente";
-import { Cita, Paciente } from "../../types/pacienteInterfaces";
+import { Cita } from "../../types/pacienteInterfaces";
 import { Button } from "@heroui/react";
 import { Video, RefreshCw, UploadCloud, ChevronLeft } from "lucide-react";
 import { PostBoucher } from "../../apiRoutes";
@@ -11,6 +11,7 @@ import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import { GetCita } from "../../apiRoutes";
 import usePaciente from "../../hooks/usePaciente";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import Image from "next/image";
 
 const imageToBase64 = async (file: File) => {
   try {
@@ -50,7 +51,7 @@ const validateImageFile = async (file: File) => {
   return imageToBase64(file);
 };
 
-const setCitaQuery = (setCita: Dispatch<SetStateAction<Cita | null>>, router : AppRouterInstance) => {
+const setCitaQuery = (setCita: Dispatch<SetStateAction<Cita | null>>, router: AppRouterInstance) => {
   const citaStorage = sessionStorage.getItem("miCita");
   if (citaStorage) {
     const getMyCita = async (id: number) => {
@@ -78,8 +79,8 @@ const DetalleCita = () => {
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    setCitaQuery(setCita,router)
-  }, []);
+    setCitaQuery(setCita, router)
+  }, [router]);
 
   const canNotUpload = Boolean(
     cita
@@ -164,7 +165,7 @@ const DetalleCita = () => {
                   const fileImg = formData.get("files") as File;
                   const img64 = await validateImageFile(fileImg);
                   const state = await PostBoucher(cita?.idCita, img64);
-                  if (state) setCitaQuery(setCita,router);
+                  if (state) setCitaQuery(setCita, router);
                 }}
               >
                 <input
@@ -177,22 +178,19 @@ const DetalleCita = () => {
                 />
                 <label htmlFor="file-upload" className="cursor-pointe">
                   <UploadCloud
-                    className={`pt-6 box-content w-8 h-8 mx-auto ${
-                      preview ? "text-gray-200" : "text-gray-400"
-                    } mb-2`}
+                    className={`pt-6 box-content w-8 h-8 mx-auto ${preview ? "text-gray-200" : "text-gray-400"
+                      } mb-2`}
                   />
                   <p
-                    className={`text-sm text-gray-600 ${
-                      preview ? "dark:text-gray-200" : "dark:text-gray-400"
-                    }`}
+                    className={`text-sm text-gray-600 ${preview ? "dark:text-gray-200" : "dark:text-gray-400"
+                      }`}
                   >
                     <span className="font-medium">Haz clic para subir</span> o
                     arrastra el archivo
                   </p>
                   <p
-                    className={`text-xs text-gray-500 pb-4 ${
-                      preview ? "dark:text-gray-300" : "dark:text-gray-500"
-                    } mt-1`}
+                    className={`text-xs text-gray-500 pb-4 ${preview ? "dark:text-gray-300" : "dark:text-gray-500"
+                      } mt-1`}
                   >
                     PNG, JPG o PDF (MAX. 5MB)
                   </p>
@@ -208,7 +206,14 @@ const DetalleCita = () => {
         <hr />
         <h3>Mis comprobantes</h3>
         {(cita?.bouchers ? cita.bouchers : []).map((b) => (
-          <img key={b.idBoucher} src={b.imagen} />
+          <Image
+            alt="Voucher Paciente"
+            key={b.idBoucher}
+            src={b.imagen}
+            width={300}
+            height={200}
+            style={{ objectFit: "contain" }}
+          />
         ))}
       </div>
     </div>
