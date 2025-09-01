@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import CerrarSesion from "@/components/CerrarSesion";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import Input from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import showToast from "@/components/ToastStyle";
-import { CitasConteo } from "@/interface";
 import HeaderPaciente from "./components/HeaderPaciente";
 
 import { GetCitas } from "./apiRoutes";
@@ -19,24 +15,16 @@ import Link from "next/link";
 import {
   CalendarDays, // Ícono de calendario (día)
   Video, // Ícono de videollamada
-  UploadCloud, // Ícono de subir a la nube
   Clock, // Ícono de reloj
   CheckCircle, // Ícono de check/éxito
-  FileImage, // Ícono de imagen/archivo
   Calendar, // Ícono de calendario genérico
   Activity, // Ícono de actividad/estadística
   History, // Ícono de historial
-  Settings, // Ícono de ajustes
-  Bell, // Ícono de notificaciones (no se usa en este snippet, pero disponible)
   Download, // Ícono de descarga
   Eye, // Ícono de ver/preview
-  Phone, // Ícono de teléfono (no se usa aquí)
-  Mail, // Ícono de correo (no se usa aquí)
   ChevronDown, // Ícono de desplegar hacia abajo
   ChevronUp, // Ícono de desplegar hacia arriba
   RefreshCw, // Ícono de recargar/rehacer (reagendar)
-  Loader2, // Ícono spinner (cargando)
-  X, // Ícono de cerrar/eliminar
   ChevronRight,
 } from "lucide-react"; // Paquete de íconos
 
@@ -76,17 +64,10 @@ const getEstadoColor = (estado: string) => {
 };
 
 const Paciente = () => {
-  const [loading, setLoading] = useState(true);
   const paciente = usePaciente();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [selectedPaymentType, setSelectedPaymentType] = useState<string | null>(
-    null
-  );
   const [citas, setCitas] = useState<Cita[] | null>(null);
   const [expandedCitas, setExpandedCitas] = useState<number[]>([]);
   const [expandedPagos, setExpandedPagos] = useState<number[]>([]);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const HandleGetCitas = async (signal: AbortSignal) => {
     try {
@@ -100,11 +81,8 @@ const Paciente = () => {
       }));
       setCitas(formatCitas);
       showToast("success", "Citas obtenidas correctamente");
-    } catch (error: any) {
-      if (error.name != "AbortError")
-        showToast("error", "Error al obtener las citas");
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      showToast("error", `Error al obtener las citas: ${error}`);
     }
   };
 
@@ -142,39 +120,9 @@ const Paciente = () => {
     return () => abortController.abort();
   }, []);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; // Toma el primer archivo
-    if (file) {
-      setSelectedFile(file); // Lo guarda en estado
-    }
-  };
-
-  const handleFileUpload = async () => {
-    // Simula la subida del archivo
-    if (!selectedFile) return; // Si no hay archivo, salir
-    setIsUploading(true); // Activa spinner/bloquea botones
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2s (simulación de API)
-      alert("Comprobante subido exitosamente"); // Notifica éxito (reemplazar por toast en prod)
-      setSelectedFile(null); // Limpia el archivo
-      setSelectedPaymentType(null); // Limpia el tipo seleccionado
-    } catch (error) {
-      // Captura errores
-      console.error("Error al subir archivo:", error); // Log de error
-      alert("Error al subir el comprobante"); // Notifica error
-    } finally {
-      setIsUploading(false); // Siempre apagar el estado de carga
-    }
-  };
-
-  const joinVideoCall = (citaId: number) => {
-    window.open(`/videocall/${citaId}`, "_blank");
-  };
-
   const handleReagendar = (cita: Cita) => {
     alert(
-      `Preparando para reagendar cita con ${
-        cita.apellidoPsicologo + " " + cita.nombrePsicologo
+      `Preparando para reagendar cita con ${cita.apellidoPsicologo + " " + cita.nombrePsicologo
       } el ${cita.fecha_cita} a las ${cita.hora_cita}`
     );
   };
@@ -436,9 +384,8 @@ const Paciente = () => {
                           onClick={() => {
                             const link = document.createElement("a"); // Crea un elemento <a>
                             link.href = pago.voucher; // Asigna el origen del archivo
-                            link.download = `comprobante-${
-                              pago.id
-                            }.${pago.voucher.split(".").pop()}`; // Sugiere nombre de descarga
+                            link.download = `comprobante-${pago.id
+                              }.${pago.voucher.split(".").pop()}`; // Sugiere nombre de descarga
                             link.click(); // Dispara la descarga
                           }}
                         >
