@@ -92,7 +92,7 @@ export default function Footer() {
                     <Link
                       href={link.href}
                       title={link.title}
-                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
+                      className="transition-colors duration-500 flex items-center group relative"
                     >
                       <span className="relative group">
                         {link.text}
@@ -112,7 +112,7 @@ export default function Footer() {
                     <Link
                       href={link.href}
                       title={link.title}
-                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
+                      className=" transition-colors duration-500 flex items-center group relative"
                     >
                       <span className="relative group">
                         {link.text}
