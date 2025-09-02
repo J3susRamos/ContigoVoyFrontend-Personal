@@ -142,30 +142,6 @@ const Paciente = () => {
     return () => abortController.abort();
   }, []);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; // Toma el primer archivo
-    if (file) {
-      setSelectedFile(file); // Lo guarda en estado
-    }
-  };
-
-  const handleFileUpload = async () => {
-    // Simula la subida del archivo
-    if (!selectedFile) return; // Si no hay archivo, salir
-    setIsUploading(true); // Activa spinner/bloquea botones
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Espera 2s (simulación de API)
-      alert("Comprobante subido exitosamente"); // Notifica éxito (reemplazar por toast en prod)
-      setSelectedFile(null); // Limpia el archivo
-      setSelectedPaymentType(null); // Limpia el tipo seleccionado
-    } catch (error) {
-      // Captura errores
-      console.error("Error al subir archivo:", error); // Log de error
-      alert("Error al subir el comprobante"); // Notifica error
-    } finally {
-      setIsUploading(false); // Siempre apagar el estado de carga
-    }
-  };
 
   const joinVideoCall = (citaId: number) => {
     window.open(`/videocall/${citaId}`, "_blank");
