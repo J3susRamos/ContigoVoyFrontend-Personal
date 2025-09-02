@@ -1,6 +1,5 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
 import { DatosPacienteProps, Paciente } from "@/interface";
 import { getPaciente } from "@/components/User/Pacientes/getPacienteData";
 import { useRouter } from "next/navigation";
@@ -30,79 +29,149 @@ const DatosPaciente: React.FC<DatosPacienteProps> = ({ idPaciente }) => {
     }, [router, idPaciente]);
 
   return (
-      <div>
-        <div className="flex justify-center"
-             style={{ position: "relative", zIndex: 100, marginTop: "-160px" }}>
-          <div className="bg-card dark:bg-card text-card-foreground dark:text-card-foreground mt-4 rounded-3xl p-4 flex justify-around w-full h-full shadow-lg">
-            <div className="text-primary dark:text-primary font-bold flex flex-col gap-y-6">
-              {/* Datos del paciente existente*/}
-              <div className="flex gap-6">
-                <div className="w-28">Nombre</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.nombre}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">Apellido</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.apellido}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">Género</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.genero}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">Fecha de Nacimiento</div>
-                <div className="font-normal text-foreground dark:text-foreground">
-                  {paciente
-                      ? new Date(paciente.fecha_nacimiento).toLocaleDateString(
-                          "es-ES",
-                          {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          }
-                      )
-                      : "Fecha no disponible"}
+    <div className="w-full max-w-6xl mx-auto patient-card">
+      {/* Grid layout para datos del paciente */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Información Personal */}
+        <div className="lg:col-span-2">
+          <div className="bg-card dark:bg-card rounded-xl shadow-sm border border-border dark:border-border p-6 patient-card">
+            <h3 className="text-lg font-semibold text-foreground dark:text-foreground mb-6 flex items-center gap-2">
+              <div className="w-2 h-2 bg-primary dark:bg-primary rounded-full status-indicator"></div>
+              Información Personal
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Nombre</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente?.nombre || "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Apellido</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente?.apellido || "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Género</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors capitalize">
+                    {paciente?.genero || "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Fecha de Nacimiento</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente
+                      ? new Date(paciente.fecha_nacimiento).toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })
+                      : "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Ocupación</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente?.ocupacion || "No especificado"}
+                  </p>
                 </div>
               </div>
-              <div className="flex gap-6">
-                <div className="w-28">Ocupación</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.ocupacion}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">Estado Civil</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.estadoCivil}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">DNI</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.DNI}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">Celular</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.celular}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">Correo</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.email}</div>
-              </div>
-              <div className="flex gap-6">
-                <div className="w-28">Dirección</div>
-                <div className="font-normal text-foreground dark:text-foreground">{paciente?.direccion}</div>
+              
+              <div className="space-y-4">
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Estado Civil</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors capitalize">
+                    {paciente?.estadoCivil || "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">DNI</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente?.DNI || "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Celular</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente?.celular || "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Correo Electrónico</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente?.email || "No especificado"}
+                  </p>
+                </div>
+                
+                <div className="patient-info-item group">
+                  <label className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Dirección</label>
+                  <p className="text-foreground dark:text-foreground font-medium mt-1 p-3 bg-muted/30 dark:bg-muted/30 rounded-lg group-hover:bg-muted/50 dark:group-hover:bg-muted/50 transition-colors">
+                    {paciente?.direccion || "No especificado"}
+                  </p>
+                </div>
               </div>
             </div>
-
-            <div className="mt-2">
+          </div>
+        </div>
+        
+        {/* Panel de Acciones */}
+        <div className="space-y-6">
+          <div className="bg-card dark:bg-card rounded-xl shadow-sm border border-border dark:border-border p-6 patient-card">
+            <h3 className="text-lg font-semibold text-foreground dark:text-foreground mb-4 flex items-center gap-2">
+              <div className="w-2 h-2 bg-primary dark:bg-primary rounded-full status-indicator"></div>
+              Acciones
+            </h3>
+            
+            <div className="space-y-3">
               <button
-                  onClick={handleEditPaciente}
-                  className={cn(
-                      "bg-transparent text-primary dark:text-primary border-primary dark:border-primary border rounded-full py-2 px-4 mt-4 hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground dark:hover:text-primary-foreground transition-colors duration-200"
-                  )}
+                onClick={handleEditPaciente}
+                className="w-full bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground rounded-lg py-3 px-4 font-medium hover:bg-primary/90 dark:hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-[1.02]"
               >
-                Editar
-              </button >
-              <FamiliaButton idPaciente={idPaciente || 0} />
+                ✏️ Editar Paciente
+              </button>
+              
+              <div className="transform transition-all duration-200 hover:scale-[1.02]">
+                <FamiliaButton idPaciente={idPaciente || 0} />
+              </div>
+            </div>
+          </div>
+          
+          {/* Información adicional */}
+          <div className="bg-card dark:bg-card rounded-xl shadow-sm border border-border dark:border-border p-6 patient-card">
+            <h3 className="text-lg font-semibold text-foreground dark:text-foreground mb-4 flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full status-indicator"></div>
+              Estado del Paciente
+            </h3>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg patient-info-item">
+                <span className="text-sm font-medium text-green-800 dark:text-green-200">Estado</span>
+                <span className="inline-flex items-center gap-1 text-sm font-medium text-green-800 dark:text-green-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full status-indicator"></div>
+                  Activo
+                </span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-muted/50 dark:bg-muted/50 rounded-lg patient-info-item">
+                <span className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">ID Paciente</span>
+                <span className="text-sm font-bold text-foreground dark:text-foreground">#{idPaciente}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 

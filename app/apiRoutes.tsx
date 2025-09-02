@@ -21,7 +21,9 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
+    cache: 'force-cache' // Cache para generación estática
+  });
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -29,7 +31,9 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, {
+    cache: 'force-cache' // Cache para generación estática
+  });
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -38,7 +42,10 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
+    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`,
+    {
+      cache: 'force-cache' // Cache para generación estática
+    }
   );
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
@@ -342,7 +349,7 @@ export async function GetPlantillas(): Promise<MarketingApiResponse> {
 //Traer citas totales por fecha
 export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/periodosmensuales`,
     {
       method: "GET",
       headers: {

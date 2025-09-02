@@ -5,7 +5,6 @@ import CerrarSesion from "@/components/CerrarSesion";
 import { View } from "react-big-calendar";
 import { Button, useDisclosure } from "@heroui/react";
 import Week from "./SelectorDate";
-import Calendario from "./Calendar";
 import { Citas } from "@/interface";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ModalCitaExample from "./modal/ModalCitaExample";
@@ -13,19 +12,19 @@ import { addDays, addMonths, addWeeks, subDays, subMonths, subWeeks } from "date
 import "./styles/calendar-styles.css"; // ← IMPORTACIÓN DEL CSS
 
 
+import Calendario from "./Calendar";
+import { useCitas } from "./hooks/useCitas";
 
+//establecer constantes que van a ir cambiando de acuerdo a estados
 interface CalProps {
   citas: Citas[];
 }
-
-//establecer constantes que van a ir cambiando de acuerdo a estados
-export default function CalendarioMain({ citas }: CalProps) {
+export default function CalendarioMain() {
+  const { citas } = useCitas();
   const [vistaActual, setVistaActual] = useState("calendario");
   const [view, setView] = useState<View>("week");
   const [currentDate, setCurrentDate] = useState(new Date());
 
-
-  
   // Navegación
   const goToToday = () => setCurrentDate(new Date());
   const goToPrev = () => {
@@ -62,9 +61,8 @@ export default function CalendarioMain({ citas }: CalProps) {
   }, [citas]);
 
   return (
-    // 🔧 CAMBIO: en dark ahora fondo real negro
-    <div className="bg-background dark:bg-gray-950 min-h-screen flex flex-col">
-
+    // 🔧 CAMBIO: fondo usa tokens; mejor contraste en dark (no usar #000 directo)
+    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
       {/* Header principal */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
         <div className="flex flex-col md:flex-row items-center gap-4">
@@ -187,9 +185,10 @@ export default function CalendarioMain({ citas }: CalProps) {
           <Button
             radius="full"
             className={`hidden text-[15px] md:text-[16px] leading-[20px] font-medium
-              ${vistaActual === "calendario"
-                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
+              ${
+                vistaActual === "calendario"
+                  ? "bg-background text-primary"
+                  : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -202,9 +201,10 @@ export default function CalendarioMain({ citas }: CalProps) {
           <Button
             radius="full"
             className={`text-[15px] md:text-[16px] leading-[20px] font-medium
-              ${vistaActual === "horarios"
-                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
+              ${
+                vistaActual === "horarios"
+                  ? "bg-background text-primary"
+                  : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -227,9 +227,10 @@ export default function CalendarioMain({ citas }: CalProps) {
             aria-label="Vista mes"
             className={`
               text-[15px] md:text-[16px] leading-[20px] font-medium
-              ${vistaActual === "calendario" && view === "month"
-                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
+              ${
+                vistaActual === "calendario" && view === "month"
+                  ? "bg-background text-primary"
+                  : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -244,9 +245,10 @@ export default function CalendarioMain({ citas }: CalProps) {
             aria-label="Vista semana"
             className={`
               text-[15px] md:text-[16px] leading-[20px] font-medium
-              ${vistaActual === "calendario" && view === "week"
-                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
+              ${
+                vistaActual === "calendario" && view === "week"
+                  ? "bg-background text-primary"
+                  : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -261,9 +263,10 @@ export default function CalendarioMain({ citas }: CalProps) {
             aria-label="Vista día"
             className={`
               text-[15px] md:text-[16px] leading-[20px] font-medium
-              ${vistaActual === "calendario" && view === "day"
-                ? "bbg-background text-primary dark:bg-gray-800 dark:text-violet-300"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300 "
+              ${
+                vistaActual === "calendario" && view === "day"
+                  ? "bg-background text-primary"
+                  : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary 
@@ -280,7 +283,11 @@ export default function CalendarioMain({ citas }: CalProps) {
         {vistaActual === "horarios" ? (
           <Week />
         ) : (
-          <Calendario vista={view} citasPorDia={citasPorDia} date={currentDate} />
+          <Calendario
+            vista={view}
+            citasPorDia={citasPorDia}
+            date={currentDate}
+          />
         )}
       </div>
 

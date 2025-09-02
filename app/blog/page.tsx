@@ -1,55 +1,60 @@
-"use client";
 import {
   BlogsWebSite,
   GetBlogsPreviewApi,
   GetCagetories,
 } from "@/app/apiRoutes";
-import BlogPageComponent from "@/components/blog/BlogPageComponent";
-import BlogPageLoading from "@/components/blog/BlogPageLoading";
-import {
-  ApiResponse,
-  AuthorsApi,
-  CategoriaApi,
-} from "@/interface";
-import { useEffect, useState } from "react";
+import BlogPageComponentOptimized from "@/components/blog/BlogPageComponentOptimized";
 
-export default  function BlogPage() {
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [categoria, setCategoria] = useState<CategoriaApi | null>(null);
-  const [authors, setAuthors] = useState<AuthorsApi | null>(null);
-  const [error, setError] = useState<string | null>(null);
+// Obtener datos durante el build (Server Component)
+async function getBlogData() {
+  try {
+    const [dato, category, author] = await Promise.all([
+      BlogsWebSite(),
+      GetCagetories(),
+      GetBlogsPreviewApi()
+    ]);
+    
+    return {
+      data: dato,
+      categoria: category,
+      authors: author,
+      error: null
+    };
+  } catch (error) {
+    console.error("Error fetching blog data:", error);
+    return {
+      data: null,
+      categoria: null,
+      authors: null,
+      error: "Error obteniendo blogs"
+    };
+  }
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const dato = await BlogsWebSite();
-        const category = await GetCagetories();
-        const author = await GetBlogsPreviewApi();
-        setData(dato);
-        setCategoria(category);
-        setAuthors(author);
-      } catch (error) {
-        setError("Error obteniendo blogs");
-        console.error(error);
-      }
-    }
-    fetchData().catch(error => {
-      console.error("Error in fetchData:", error);
-    });
-  }, []);
+export default async function BlogPage() {
+  const { data, categoria, authors, error } = await getBlogData();
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (!data || !categoria || !authors) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>No se pudieron cargar los datos</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      {error && (
-        <p className="flex items-center justify-center h-screen">{error}</p>
-      )}
-      { (data && categoria && authors) ?
-        <BlogPageComponent
-          Datos={data.result}
-          Categories={categoria.result}
-          Authors={authors.result}
-        /> : <BlogPageLoading/>
-      }
-    </div>
+    <BlogPageComponentOptimized
+      Datos={data.result}
+      Categories={categoria.result}
+      Authors={authors.result}
+    />
   );
 }

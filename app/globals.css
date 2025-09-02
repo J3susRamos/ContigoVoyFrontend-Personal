@@ -35,6 +35,52 @@ body {
   .animate-fade-exit-active {
     @apply opacity-0 transition-opacity duration-300;
   }
+
+  /* Animaciones para el detalle del paciente */
+  .patient-card {
+    @apply transition-all duration-300 ease-in-out;
+    animation: slideUpFade 0.6s ease-out;
+  }
+
+  .patient-info-item {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .patient-info-item:hover {
+    @apply scale-[1.02] shadow-sm;
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--primary) / 0.05) 50%, transparent 100%);
+  }
+
+  .dark .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.2) 0%, hsl(var(--primary) / 0.1) 50%, transparent 100%);
+  }
+
+  @keyframes slideUpFade {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .status-indicator {
+    animation: pulse-subtle 2s infinite;
+  }
 }
 
 .embla {
@@ -429,4 +475,103 @@ body {
   -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   transition: background-color 5000s ease-in-out 0s !important;
   background-color: transparent !important;
+}
+
+/* Animaciones para el registro familiar */
+.family-card {
+  @apply transition-all duration-500 ease-in-out;
+  animation: slideUpFade 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.family-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.family-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.family-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.family-card:hover {
+  @apply transform scale-[1.02] shadow-xl;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.family-section-header {
+  animation: bounceIn 0.8s ease-out;
+}
+
+/* Efectos hover para secciones internas */
+.family-subsection {
+  @apply transition-all duration-300;
+}
+
+.family-subsection:hover {
+  @apply transform translate-y-[-2px] shadow-md;
+}
+
+/* Gradientes animados para los fondos */
+.family-gradient-bg {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Efectos de pulso para elementos interactivos */
+.pulse-element {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .8;
+  }
 }

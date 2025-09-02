@@ -16,10 +16,8 @@ const DataTable = <T,>({
   return (
     <>
       <div className="hidden lg:block">
-        <table
-          className="max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8 mt-5"
-        >          
-        <thead>
+        <table className="max-w-screen-2xl mx-auto w-full border-separate border-spacing-y-4 px-8 mt-5">
+          <thead>
             <tr className="bg-[#6265f4] dark:bg-[#6364f4] text-white dark:text-primary-foreground h-12 text-center">
               <th className="py-3 pl-9 text-2xl font-light rounded-tl-full">
                 O
@@ -48,7 +46,8 @@ const DataTable = <T,>({
           </tbody>
         </table>
       </div>
-      {renderCard && (        <div className="lg:hidden p-5">
+      {renderCard && (
+        <div className="lg:hidden p-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {data.map((item, index) => (
               <div

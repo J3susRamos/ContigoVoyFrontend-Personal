@@ -207,9 +207,14 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
             value={filterValue}
             onValueChange={onSearchChange}
           />          {/* Grupo de icono de agregar y botón - Desktop */}
-          <div className="ml-auto hidden md:flex items-center gap-4 mr-12">
-            <span
+          <div className="ml-auto mr-12 text-white max-md:hidden ">
+            {/* Botón de agregar nuevo paciente - Desktop */}
+            <button
+              className="bg-accent dark:bg-accent flex items-center gap-2 text-accent-foreground dark:text-primary-foreground rounded-full text-base px-4 py-1 font-normal hover:scale-105 transition-transform"
               onClick={handleAddNew}
+            >
+            <div>Agregar nuevo paciente </div>
+            <span
               className="text-primary transition-colors cursor-pointer"
               dangerouslySetInnerHTML={{
                 __html: Icons.plus.replace(/<svg /, '<svg fill="currentColor"'),
@@ -220,15 +225,9 @@ export const NavbarPacientes: React.FC<NavbarProps> = ({
                 borderColor: "hsl(var(--primary))",
               }}
             />
-
-            {/* Botón de agregar nuevo paciente - Desktop */}
-            <button
-              className="text-primary-foreground dark:border-white font-light text-xl border-1 rounded-full px-4"
-              onClick={handleAddNew}
-            >
-              Agregar nuevo paciente
             </button>
-          </div>          {/* Botón de agregar para móviles/tablets */}
+          </div>          
+          {/* Botón de agregar para móviles/tablets */}
           <div className="ml-auto md:hidden flex items-center mr-8">
             <button
               className="bg-card dark:bg-card text-primary dark:text-primary p-3 rounded-full border-2 border-primary dark:border-primary hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200"

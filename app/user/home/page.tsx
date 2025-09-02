@@ -5,15 +5,25 @@ import { Citas, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
 import { GetCitasPsicologoPorMes } from "@/app/apiRoutes";
 import showToast from "@/components/ToastStyle";
+import { useRouter } from "next/navigation";
+
 const PageHome = () => {
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
   const [citasDelDia, setCitasDelDia] = useState<Citas[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
-        setUser(JSON.parse(storedUser) as UsuarioLocalStorage);
+        const userData = JSON.parse(storedUser) as UsuarioLocalStorage;
+        setUser(userData);
+        
+        // Si es administrador, redirigir directamente a citas sin pagar
+        if (userData.rol === "ADMIN") {
+          router.push("/user/citas-sin-pagar");
+          return;
+        }
       }
 
       GetCitasPsicologoPorMes().then(res => {
@@ -33,14 +43,14 @@ const PageHome = () => {
         return showToast("success", "No tienes citas agendadas para hoy")}
       );
     }
-  }, []);
+  }, [router]);
 
   if (!user) {
     return <div>Loading...</div>;
   }
 
   return (
-    <section className="bg-white dark:bg-[#1A1A1A] min-h-screen">
+    <section className="bg-white dark:bg-[#020202] min-h-screen">
 
       <div className="flex flex-col md:flex-row justify-between">
         <div className="m-5">
