@@ -161,6 +161,11 @@ const Paciente = () => {
     return () => abortController.abort();
   }, []);
 
+
+  const joinVideoCall = (citaId: number) => {
+    window.open(`/videocall/${citaId}`, "_blank");
+  };
+
   const handleReagendar = (cita: Cita) => {
     sessionStorage.setItem("miCita", JSON.stringify(cita));
     router.push("/paciente/citas/detalleCita");
