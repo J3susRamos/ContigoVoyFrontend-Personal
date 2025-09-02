@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo,useEffect } from "react";
 import CerrarSesion from "@/components/CerrarSesion";
 import { View } from "react-big-calendar";
 import { Button, useDisclosure } from "@heroui/react";
@@ -10,6 +10,9 @@ import { Citas } from "@/interface";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ModalCitaExample from "./modal/ModalCitaExample";
 import { addDays, addMonths, addWeeks, subDays, subMonths, subWeeks } from "date-fns";
+import "./styles/calendar-styles.css"; // ← IMPORTACIÓN DEL CSS
+
+
 
 interface CalProps {
   citas: Citas[];
@@ -21,6 +24,8 @@ export default function CalendarioMain({ citas }: CalProps) {
   const [view, setView] = useState<View>("week");
   const [currentDate, setCurrentDate] = useState(new Date());
 
+
+  
   // Navegación
   const goToToday = () => setCurrentDate(new Date());
   const goToPrev = () => {
@@ -57,8 +62,8 @@ export default function CalendarioMain({ citas }: CalProps) {
   }, [citas]);
 
   return (
-    // 🔧 CAMBIO: fondo usa tokens; mejor contraste en dark (no usar #000 directo)
-    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+    // 🔧 CAMBIO: en dark ahora fondo real negro
+    <div className="bg-background dark:bg-gray-950 min-h-screen flex flex-col">
 
       {/* Header principal */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
@@ -76,8 +81,9 @@ export default function CalendarioMain({ citas }: CalProps) {
       </div>
 
       {/* 🔧 CAMBIO: Barra morada con mejor contraste, sticky ring para accesibilidad */}
+      {/* 🔧 CAMBIO: en dark ahora violeta más fuerte */}
       <div
-        className="w-full h-auto md:h-16 bg-primary dark:bg-primary
+        className="w-full h-auto md:h-16 bg-primary dark:bg-violet-900
                    items-center justify-start flex flex-col md:flex-row px-2 md:px-8 py-4 md:py-0 gap-2 md:gap-0"
       >
         {/* Mobile: flechas + mes */}
@@ -89,8 +95,7 @@ export default function CalendarioMain({ citas }: CalProps) {
             aria-label="Anterior"
             title="Anterior"
             className="
-              bg-transparent text-primary-foreground
-              hover:bg-primary/80
+              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-violet-800
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -110,8 +115,7 @@ export default function CalendarioMain({ citas }: CalProps) {
             aria-label="Siguiente"
             title="Siguiente"
             className="
-              bg-transparent text-primary-foreground
-              hover:bg-primary/80
+              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-violet-800
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -131,8 +135,7 @@ export default function CalendarioMain({ citas }: CalProps) {
             aria-label="Anterior"
             title="Anterior"
             className="
-              bg-transparent text-primary-foreground
-              hover:bg-primary/80
+              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-violet-800
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -150,7 +153,7 @@ export default function CalendarioMain({ citas }: CalProps) {
             title="Siguiente"
             className="
               bg-transparent text-primary-foreground
-              hover:bg-primary/80
+              hover:bg-primary/70 dark:hover:bg-violet-800
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -164,13 +167,13 @@ export default function CalendarioMain({ citas }: CalProps) {
 
         {/* Botones de navegación de vista izquierda */}
         <div className="flex gap-2 items-center w-full max-w-full md:max-w-[730px] justify-center md:justify-start mt-2 md:mt-0">
-          {/* 🔧 CAMBIO: botón “Hoy” con pastilla clara (alto contraste sobre bg morado) */}
+          {/* 🔧 CAMBIO: botón Hoy adaptado dark */}
           <Button
             radius="full"
             aria-label="Ir a hoy"
             className="
-              text-[15px] md:text-[16px] leading-[20px] font-semibold
-              bg-background text-primary
+              text-[15px] md:text-[16px] leading-[20px] font-semibold bg-background text-primary
+                       dark:bg-gray-800 dark:text-violet-300
               hover:brightness-105
               active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -185,8 +188,8 @@ export default function CalendarioMain({ citas }: CalProps) {
             radius="full"
             className={`hidden text-[15px] md:text-[16px] leading-[20px] font-medium
               ${vistaActual === "calendario"
-                ? "bg-background text-primary"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -200,8 +203,8 @@ export default function CalendarioMain({ citas }: CalProps) {
             radius="full"
             className={`text-[15px] md:text-[16px] leading-[20px] font-medium
               ${vistaActual === "horarios"
-                ? "bg-background text-primary"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -218,15 +221,15 @@ export default function CalendarioMain({ citas }: CalProps) {
         </div>
 
         {/* Botones de cambio de vista (Mes/Semana/Día) a la derecha */}
-        <div className="flex gap-2 items-center w-full max-w-full md:max-w-[530px] justify-center md:justify-end mt-2 md:mt-0">
+        <div className="flex gap-2 items-center w-full max-w-full md:max-w-[530px] justify-center md:justify-end mt-2 md:mt-0  ">
           <Button
             radius="full"
             aria-label="Vista mes"
             className={`
               text-[15px] md:text-[16px] leading-[20px] font-medium
               ${vistaActual === "calendario" && view === "month"
-                ? "bg-background text-primary"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -242,8 +245,8 @@ export default function CalendarioMain({ citas }: CalProps) {
             className={`
               text-[15px] md:text-[16px] leading-[20px] font-medium
               ${vistaActual === "calendario" && view === "week"
-                ? "bg-background text-primary"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+                ? "bg-background text-primary dark:bg-gray-800 dark:text-violet-300"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300"
               }
               hover:brightness-105 active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -259,11 +262,11 @@ export default function CalendarioMain({ citas }: CalProps) {
             className={`
               text-[15px] md:text-[16px] leading-[20px] font-medium
               ${vistaActual === "calendario" && view === "day"
-                ? "bg-background text-primary"
-                : "bg-transparent border border-primary-foreground/60 text-primary-foreground"
+                ? "bbg-background text-primary dark:bg-gray-800 dark:text-violet-300"
+                : "bg-transparent border border-primary-foreground/60 text-primary-foreground dark:border-violet-400 dark:text-violet-300 "
               }
               hover:brightness-105 active:scale-95 transition duration-150
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary 
             `}
             onPress={() => cambiarVistaGlobal("calendario", "day")}
           >
@@ -273,7 +276,7 @@ export default function CalendarioMain({ citas }: CalProps) {
       </div>
 
       {/* Contenido */}
-      <div className="bg-background dark:bg-background">
+      <div className="bg-background dark:text-violet-300">
         {vistaActual === "horarios" ? (
           <Week />
         ) : (
