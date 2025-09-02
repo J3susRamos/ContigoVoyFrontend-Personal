@@ -61,25 +61,7 @@ const ListarCitasSinPagar = ({ filterValue }: Props) => {
         const citasRaw = citasData.result;
 
         if (Array.isArray(citasRaw)) {
-          const formattedCitas = citasRaw.map((cita: CitaSinPagar) => ({
-            idCita: cita.idCita,
-            motivo_Consulta: cita.motivo_Consulta,
-            estado_Cita: cita.estado_Cita,
-            duracion: cita.duracion,
-            fecha_cita: cita.fecha_cita,
-            hora_cita: cita.hora_cita,
-            paciente: {
-              idPaciente: cita.paciente.idPaciente,
-              nombre: cita.paciente.nombre,
-              apellido: cita.paciente.apellido,
-              numero: cita.paciente.numero,
-            },
-            psicologo: {
-              idPsicologo: cita.psicologo.idPsicologo,
-              nombre: cita.psicologo.nombre,
-              apellido: cita.psicologo.apellido,
-            },
-          }));
+          const formattedCitas = citasRaw;
           if (showToast && !toastShownRef.current) {
             showToastFunction("success", "Citas obtenidas correctamente");
             toastShownRef.current = true;

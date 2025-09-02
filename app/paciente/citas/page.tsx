@@ -64,10 +64,8 @@ const Citas = () => {
         setShowedCitas(formatCitas);
         setLastPage(citasResponse.last_page);
         setLoading(false);
-      } catch (error: any) {
-        if (error.name != "AbortError") {
-          console.error("Error fetching citas:", error);
-        }
+      } catch (error) {
+        console.error("Error fetching citas:", error);
       }
     }
     fetchData();
