@@ -6,13 +6,15 @@ import React, { useEffect, useState } from "react";
 export default function DashboardResumen() {
   const [citasPsicologo, setCitasPsicologo] = useState<DashboardResult>({
       total_citas: 0,
-      citas_completadas: 0,
       citas_pendientes: 0,
+      citas_ausentes:0,
+      citas_realizadas:0,
+      citas_reprogramadas:0,
+      citas_sin_pagar:0,
       citas_canceladas: 0,
       total_minutos_reservados: 0,
       total_pacientes: 0,
       nuevos_pacientes: 0,
-      citas_confirmadas: 0,
     });
  
 const fetchDashboard = async () => {
@@ -31,13 +33,15 @@ const fetchDashboard = async () => {
 
       setCitasPsicologo({
         total_citas: result?.total_citas ?? 0,
-        citas_completadas: result?.citas_completadas ?? 0,
         citas_pendientes: result?.citas_pendientes ?? 0,
         citas_canceladas: result?.citas_canceladas ?? 0,
         total_minutos_reservados: result?.total_minutos_reservados ?? 0,
         total_pacientes: result?.total_pacientes ?? 0,
         nuevos_pacientes: result?.nuevos_pacientes ?? 0,
-        citas_confirmadas: result?.citas_confirmadas ?? 0,
+        citas_ausentes: result?.citas_ausentes ?? 0,
+        citas_realizadas: result?.citas_realizadas ?? 0,
+        citas_reprogramadas: result?.citas_reprogramadas ?? 0,
+        citas_sin_pagar: result?.citas_sin_pagar ?? 0
       });
     };
     loadData();
@@ -52,7 +56,6 @@ const fetchDashboard = async () => {
           </div>
           <div className="mx-10 sm:mx-14 md:mx-20 lg:mx-24">
             <ul className="list-disc pl-7 text-[#634AE2] dark:text-white text-xl font-normal p-6">
-              <li>{citasPsicologo.citas_completadas} citas completadas</li>
               <li>{citasPsicologo.citas_pendientes} citas pendientes</li>
               <li>{citasPsicologo.citas_canceladas} citas canceladas</li>
               <li>{citasPsicologo.total_minutos_reservados} minutos reservados</li>

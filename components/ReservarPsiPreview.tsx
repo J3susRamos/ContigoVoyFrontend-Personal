@@ -116,6 +116,35 @@ export default function ReservarPsiPreview({
       });
       setIsConfirmOpen(false);
       setIsSuccessOpen(true);
+
+      //construimos nuestro propio parametros para api/send-message
+      const parametros = {
+        phone: data.celular,
+        templateOption: 'cita_gratis',
+        psicologo: `${psicologo.nombre} ${psicologo.apellido}`,
+        fecha: data.fecha_cita,
+        hora: data.hora_cita
+      }
+
+      // llamamos a la api de whatsapp para enviarle el mensaje
+      const resp = await fetch(
+        `${process.env.NEXT_PUBLIC_WHATS_BACK}api/send-message`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(parametros),
+        }
+      );
+
+      const resultadoWhats = await resp.json();
+
+      if (resultadoWhats.success) {
+        alert('Se envió mensaje de WhatsApp tambien. Si llego hasta aqui debe de haber llegado el mensaje realmente, caso contrario, debugear para saber porque no.');
+      }
+
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message || "No se pudo enviar el formulario.");

@@ -15,8 +15,15 @@ export function ThemeToggle() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  // Show a placeholder while loading to prevent hydration errors
   if (!mounted) {
-    return null;
+    return (
+      <label htmlFor="theme-toggle" className="relative inline-block w-16 h-8" style={{marginLeft: '12px'}}>
+        <span className="absolute h-[33px] cursor-pointer top-0 left-0 right-0 bottom-0 bg-[#9494F3] rounded-md">
+          <span className="absolute h-[33px] w-[33px] bg-[#634AE2] rounded-md transform translate-x-0"></span>
+        </span>
+      </label>
+    );
   }
 
   return (
