@@ -32,7 +32,7 @@ export default function Calendario({ citasPorDia, vista, date }: CalendarioProps
 
         <Calendar
           messages={CALENDAR_MESSAGES}
-          className="calendar-component bg-background dark:bg-background text-primary dark:text-primary-foreground"
+          className="calendar-component bg-background dark:bg-background text-primary dark:text-primary-foreground  "
           localizer={localizer}
           events={events}
           startAccessor="start"

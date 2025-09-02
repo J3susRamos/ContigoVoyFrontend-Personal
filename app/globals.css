@@ -292,6 +292,11 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /*agregados recien*/
+    --color-primary: #2563eb; /* Azul principal */
+    --color-primary-light: #3b82f6;
+    --color-primary-dark: #1e40af;
   }
   .dark {
     --background: 210 4% 19%;
@@ -319,6 +324,16 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+
+     /* Paleta para dark mode */
+    --color-primary: #60a5fa; /* Azul más claro para resaltar */
+    --color-primary-light: #93c5fd; /* intermedio */
+    --color-primary-dark: #1d4ed8; /* profundo */
+    
+    /* Colores intermedios de contraste */
+    --color-primary-contrast1: #4f83cc;
+    --color-primary-contrast2: #375a8c;
   }
 }
 
