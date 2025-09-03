@@ -219,7 +219,7 @@ function Editar({
       onOpenChange={setIsEditOpen}
       className="border-2 border-[#634AE2] rounded-lg xl:min-w-[900px] max-md:flex max-md:flex-col"
     >
-      <ModalContent>
+      <ModalContent className="bg-white dark:bg-[#19191a] rounded-xl">
         <ModalBody>
           <form
             onSubmit={handleSubmit}
