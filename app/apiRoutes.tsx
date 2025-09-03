@@ -496,26 +496,3 @@ export async function GetEspecialidadesPsicologos(id: number): Promise<Especiali
 
   return await res.json();
 }
-
-// services/disponibilidad HISTORIAL ultimos 7 dias psicologos
-export async function GetDisponibilidadUltimos7Dias(
-  id: number | null
-): Promise<any> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/disponibilidad/ultimos-7-dias/${id}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      credentials: "include", // importante si se usa Sanctum
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Error al obtener la disponibilidad de los últimos 7 días");
-  }
-
-  return await res.json();
-}
