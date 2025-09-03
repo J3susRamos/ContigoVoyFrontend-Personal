@@ -185,9 +185,10 @@ const RegistroFamiliar = ({ id }: { id: string | null}) => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:bg-[#020202] dark:bg-none">
+
         {/* Header */}
-        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
+<div className="bg-white/80 dark:bg-[#020202] border-b border-slate-200 dark:border-slate-700 sticky top-0 z-10">
           <HeaderUser title="Registro Familiar" />
         </div>
 
@@ -243,7 +244,7 @@ const RegistroFamiliar = ({ id }: { id: string | null}) => {
             {/* Main Form Content */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
               {/* Padres y Tutores */}
-              <div className="family-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg">
+<div className="family-card bg-white dark:bg-[#19191a] backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg">
                 <div className="flex items-center mb-6">
                   <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center text-white mr-3">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -316,7 +317,7 @@ const RegistroFamiliar = ({ id }: { id: string | null}) => {
               </div>
 
               {/* Información Familiar Extendida */}
-              <div className="family-card bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg">
+<div className="family-card bg-white dark:bg-[#19191a] backdrop-blur-sm rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-lg">
                 <div className="flex items-center mb-6">
                   <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-white mr-3">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

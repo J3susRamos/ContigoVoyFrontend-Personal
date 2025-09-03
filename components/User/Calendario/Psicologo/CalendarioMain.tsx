@@ -25,6 +25,8 @@ export default function CalendarioMain() {
   const [view, setView] = useState<View>("week");
   const [currentDate, setCurrentDate] = useState(new Date());
 
+
+  
   // Navegación
   const goToToday = () => setCurrentDate(new Date());
   const goToPrev = () => {
