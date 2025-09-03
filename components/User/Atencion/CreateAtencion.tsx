@@ -265,12 +265,16 @@ const CreateAtencion = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 dark:bg-background">
+    <div className="min-h-screen p-4 dark:bg-[#020202]">
+
       {/* Header */}
-      <div className="flex flex-1 bg-[#eaeded] dark:bg-background w-full z-30">
+     <div className="flex flex-1 bg-[#eaeded] dark:bg-[#020202] w-full z-30">
+
         <div>
-          <nav className="bg-[#eaeded] dark:bg-background rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
-            <div className="bg-[#eaeded] dark:bg-background flex items-end justify-end w-full">
+          <nav className="bg-[#eaeded] dark:bg-[#020202] rounded-2xl flex items-center w-[calc(95vw-270px)] p-4">
+
+            <div className="bg-[#eaeded] dark:bg-[#020202] flex items-end justify-end w-full">
+
               <div className="flex gap-x-5">
                 <CerrarSesion />
               </div>
@@ -285,7 +289,8 @@ const CreateAtencion = () => {
         {/* body */}
       </div>
       <div className="flex mt-4 text-[#634AE2] font-bold text-normal">
-        <div className="flex-1 ml-5 mr-5 rounded-2xl p-4 bg-card dark:bg-card">
+        <div className="flex-1 ml-5 mr-5 rounded-2xl p-4 bg-card dark:bg-[#19191a] dark:border dark:border-white/20">
+
           <div className="flex pt-2">
             <div className="flex-1 items-center justify-items-center">
               <div>Codigo del Paciente *</div>
@@ -415,7 +420,8 @@ const CreateAtencion = () => {
           </div>
         </div>
         {/*Segunda Columna*/}
-        <div className="flex-1 mr-5 ml-5 bg-card dark:bg-card rounded-2xl p-6">
+        <div className="flex-1 mr-5 ml-5 bg-card dark:bg-[#19191a] dark:border dark:border-white/20 rounded-2xl p-6">
+
           <div className="text-center pt-1 pb-1">
             Últimos objetivos / Objetivo alcanzado
           </div>
