@@ -47,18 +47,31 @@ export async function generateMetadata({
   
   const publishedTime = new Date(blog.fecha).toISOString();
   const imageUrl = blog.imagenes?.[0] || blog.imagen;
-  
+  const description = blog.contenido.replace(/<[^>]*>/g, '').substring(0, 160).trim();
+  const blogUrl = `https://centropsicologicocontigovoy.com/blog/${blog.slug || slug}`;
+
   return {
     title: `${blog.tema} | Blog Contigo Voy`,
-    description: blog.contenido.replace(/<[^>]*>/g, '').substring(0, 160) + '...',
+    description: description + (description.length >= 160 ? '...' : ''),
     authors: [{ name: `${blog.psicologo} ${blog.psicologApellido}` }],
-    keywords: [blog.categoria, 'psicología', 'salud mental', 'bienestar'],
+    keywords: [
+      blog.categoria, 
+      'psicología', 
+      'salud mental', 
+      'bienestar',
+      'terapia psicológica',
+      'centro psicológico',
+      blog.tema.split(' ').slice(0, 3).join(' ').toLowerCase()
+    ],
+    publisher: 'Centro Psicológico Contigo Voy',
     openGraph: {
       title: blog.tema,
-      description: blog.contenido.replace(/<[^>]*>/g, '').substring(0, 200),
+      description: blog.contenido.replace(/<[^>]*>/g, '').substring(0, 200).trim(),
       type: 'article',
       publishedTime,
       authors: [`${blog.psicologo} ${blog.psicologApellido}`],
+      siteName: 'Centro Psicológico Contigo Voy',
+      url: blogUrl,
       images: imageUrl ? [
         {
           url: imageUrl,
@@ -71,11 +84,13 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: blog.tema,
-      description: blog.contenido.replace(/<[^>]*>/g, '').substring(0, 200),
+      description: blog.contenido.replace(/<[^>]*>/g, '').substring(0, 200).trim(),
       images: imageUrl ? [imageUrl] : [],
+      creator: `@${blog.psicologo.replace(/\s+/g, '').toLowerCase()}`,
+      site: '@contigovoy',
     },
     alternates: {
-      canonical: `https://centropsicologicocontigovoy.com/blog/${slug}`,
+      canonical: blogUrl,
     },
     robots: {
       index: true,
@@ -129,9 +144,9 @@ export async function generateStaticParams() {
     
     console.log(`Generating static params for ${blogs.length} blogs`);
     
-    // Generar slugs para todos los blogs usando el campo idBlog
+    // Generar slugs descriptivos para todos los blogs
     return blogs.map((blog) => ({
-      slug: blog.idBlog.toString(),
+      slug: blog.slug || blog.idBlog.toString(), // Usar slug si existe, sino fallback a ID
     })).filter(item => item.slug !== '');
   } catch (error) {
     console.error('Error generating static params:', error);
