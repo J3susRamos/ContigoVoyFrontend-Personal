@@ -153,7 +153,7 @@ export default function ChooseUs() {
           </p>
         </motion.div>
 
-        {/* Móvil (<768px) - Carrusel con 1 item */}
+        {/* Móvil (<768px) */}
         <div className="block md:hidden w-full">
           <div className="embla" ref={emblaRef}>
             <div className="embla__container">
@@ -177,6 +177,7 @@ export default function ChooseUs() {
                       alt={feature.description}
                       title={feature.title}
                       fill
+                      sizes="100vw"
                       className="mask-all-fade object-contain object-right"
                     />
                   </div>
@@ -184,7 +185,6 @@ export default function ChooseUs() {
               ))}
             </div>
           </div>
-          {/* Puntos de navegación centrados */}
           <div className="flex justify-center w-full mt-scv6 px-4">
             <div className="flex space-x-2">
               {features.map((_, index) => (
@@ -200,7 +200,7 @@ export default function ChooseUs() {
           </div>
         </div>
 
-        {/* Tablet (768px-1023px) - 2 items centrados */}
+        {/* Tablet (768px-1023px) */}
         <div className="hidden md:flex lg:hidden w-full px-4">
           <div className="w-full flex flex-col items-center">
             <div className="grid grid-cols-2 gap-8 w-full max-w-2xl mx-auto">
@@ -219,8 +219,6 @@ export default function ChooseUs() {
                 </div>
               ))}
             </div>
-            
-            {/* Puntos de navegación */}
             <div className="flex justify-center gap-2 mt-8">
               {features.map((_, index) => (
                 <button
@@ -233,21 +231,20 @@ export default function ChooseUs() {
               ))}
             </div>
           </div>
-          
-          {/* Imagen derecha */}
           <div className="absolute right-0 top-0 w-[13%] h-full max-w-[250px]">
             <div className="relative w-full h-full">
               <Image
                 src={features[selectedIndex].background}
                 alt={features[selectedIndex].title}
                 fill
+                sizes="50vw"
                 className="mask-all-fade object-contain object-right"
               />
             </div>
           </div>
         </div>
 
-        {/* Desktop (≥1024px) - Grid 2x2 */}
+        {/* Desktop (≥1024px) */}
         <div className="hidden lg:flex w-full relative justify-center max-2xl:justify-start">
           <div className="w-full md:w-2/3 flex pl-[30px] py-scv4 max-w-[800px] 2xl:mr-20">
             <motion.div
@@ -282,12 +279,15 @@ export default function ChooseUs() {
                 <div className="embla__container">
                   {features.map((item, index) => (
                     <div className="embla__slide" key={index}>
-                      <div
-                        className="h-[800px] max-w-[500px] rounded-l-full mask-all-fade"
-                        style={{
-                          backgroundImage: `url(${item.background})`,
-                        }}
-                      />
+                      <div className="relative h-[800px] max-w-[500px] rounded-l-full mask-all-fade">
+                        <Image
+                          src={item.background}
+                          alt={item.title}
+                          fill
+                          sizes="500px"
+                          className="object-cover rounded-l-full"
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
