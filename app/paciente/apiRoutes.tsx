@@ -4,15 +4,14 @@ import { parseCookies } from "nookies";
 const token = parseCookies()["session"];
 
 export const GetCita = async (id: number) => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL
-    }api/citas/paciente/${id}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/paciente/${id}`;
   try {
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
-      }
+      },
     });
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
@@ -23,12 +22,16 @@ export const GetCita = async (id: number) => {
     } else {
       throw new Error(data.message || "Error al obtener cita");
     }
-  } catch (error) {
-    console.error("Error al obtener cita:", error);
-    throw error;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.name != "AbortError") {
+        console.error("Error al obtener cita:", error);
+        throw error;
+      }
+    }
+    
   }
-}
-
+};
 
 export const GetCitas = async (
   currentPage: number,
@@ -39,7 +42,6 @@ export const GetCitas = async (
   fecha_fin: DateValue | null,
   signal: AbortSignal
 ) => {
-
   const params = new URLSearchParams();
   if (estado_cita) params.append("estado_cita", estado_cita);
   if (estado_boucher) params.append("estado_boucher", estado_boucher);
@@ -60,8 +62,9 @@ export const GetCitas = async (
   }
   if (pageSize) params.append("per_page", pageSize.toString());
 
-  const url = `${process.env.NEXT_PUBLIC_API_URL
-    }api/citas/enlaces?${params.toString()}`;
+  const url = `${
+    process.env.NEXT_PUBLIC_API_URL
+  }api/citas/enlaces?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -70,7 +73,7 @@ export const GetCitas = async (
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-      signal
+      signal,
     });
 
     if (!res.ok) {
@@ -84,13 +87,21 @@ export const GetCitas = async (
     } else {
       throw new Error(data.message || "Error al obtener psicólogos");
     }
-  } catch (error) {
-    console.error("Error al obtener psicólogos:", error);
-    throw error;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.name != "AbortError") {
+        console.error("Error al obtener cita:", error);
+        throw error;
+      }
+    }
+    
   }
 };
 
-export const PostBoucher = async (idCita: number | undefined, image64: string) => {
+export const PostBoucher = async (
+  idCita: number | undefined,
+  image64: string
+) => {
   if (!idCita) return;
 
   const payload = {

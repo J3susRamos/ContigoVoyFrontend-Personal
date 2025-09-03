@@ -89,7 +89,7 @@ const DetalleCita = () => {
 
   const canNotUpload = Boolean(
     cita
-      ? cita.bouchers?.some((boucher) => boucher.estado == "pendiente")
+      ? cita.bouchers?.some((boucher) => ["pendiente","aceptado"].includes(boucher.estado))
       : true
   );
 
@@ -107,7 +107,7 @@ const DetalleCita = () => {
     }
   };
 
-  console.log(cita);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
@@ -194,69 +194,71 @@ const DetalleCita = () => {
         <hr />
         {!canNotUpload && (
           <>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Subir Comprobante
-              </label>
-              <div
-                style={{
-                  backgroundImage: preview
-                    ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url(${preview})`
-                    : "none",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  borderStyle: preview ? "solid" : "dashed",
-                }}
-                className="border-2 border-dashed rounded-lg  text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
-              >
-                <form
-                  method="post"
-                  onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
-                    e.preventDefault();
-                    const formData = new FormData(e.currentTarget);
-                    const fileImg = formData.get("files") as File;
-                    const img64 = await validateImageFile(fileImg);
-                    const state = await PostBoucher(cita?.idCita, img64);
-                    if (state) setCitaQuery(setCita, router);
+            <Card>
+              <CardContent className="p-4">
+                <label className="block text-sm font-medium mb-1">
+                  Subir Comprobante
+                </label>
+                <div
+                  style={{
+                    backgroundImage: preview
+                      ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url(${preview})`
+                      : "none",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    borderStyle: preview ? "solid" : "dashed",
                   }}
+                  className="border-2 border-dashed rounded-lg  text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
                 >
-                  <input
-                    name="files"
-                    type="file"
-                    className="hidden"
-                    id="file-upload"
-                    accept="image/*,.pdf"
-                    onChange={handleFileChange}
-                  />
-                  <label htmlFor="file-upload" className="cursor-pointe">
-                    <UploadCloud
-                      className={`pt-6 box-content w-8 h-8 mx-auto ${
-                        preview ? "text-gray-200" : "text-gray-400"
-                      } mb-2`}
+                  <form
+                    method="post"
+                    onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.currentTarget);
+                      const fileImg = formData.get("files") as File;
+                      const img64 = await validateImageFile(fileImg);
+                      const state = await PostBoucher(cita?.idCita, img64);
+                      if (state) setCitaQuery(setCita, router);
+                    }}
+                  >
+                    <input
+                      name="files"
+                      type="file"
+                      className="hidden"
+                      id="file-upload"
+                      accept="image/*,.pdf"
+                      onChange={handleFileChange}
                     />
-                    <p
-                      className={`text-sm text-gray-600 ${
-                        preview ? "dark:text-gray-200" : "dark:text-gray-400"
-                      }`}
-                    >
-                      <span className="font-medium">Haz clic para subir</span> o
-                      arrastra el archivo
-                    </p>
-                    <p
-                      className={`text-xs text-gray-500 pb-4 ${
-                        preview ? "dark:text-gray-300" : "dark:text-gray-500"
-                      } mt-1`}
-                    >
-                      PNG, JPG o PDF (MAX. 5MB)
-                    </p>
-                  </label>
-                  <button className="w-full py-1 bg-slate-800" type="submit">
-                    Subir Voucher
-                  </button>
-                </form>
-              </div>
-            </div>
+                    <label htmlFor="file-upload" className="cursor-pointe">
+                      <UploadCloud
+                        className={`pt-6 box-content w-8 h-8 mx-auto ${
+                          preview ? "text-gray-200" : "text-gray-400"
+                        } mb-2`}
+                      />
+                      <p
+                        className={`text-sm text-gray-600 ${
+                          preview ? "dark:text-gray-200" : "dark:text-gray-400"
+                        }`}
+                      >
+                        <span className="font-medium">Haz clic para subir</span>{" "}
+                        o arrastra el archivo
+                      </p>
+                      <p
+                        className={`text-xs text-gray-500 pb-4 ${
+                          preview ? "dark:text-gray-300" : "dark:text-gray-500"
+                        } mt-1`}
+                      >
+                        PNG, JPG o PDF (MAX. 5MB)
+                      </p>
+                    </label>
+                    <button className="w-full py-1 bg-slate-800" type="submit">
+                      Subir Voucher
+                    </button>
+                  </form>
+                </div>
+              </CardContent>
+            </Card>
             <hr />
           </>
         )}
@@ -296,7 +298,6 @@ const DetalleCita = () => {
                     </Label>
                     <p className="text-lg font-semibold">{b.estado}</p>
                   </div>
-
                 </div>
               </div>
             ))}

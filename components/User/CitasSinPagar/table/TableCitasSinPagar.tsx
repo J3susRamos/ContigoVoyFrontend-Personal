@@ -49,12 +49,12 @@ export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
   };
 
   const handleRechazarCita = async (
-    idBoucher: number,
+    codigo: string,
     comentario: string,
-    numero: string,
+    numero: string
   ) => {
     try {
-      await rechazarCita(idBoucher, comentario, numero);
+      await rechazarCita(codigo, comentario, numero);
       // Opcional: Refrescar la lista de citas o actualizar el estado
       handleCloseModal();
     } catch (error) {
