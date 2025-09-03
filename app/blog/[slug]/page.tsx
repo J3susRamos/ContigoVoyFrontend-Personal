@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogIndividualView from '@/components/blog/BlogIndividualView';
+import BlogRedirectWrapper from '@/components/blog/BlogRedirectWrapper';
 import { BlogPreviewData } from '@/interface';
 
 // Función para obtener un blog específico
@@ -10,7 +11,7 @@ async function getBlog(slug: string): Promise<BlogPreviewData | null> {
     const response = await fetch(
       `${apiUrl}api/blogs/${slug}`,
       {
-        cache: 'force-cache', // Usar cache forzado para generación estática
+        cache: 'no-store', // Deshabilitar cache temporalmente para debugging
         headers: {
           'Content-Type': 'application/json',
         },
@@ -118,7 +119,11 @@ export default async function BlogPage({
     notFound();
   }
   
-  return <BlogIndividualView blog={blog} />;
+  return (
+    <BlogRedirectWrapper blog={blog} currentSlug={slug}>
+      <BlogIndividualView blog={blog} />
+    </BlogRedirectWrapper>
+  );
 }
 
 // Generar páginas estáticas en build time para todos los blogs
@@ -130,7 +135,7 @@ export async function generateStaticParams() {
     const response = await fetch(
       `${apiUrl}api/blogs`,
       {
-        cache: 'force-cache', // Forzar cache para build time
+        cache: 'no-store', // Deshabilitar cache temporalmente para debugging
       }
     );
     
@@ -144,10 +149,22 @@ export async function generateStaticParams() {
     
     console.log(`Generating static params for ${blogs.length} blogs`);
     
-    // Generar slugs descriptivos para todos los blogs
-    return blogs.map((blog) => ({
-      slug: blog.slug || blog.idBlog.toString(), // Usar slug si existe, sino fallback a ID
-    })).filter(item => item.slug !== '');
+    const params: { slug: string }[] = [];
+    
+    // Generar páginas para los slugs nuevos y mantener IDs para compatibilidad
+    blogs.forEach((blog) => {
+      // Agregar el slug principal si existe
+      if (blog.slug) {
+        params.push({ slug: blog.slug });
+      }
+      
+      // Agregar también el ID para compatibilidad con enlaces existentes
+      params.push({ slug: blog.idBlog.toString() });
+    });
+    
+    return params.filter((item, index, self) => 
+      index === self.findIndex(p => p.slug === item.slug)
+    ); // Eliminar duplicados
   } catch (error) {
     console.error('Error generating static params:', error);
     return [];
