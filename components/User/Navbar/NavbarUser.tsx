@@ -76,6 +76,28 @@ const NavbarUser = () => {
   const panelRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
+  const cancelarCitasVencidas = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/citas/cancelar-citas`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ estado: 'Sin pagar' }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Error al cancelar citas:', data);
+      } else {
+
+      }
+    } catch (error) {
+      console.error('Error al conectar con el servidor:', error);
+    }
+  };
+
   const handleClickOutside = (event: MouseEvent) => {
     if (
       panelRef.current &&
@@ -112,6 +134,18 @@ const NavbarUser = () => {
         items = items.filter(
           (item) => item.name !== "Citas" && item.name !== "Historial" && item.name !== "Dashboard"
         );
+      } else {
+        items = items.map((item) => {
+          if (item.name === "Citas") {
+            return {
+              ...item,
+              onClick: () => {
+                cancelarCitasVencidas();
+              },
+            };
+          }
+          return item;
+        });
       }
 
       setNavItems(items);

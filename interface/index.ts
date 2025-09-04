@@ -329,6 +329,7 @@ export interface NavItems {
   name: string;
   link: string;
   icono: string;
+  onClick?: () => Promise<void> | void;
 }
 
 // Interface for horarios psicologos
