@@ -118,10 +118,6 @@ const Paciente = () => {
     return () => abortController.abort();
   }, []);
 
-  const joinVideoCall = (citaId: number) => {
-    window.open(`/videocall/${citaId}`, "_blank");
-  };
-
   const handleReagendar = (cita: Cita) => {
     alert(
       `Preparando para reagendar cita con ${
