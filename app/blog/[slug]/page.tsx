@@ -10,10 +10,9 @@ async function getBlog(slug: string): Promise<BlogPreviewData | null> {
     const response = await fetch(
       `${apiUrl}api/blogs/${slug}`,
       {
-        cache: 'force-cache', // Usar cache forzado para generación estática
         headers: {
           'Content-Type': 'application/json',
-        },
+        }
       }
     );
     
@@ -128,10 +127,7 @@ export async function generateStaticParams() {
     console.log('Fetching blogs for static generation from:', apiUrl);
     
     const response = await fetch(
-      `${apiUrl}api/blogs`,
-      {
-        cache: 'force-cache', // Forzar cache para build time
-      }
+      `${apiUrl}api/blogs`
     );
     
     if (!response.ok) {
