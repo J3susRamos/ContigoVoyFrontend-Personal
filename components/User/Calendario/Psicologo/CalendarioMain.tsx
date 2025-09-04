@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo,useEffect } from "react";
+import { useState, useMemo } from "react";
 import CerrarSesion from "@/components/CerrarSesion";
 import { View } from "react-big-calendar";
 import { Button, useDisclosure } from "@heroui/react";
@@ -8,25 +8,25 @@ import Week from "./SelectorDate";
 import { Citas } from "@/interface";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ModalCitaExample from "./modal/ModalCitaExample";
-import { addDays, addMonths, addWeeks, subDays, subMonths, subWeeks } from "date-fns";
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  subDays,
+  subMonths,
+  subWeeks,
+} from "date-fns";
 import "./styles/calendar-styles.css"; // ← IMPORTACIÓN DEL CSS
-
 
 import Calendario from "./Calendar";
 import { useCitas } from "./hooks/useCitas";
 
-//establecer constantes que van a ir cambiando de acuerdo a estados
-interface CalProps {
-  citas: Citas[];
-}
 export default function CalendarioMain() {
   const { citas } = useCitas();
   const [vistaActual, setVistaActual] = useState("calendario");
   const [view, setView] = useState<View>("week");
   const [currentDate, setCurrentDate] = useState(new Date());
 
-
-  
   // Navegación
   const goToToday = () => setCurrentDate(new Date());
   const goToPrev = () => {

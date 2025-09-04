@@ -139,6 +139,7 @@ export interface Contact {
 export interface BlogApi {
   idCategoria: number | null;
   tema: string;
+  slug?: string;
   contenido: string;
   imagenes: string[]; // Array de imágenes
   idPsicologo: number | null;
@@ -148,6 +149,7 @@ export interface BlogApiGEt {
   idBlog: number | null;
   categoria: string;
   tema: string;
+  slug?: string;
   contenido: string;
   imagen: string; // Mantener para compatibilidad
   imagenes?: string[]; // Nuevo campo opcional
@@ -157,6 +159,7 @@ export interface BlogApiGEt {
 export interface BlogPreviewData {
   idBlog: number;
   tema: string;
+  slug?: string;
   contenido: string;
   imagen: string; // Mantener para compatibilidad
   imagenes?: string[]; // Nuevo campo opcional
