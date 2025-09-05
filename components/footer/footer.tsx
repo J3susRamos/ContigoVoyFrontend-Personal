@@ -91,15 +91,13 @@ export default function Footer() {
                   <li key={link.text}>
                     <Link
                       href={link.href}
-                      passHref
-                      legacyBehavior
-                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
+                      title={link.title}
+                      className="transition-colors duration-500 flex items-center group relative"
                     >
-                      <a title={link.title} className="relative group">
+                      <span className="relative group">
                         {link.text}
                         <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
-
-                      </a>
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -113,15 +111,13 @@ export default function Footer() {
                   <li key={link.text}>
                     <Link
                       href={link.href}
-                      passHref
-                      legacyBehavior
-                      className="text-purple-100 hover:text-white transition-colors duration-500 flex items-center group relative"
+                      title={link.title}
+                      className=" transition-colors duration-500 flex items-center group relative"
                     >
-                      <a title={link.title} className="relative group">
+                      <span className="relative group">
                         {link.text}
                         <span className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-[#634AE2] dark:bg-white group-hover:w-full inline-block duration-500"></span>
-
-                      </a>
+                      </span>
                     </Link>
                   </li>
                 ))}

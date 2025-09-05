@@ -27,8 +27,7 @@ interface CitaSinPagarModalProps {
     numero: string,
   ) => void;
   onRechazar: (
-    idBoucher: number,
-    idCita: string,
+    codigo: string,
     comentario: string,
     numero: string,
   ) => void;
@@ -107,8 +106,7 @@ export const CitaSinPagarModal: React.FC<CitaSinPagarModalProps> = ({
     setIsLoading(true);
     try {
       await onRechazar(
-        cita.boucher.idBoucher,
-        cita.idCita,
+        cita.boucher.codigo,
         comentario,
         cita.paciente.numero,
       );

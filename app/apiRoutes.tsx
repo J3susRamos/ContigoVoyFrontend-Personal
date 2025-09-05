@@ -21,9 +21,7 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
-    cache: 'force-cache' // Cache para generación estática
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -31,9 +29,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, {
-    cache: 'force-cache' // Cache para generación estática
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -42,10 +38,7 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`,
-    {
-      cache: 'force-cache' // Cache para generación estática
-    }
+    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
   );
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
@@ -492,29 +485,6 @@ export async function GetEspecialidadesPsicologos(id: number): Promise<Especiali
 
   if (!res.ok) {
     throw new Error("Error al obtener las especialidades de los psicologos");
-  }
-
-  return await res.json();
-}
-
-// services/disponibilidad HISTORIAL ultimos 7 dias psicologos
-export async function GetDisponibilidadUltimos7Dias(
-  id: number | null
-): Promise<any> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/disponibilidad/ultimos-7-dias/${id}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      credentials: "include", // importante si se usa Sanctum
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Error al obtener la disponibilidad de los últimos 7 días");
   }
 
   return await res.json();

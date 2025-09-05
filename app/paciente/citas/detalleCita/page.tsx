@@ -12,6 +12,8 @@ import { GetCita } from "../../apiRoutes";
 import usePaciente from "../../hooks/usePaciente";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 const imageToBase64 = async (file: File) => {
   try {
@@ -51,7 +53,10 @@ const validateImageFile = async (file: File) => {
   return imageToBase64(file);
 };
 
-const setCitaQuery = (setCita: Dispatch<SetStateAction<Cita | null>>, router: AppRouterInstance) => {
+const setCitaQuery = (
+  setCita: Dispatch<SetStateAction<Cita | null>>,
+  router: AppRouterInstance
+) => {
   const citaStorage = sessionStorage.getItem("miCita");
   if (citaStorage) {
     const getMyCita = async (id: number) => {
@@ -79,12 +84,12 @@ const DetalleCita = () => {
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    setCitaQuery(setCita, router)
+    setCitaQuery(setCita, router);
   }, [router]);
 
   const canNotUpload = Boolean(
     cita
-      ? cita.bouchers?.some((boucher) => boucher.estado == "pendiente")
+      ? cita.bouchers?.some((boucher) => ["pendiente","aceptado"].includes(boucher.estado))
       : true
   );
 
@@ -102,6 +107,8 @@ const DetalleCita = () => {
     }
   };
 
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-6 lg:py-8 space-y-6">
@@ -113,108 +120,189 @@ const DetalleCita = () => {
           <ChevronLeft strokeWidth={4} />
           Regresar
         </button>
-        {cita?.idCita}
-        <hr />
-        {cita?.fecha_cita}
-        <hr />
-        {cita?.hora_cita}
-        <hr />
-        <div className="flex items-center gap-2 text-sm p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <Video className="w-4 h-4 text-purple-500" />
-          <span>Videollamada en línea</span>
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="p-4">
+              <div className="grid grid-cols sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-400">
+                    Fecha Cita
+                  </Label>
+                  <p className="text-lg font-semibold">{cita?.fecha_cita}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-400">
+                    Hora Cita
+                  </Label>
+                  <p className="text-lg font-semibold">{cita?.hora_cita}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-400">
+                    Estado Cita
+                  </Label>
+                  <p className="text-lg font-semibold">{cita?.estado_Cita}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-400">
+                    Identificador Cita
+                  </Label>
+                  <p className="text-lg font-semibold">{cita?.idCita}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-400">
+                    Terapeuta asignado
+                  </Label>
+                  <p className="text-lg font-semibold">
+                    {cita?.apellidoPsicologo + " " + cita?.nombrePsicologo}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-400">
+                    Identificador Cita
+                  </Label>
+                  <p className="text-lg font-semibold">{cita?.idCita}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <div className="flex flex-col gap-2">
-          <Button
-            className="w-full"
-            disabled={cita?.estado_Cita !== "confirmada"}
-          >
-            <Video className="w-4 h-4 mr-2" />
-            {cita?.estado_Cita === "confirmada"
-              ? "Ingresar a videollamada"
-              : "Cita pendiente"}
-          </Button>
+        <hr />
+        <Card>
+          <CardContent className="p-4 space-y-6">
+            <div className="flex items-center gap-2 text-sm p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <Video className="w-4 h-4 text-purple-500" />
+              <span>Videollamada en línea</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Button
+                className="w-full"
+                disabled={cita?.estado_Cita !== "confirmada"}
+              >
+                <Video className="w-4 h-4 mr-2" />
+                {cita?.estado_Cita === "confirmada"
+                  ? "Ingresar a videollamada"
+                  : "Cita pendiente"}
+              </Button>
 
-          <Button variant="shadow" className="w-full">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Volver a agendar
-          </Button>
-        </div>
+              <Button variant="shadow" className="w-full">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Volver a agendar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
         <hr />
         {!canNotUpload && (
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Subir Comprobante
-            </label>
-            <div
-              style={{
-                backgroundImage: preview
-                  ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url(${preview})`
-                  : "none",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-                borderStyle: preview ? "solid" : "dashed",
-              }}
-              className="border-2 border-dashed rounded-lg  text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
-            >
-              <form
-                method="post"
-                onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.currentTarget);
-                  const fileImg = formData.get("files") as File;
-                  const img64 = await validateImageFile(fileImg);
-                  const state = await PostBoucher(cita?.idCita, img64);
-                  if (state) setCitaQuery(setCita, router);
-                }}
-              >
-                <input
-                  name="files"
-                  type="file"
-                  className="hidden"
-                  id="file-upload"
-                  accept="image/*,.pdf"
-                  onChange={handleFileChange}
-                />
-                <label htmlFor="file-upload" className="cursor-pointe">
-                  <UploadCloud
-                    className={`pt-6 box-content w-8 h-8 mx-auto ${preview ? "text-gray-200" : "text-gray-400"
-                      } mb-2`}
-                  />
-                  <p
-                    className={`text-sm text-gray-600 ${preview ? "dark:text-gray-200" : "dark:text-gray-400"
-                      }`}
-                  >
-                    <span className="font-medium">Haz clic para subir</span> o
-                    arrastra el archivo
-                  </p>
-                  <p
-                    className={`text-xs text-gray-500 pb-4 ${preview ? "dark:text-gray-300" : "dark:text-gray-500"
-                      } mt-1`}
-                  >
-                    PNG, JPG o PDF (MAX. 5MB)
-                  </p>
+          <>
+            <Card>
+              <CardContent className="p-4">
+                <label className="block text-sm font-medium mb-1">
+                  Subir Comprobante
                 </label>
-                <button className="w-full py-1 bg-slate-800" type="submit">
-                  Subir Voucher
-                </button>
-              </form>
-            </div>
-          </div>
+                <div
+                  style={{
+                    backgroundImage: preview
+                      ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url(${preview})`
+                      : "none",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    borderStyle: preview ? "solid" : "dashed",
+                  }}
+                  className="border-2 border-dashed rounded-lg  text-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                >
+                  <form
+                    method="post"
+                    onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.currentTarget);
+                      const fileImg = formData.get("files") as File;
+                      const img64 = await validateImageFile(fileImg);
+                      const state = await PostBoucher(cita?.idCita, img64);
+                      if (state) setCitaQuery(setCita, router);
+                    }}
+                  >
+                    <input
+                      name="files"
+                      type="file"
+                      className="hidden"
+                      id="file-upload"
+                      accept="image/*,.pdf"
+                      onChange={handleFileChange}
+                    />
+                    <label htmlFor="file-upload" className="cursor-pointe">
+                      <UploadCloud
+                        className={`pt-6 box-content w-8 h-8 mx-auto ${
+                          preview ? "text-gray-200" : "text-gray-400"
+                        } mb-2`}
+                      />
+                      <p
+                        className={`text-sm text-gray-600 ${
+                          preview ? "dark:text-gray-200" : "dark:text-gray-400"
+                        }`}
+                      >
+                        <span className="font-medium">Haz clic para subir</span>{" "}
+                        o arrastra el archivo
+                      </p>
+                      <p
+                        className={`text-xs text-gray-500 pb-4 ${
+                          preview ? "dark:text-gray-300" : "dark:text-gray-500"
+                        } mt-1`}
+                      >
+                        PNG, JPG o PDF (MAX. 5MB)
+                      </p>
+                    </label>
+                    <button className="w-full py-1 bg-slate-800" type="submit">
+                      Subir Voucher
+                    </button>
+                  </form>
+                </div>
+              </CardContent>
+            </Card>
+            <hr />
+          </>
         )}
 
-        <hr />
-        <h3>Mis comprobantes</h3>
-        {(cita?.bouchers ? cita.bouchers : []).map((b) => (
-          <Image
-            alt="Voucher Paciente"
-            key={b.idBoucher}
-            src={b.imagen}
-            width={300}
-            height={200}
-            style={{ objectFit: "contain" }}
-          />
-        ))}
+        <Card>
+          <CardContent className="p-4">
+            <Label className="text-sm font-medium text-gray-400 mb-3 block">
+              Vouchers subidos
+            </Label>
+
+            {(cita?.bouchers ? cita.bouchers : []).map((b) => (
+              <div className="flex flex-col sm:flex-row gap-x-5" key={b.codigo}>
+                <Image
+                  alt="Voucher Paciente"
+                  key={b.idBoucher}
+                  src={b.imagen}
+                  width={400}
+                  height={300}
+                  style={{ objectFit: "contain" }}
+                />
+                <div className="flex-1 grid items-center grid-cols sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-400">
+                      Identificador Voucher
+                    </Label>
+                    <p className="text-lg font-semibold">{b.codigo}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-400">
+                      Fecha subida
+                    </Label>
+                    <p className="text-lg font-semibold">{b.fecha}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium text-gray-400">
+                      Estado voucher
+                    </Label>
+                    <p className="text-lg font-semibold">{b.estado}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -36,8 +36,6 @@ import usePaciente from "./hooks/usePaciente";
 // Definición de tipos (TypeScript)
 // --------------------------
 
-
-
 // Interfaz de un pago
 interface Pago {
   id: number; // ID del pago
@@ -72,20 +70,20 @@ const Paciente = () => {
   const HandleGetCitas = async (signal: AbortSignal) => {
     try {
       const dataCitas = await GetCitas(1, 5, "", "", null, null, signal);
-      console.log(dataCitas);
-      const citasResponse = dataCitas.citas;
-      const citasInfo = citasResponse.data as Cita[];
-      const formatCitas = citasInfo.map((c) => ({
-        ...c,
-        fecha_cita: formatDate(c.fecha_cita),
-      }));
-      setCitas(formatCitas);
-      showToast("success", "Citas obtenidas correctamente");
+      if (dataCitas) {
+        const citasResponse = dataCitas.citas;
+        const citasInfo = citasResponse.data as Cita[];
+        const formatCitas = citasInfo.map((c) => ({
+          ...c,
+          fecha_cita: formatDate(c.fecha_cita),
+        }));
+        setCitas(formatCitas);
+        showToast("success", "Citas obtenidas correctamente");
+      }
     } catch (error) {
       showToast("error", `Error al obtener las citas: ${error}`);
     }
   };
-
 
   // Historial de pagos de ejemplo (simulado)
   const historialPagos: Pago[] = [
@@ -122,7 +120,8 @@ const Paciente = () => {
 
   const handleReagendar = (cita: Cita) => {
     alert(
-      `Preparando para reagendar cita con ${cita.apellidoPsicologo + " " + cita.nombrePsicologo
+      `Preparando para reagendar cita con ${
+        cita.apellidoPsicologo + " " + cita.nombrePsicologo
       } el ${cita.fecha_cita} a las ${cita.hora_cita}`
     );
   };
@@ -384,8 +383,9 @@ const Paciente = () => {
                           onClick={() => {
                             const link = document.createElement("a"); // Crea un elemento <a>
                             link.href = pago.voucher; // Asigna el origen del archivo
-                            link.download = `comprobante-${pago.id
-                              }.${pago.voucher.split(".").pop()}`; // Sugiere nombre de descarga
+                            link.download = `comprobante-${
+                              pago.id
+                            }.${pago.voucher.split(".").pop()}`; // Sugiere nombre de descarga
                             link.click(); // Dispara la descarga
                           }}
                         >
@@ -405,4 +405,4 @@ const Paciente = () => {
   );
 };
 
-export default Paciente; 
+export default Paciente;
