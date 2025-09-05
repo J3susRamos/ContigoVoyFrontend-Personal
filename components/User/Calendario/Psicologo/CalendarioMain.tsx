@@ -63,14 +63,14 @@ export default function CalendarioMain() {
   }, [citas]);
 
   return (
-    // 🔧 CAMBIO: fondo usa tokens; mejor contraste en dark (no usar #000 directo)
-    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+    // 🔧 CAMBIO: fondo general en modo oscuro cambiado a #020202
+    <div className="bg-background dark:bg-[#020202] min-h-screen flex flex-col">
       {/* Header principal */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <h1
             className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px]
-                       text-title dark:text-title" // 🔧 CAMBIO: usa --title para mayor consistencia
+                       text-title dark:text-gray-200" // 🔧 Ajuste de color de texto para mejor contraste
           >
             Calendario de citas
           </h1>
@@ -80,22 +80,20 @@ export default function CalendarioMain() {
         </div>
       </div>
 
-      {/* 🔧 CAMBIO: Barra morada con mejor contraste, sticky ring para accesibilidad */}
-      {/* 🔧 CAMBIO: en dark ahora violeta más fuerte */}
+      {/* Barra de navegación */}
       <div
-        className="w-full h-auto md:h-16 bg-primary dark:bg-violet-900
+        className="w-full h-auto md:h-16 bg-primary dark:bg-[#2a2a5f]
                    items-center justify-start flex flex-col md:flex-row px-2 md:px-8 py-4 md:py-0 gap-2 md:gap-0"
       >
         {/* Mobile: flechas + mes */}
         <div className="flex w-full items-center justify-center md:hidden mb-2">
-          {/* 🔧 CAMBIO: botones icon-only con feedback hover/active/focus y etiqueta accesible */}
           <Button
             isIconOnly
             size="sm"
             aria-label="Anterior"
             title="Anterior"
             className="
-              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-violet-800
+              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-[#3a3a7f]
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -115,7 +113,7 @@ export default function CalendarioMain() {
             aria-label="Siguiente"
             title="Siguiente"
             className="
-              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-violet-800
+              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-[#3a3a7f]
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -128,14 +126,13 @@ export default function CalendarioMain() {
 
         {/* Desktop: flechas a la izquierda */}
         <div className="hidden md:flex gap-2 items-center w-full max-w-full md:max-w-[230px] justify-center md:justify-start">
-          {/* 🔧 CAMBIO: reemplazo <span> por Button para estados activos/hover accesibles */}
           <Button
             isIconOnly
             radius="full"
             aria-label="Anterior"
             title="Anterior"
             className="
-              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-violet-800
+              bg-transparent text-primary-foreground hover:bg-primary/70 dark:hover:bg-[#3a3a7f]
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -153,7 +150,7 @@ export default function CalendarioMain() {
             title="Siguiente"
             className="
               bg-transparent text-primary-foreground
-              hover:bg-primary/70 dark:hover:bg-violet-800
+              hover:bg-primary/70 dark:hover:bg-[#3a3a7f]
               active:scale-95
               transition-transform duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -167,13 +164,12 @@ export default function CalendarioMain() {
 
         {/* Botones de navegación de vista izquierda */}
         <div className="flex gap-2 items-center w-full max-w-full md:max-w-[730px] justify-center md:justify-start mt-2 md:mt-0">
-          {/* 🔧 CAMBIO: botón Hoy adaptado dark */}
           <Button
             radius="full"
             aria-label="Ir a hoy"
             className="
               text-[15px] md:text-[16px] leading-[20px] font-semibold bg-background text-primary
-                       dark:bg-gray-800 dark:text-violet-300
+                       dark:bg-[#19191a] dark:text-gray-300
               hover:brightness-105
               active:scale-95 transition duration-150
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-primary
@@ -183,7 +179,6 @@ export default function CalendarioMain() {
             Hoy
           </Button>
 
-          {/* 🔧 CAMBIO: los tabs usan estado seleccionado con pill clara y no-seleccionado transparente con borde legible */}
           <Button
             radius="full"
             className={`hidden text-[15px] md:text-[16px] leading-[20px] font-medium
@@ -281,7 +276,7 @@ export default function CalendarioMain() {
       </div>
 
       {/* Contenido */}
-      <div className="bg-background dark:text-violet-300">
+      <div className="bg-background dark:bg-[#020202] dark:text-gray-300">
         {vistaActual === "horarios" ? (
           <Week />
         ) : (
@@ -297,6 +292,3 @@ export default function CalendarioMain() {
     </div>
   );
 }
-
-
-
