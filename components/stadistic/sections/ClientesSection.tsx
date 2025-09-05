@@ -2,8 +2,8 @@ import Clients from "../modules/clients";
 
 function ClientesSection() {
   return (
-    <section className="space-y-4">
-      <header className="border-b border-gray-200 dark:border-gray-700 pb-4">
+    <section className="space-y-4 bg-white dark:bg-[#020202] min-h-screen">
+      <header className="border-b border-gray-200 dark:border-gray-700 pb-4 bg-white dark:bg-[#020202]">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
           Estadísticas de Clientes
         </h1>
@@ -11,7 +11,7 @@ function ClientesSection() {
           Análisis detallado de la información de clientes
         </p>
       </header>
-      <div className="mt-6">
+      <div className="mt-6 bg-white dark:bg-[#020202]">
         <Clients />
       </div>
     </section>
