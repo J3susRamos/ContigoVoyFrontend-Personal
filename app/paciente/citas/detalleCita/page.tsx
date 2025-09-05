@@ -53,6 +53,10 @@ const validateImageFile = async (file: File) => {
   return imageToBase64(file);
 };
 
+const joinVideoCall = (link: string | undefined | null) => {
+  if (link) window.open(link, "_blank");
+};
+
 const setCitaQuery = (
   setCita: Dispatch<SetStateAction<Cita | null>>,
   router: AppRouterInstance
@@ -89,7 +93,9 @@ const DetalleCita = () => {
 
   const canNotUpload = Boolean(
     cita
-      ? cita.bouchers?.some((boucher) => ["pendiente","aceptado"].includes(boucher.estado))
+      ? cita.bouchers?.some((boucher) =>
+          ["pendiente", "aceptado"].includes(boucher.estado)
+        )
       : true
   );
 
@@ -107,7 +113,7 @@ const DetalleCita = () => {
     }
   };
 
-
+  console.log(cita);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
@@ -153,7 +159,8 @@ const DetalleCita = () => {
                     Terapeuta asignado
                   </Label>
                   <p className="text-lg font-semibold">
-                    {cita?.apellidoPsicologo + " " + cita?.nombrePsicologo}
+                    {cita?.apellidoPsicologo ? cita.apellidoPsicologo : ""}{" "}
+                    {cita?.nombrePsicologo ? cita.nombrePsicologo : ""}
                   </p>
                 </div>
                 <div>
@@ -176,15 +183,19 @@ const DetalleCita = () => {
             <div className="flex flex-col gap-2">
               <Button
                 className="w-full"
-                disabled={cita?.estado_Cita !== "confirmada"}
+                onPress={() => joinVideoCall(cita?.jitsi_url)}
+                disabled={cita?.estado_Cita !== "Pendiente"}
+                color={
+                  cita?.estado_Cita === "Pendiente" ? "primary" : "secondary"
+                }
               >
                 <Video className="w-4 h-4 mr-2" />
-                {cita?.estado_Cita === "confirmada"
+                {cita?.estado_Cita === "Pendiente"
                   ? "Ingresar a videollamada"
                   : "Cita pendiente"}
               </Button>
 
-              <Button variant="shadow" className="w-full">
+              <Button variant="shadow" className="w-full" color="warning">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Volver a agendar
               </Button>
@@ -270,15 +281,17 @@ const DetalleCita = () => {
             </Label>
 
             {(cita?.bouchers ? cita.bouchers : []).map((b) => (
-              <div className="flex flex-col sm:flex-row gap-x-5" key={b.codigo}>
-                <Image
-                  alt="Voucher Paciente"
-                  key={b.idBoucher}
-                  src={b.imagen}
-                  width={400}
-                  height={300}
-                  style={{ objectFit: "contain" }}
-                />
+              <div className="flex flex-col sm:flex-row gap-x-5 mb-3 border-2 border-slate-300 dark:border-purple-700 p-6 rounded-md box-border"  key={b.codigo}>
+                <div className="w-[300px] h-[300px] relative border-2 border-slate-200 dark:border-gray-500 rounded-md">
+                  <Image
+                    alt="Voucher Paciente"
+                    key={b.idBoucher}
+                    src={b.imagen}
+                    fill
+                    className="object-scale-down"
+                  />
+                </div>
+
                 <div className="flex-1 grid items-center grid-cols sm:grid-cols-2 gap-4">
                   <div>
                     <Label className="text-sm font-medium text-gray-400">

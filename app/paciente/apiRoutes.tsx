@@ -3,6 +3,31 @@ import { parseCookies } from "nookies";
 
 const token = parseCookies()["session"];
 
+export const GetEstadisticasCita = async () => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/contador`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data = await res.json();
+    if (data.success) {
+      return data;
+    } else {
+      throw new Error(data.message || "Error al obtener cita");
+    }
+  } catch (err) {
+    console.error("Error al obtener cita:", err);
+    throw err;
+  }
+};
+
 export const GetCita = async (id: number) => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}api/citas/paciente/${id}`;
   try {
@@ -29,7 +54,6 @@ export const GetCita = async (id: number) => {
         throw error;
       }
     }
-    
   }
 };
 
@@ -94,7 +118,6 @@ export const GetCitas = async (
         throw error;
       }
     }
-    
   }
 };
 

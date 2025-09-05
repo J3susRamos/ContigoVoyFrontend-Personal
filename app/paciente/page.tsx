@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import showToast from "@/components/ToastStyle";
 import HeaderPaciente from "./components/HeaderPaciente";
 
-import { GetCitas } from "./apiRoutes";
+import { GetCitas, GetEstadisticasCita } from "./apiRoutes";
 import { formatDate } from "./utils/formatDate";
 import { Cita } from "./types/pacienteInterfaces";
 import Link from "next/link";
@@ -45,6 +45,12 @@ interface Pago {
   estado: "aprobado" | "pendiente" | "rechazado"; // Estado del pago
   descripcion: string; // Descripción (concepto)
   metodoPago: string; // Método (Yape, Plin, transferencia, etc.)
+}
+
+async function HandleGetEstadisticas() {
+  const data = await GetEstadisticasCita();
+  console.log(Object.values<number>(data.data).reduce<number>((acc,curr) => acc + curr,0))
+  console.log(data.data["Pendiente"])
 }
 
 const getEstadoColor = (estado: string) => {
@@ -114,13 +120,12 @@ const Paciente = () => {
     const signal = abortController.signal;
 
     HandleGetCitas(signal);
+    HandleGetEstadisticas();
 
     return () => abortController.abort();
   }, []);
 
-  const joinVideoCall = (citaId: number) => {
-    window.open(`/videocall/${citaId}`, "_blank");
-  };
+
 
   const handleReagendar = (cita: Cita) => {
     alert(
