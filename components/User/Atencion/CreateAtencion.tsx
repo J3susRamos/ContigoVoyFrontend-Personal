@@ -18,10 +18,10 @@ function DropzoneWithoutKeyboard() {
   ));
 
   return (
-    <section className="container border-1 border-[#634AE2] rounded-2xl w-11/12">
+    <section className="container border-1 border-[#634AE2] dark:border-gray-600 rounded-2xl w-11/12">
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <p className="text-[#634AE2] text-center text-8xl">+</p>
+        <p className="text-[#634AE2] dark:text-gray-300 text-center text-8xl">+</p>
       </div>
       <aside>
         <ul>{files}</ul>
@@ -288,8 +288,8 @@ const CreateAtencion = () => {
         </div>
         {/* body */}
       </div>
-      <div className="flex mt-4 text-[#634AE2] font-bold text-normal">
-        <div className="flex-1 ml-5 mr-5 rounded-2xl p-4 bg-card dark:bg-[#19191a] dark:border dark:border-white/20">
+      <div className="flex mt-4 text-[#634AE2] dark:text-gray-300 font-bold text-normal">
+        <div className="flex-1 ml-5 mr-5 rounded-2xl p-4 bg-card dark:bg-[#19191a] dark:border dark:border-gray-700">
 
           <div className="flex pt-2">
             <div className="flex-1 items-center justify-items-center">
@@ -299,10 +299,10 @@ const CreateAtencion = () => {
                   type="text"
                   readOnly
                   value={cita?.idPaciente}
-                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground"
+                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200"
                 />
                 <span
-                  className="text-[#634AE2] transition-colors absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className="text-[#634AE2] dark:text-gray-400 transition-colors absolute right-3 top-1/2 transform -translate-y-1/2"
                   dangerouslySetInnerHTML={{
                     __html: Icons.loup.replace(
                       /<svg /,
@@ -323,11 +323,11 @@ const CreateAtencion = () => {
                   type="text"
                   readOnly
                   value={cita?.paciente}
-                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground"
+                  className="pl-12 pr-3 text-sm h-9 font-normal mt-2 outline-none focus:ring-0 focus:outline-none w-full rounded-full border-none placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200"
                 />
 
                 <span
-                  className="text-[#634AE2] transition-colors absolute right-3 top-1/2 transform -translate-y-1/2"
+                  className="text-[#634AE2] dark:text-gray-400 transition-colors absolute right-3 top-1/2 transform -translate-y-1/2"
                   dangerouslySetInnerHTML={{
                     __html: Icons.loup.replace(
                       /<svg /,
@@ -347,7 +347,7 @@ const CreateAtencion = () => {
             <input
               type="text"
               readOnly
-              className="pl-12 pr-3 text-sm h-9 font-normal outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground"
+              className="pl-12 pr-3 text-sm h-9 font-normal outline-none focus:ring-0 focus:outline-none w-11/12 rounded-full border-none placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200"
               value={cita?.paciente}
               placeholder="Ningún paciente seleccionado"
             />
@@ -363,7 +363,7 @@ const CreateAtencion = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, MotivoConsulta: e.target.value })
                   }
-                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200 border-2 border-[#634AE2] dark:border-gray-600"
                 />
               </div>
             </div>
@@ -377,7 +377,7 @@ const CreateAtencion = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, FormaContacto: e.target.value })
                   }
-                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200 border-2 border-[#634AE2] dark:border-gray-600"
                 />
               </div>
             </div>
@@ -385,7 +385,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Diagnostico</div>
           <div className="flex justify-center">
             <textarea
-              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              className="w-11/12 h-20 font-light text-[#634AE2] dark:text-gray-200 p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] dark:placeholder-gray-400 text-base bg-[#F3F3F3] dark:bg-[#2a2a2b] border-2 border-[#634AE2] dark:border-gray-600"
               name="Diagnostico"
               value={formData.Diagnostico}
               onChange={(e) =>
@@ -397,7 +397,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Tratamiento</div>
           <div className="flex justify-center">
             <textarea
-              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              className="w-11/12 h-20 font-light text-[#634AE2] dark:text-gray-200 p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] dark:placeholder-gray-400 text-base bg-[#F3F3F3] dark:bg-[#2a2a2b] border-2 border-[#634AE2] dark:border-gray-600"
               name="Tratamiento"
               value={formData.Tratamiento}
               onChange={(e) =>
@@ -409,7 +409,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Observacion</div>
           <div className="flex justify-center">
             <textarea
-              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              className="w-11/12 h-20 font-light text-[#634AE2] dark:text-gray-200 p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] dark:placeholder-gray-400 text-base bg-[#F3F3F3] dark:bg-[#2a2a2b] border-2 border-[#634AE2] dark:border-gray-600"
               name="Observacion"
               value={formData.Observacion}
               onChange={(e) =>
@@ -420,14 +420,14 @@ const CreateAtencion = () => {
           </div>
         </div>
         {/*Segunda Columna*/}
-        <div className="flex-1 mr-5 ml-5 bg-card dark:bg-[#19191a] dark:border dark:border-white/20 rounded-2xl p-6">
+        <div className="flex-1 mr-5 ml-5 bg-card dark:bg-[#19191a] dark:border dark:border-gray-700 rounded-2xl p-6">
 
           <div className="text-center pt-1 pb-1">
             Últimos objetivos / Objetivo alcanzado
           </div>
           <div className="flex justify-center">
             <textarea
-              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              className="w-11/12 h-20 font-light text-[#634AE2] dark:text-gray-200 p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] dark:placeholder-gray-400 text-base bg-[#F3F3F3] dark:bg-[#2a2a2b] border-2 border-[#634AE2] dark:border-gray-600"
               name="UltimosObjetivos"
               value={formData.UltimosObjetivos}
               onChange={(e) =>
@@ -451,23 +451,23 @@ const CreateAtencion = () => {
                     setShowDSM5Dropdown(true);
                     setDSM5SearchTerm("");
                   }}
-                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200 border-2 border-[#634AE2] dark:border-gray-600"
                   placeholder="Buscar por DSM5"
                 />
                 {showDSM5Dropdown && (
-                  <div className="absolute z-10 top-12 w-full bg-[#efefef] dark:bg-input border rounded-lg shadow-lg max-h-60 overflow-auto">
+                  <div className="absolute z-10 top-12 w-full bg-[#efefef] dark:bg-[#2a2a2b] border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
                     {filteredEnfermedadesByDSM5.length > 0 ? (
                       filteredEnfermedadesByDSM5.map((enfermedad) => (
                         <div
                           key={enfermedad.idEnfermedad}
-                          className="p-2 hover:bg-[#F3F3F3] cursor-pointer"
+                          className="p-2 hover:bg-[#F3F3F3] dark:hover:bg-[#3a3a3b] cursor-pointer text-gray-800 dark:text-gray-200"
                           onClick={() => handleEnfermedadSelect(enfermedad)}
                         >
                           {enfermedad.DSM5}
                         </div>
                       ))
                     ) : (
-                      <div className="p-2 text-gray-500">
+                      <div className="p-2 text-gray-500 dark:text-gray-400">
                         No se encontraron resultados
                       </div>
                     )}
@@ -489,23 +489,23 @@ const CreateAtencion = () => {
                     setShowCEA10Dropdown(true);
                     setCEA10SearchTerm("");
                   }}
-                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+                  className="px-4 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none w-full rounded-full placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200 border-2 border-[#634AE2] dark:border-gray-600"
                   placeholder="Buscar por CEA10"
                 />
                 {showCEA10Dropdown && (
-                  <div className="absolute z-10 top-12 w-full bg-[#efefef] dark:bg-input border rounded-lg shadow-lg max-h-60 overflow-auto">
+                  <div className="absolute z-10 top-12 w-full bg-[#efefef] dark:bg-[#2a2a2b] border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-auto">
                     {filteredEnfermedadesByCEA10.length > 0 ? (
                       filteredEnfermedadesByCEA10.map((enfermedad) => (
                         <div
                           key={enfermedad.idEnfermedad}
-                          className="p-2 hover:bg-[#F3F3F3] cursor-pointer"
+                          className="p-2 hover:bg-[#F3F3F3] dark:hover:bg-[#3a3a3b] cursor-pointer text-gray-800 dark:text-gray-200"
                           onClick={() => handleEnfermedadSelect(enfermedad)}
                         >
                           {enfermedad.CEA10}
                         </div>
                       ))
                     ) : (
-                      <div className="p-2 text-gray-500">
+                      <div className="p-2 text-gray-500 dark:text-gray-400">
                         No se encontraron resultados
                       </div>
                     )}
@@ -519,7 +519,7 @@ const CreateAtencion = () => {
             <input
               type="text"
               readOnly
-              className="px-4 w-11/12 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none rounded-full placeholder:text-[#634AE2] bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              className="px-4 w-11/12 text-sm h-9 mt-1 outline-none font-light focus:ring-0 focus:outline-none rounded-full placeholder:text-[#634AE2] dark:placeholder-gray-400 bg-[#F3F3F3] dark:bg-[#2a2a2b] dark:text-gray-200 border-2 border-[#634AE2] dark:border-gray-600"
               value={
                 selectedEnfermedad
                   ? `${selectedEnfermedad.nombreEnfermedad}`
@@ -535,7 +535,7 @@ const CreateAtencion = () => {
           <div className="text-center pt-1 pb-1">Comentario</div>
           <div className="flex justify-center">
             <textarea
-              className="w-11/12 h-20 font-light text-[#634AE2] p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] text-base bg-[#F3F3F3] dark:bg-input dark:text-foreground border-2 border-[#634AE2]"
+              className="w-11/12 h-20 font-light text-[#634AE2] dark:text-gray-200 p-3 outline-none focus:ring-0 focus:outline-none rounded-3xl placeholder:text-[#634AE2] dark:placeholder-gray-400 text-base bg-[#F3F3F3] dark:bg-[#2a2a2b] border-2 border-[#634AE2] dark:border-gray-600"
               name="Comentario"
               value={formData.Comentario}
               onChange={(e) =>
@@ -558,7 +558,7 @@ const CreateAtencion = () => {
         </Link>
         <button
           onClick={HandlePostAtencion}
-          className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
+         className="bg-card dark:bg-card text-[#634AE2] rounded-full border-2 border-[#634AE2] w-32 h-10 hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground transition-colors duration-200 font-semibold"
           >
           Registrar
         </button>
