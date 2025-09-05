@@ -32,162 +32,131 @@
   background-color: var(--cal-bg) !important;
   color: var(--cal-text-primary) !important;
   font-weight: 400;
-}
-
-/* MES - Mejorado */
-.dark .rbc-month-view {
-  background-color: var(--cal-bg, #121826) !important;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
-  border: 1px solid rgba(139, 92, 246, 0.1);
-}
-
-.dark .rbc-date-cell {
-  color: var(--cal-text-primary, #F1F5F9) !important;
-  font-weight: 500;
-  opacity: 1;
-}
-
-.dark .rbc-day-bg {
-  background-color: var(--cal-card, #1E293B) !important;
-  border-color: var(--cal-border, #334155) !important;
-  opacity: 1;
-  transition: background-color 0.2s ease;
-}
-
-.dark .rbc-day-bg:hover {
-  background-color: var(--cal-hover-bg, rgba(30, 41, 59, 0.8)) !important;
-}
-
-/* selector dia cuadrado */
-.dark .rbc-row-bg {
-  background-color: var(--cal-card, #1E293B) !important;
-  border-color: var(--cal-border, #334155) !important;
-  opacity: 1;
-}
-
-.rbc-current-time-indicator {
-  background-color: var(--cal-accent-purple, #7C3AED) !important;
-  height: 2px;
-  opacity: 0.7;
-}
-
-/* TEXTOS Y ELEMENTOS GENERALES */
-.rbc-toolbar .rbc-toolbar-label {
-  color: var(--cal-text-primary, #E2E8F0) !important;
-  font-size: 1.4rem;
-  font-weight: 600;
-  opacity: 0.95;
-}
-
-.dark .rbc-event {
-  background-color: var(--cal-accent-purple, #8B5CF6) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 6px;
+  border-color: var(--cal-border-dark, #4A5568) !important;
   opacity: 0.9;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
-  padding: 4px 8px;
-  border: 1px solid rgba(167, 139, 250, 0.3);
 }
 
-.dark .rbc-event:hover {
-  background-color: var(--cal-accent-purple-light, #A78BFA) !important;
-  opacity: 1;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+/* CELDAS CON FONDO #373739 */
+.dark .rbc-calendar .rbc-day-bg,
+.rbc-calendar.dark .rbc-day-bg,
+.dark .rbc-calendar .rbc-time-content,
+.rbc-calendar.dark .rbc-time-content {
+  background-color: var(--cal-card-dark) !important;
+  border-color: var(--cal-border-dark) !important;
 }
 
-.rbc-off-range {
-  color: var(--cal-text-secondary, #A0AEC0) !important;
+/* TEXTO EN CELDAS */
+.dark .rbc-calendar .rbc-date-cell,
+.rbc-calendar.dark .rbc-date-cell {
+  color: var(--cal-text-primary) !important;
+  font-weight: 400;
+}
+
+.dark .rbc-calendar .rbc-off-range,
+.rbc-calendar.dark .rbc-off-range {
+  color: var(--cal-text-secondary) !important;
   opacity: 0.6;
 }
 
-/* Día actual - MEJORADO con mayor contraste */
-.dark .rbc-today {
-  background-color: var(--cal-today-bg, rgba(139, 92, 246, 0.3)) !important;
-  border: 2px solid var(--cal-today-border, rgba(167, 139, 250, 0.6)) !important;
+/* DÍA ACTUAL */
+.dark .rbc-calendar .rbc-today,
+.rbc-calendar.dark .rbc-today {
+  background-color: var(--cal-highlight) !important;
 }
 
-.dark .rbc-today .rbc-date-cell {
-  color: var(--cal-accent-light, #BAE6FD) !important;
-  font-weight: 700;
-}
-
-/* HEADERS DE DÍAS - Mejorado */
-.dark .rbc-header {
-  color: var(--cal-text-secondary, #CBD5E1) !important;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  opacity: 1;
-  background-color: var(--cal-card, #1E293B) !important;
-  padding: 10px 0;
+.dark .rbc-calendar .rbc-today .rbc-date-cell,
+.rbc-calendar.dark .rbc-today .rbc-date-cell {
+  color: var(--cal-accent) !important;
   font-weight: 600;
-  border-bottom: 2px solid var(--cal-border, #334155) !important;
 }
 
-/* BOTONES DE NAVEGACIÓN - Mejorado */
-.dark .rbc-toolbar button {
-  color: var(--cal-text-secondary, #CBD5E1) !important;
-  border-color: var(--cal-border, #334155) !important;
-  background-color: var(--cal-card, #1E293B) !important;
-  opacity: 1;
+/* EVENTOS CON AZUL PROFESIONAL */
+.dark .rbc-calendar .rbc-event,
+.rbc-calendar.dark .rbc-event {
+  background-color: var(--cal-accent) !important;
+  color: #1a1a1a !important; /* Texto oscuro para buen contraste con azul */
+  border: none !important;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 2px 4px;
+}
+
+.dark .rbc-calendar .rbc-event:hover,
+.rbc-calendar.dark .rbc-event:hover {
+  background-color: var(--cal-accent-hover) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* BOTONES DE HERRAMIENTAS */
+.dark .rbc-calendar .rbc-toolbar button,
+.rbc-calendar.dark .rbc-toolbar button {
+  color: var(--cal-text-secondary) !important;
+  border: 1px solid var(--cal-border-dark) !important;
+  background-color: var(--cal-card-dark) !important;
   border-radius: 6px;
   padding: 6px 12px;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
-.dark .rbc-toolbar button:hover {
-  background-color: rgba(139, 92, 246, 0.2) !important;
-  color: var(--cal-text-primary, #F1F5F9) !important;
-  border-color: var(--cal-accent-purple, #8B5CF6) !important;
+.dark .rbc-calendar .rbc-toolbar button:hover,
+.rbc-calendar.dark .rbc-toolbar button:hover {
+  background-color: var(--cal-highlight) !important;
+  color: var(--cal-text-primary) !important;
+  border-color: var(--cal-accent) !important;
 }
 
-.dark .rbc-toolbar button:active,
-.dark .rbc-toolbar button.rbc-active {
-  background-color: var(--cal-accent-purple, #8B5CF6) !important;
-  color: white !important;
-  opacity: 1;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
-  border: 1px solid rgba(167, 139, 250, 0.4);
+.dark .rbc-calendar .rbc-toolbar button:active,
+.dark .rbc-calendar .rbc-toolbar button.rbc-active,
+.rbc-calendar.dark .rbc-toolbar button:active,
+.rbc-calendar.dark .rbc-toolbar button.rbc-active {
+  background-color: var(--cal-accent) !important;
+  color: #1a1a1a !important;
+  border-color: var(--cal-accent) !important;
 }
 
-/* ESTADOS DE FOCO SUAVIZADOS */
-.rbc-event:focus,
-.rbc-toolbar button:focus {
-  outline: 1px solid var(--cal-accent-light, #90CDF4);
-  outline-offset: 1px;
+/* VISTA DE TIEMPO */
+.dark .rbc-calendar .rbc-time-slot,
+.rbc-calendar.dark .rbc-time-slot {
+  color: var(--cal-text-secondary) !important;
+  border-color: var(--cal-border-dark) !important;
+  font-size: 0.8rem;
 }
 
-/* SCROLLBAR SUAVIZADO - Mejorado */
-.dark .rbc-time-content::-webkit-scrollbar {
+.dark .rbc-calendar .rbc-current-time-indicator,
+.rbc-calendar.dark .rbc-current-time-indicator {
+  background-color: var(--cal-current-time) !important;
+  height: 2px;
+}
+
+/* BARRAS DE DESPLAZAMIENTO */
+.dark .rbc-calendar ::-webkit-scrollbar,
+.rbc-calendar.dark ::-webkit-scrollbar {
   width: 8px;
 }
 
-.dark .rbc-time-content::-webkit-scrollbar-track {
-  background: var(--cal-card, #1E293B);
+.dark .rbc-calendar ::-webkit-scrollbar-track,
+.rbc-calendar.dark ::-webkit-scrollbar-track {
+  background: var(--cal-card-dark);
+}
+
+.dark .rbc-calendar ::-webkit-scrollbar-thumb,
+.rbc-calendar.dark ::-webkit-scrollbar-thumb {
+  background: var(--cal-border-dark);
   border-radius: 4px;
 }
 
-.dark .rbc-time-content::-webkit-scrollbar-thumb {
-  background: var(--cal-border, #334155);
-  border-radius: 4px;
-  border: 2px solid var(--cal-card, #1E293B);
+.dark .rbc-calendar ::-webkit-scrollbar-thumb:hover,
+.rbc-calendar.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--cal-text-secondary);
 }
 
-.dark .rbc-time-content::-webkit-scrollbar-thumb:hover {
-  background: var(--cal-accent-purple, #8B5CF6);
-  cursor: pointer;
-}
-
-/* SUAVIZAR TRANSICIONES */
-.rbc-event,
-.rbc-toolbar button,
-.rbc-date-cell {
+/* EFECTOS DE TRANSICIÓN */
+.dark .rbc-calendar .rbc-event,
+.rbc-calendar.dark .rbc-event,
+.dark .rbc-calendar .rbc-toolbar button,
+.rbc-calendar.dark .rbc-toolbar button {
   transition: all 0.2s ease-in-out;
 }
 
