@@ -6,15 +6,15 @@ import DetallesPaciente from "./DetallesPaciente";
 
 const headerColumns = [
     {uid: 1, name: "#"},
+    {uid: 1, name: "Codigo"},
     {uid: 2, name: "Paciente"},
     {uid: 3, name: "Fecha de Inicio"},
-    {uid: 4, name: "Diagnóstico"},
-    {uid: 5, name: "Detalles"},
-    {uid: 6, name: "Editar"},
+    {uid: 4, name: "Hora de Inicio"},
+    {uid: 5, name: "Detalles"}, 
 ];
 
 export const HistorialPaciente: React.FC<HistorialPacienteProps> = ({
-                                                                        idPaciente, ultimaAtencion
+                                                                        idPaciente, ultimaAtencion                                                                        
                                                                     }) => {
     const [showCart, setShowCart] = useState(false);
     const [atenciones, setAtenciones] = useState<ListaAtencion[]>([]);
@@ -92,14 +92,18 @@ export const HistorialPaciente: React.FC<HistorialPacienteProps> = ({
                             {atencion.idAtencion}
                         </td>
                         <td className="font-normal text-lg text-center p-6">
+                            {atencion.codigo}
+                        </td>
+                        <td className="font-normal text-lg text-center p-6">
                             {atencion.nombre_completo}
                         </td>
                         <td className="font-normal text-lg text-center p-6">
                             {atencion.fecha_inicio}
                         </td>
                         <td className="font-normal text-lg text-center p-6">
-                            {atencion.diagnostico}
+                            {atencion.hora_inicio}
                         </td>
+                        
                         <td className="font-normal text-lg justify-items-center p-6">
                             <button
                                 className="rounded-full border-2 border-[#634AE2] w-28 items-center justify-center flex space-x-1"
@@ -119,17 +123,6 @@ export const HistorialPaciente: React.FC<HistorialPacienteProps> = ({
                                 Ver mas
                             </button>
                         </td>
-                        <td className="font-normal text-lg text-center p-6 rounded-r-medium">
-                            <button
-                                dangerouslySetInnerHTML={{
-                                    __html: Icons.edit.replace(/<svg /, '<svg fill="#634AE2" '),
-                                }}
-                                style={{
-                                    width: "1.2em",
-                                    height: "1.2em",
-                                }}
-                            />
-                        </td>
                     </tr>
                 ))}
                 </tbody>
@@ -142,11 +135,14 @@ export const HistorialPaciente: React.FC<HistorialPacienteProps> = ({
                     <div
                         className="relative bg-white p-6 rounded-3xl z-10"
                         onClick={(e) => e.stopPropagation()}
+                        
                     >
-                        <DetallesPaciente ultimaAtencion={ultimaAtencion}/>
+                        <DetallesPaciente ultimaAtencion={ultimaAtencion} onClose={() => setShowCart(false)}/>
                     </div>
                 </div>
             )}
         </div>
     );
 };
+
+export default HistorialPaciente;

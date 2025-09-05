@@ -17,6 +17,7 @@ function AddCitas({ open, dataPaciente }: AddCitasProps) {
     const [formDataPatient, setFormDataPatient] = useState<FormCita>({
         idPaciente: "",
         fecha_cita: "",
+        fecha_limite:"",
         hora_cita: "",
         duracion: "",
         motivo_Consulta: "",
@@ -33,6 +34,7 @@ function AddCitas({ open, dataPaciente }: AddCitasProps) {
             setFormDataPatient({
             idPaciente: dataPaciente.idPaciente.toString(),
             fecha_cita: "",
+            fecha_limite:"",
             hora_cita: "",
             duracion: "",
             motivo_Consulta: "",
@@ -102,6 +104,14 @@ function AddCitas({ open, dataPaciente }: AddCitasProps) {
                         label="Fecha de la cita"
                         value={formDataPatient.fecha_cita}
                         onChange={e => handleInputChange("fecha_cita", e.target.value)}
+                        className="flex-1"
+                        />
+                        <Input
+                        type="date"
+                        required
+                        label="Fecha limite de pago"
+                        value={formDataPatient.fecha_limite}
+                        onChange={e => handleInputChange("fecha_limite", e.target.value)}
                         className="flex-1"
                         />
                         <Input
