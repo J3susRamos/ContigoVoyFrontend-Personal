@@ -34,6 +34,7 @@ interface Paciente {
 interface FormData {
     idPaciente: string;
     fecha_cita: string;
+    fecha_limite:string;
     hora_cita: string;
     duracion: string;
     motivo_Consulta: string;
@@ -44,6 +45,7 @@ interface FormData {
 const INITIAL_FORM_DATA: FormData = {
     idPaciente: "",
     fecha_cita: "",
+    fecha_limite:"",
     hora_cita: "",
     duracion: "60",
     motivo_Consulta: "",
@@ -119,6 +121,9 @@ const useFormValidation = () => {
         if (!formData.fecha_cita) {
             newErrors.fecha_cita = "La fecha es requerida";
         }
+        if (!formData.fecha_limite) {
+            newErrors.fecha_limite = "La fecha limite es requerida";
+        }
         if (!formData.hora_cita) {
             newErrors.hora_cita = "La hora es requerida";
         }
@@ -128,11 +133,11 @@ const useFormValidation = () => {
 
         // For new appointments, validate that they're not in the past
         // For editing, we might allow past appointments to be modified
-        if (!isEditing && formData.fecha_cita && formData.hora_cita) {
-            const appointmentDateTime = new Date(`${formData.fecha_cita}T${formData.hora_cita}`);
+        if (!isEditing && formData.fecha_cita && formData.hora_cita && formData.fecha_limite) {
+            const appointmentDateTime = new Date(`${formData.fecha_cita}T${formData.hora_cita}T${formData.fecha_limite}`);
             const now = new Date();
             if (appointmentDateTime <= now) {
-                newErrors.fecha_cita = "La fecha y hora de la cita no puede ser en el pasado";
+                newErrors.fecha_cita = "Las fechas y hora de la cita no puede ser en el pasado";
             }
         }
 
@@ -191,6 +196,11 @@ const formatDateForInput = (dateTimeString: string): string => {
     return date.toISOString().split('T')[0]; // YYYY-MM-DD format
 };
 
+const formatDateLimitForInput=(dateTimeString: string): string =>{
+    console.log(dateTimeString);
+    return "2025-09-24";
+}
+
 const getTodayDate = (): string => {
     return new Date().toISOString().split('T')[0];
 };
@@ -205,6 +215,7 @@ const prepareRequestData = (formData: FormData) => ({
 const mapCitaToFormData = (cita: Citas): FormData => ({
     idPaciente: cita.idPaciente.toString(),
     fecha_cita: formatDateForInput(cita.fecha_inicio),
+    fecha_limite: formatDateLimitForInput(cita.fecha_limite),
     hora_cita: formatTimeForInput(cita.fecha_inicio),
     duracion: cita.duracion.replace(' minutos', '').replace(' min', '').trim(),
     motivo_Consulta: cita.motivo,
@@ -341,6 +352,16 @@ export const FormCita: React.FC<FormCitaProps> = ({
                                             onChange={(e) => handleInputChange("fecha_cita", e.target.value)}
                                             isInvalid={!!errors.fecha_cita}
                                             errorMessage={errors.fecha_cita}
+                                            className="flex-1"
+                                            min={!isEditing ? getTodayDate() : undefined}
+                                        />
+                                        <Input
+                                            type="date"
+                                            label="Fecha limite de pago"
+                                            value={formData.fecha_limite}
+                                            onChange={(e) => handleInputChange("fecha_limite", e.target.value)}
+                                            isInvalid={!!errors.fecha_limite}
+                                            errorMessage={errors.fecha_limite}
                                             className="flex-1"
                                             min={!isEditing ? getTodayDate() : undefined}
                                         />

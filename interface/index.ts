@@ -488,6 +488,7 @@ export interface Citas {
   paciente: string;
   codigo: string;
   fecha_inicio: string;
+  fecha_limite:string;
   estado: string;
   edad: number;
   motivo: string;
@@ -708,12 +709,13 @@ export interface SelectItemI {
 }
 
 export interface FormCita {
-  idPaciente: string;
-  fecha_cita: string;
-  hora_cita: string;
-  duracion: string;
-  motivo_Consulta: string;
-  estado_Cita: string;
+    idPaciente: string;
+    fecha_cita: string;
+    fecha_limite:string;
+    hora_cita: string;
+    duracion: string;
+    motivo_Consulta: string;
+    estado_Cita: string;
 }
 export interface PacienteCita {
   idPaciente: number;
