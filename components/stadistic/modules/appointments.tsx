@@ -8,6 +8,7 @@ import LineChartGrafic from "../grafics/LineChartGrafic";
 
 const COLORS = ["#BABAFF", "#58A6FF", "#9494F3", "#B158FF", "#197a50", "#b9cd38"];
 
+
 // Datos para el LineChart
 
 
@@ -116,7 +117,7 @@ console.log(citasMensuales)
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         
         {/* LineChart - Citas del período */}
-        <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col">
+        <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col border border-gray-200 dark:border-gray-700">
           <div className="rounded-r-full w-full max-w-[300px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
               Citas totales del período
@@ -138,7 +139,7 @@ console.log(citasMensuales)
         </div>
         
         {/* PieChart - Estado de citas */}
-        <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col">
+       <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col border border-gray-200 dark:border-gray-700">
           <div className="rounded-r-full w-full max-w-[300px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
             <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
               Estado de citas
