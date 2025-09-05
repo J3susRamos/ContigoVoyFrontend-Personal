@@ -895,7 +895,7 @@ export default function BlogUsuarioCrear() {
   }, []);
 
   return (
-    <div>
+    <div className="dark:bg-[#020202] min-h-screen">
       <div className="w-full h-16 bg-[#4d0b73] items-center justify-start flex">
         <div className="ml-10 flex justify-between items-center w-full max-w-[230px] gap-x-3">
           {/* Boton Crear Blog */}
@@ -935,7 +935,8 @@ export default function BlogUsuarioCrear() {
 
       {view === "crear" ? (
         <div className="flex flex-col md:flex-row gap-10 mx-auto px-10 mt-8 mb-8 max-w-scv18 h-full">
-          <div className="flex-1 flex flex-col justify-between gap-y-scv8 items-center w-full  mx-auto bg-slate-200 dark:bg-gray-800 p-scv4">
+          <div className="flex-1 flex flex-col justify-between gap-y-scv8 items-center w-full mx-auto bg-slate-200 dark:bg-[#121212] border border-[#f0f0f0] dark:border dark:border-white/20 rounded-lg p-scv4">
+
             {/* Titulo */}
             <div className="w-full">
               <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
@@ -947,7 +948,7 @@ export default function BlogUsuarioCrear() {
                 classNames={{
                   input: "dark:!text-gray-100 whitespace-pre-wrap",
                   inputWrapper:
-                    "!bg-white dark:!bg-gray-700 border-2 border-[#634AE2] rounded-lg",
+                    "!bg-white dark:!bg-[#19191a] border-2 border-[#634AE2] rounded-lg",
                 }}
                 radius="lg"
                 minRows={2}
@@ -974,7 +975,7 @@ export default function BlogUsuarioCrear() {
               </h1>
               <div className="flex w-full flex-col">
                 <Autocomplete
-                  className="dark:[&_[data-slot=input-wrapper]]:bg-gray-700 [&_[data-slot=input-wrapper]]:bg-white [&_[data-slot=input-wrapper]]:border-[#634AE2] [&_[data-slot=input-wrapper]]:rounded-lg"
+                  className="dark:[&_[data-slot=input-wrapper]]:bg-[#19191a] [&_[data-slot=input-wrapper]]:bg-white [&_[data-slot=input-wrapper]]:border-[#634AE2] [&_[data-slot=input-wrapper]]:rounded-lg"
                   radius="full"
                   inputProps={{
                     className: "dark:!text-gray-100 ",
@@ -1008,7 +1009,7 @@ export default function BlogUsuarioCrear() {
               {/* Sección de subida de múltiples imágenes */}
               <div className="w-full flex flex-col gap-2">
                 {/* Boton de subir múltiples imágenes */}
-                <div className="relative border-2 border-[#634AE2] bg-white dark:bg-gray-700 rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
+                <div className="relative border-2 border-[#634AE2] bg-white dark:bg-[#19191a] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
                   <div className="flex flex-col items-center">
                     <Plus
                       width={40}
@@ -1087,7 +1088,7 @@ export default function BlogUsuarioCrear() {
                       classNames={{
                         input: "dark:!text-gray-100 ",
                         inputWrapper:
-                          "!bg-white dark:!bg-gray-700 border-2 border-[#634AE2] rounded-lg",
+                          "!bg-white dark:!bg-[#19191a] border-2 border-[#634AE2] rounded-lg",
                       }}
                       radius="full"
                       height={43}
@@ -1133,8 +1134,8 @@ export default function BlogUsuarioCrear() {
                       base64Images.length +
                         urls.filter((url) => url.trim() !== "").length >=
                       1
-                        ? "text-green-600"
-                        : "text-red-800 dark:text-[#d66686]"
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-800 dark:text-red-400"
                     }`}
                   >
                     Imágenes agregadas:{" "}
@@ -1163,7 +1164,7 @@ export default function BlogUsuarioCrear() {
             </div>
           </div>
 
-          <div className="flex-[2] flex flex-col w-full max-w-full bg-slate-200 dark:bg-gray-800 p-scv4">
+          <div className="flex-[2] flex flex-col w-full max-w-full bg-slate-200 dark:bg-[#19191a] border border-[#f0f0f0] dark:border dark:border-white/20 rounded-lg p-scv4">
             <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
               Descripción
             </h1>
@@ -1173,7 +1174,7 @@ export default function BlogUsuarioCrear() {
           </div>
         </div>
       ) : (
-        <div className="mx-10 mt-14">
+        <div className="mx-10 mt-14 dark:text-white">
           <Listarblog onEdit={handleEdit} />
         </div>
       )}
