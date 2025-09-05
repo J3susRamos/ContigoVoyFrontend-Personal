@@ -95,7 +95,8 @@ export default function Sales() {
                         </p>
                     </div>
 
-                    <div className="w-full h-[300px] md:h-[350px] lg:h-[400px] flex items-center justify-center">
+                    <div className="lg:col-span-2 w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col border border-gray-200 dark:border-gray-700">
+
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart
                                 data={data}
@@ -146,7 +147,7 @@ export default function Sales() {
                 </div>
 
                 {/* Estado de Citas - PieChart */}
-                <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col">
+                <div className="w-full bg-card dark:bg-card rounded-2xl p-4 lg:p-6 flex flex-col border border-gray-200 dark:border-gray-700">
                     <div
                         className="rounded-r-full w-full max-w-[280px] h-[50px] md:h-[60px] bg-primary dark:bg-primary mb-4 flex items-center justify-center">
                         <p className="text-primary-foreground dark:text-primary-foreground font-medium text-center px-4 text-sm md:text-lg lg:text-xl">
