@@ -54,18 +54,26 @@ const Citas = () => {
           endDayFilter,
           signal
         );
-        const citasResponse = data.citas;
-        const citasInfo = citasResponse.data as Cita[];
-        const formatCitas = citasInfo.map((c) => ({
-          ...c,
-          fecha_cita: formatDate(c.fecha_cita),
-        }));
+        if (data) {
+          const citasResponse = data.citas;
+          const citasInfo = citasResponse.data as Cita[];
+          const formatCitas = citasInfo.map((c) => ({
+            ...c,
+            fecha_cita: formatDate(c.fecha_cita),
+          }));
 
-        setShowedCitas(formatCitas);
-        setLastPage(citasResponse.last_page);
+          setShowedCitas(formatCitas);
+          setLastPage(citasResponse.last_page);
+        }
+
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching citas:", error);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          if (error.name != "AbortError") {
+            console.error("Error al obtener cita:", error.name);
+            throw error;
+          }
+        }
       }
     }
     fetchData();

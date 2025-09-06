@@ -31,9 +31,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, {
-    cache: 'force-cache' // Cache para generación estática
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -42,10 +40,7 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`,
-    {
-      cache: 'force-cache' // Cache para generación estática
-    }
+    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
   );
   if (!res.ok) {
     throw new Error("Error al obtener los datos");

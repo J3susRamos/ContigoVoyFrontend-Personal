@@ -12,7 +12,7 @@ const getEstadoColor = (estado: string) => {
     case "realizado": 
     case "aprobado":
       return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"; // Verde
-    case "pendiente":
+    case "Pendiente":
       return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-500"; // Amarillo
     case "Sin pagar":
       return "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-500"; // Rojo

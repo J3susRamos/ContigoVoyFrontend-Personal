@@ -67,15 +67,15 @@ export const useCitasSinPagar = () => {
   };
 
   const rechazarCita = async (
-    idBoucher: number,
+    codigo: string,
     comentario: string,
-    numero: string,
+    numero: string
   ) => {
     setIsLoading(true);
     try {
       // Usar el endpoint cancelarBoucher existente
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/citas/habilitar-boucher`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/citas/rechazar`,
         {
           method: "POST",
           headers: {
@@ -83,9 +83,9 @@ export const useCitasSinPagar = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            idBoucher: idBoucher,
+            codigo: codigo,
           }),
-        },
+        }
       );
 
       if (!response.ok) {
@@ -96,7 +96,7 @@ export const useCitasSinPagar = () => {
       const result = await response.json();
 
       // El endpoint cancelarBoucher devuelve un mensaje de éxito diferente
-      if (result.message === "Boucher cancelado correctamente.") {
+      if (result.status_code === 200) {
         // Enviar comentario si existe
         if (comentario.trim()) {
           await enviarComentario(numero, comentario, "api/send-message-reject");
@@ -110,7 +110,7 @@ export const useCitasSinPagar = () => {
     } catch (error) {
       console.error("Error al rechazar cita:", error);
       toast.error(
-        error instanceof Error ? error.message : "Error al rechazar la cita",
+        error instanceof Error ? error.message : "Error al rechazar la cita"
       );
       throw error;
     } finally {
