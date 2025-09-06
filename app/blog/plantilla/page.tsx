@@ -143,7 +143,8 @@ function BlogContent({ blogQuery }: { blogQuery: string }) {
   return <BlogIndividualView blog={blog} />;
 }
 
-export default function BlogPlantillaPage() {
+// Componente para manejar los search params
+function BlogParamsHandler() {
   const searchParams = useSearchParams();
   const blogQuery = searchParams.get('blog');
   
@@ -169,13 +170,17 @@ export default function BlogPlantillaPage() {
     );
   }
   
+  return <BlogContent blogQuery={blogQuery} />;
+}
+
+export default function BlogPlantillaPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#634AE2]"></div>
       </div>
     }>
-      <BlogContent blogQuery={blogQuery} />
+      <BlogParamsHandler />
     </Suspense>
   );
 }

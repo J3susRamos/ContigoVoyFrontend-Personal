@@ -38,9 +38,10 @@ async function getBlogByQuery(blogQuery: string): Promise<BlogPreviewData | null
 
 // Generar metadata dinámica para cada blog
 export async function generateMetadata(
-  { searchParams }: { searchParams: { blog?: string } }
+  { searchParams }: { searchParams: Promise<{ blog?: string }> }
 ): Promise<Metadata> {
-  const blogQuery = searchParams.blog;
+  const resolvedSearchParams = await searchParams;
+  const blogQuery = resolvedSearchParams.blog;
   
   if (!blogQuery) {
     return {
@@ -160,9 +161,10 @@ export async function generateMetadata(
 export default async function BlogViewerPage({
   searchParams,
 }: {
-  searchParams: { blog?: string };
+  searchParams: Promise<{ blog?: string }>;
 }) {
-  const blogQuery = searchParams.blog;
+  const resolvedSearchParams = await searchParams;
+  const blogQuery = resolvedSearchParams.blog;
   
   if (!blogQuery) {
     return (
