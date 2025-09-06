@@ -17,7 +17,7 @@ async function getBlogByQuery(blogQuery: string): Promise<BlogPreviewData | null
     const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
     
     const response = await fetch(endpoint, {
-      cache: 'no-store',
+      cache: 'force-cache',
       headers: {
         'Content-Type': 'application/json',
       },
