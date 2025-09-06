@@ -1,23 +1,23 @@
 import { Metadata } from 'next';
-import { Suspense } from 'react';
-import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import BlogIndividualView from '@/components/blog/BlogIndividualView';
 import BlogStructuredData from '@/components/blog/BlogStructuredData';
 import { BlogPreviewData } from '@/interface';
-import { createSlug } from '@/utils/slugUtils';
 
-// Función para obtener un blog por slug
-async function getBlogBySlug(slug: string): Promise<BlogPreviewData | null> {
+// Función para obtener un blog por tema (Server-side)
+async function getBlogByQuery(blogQuery: string): Promise<BlogPreviewData | null> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/';
     
     // Convertir el slug de vuelta a un término de búsqueda
-    const searchTerm = slug.replace(/-/g, ' ');
+    const searchTerm = blogQuery.includes('-') 
+      ? blogQuery.replace(/-/g, ' ') 
+      : decodeURIComponent(blogQuery);
     
     const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
     
     const response = await fetch(endpoint, {
-      cache: 'force-cache', // Cache para exportación estática
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -36,36 +36,20 @@ async function getBlogBySlug(slug: string): Promise<BlogPreviewData | null> {
   }
 }
 
-// Generar parámetros estáticos para todos los blogs
-export async function generateStaticParams() {
-  try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/';
-    const response = await fetch(`${apiUrl}api/blogs`, {
-      cache: 'force-cache',
-    });
-    
-    if (!response.ok) {
-      console.error('Failed to fetch blogs for static generation');
-      return [];
-    }
-    
-    const data = await response.json();
-    const blogs: BlogPreviewData[] = data.result || [];
-    
-    return blogs.map((blog) => ({
-      slug: createSlug(blog.tema),
-    }));
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
-  }
-}
-
 // Generar metadata dinámica para cada blog
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { searchParams }: { searchParams: { blog?: string } }
 ): Promise<Metadata> {
-  const blog = await getBlogBySlug(params.slug);
+  const blogQuery = searchParams.blog;
+  
+  if (!blogQuery) {
+    return {
+      title: 'Blog no encontrado | Centro Psicológico Contigo Voy',
+      description: 'El artículo solicitado no fue encontrado.',
+    };
+  }
+
+  const blog = await getBlogByQuery(blogQuery);
   
   if (!blog) {
     return {
@@ -108,6 +92,18 @@ export async function generateMetadata(
     
     return firstHalf === secondHalf || text.includes(text.substring(0, 30).repeat(2));
   }
+  
+  // Crear slug para la URL canónica
+  const slug = blog.tema
+    .toLowerCase()
+    .replace(/[áéíóúñ]/g, (match) => {
+      const replacements: { [key: string]: string } = {
+        'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ñ': 'n'
+      };
+      return replacements[match] || match;
+    })
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-');
 
   return {
     title: `${blog.tema} | Blog Contigo Voy`,
@@ -124,7 +120,7 @@ export async function generateMetadata(
       ...blog.tema.split(' ').filter(word => word.length > 3)
     ],
     alternates: {
-      canonical: `https://centropsicologicocontigovoy.com/blog/${params.slug}`,
+      canonical: `https://centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
     },
     robots: {
       index: true,
@@ -135,7 +131,7 @@ export async function generateMetadata(
       siteName: 'Centro Psicológico Contigo Voy',
       title: blog.tema,
       description: description,
-      url: `https://centropsicologicocontigovoy.com/blog/${params.slug}`,
+      url: `https://centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
       images: blog.imagenes?.[0] || blog.imagen ? [{
         url: blog.imagenes?.[0] || blog.imagen,
         alt: `Imagen del artículo: ${blog.tema}`,
@@ -156,31 +152,68 @@ export async function generateMetadata(
       'article:author': `${blog.psicologo} ${blog.psicologApellido}`,
       'article:published_time': blog.fecha,
       'article:section': blog.categoria,
+      'article:tag': blog.categoria,
     },
   };
 }
 
-export default async function BlogDetailPage({ 
-  params 
-}: { 
-  params: { slug: string } 
+export default async function BlogViewerPage({
+  searchParams,
+}: {
+  searchParams: { blog?: string };
 }) {
-  const blog = await getBlogBySlug(params.slug);
-
+  const blogQuery = searchParams.blog;
+  
+  if (!blogQuery) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="text-center space-y-6 max-w-md px-6">
+          <div className="text-6xl">❓</div>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+            Parámetro de blog requerido
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            No se especificó qué artículo mostrar.
+          </p>
+          <Link 
+            href="/blog"
+            className="inline-block px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+          >
+            Volver al Blog
+          </Link>
+        </div>
+      </div>
+    );
+  }
+  
+  const blog = await getBlogByQuery(blogQuery);
+  
   if (!blog) {
-    notFound();
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="text-center space-y-6 max-w-md px-6">
+          <div className="text-6xl">😕</div>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+            Artículo no encontrado
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            El artículo que buscas no existe o ha sido movido.
+          </p>
+          <Link 
+            href="/blog"
+            className="inline-block px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
+          >
+            Volver al Blog
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
     <>
       <BlogStructuredData blog={blog} />
-      <Suspense fallback={
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-pulse">Cargando artículo...</div>
-        </div>
-      }>
-        <BlogIndividualView blog={blog} />
-      </Suspense>
+      <BlogIndividualView blog={blog} />
     </>
   );
 }

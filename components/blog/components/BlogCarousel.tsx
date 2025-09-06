@@ -66,8 +66,8 @@ export default function BlogCarousel({
       <div className="relative h-80 lg:h-[500px] overflow-hidden">
         <Image
           src={imageUrl}
-          alt={`Imagen de ${blog.tema}`}
-          title={blog.tema}
+          alt={`Imagen ilustrativa del artículo: ${blog.tema}`}
+          title={`${blog.tema} - Por ${blog.psicologo} ${blog.psicologApellido}`}
           fill
           className="object-contain bg-gray-100 dark:bg-gray-800"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
@@ -106,8 +106,8 @@ export default function BlogCarousel({
       <div className="relative h-full">
         <Image
           src={currentImageUrl}
-          alt={`Imagen ${safeCurrentIndex + 1} de ${blog.tema}`}
-          title={blog.tema}
+          alt={`Imagen ${safeCurrentIndex + 1} del artículo: ${blog.tema}`}
+          title={`${blog.tema} - Imagen ${safeCurrentIndex + 1} de ${imagesToShow.length}`}
           fill
           className="object-contain bg-gray-100 dark:bg-gray-800 transition-opacity duration-500"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
