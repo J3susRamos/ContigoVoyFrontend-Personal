@@ -21,7 +21,9 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
+    cache: 'no-store' // Deshabilitar cache temporalmente para debugging
+  });
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
