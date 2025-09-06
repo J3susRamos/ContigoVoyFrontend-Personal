@@ -22,7 +22,7 @@ export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
-    cache: 'force-cache' // Deshabilitar cache temporalmente para debugging
+    next: { revalidate: 300 } // Revalidar cada 5 minutos
   });
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
@@ -31,7 +31,9 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, {
+    next: { revalidate: 600 } // Revalidar cada 10 minutos (categorías cambian menos)
+  });
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -40,7 +42,10 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
+    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`,
+    {
+      next: { revalidate: 600 } // Revalidar cada 10 minutos
+    }
   );
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
