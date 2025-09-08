@@ -16,8 +16,13 @@ async function getBlogByQuery(blogQuery: string): Promise<BlogPreviewData | null
     
     const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
     
+    // En desarrollo usar cache: 'no-store', en producción usar revalidación
+    const cacheConfig = process.env.NODE_ENV === 'development' 
+      ? { cache: 'no-store' as const }
+      : { next: { revalidate: 0 } };
+    
     const response = await fetch(endpoint, {
-      cache: 'force-cache',
+      ...cacheConfig,
       headers: {
         'Content-Type': 'application/json',
       },
