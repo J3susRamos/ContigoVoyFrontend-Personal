@@ -23,7 +23,7 @@ async function getBlogByQuery(blogQuery: string): Promise<BlogPreviewData | null
     const response = await fetch(
       endpoint,
       {
-        cache: 'no-store', // Siempre obtener datos frescos
+        cache: 'force-cache', // Siempre obtener datos frescos
         headers: {
           'Content-Type': 'application/json',
         },

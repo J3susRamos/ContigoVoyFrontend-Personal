@@ -8,12 +8,24 @@ import BlogPageComponentOptimized from "@/components/blog/BlogPageComponentOptim
 // Obtener datos durante el build (Server Component)
 async function getBlogData() {
   try {
+    // Durante el build, si no hay servidor disponible, devolver datos vacíos
+    const isBuilding = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL;
+
+    if (isBuilding) {
+      return {
+        data: { result: [] },
+        categoria: { result: [] },
+        authors: { result: [] },
+        error: null
+      };
+    }
+
     const [dato, category, author] = await Promise.all([
       BlogsWebSite(),
       GetCagetories(),
       GetBlogsPreviewApi()
     ]);
-    
+
     return {
       data: dato,
       categoria: category,
