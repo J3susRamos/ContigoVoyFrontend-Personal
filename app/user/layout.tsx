@@ -14,7 +14,7 @@ export default function UserLayout({
         <NavbarUser />
         <div className="min-h-[80vh] lg:min-h-[89vh] lg:ml-72">
           {children}
-        </div>
+        </div>  
       </div>
     </AuthGuard>
   );
