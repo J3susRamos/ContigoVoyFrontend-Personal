@@ -34,8 +34,8 @@ async function getBlogData() {
     };
   } catch (error) {
     console.error("Error fetching blog data:", error);
-
-    // Durante el build, devolver datos vacíos en lugar de error
+    
+    // En caso de error, devolver estructuras vacías pero válidas
     return {
       data: { result: [] },
       categoria: { result: [] },
