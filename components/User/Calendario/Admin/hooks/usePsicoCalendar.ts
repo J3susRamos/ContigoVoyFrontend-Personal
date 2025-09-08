@@ -69,7 +69,6 @@ export const usePsicoCalendar = (): UsePsicoCalendarReturn => {
 
   useEffect(() => {
     fetchPsychologists();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

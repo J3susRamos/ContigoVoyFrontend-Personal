@@ -22,39 +22,26 @@ async function getBlogData() {
     };
   } catch (error) {
     console.error("Error fetching blog data:", error);
+    
+    // En caso de error, devolver estructuras vacías pero válidas
     return {
-      data: null,
-      categoria: null,
-      authors: null,
-      error: "Error obteniendo blogs"
+      data: { result: [] },
+      categoria: { result: [] },
+      authors: { result: [] },
+      error: null
     };
   }
 }
 
 export default async function BlogPage() {
-  const { data, categoria, authors, error } = await getBlogData();
+  const { data, categoria, authors } = await getBlogData();
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p>{error}</p>
-      </div>
-    );
-  }
-
-  if (!data || !categoria || !authors) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p>No se pudieron cargar los datos</p>
-      </div>
-    );
-  }
-
+  // Siempre renderizar el componente, incluso con datos vacíos
   return (
     <BlogPageComponentOptimized
-      Datos={data.result}
-      Categories={categoria.result}
-      Authors={authors.result}
+      Datos={data?.result || []}
+      Categories={categoria?.result || []}
+      Authors={authors?.result || []}
     />
   );
 }
