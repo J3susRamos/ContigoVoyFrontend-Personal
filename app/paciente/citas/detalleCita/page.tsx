@@ -221,7 +221,7 @@ const DetalleCita = () => {
                 onPress={onOpen}
                 variant="shadow"
                 className="w-full"
-                disabled={canReprogramate}
+                disabled={!canReprogramate}
                 color={canReprogramate ? "warning" : "secondary"}
               >
                 <RefreshCw className="w-4 h-4 mr-2" />

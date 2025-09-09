@@ -28,7 +28,6 @@ export const ReprogramarCita = async (idCita: number) => {
     console.error("Error al reprogramar cita:", err);
     throw err;
   }
-  return false;
 };
 
 export const GetEstadisticasCita = async () => {

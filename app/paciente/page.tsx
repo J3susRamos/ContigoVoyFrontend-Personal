@@ -111,20 +111,20 @@ const Paciente = () => {
   const HandleGetCitas = async (signal: AbortSignal) => {
     try {
       const [dataCitasSinPagar, dataCitasDisponibles, dataBouchers] =
-        await Promise.all([
+        await Promise.allSettled([
           GetCitas(1, 5, "Sin pagar", "", null, null, signal),
           GetCitas(1, 5, "Pendiente", "", null, null, signal),
           GetBouchers(1, 5, "", null, null, signal),
         ]);
-      if (dataBouchers) {
-        const bouchersResponse = dataBouchers.bouchers;
+      if (dataBouchers.status == "fulfilled" && dataBouchers.value) {
+        const bouchersResponse = dataBouchers.value.bouchers;
         const bouchersInfo = bouchersResponse.data as Boucher[];
         setBouchersPaciente(bouchersInfo);
         showToast("success", "Bouchers obtenidos correctamente");
         console.log(bouchersInfo);
       }
-      if (dataCitasSinPagar) {
-        const citasResponse = dataCitasSinPagar.citas;
+      if (dataCitasSinPagar.status == "fulfilled" && dataCitasSinPagar.value) {
+        const citasResponse = dataCitasSinPagar.value.citas;
         const citasInfo = citasResponse.data as Cita[];
         const formatCitas = citasInfo.map((c) => ({
           ...c,
@@ -133,8 +133,11 @@ const Paciente = () => {
         setCitasSinPagar(formatCitas);
         showToast("success", "Citas sin pagar obtenidas correctamente");
       }
-      if (dataCitasDisponibles) {
-        const citasResponse = dataCitasDisponibles.citas;
+      if (
+        dataCitasDisponibles.status == "fulfilled" &&
+        dataCitasDisponibles.value
+      ) {
+        const citasResponse = dataCitasDisponibles.value.citas;
         const citasInfo = citasResponse.data as Cita[];
         const formatCitas = citasInfo.map((c) => ({
           ...c,
