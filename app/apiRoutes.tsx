@@ -21,9 +21,12 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
-    cache: 'force-cache' // Cache para generación estática
-  });
+  // En desarrollo usar cache: 'no-store', en producción usar revalidación
+  const cacheConfig = process.env.NODE_ENV === 'development' 
+    ? { cache: 'no-store' as const }
+    : { next: { revalidate: 0 } }; // Revalidar en cada request en producción
+    
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, cacheConfig);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -31,9 +34,11 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, {
-    cache: 'force-cache' // Cache para generación estática
-  });
+  const cacheConfig = process.env.NODE_ENV === 'development' 
+    ? { cache: 'no-store' as const }
+    : { next: { revalidate: 0 } };
+    
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, cacheConfig);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -41,11 +46,13 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 }
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
+  const cacheConfig = process.env.NODE_ENV === 'development' 
+    ? { cache: 'no-store' as const }
+    : { next: { revalidate: 0 } };
+    
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`,
-    {
-      cache: 'force-cache' // Cache para generación estática
-    }
+    cacheConfig
   );
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
