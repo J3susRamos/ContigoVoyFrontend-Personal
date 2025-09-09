@@ -330,8 +330,11 @@ export interface AuthorsApi {
 
 export interface NavItems {
   name: string;
-  link: string;
   icono: string;
+  link?: string;
+  role?: string;
+  key?: string;
+  hijos?: NavItems[]
 }
 
 // Interface for horarios psicologos
