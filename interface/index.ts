@@ -707,6 +707,16 @@ export interface SelectItemI {
   showLabel: string;
 }
 
+export interface Roles {
+  textValue: string,
+  showLabel: string
+}
+
+export interface Permissions{
+  textValue: string,
+  showLabel: string
+}
+
 export interface FormCita {
   idPaciente: string;
   fecha_cita: string;
@@ -720,4 +730,16 @@ export interface PacienteCita {
   nombre: string;
   apellido: string;
   codigo: string;
+}
+
+
+export interface Personal {
+  apellido: string,
+  email: string,
+  fecha_nacimiento: Date | string | DateValue,
+  name: string,
+  password: string,
+  permissions?: string[] | string,
+  rol: string,
+  imagen: string | null
 }

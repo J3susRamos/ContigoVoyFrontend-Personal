@@ -13,7 +13,7 @@ export default function Pacientes() {
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem("user") || "{}");
-        if (userData.rol === "PSICOLOGO" || userData.rol === "ADMIN") {
+        if (userData.rol === "PSICOLOGO" || userData.rol === "ADMIN"||userData.rol === "ADMINISTRADOR"|| userData.rol === "COMUNICACION"||userData.rol === "MARKETING") {
             setIsAuthorized(true);
             setRole(userData.rol);
         } else {
