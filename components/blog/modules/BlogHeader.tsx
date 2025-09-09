@@ -7,7 +7,7 @@ interface BlogHeaderProps {
 
 export default function BlogHeader({ searchTerm, onSearch }: BlogHeaderProps) {
   return (
-    <div className="mb-8">
+    <div className="mb-8 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg">
       <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
         <div className="text-center lg:text-left">
           <h1 className="text-4xl lg:text-6xl font-bold text-[#634AE2] dark:text-primary pb-1 lg:pb-2 mb-2 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] bg-clip-text text-transparent">
