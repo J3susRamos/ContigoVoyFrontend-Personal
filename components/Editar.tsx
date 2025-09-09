@@ -126,7 +126,7 @@ function Editar({
     fetchEspecialidadesPsicologo();
   }, [isEditOpen, user]);
 
-  // Manejo de imagen (WebP y base64)
+  // Manejo de imagen (WebP and base64)
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -219,17 +219,17 @@ function Editar({
       onOpenChange={setIsEditOpen}
       className="border-2 border-[#634AE2] rounded-lg xl:min-w-[900px] max-md:flex max-md:flex-col"
     >
-      <ModalContent className="bg-white dark:bg-[#19191a] rounded-xl">
-        <ModalBody>
+      <ModalContent className="bg-[#E7E7FF] dark:bg-[#19191a] rounded-xl border border-white/20">
+        <ModalBody className="p-6">
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 p-2 grid xl:grid-cols-2 max-xl:grid-cols-1 gap-4"
+            className="space-y-4 grid xl:grid-cols-2 max-xl:grid-cols-1 gap-6"
           >
             {/* Primera columna - Datos personales e imagen */}
             <div>
               {/* Datos personales básicos */}
               <div>
-                <label className="block font-bold text-base text-[#634AE2] py-2 mt-2">
+                <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] py-2 mt-2">
                   Nombre
                 </label>
                 <Input
@@ -238,15 +238,15 @@ function Editar({
                   onChange={(e) => setNombre(e.target.value)}
                   className="w-full rounded-full"
                   classNames={{
-                    input: "focus:outline-none",
-                    inputWrapper: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                    input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                    inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
                   }}
                   required
                 />
               </div>
               
               <div>
-                <label className="block font-bold text-base text-[#634AE2] mb-2">
+                <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                   Apellido
                 </label>
                 <Input
@@ -255,8 +255,8 @@ function Editar({
                   onChange={(e) => setApellido(e.target.value)}
                   className="w-full rounded-full"
                   classNames={{
-                    input: "focus:outline-none",
-                    inputWrapper: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                    input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                    inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
                   }}
                   required
                 />
@@ -265,7 +265,7 @@ function Editar({
               {user?.rol === 'PSICOLOGO' && (
                 <>
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] mb-2">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                       Email
                     </label>
                     <Input
@@ -274,8 +274,8 @@ function Editar({
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full rounded-full"
                       classNames={{
-                        input: "focus:outline-none",
-                        inputWrapper: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-gray-300",
+                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20"
                       }}
                       isDisabled
                       description="El email no puede ser modificado por seguridad"
@@ -283,7 +283,7 @@ function Editar({
                   </div>
 
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] mb-2">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                       Fecha de Nacimiento
                     </label>
                     <Input
@@ -292,8 +292,8 @@ function Editar({
                       onChange={(e) => setFechaNacimiento(e.target.value)}
                       className="w-full rounded-full"
                       classNames={{
-                        input: "focus:outline-none",
-                        inputWrapper: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
                       }}
                     />
                   </div>
@@ -301,11 +301,11 @@ function Editar({
               )}
 
               {/* Imagen */}
-              <h1 className="block font-bold text-base text-[#634AE2] mb-2 text-center mt-4">
+              <h1 className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2 text-center mt-4">
                 Imagen de Perfil
               </h1>
               <div className="w-full flex flex-col gap-2 m-auto items-center">
-                <div className="relative border-2 border-[#634AE2] rounded-lg h-[220px] w-[220px] bg-[#F3F3F3] dark:bg-input flex justify-center items-center cursor-pointer overflow-hidden">
+                <div className="relative border-2 border-[#634AE2] dark:border-[#634AE2] rounded-lg h-[220px] w-[220px] bg-[#F3F3F3] dark:bg-[#232324] flex justify-center items-center cursor-pointer overflow-hidden">
                   {imagen ? (
                     <Image
                       src={imagen}
@@ -315,12 +315,11 @@ function Editar({
                       className="w-full h-full object-cover object-center"
                     />
                   ) : (
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center text-gray-500 dark:text-gray-400">
                       <Plus
                         width={40}
                         height={40}
                         strokeWidth={2}
-                        className="text-card-foreground dark:text-card-foreground"
                       />
                       <span className="text-sm mt-2">
                         Subir foto de perfil
@@ -335,11 +334,11 @@ function Editar({
                   />
                   <button
                     type="button"
-                    className="absolute top-2 right-2 bg-white/80 dark:bg-white/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-100 transition-colors"
+                    className="absolute top-2 right-2 bg-white/80 dark:bg-[#2e2e2f]/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
                     onClick={() => setImagen("")}
                     aria-label="Eliminar imagen"
                   >
-                    <X className="w-5 h-5 text-primary dark:bg-text-primary" />
+                    <X className="w-5 h-5 text-[#634AE2] dark:text-gray-300" />
                   </button>
                 </div>
               </div>
@@ -351,7 +350,7 @@ function Editar({
                 <>
                   {/* Título profesional */}
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] mb-2">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                       Título Profesional
                     </label>
                     <Input
@@ -361,15 +360,15 @@ function Editar({
                       placeholder="Ej: Psicólogo Clínico"
                       className="w-full rounded-full"
                       classNames={{
-                        input: "focus:outline-none",
-                        inputWrapper: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
                       }}
                     />
                   </div>
 
                   {/* Introducción */}
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] mb-2">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                       Introducción Profesional
                     </label>
                     <Textarea
@@ -379,15 +378,15 @@ function Editar({
                       maxRows={4}
                       className="w-full"
                       classNames={{
-                        input: "focus:outline-none",
-                        inputWrapper: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
                       }}
                     />
                   </div>
 
                   {/* País */}
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] mb-2">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                       País
                     </label>
                     <Select
@@ -396,11 +395,18 @@ function Editar({
                       placeholder="Selecciona tu país"
                       className="w-full"
                       classNames={{
-                        trigger: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                        trigger: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
+                        popoverContent: "dark:bg-[#232324] dark:border-white/20",
+                        listbox: "dark:bg-[#232324]",
                       }}
                     >
                       {Flags.map((flag) => (
-                        <SelectItem key={flag.value}>
+                        <SelectItem 
+                          key={flag.value} 
+                          classNames={{
+                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
+                          }}
+                        >
                           {flag.label}
                         </SelectItem>
                       ))}
@@ -410,7 +416,7 @@ function Editar({
                   <div className="grid grid-cols-2 gap-4">
                     {/* Género */}
                     <div>
-                      <label className="block font-bold text-base text-[#634AE2] mb-2">
+                      <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                         Género
                       </label>
                       <Select
@@ -419,18 +425,41 @@ function Editar({
                         placeholder="Selecciona"
                         className="w-full"
                         classNames={{
-                          trigger: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                          trigger: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
+                          popoverContent: "dark:bg-[#232324] dark:border-white/20",
+                          listbox: "dark:bg-[#232324]",
                         }}
                       >
-                        <SelectItem key="Masculino">Masculino</SelectItem>
-                        <SelectItem key="Femenino">Femenino</SelectItem>
-                        <SelectItem key="Otro">Otro</SelectItem>
+                        <SelectItem 
+                          key="Masculino"
+                          classNames={{
+                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
+                          }}
+                        >
+                          Masculino
+                        </SelectItem>
+                        <SelectItem 
+                          key="Femenino"
+                          classNames={{
+                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
+                          }}
+                        >
+                          Femenino
+                        </SelectItem>
+                        <SelectItem 
+                          key="Otro"
+                          classNames={{
+                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
+                          }}
+                        >
+                          Otro
+                        </SelectItem>
                       </Select>
                     </div>
 
                     {/* Experiencia */}
                     <div>
-                      <label className="block font-bold text-base text-[#634AE2] mb-2">
+                      <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                         Experiencia (años)
                       </label>
                       <Input
@@ -441,8 +470,8 @@ function Editar({
                         onChange={(e) => setExperiencia(parseInt(e.target.value) || 0)}
                         className="w-full rounded-full"
                         classNames={{
-                          input: "focus:outline-none",
-                          inputWrapper: "border focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2]"
+                          input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                          inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
                         }}
                       />
                     </div>
@@ -450,14 +479,14 @@ function Editar({
 
                   {/* Especialidades */}
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] mb-2">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                       Especialidades
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {allEspecialidades.map((esp) => (
                         <label
                           key={esp.idEspecialidad}
-                          className="flex items-center gap-2"
+                          className="flex items-center gap-2 dark:text-gray-300"
                         >
                           <input
                             type="checkbox"
@@ -475,9 +504,9 @@ function Editar({
                                 );
                               }
                             }}
-                            className="accent-[#634AE2] min-w-4 min-h-4"
+                            className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
                           />
-                          <span className="text-[#634AE2] text-sm">{esp.nombre}</span>
+                          <span className="text-sm text-[#634AE2] dark:text-gray-300">{esp.nombre}</span>
                         </label>
                       ))}
                     </div>
@@ -485,7 +514,7 @@ function Editar({
                       {especialidades.map((esp) => (
                         <span
                           key={esp}
-                          className="bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs"
+                          className="bg-[#634AE2] dark:bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs"
                         >
                           {esp}
                         </span>
@@ -496,14 +525,14 @@ function Editar({
               ) : (
                 /* Para otros roles, mostrar solo especialidades */
                 <div>
-                  <label className="block font-bold text-base text-[#634AE2] mb-2">
+                  <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                     Especialidades
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {allEspecialidades.map((esp) => (
                       <label
                         key={esp.idEspecialidad}
-                        className="flex items-center gap-2"
+                        className="flex items-center gap-2 dark:text-gray-300"
                       >
                         <input
                           type="checkbox"
@@ -521,9 +550,9 @@ function Editar({
                               );
                             }
                           }}
-                          className="accent-[#634AE2] min-w-4 min-h-4"
+                          className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
                         />
-                        <span className="text-[#634AE2]">{esp.nombre}</span>
+                        <span className="text-[#634AE2] dark:text-gray-300">{esp.nombre}</span>
                       </label>
                     ))}
                   </div>
@@ -531,7 +560,7 @@ function Editar({
                     {especialidades.map((esp) => (
                       <span
                         key={esp}
-                        className="bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs"
+                        className="bg-[#634AE2] dark:bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs"
                       >
                         {esp}
                       </span>
@@ -545,15 +574,14 @@ function Editar({
                   type="button"
                   variant="light"
                   onPress={() => setIsEditOpen(false)}
-                  className="rounded-full"
+                  className="rounded-full dark:bg-[#2e2e2f] dark:text-white dark:hover:bg-[#3a3a3b] dark:border dark:border-white/20"
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
                   isLoading={loading}
-                  className="rounded-full"
-                  color="primary"
+                  className="rounded-full bg-[#634AE2] dark:bg-[#634AE2] dark:text-white dark:hover:bg-[#7560e6]"
                 >
                   Guardar
                 </Button>
