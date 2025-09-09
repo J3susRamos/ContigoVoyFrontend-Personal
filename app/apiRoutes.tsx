@@ -15,6 +15,7 @@ import {
   ActualizarPerfilCompletoPsicologo,
   EspecialidadesPsicologoResponse,
   PacienteDisabled,
+  Personal,
 } from "@/interface";
 import { parseCookies } from "nookies";
 
@@ -499,6 +500,33 @@ export async function GetEspecialidadesPsicologos(id: number): Promise<Especiali
 
   if (!res.ok) {
     throw new Error("Error al obtener las especialidades de los psicologos");
+  }
+
+  return await res.json();
+}
+
+
+//Crear citas en el perfil del paciente
+export async function CreatePersonal(values: Personal){
+  
+  const payload = {
+    ...values
+  };
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/personal`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    console.error("Error del backend:", errorData);
+    throw errorData;
   }
 
   return await res.json();
