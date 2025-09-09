@@ -12,6 +12,7 @@ const navItemsBase = [
     name: "Dashboard",
     link: "/user/home",
     icono: Icons.dashboard,
+    role: "both"
   },
   {
     name: "Citas",
@@ -35,16 +36,19 @@ const navItemsBase = [
     name: "Registro de personal",
     link: "/user/personal",
     icono: Icons.personal,
+    role: "admin"
   },
   {
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
+    role: "psico"
   },
   {
     name: "Psicologos",
     link: "/user/psicologos",
     icono: Icons.psicologos,
+    role: "admin"
   },
   {
     name: "Citas",
@@ -56,31 +60,37 @@ const navItemsBase = [
     name: "Historial",
     link: "/user/historial",
     icono: Icons.historial,
+    role: "psico"
   },
   {
     name: "Calendario",
     link: "/user/calendario",
     icono: Icons.calendario,
+    role: "both"
   },
   {
     name: "Estadisticas",
     link: "/user/estadisticas",
     icono: Icons.estadisticas,
+    role: "both"
   },
   {
     name: "Blog",
     link: "/user/blog",
     icono: Icons.blog,
+    role: "psico"
   },
   {
     name: "Marketing",
     link: "/user/marketing",
     icono: Icons.marketing,
+    role: "psico"
   },
   {
     name: "Politicas y Privacidad",
     link: "/user/politicas",
     icono: Icons.politicasyPriv,
+    role: "psico"
   },
 ];
 
@@ -98,14 +108,13 @@ const NavbarUser = () => {
         if (user.rol === "PSICOLOGO") {
           items = items.filter(
             (item) =>
-              item.name !== "Registro de personal" && 
-              item.name !== "Psicologos"
+              item.role === "psico" || item.role === "both"
           );
         }
 
         if (user.rol === "ADMIN") {
           items = items.filter(
-            (item) => item.role !== "psico" && item.name !== "Historial" && item.name !== "Dashboard"
+            (item) => item.role === "admin" || item.role === "both"
           );
         }
 
