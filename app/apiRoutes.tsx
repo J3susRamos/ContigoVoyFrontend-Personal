@@ -32,11 +32,25 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
     ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs`
     : '/apicontigovoy/public/api/blogs';
     
+  console.log('🔍 [BlogsWebSite] Environment:', process.env.NODE_ENV);
+  console.log('🔍 [BlogsWebSite] API URL:', apiUrl);
+  console.log('🔍 [BlogsWebSite] Cache Config:', cacheConfig);
+    
   const res = await fetch(apiUrl, cacheConfig);
+  
+  console.log('🔍 [BlogsWebSite] Response Status:', res.status);
+  console.log('🔍 [BlogsWebSite] Response OK:', res.ok);
+  console.log('🔍 [BlogsWebSite] Response Headers:', Object.fromEntries(res.headers.entries()));
+  
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error('❌ [BlogsWebSite] Error Response Text:', errorText);
     throw new Error("Error al obtener los datos");
   }
-  return await res.json();
+  
+  const jsonData = await res.json();
+  console.log('✅ [BlogsWebSite] Success! Data received:', jsonData);
+  return jsonData;
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
@@ -49,11 +63,23 @@ export async function GetCagetories(): Promise<CategoriaApi> {
     ? `${process.env.NEXT_PUBLIC_API_URL}api/categorias`
     : '/apicontigovoy/public/api/categorias';
     
+  console.log('🔍 [GetCagetories] Environment:', process.env.NODE_ENV);
+  console.log('🔍 [GetCagetories] API URL:', apiUrl);
+    
   const res = await fetch(apiUrl, cacheConfig);
+  
+  console.log('🔍 [GetCagetories] Response Status:', res.status);
+  console.log('🔍 [GetCagetories] Response OK:', res.ok);
+  
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error('❌ [GetCagetories] Error Response Text:', errorText);
     throw new Error("Error al obtener los datos");
   }
-  return await res.json();
+  
+  const jsonData = await res.json();
+  console.log('✅ [GetCagetories] Success! Data received:', jsonData);
+  return jsonData;
 }
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
@@ -66,11 +92,23 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
     ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
     : '/apicontigovoy/public/api/blogs/authors';
     
+  console.log('🔍 [GetBlogsPreviewApi] Environment:', process.env.NODE_ENV);
+  console.log('🔍 [GetBlogsPreviewApi] API URL:', apiUrl);
+    
   const res = await fetch(apiUrl, cacheConfig);
+  
+  console.log('🔍 [GetBlogsPreviewApi] Response Status:', res.status);
+  console.log('🔍 [GetBlogsPreviewApi] Response OK:', res.ok);
+  
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error('❌ [GetBlogsPreviewApi] Error Response Text:', errorText);
     throw new Error("Error al obtener los datos");
   }
-  return await res.json();
+  
+  const jsonData = await res.json();
+  console.log('✅ [GetBlogsPreviewApi] Success! Data received:', jsonData);
+  return jsonData;
 }
 
 export const GetPsicologos = async (
