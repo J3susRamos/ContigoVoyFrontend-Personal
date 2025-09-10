@@ -26,7 +26,12 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
     ? { cache: 'no-store' as const }
     : { next: { revalidate: 0 } }; // Revalidar en cada request en producción
     
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, cacheConfig);
+  // Usar URL diferente para desarrollo vs producción
+  const apiUrl = process.env.NODE_ENV === 'development' 
+    ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs`
+    : '/apicontigovoy/public/api/blogs';
+    
+  const res = await fetch(apiUrl, cacheConfig);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -38,7 +43,12 @@ export async function GetCagetories(): Promise<CategoriaApi> {
     ? { cache: 'no-store' as const }
     : { next: { revalidate: 0 } };
     
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, cacheConfig);
+  // Usar URL diferente para desarrollo vs producción
+  const apiUrl = process.env.NODE_ENV === 'development' 
+    ? `${process.env.NEXT_PUBLIC_API_URL}api/categorias`
+    : '/apicontigovoy/public/api/categorias';
+    
+  const res = await fetch(apiUrl, cacheConfig);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
@@ -50,10 +60,12 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
     ? { cache: 'no-store' as const }
     : { next: { revalidate: 0 } };
     
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`,
-    cacheConfig
-  );
+  // Usar URL diferente para desarrollo vs producción
+  const apiUrl = process.env.NODE_ENV === 'development' 
+    ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
+    : '/apicontigovoy/public/api/blogs/authors';
+    
+  const res = await fetch(apiUrl, cacheConfig);
   if (!res.ok) {
     throw new Error("Error al obtener los datos");
   }
