@@ -246,7 +246,7 @@ export async function GetPacientesDisabled(): Promise<PacienteDisabled[]> {
 }
 
 //funcion agregada GetPacientesEnabled
-export async function GetPacientesEnabled(): Promise<Paciente[]> {
+export async function GetPacientesEnabled(): Promise<PacienteDisabled[]> {
   try {
     if (typeof window === 'undefined') {
       throw new Error("Función solo disponible en el cliente");
