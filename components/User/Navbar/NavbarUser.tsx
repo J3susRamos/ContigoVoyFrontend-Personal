@@ -118,7 +118,16 @@ const NavbarUser = () => {
           );
         }
 
-        setNavItems(items);
+      setNavItems(items);
+
+      // Aqui que SANDRO SE CONSUMA ESTE ENDPOINT PARA JALARSE LOS PERMISOS
+      // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/personal/permisos/${user.id}`, { 
+      //     headers: {
+      //       "Accept": "application/json",
+      //       "Authorization": `Bearer ${token}`,
+      //     },
+      //   })
+
       } catch (error) {
         console.error("Error parsing user data:", error);
       }

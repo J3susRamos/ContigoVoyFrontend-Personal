@@ -73,7 +73,8 @@ export const useAuth = () => {
         window.location.assign("/user/home");
       }
 
-      if (userDataToStore.rol === "ADMIN") {
+      if (userDataToStore.rol === "ADMIN" || userDataToStore.rol === "ADMINISTRADOR"|| userDataToStore.rol === "COMUNICACION" || userDataToStore.rol === "MARKETING" 
+      ) {
         window.location.assign("/user/citas-sin-pagar");
       }
 

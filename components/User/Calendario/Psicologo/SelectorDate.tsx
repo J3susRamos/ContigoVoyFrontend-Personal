@@ -439,7 +439,7 @@ export default function Week() {
                   </thead>
                   <tbody>
                     {historialFuturo.map((item, i) => (
-                      <tr key={i} className="text-center  text-gray-200">
+                      <tr key={i} className="text-center  dark:text-gray-200">
                         <td className="border px-4 py-2">{item.fecha}</td>
                         <td className="border px-4 py-2">{item.hora_inicio}</td>
                         <td className="border px-4 py-2">{item.hora_fin}</td>
