@@ -1,14 +1,14 @@
 import { GetPacientesDisabled, GetPacientesEnabled } from "@/app/apiRoutes";
-import { Paciente } from "@/interface";
+import { PacienteDisabled } from "@/interface";
 import { useEffect, useState } from "react";
 
 export const useAdminPacienteData = () => {
-  const [data, setData] = useState<Paciente[] | null>(null);
+  const [data, setData] = useState<PacienteDisabled[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [filterStatus, setFilterStatus] = useState<'habilitados' | 'deshabilitados'>('deshabilitados');
+  const [filterStatus, setFilterStatus] = useState<string>('deshabilitados');
 
-  const fetchData = async (status: 'habilitados' | 'deshabilitados' = filterStatus) => {
+  const fetchData = async (status: string = filterStatus) => {
     setLoading(true);
     setError(null);
     try {
@@ -28,14 +28,14 @@ export const useAdminPacienteData = () => {
     }
   };
 
-  const handleFilterChange = (newStatus: 'habilitados' | 'deshabilitados') => {
+  const handleFilterChange = (newStatus:string) => {
     setFilterStatus(newStatus);
     fetchData(newStatus);
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [filterStatus]);
 
   return {
     data,

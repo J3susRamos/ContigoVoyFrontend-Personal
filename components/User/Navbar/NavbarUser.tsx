@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ReactSVG } from "react-svg";
 import { DesktopNavUser } from "./DesktopNavUser";

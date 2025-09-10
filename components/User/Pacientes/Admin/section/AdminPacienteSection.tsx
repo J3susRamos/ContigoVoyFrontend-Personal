@@ -35,7 +35,6 @@ function AdminPacienteSection() {
           <AdminPaciente
             Data={data}
             refreshData={fetchData}
-            filterStatus={filterStatus} // Prop adicional
           />
         ) : (
           <div className="text-center py-8 text-primary dark:text-primary-foreground">
