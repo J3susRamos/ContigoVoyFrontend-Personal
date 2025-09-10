@@ -6,7 +6,6 @@ import Row from "@/components/ui/Table/Row";
 import DataCard from "@/components/ui/DataCard";
 import { CitaSinPagar } from "@/interface";
 import { formatCitaDate } from "../../Citas/citas";
-import { useCitasPagadas } from "../hooks/useCitasPagadas";
 import { CitaPagadaModal } from "../modal/CitaPagadaModal";
 
 interface TableCitasProps {

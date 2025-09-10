@@ -42,7 +42,7 @@ const navItemsBase = [
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
-    role: "psico"
+    role: "both"
   },
   {
     name: "Psicologos",
