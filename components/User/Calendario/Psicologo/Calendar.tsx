@@ -15,7 +15,7 @@ import { useCalendarEvents } from "./hooks/useCalendarEvents";
 import CustomMonthHeader from "./custom/CustomMonthHeader";
 import CustomWeekHeader from "./custom/CustomWeekHeader";
 import CustomDayHeader from "./custom/CustomDayHeader";
-
+import "./styles/calendar-styles.css"; // agregado
 
 export default function Calendario({ citasPorDia, vista, date }: CalendarioProps) {
   const { selectedCita, isModalOpen, handleEventClick, closeModal } = useCalendarModal();
