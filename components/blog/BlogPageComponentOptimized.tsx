@@ -19,6 +19,14 @@ export default function BlogPageComponent({
   Categories: Categoria[];
   Authors: Authors[];
 }) {
+  console.log('🔍 [BlogPageComponent] Datos recibidos:');
+  console.log('  - Datos (blogs):', Datos);
+  console.log('  - Datos length:', Datos?.length);
+  console.log('  - Categories:', Categories);
+  console.log('  - Categories length:', Categories?.length);
+  console.log('  - Authors:', Authors);
+  console.log('  - Authors length:', Authors?.length);
+  
   const [showFilters, setShowFilters] = useState(false);
   
   // Custom hooks
@@ -32,6 +40,13 @@ export default function BlogPageComponent({
     handleSearch,
     clearAllFilters,
   } = useBlogFilters(Datos, Categories, Authors);
+
+  console.log('🔍 [BlogPageComponent] Datos filtrados:');
+  console.log('  - filteredData:', filteredData);
+  console.log('  - filteredData length:', filteredData?.length);
+  console.log('  - activeCategories:', activeCategories);
+  console.log('  - activeAuthors:', activeAuthors);
+  console.log('  - searchTerm:', searchTerm);
 
   return (
     <div className="min-h-screen dark:bg-gray-900 bg-gray-100">
