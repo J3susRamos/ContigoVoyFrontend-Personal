@@ -39,6 +39,7 @@ const CreateAtencion = () => {
     paciente: " ",
     codigo: " ",
     fecha_inicio: " ",
+    fecha_limite: " ",
     estado: " ",
     duracion: " ",
     edad: 0,

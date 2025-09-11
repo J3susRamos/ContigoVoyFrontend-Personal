@@ -34,7 +34,8 @@ export interface Cita {
   idPsicologo: number;
   idTipoCita: number;
   jitsi_url: string | null;
-  motivo_consulta: string;
+  motivo_Consulta: string;
   nombrePsicologo: string;
   apellidoPsicologo: string;
+  fecha_limite: string
 }

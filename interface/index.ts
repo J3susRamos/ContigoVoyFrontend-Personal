@@ -139,6 +139,7 @@ export interface Contact {
 export interface BlogApi {
   idCategoria: number | null;
   tema: string;
+  slug?: string;
   contenido: string;
   imagenes: string[]; // Array de imágenes
   idPsicologo: number | null;
@@ -148,6 +149,7 @@ export interface BlogApiGEt {
   idBlog: number | null;
   categoria: string;
   tema: string;
+  slug?: string;
   contenido: string;
   imagen: string; // Mantener para compatibilidad
   imagenes?: string[]; // Nuevo campo opcional
@@ -157,6 +159,7 @@ export interface BlogApiGEt {
 export interface BlogPreviewData {
   idBlog: number;
   tema: string;
+  slug?: string;
   contenido: string;
   imagen: string; // Mantener para compatibilidad
   imagenes?: string[]; // Nuevo campo opcional
@@ -327,9 +330,11 @@ export interface AuthorsApi {
 
 export interface NavItems {
   name: string;
-  link: string;
   icono: string;
-  onClick?: () => Promise<void> | void;
+  link?: string;
+  role?: string;
+  key?: string;
+  hijos?: NavItems[]
 }
 
 // Interface for horarios psicologos
@@ -486,6 +491,7 @@ export interface Citas {
   paciente: string;
   codigo: string;
   fecha_inicio: string;
+  fecha_limite:string;
   estado: string;
   edad: number;
   motivo: string;
@@ -705,17 +711,40 @@ export interface SelectItemI {
   showLabel: string;
 }
 
+export interface Roles {
+  textValue: string,
+  showLabel: string
+}
+
+export interface Permissions{
+  textValue: string,
+  showLabel: string
+}
+
 export interface FormCita {
-  idPaciente: string;
-  fecha_cita: string;
-  hora_cita: string;
-  duracion: string;
-  motivo_Consulta: string;
-  estado_Cita: string;
+    idPaciente: string;
+    fecha_cita: string;
+    fecha_limite:string;
+    hora_cita: string;
+    duracion: string;
+    motivo_Consulta: string;
+    estado_Cita: string;
 }
 export interface PacienteCita {
   idPaciente: number;
   nombre: string;
   apellido: string;
   codigo: string;
+}
+
+
+export interface Personal {
+  apellido: string,
+  email: string,
+  fecha_nacimiento: Date | string | DateValue,
+  name: string,
+  password: string,
+  permissions?: string[] | string,
+  rol: string,
+  imagen: string | null
 }

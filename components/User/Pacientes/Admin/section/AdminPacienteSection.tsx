@@ -2,17 +2,27 @@
 import AdminPacienteHeader from "@/components/User/Pacientes/Admin/header/AdminPacienteHeader";
 import AdminPaciente from "@/components/User/Pacientes/Admin/AdminPaciente";
 import { useAdminPacienteData } from "@/components/User/Pacientes/Admin/hooks/useAdminPacienteData";
+import PacienteFilterSelect from "@/components/User/Pacientes/PacienteFilterSelect";
 
 // Componente separado para la lógica de ADMIN
 function AdminPacienteSection() {
-  const { data, error, loading, fetchData } = useAdminPacienteData();
+  const { data, error, loading, filterStatus, fetchData, handleFilterChange } = useAdminPacienteData();
 
   return (
     <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
       <AdminPacienteHeader />
+      
+      {/* Selector de filtro - Solo esta línea es nueva */}
+      <div className="mx-5 flex justify-end items-center mt-4">
+        <PacienteFilterSelect 
+          filterStatus={filterStatus} 
+          onFilterChange={handleFilterChange} 
+        />
+      </div>
+      
       {error && (
         <div className="p-4 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg mx-5">
-          <h2>Error cargando pacientes deshabilitados</h2>
+          <h2>Error cargando pacientes {filterStatus === 'deshabilitados' ? 'deshabilitados' : 'habilitados'}</h2>
           <p>{error}</p>
         </div>
       )}
@@ -28,7 +38,7 @@ function AdminPacienteSection() {
           />
         ) : (
           <div className="text-center py-8 text-primary dark:text-primary-foreground">
-            <p>No hay pacientes deshabilitados</p>
+            <p>No hay pacientes {filterStatus === 'deshabilitados' ? 'deshabilitados' : 'habilitados'}</p>
           </div>
         )}
       </div>

@@ -64,7 +64,8 @@ export default function BlogIndividualView({ blog }: BlogIndividualViewProps) {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
                 <Image
                   src={blog.psicologoImagenId || "/default-avatar.png"}
-                  alt={blog.psicologo || "Avatar"}
+                  alt={`Foto de perfil de ${blog.psicologo} ${blog.psicologApellido}`}
+                  title={`${blog.psicologo} ${blog.psicologApellido} - Psicólogo especialista en ${blog.categoria}`}
                   width={80}
                   height={80}
                   className="rounded-full border-4 border-white/30 shadow-lg"

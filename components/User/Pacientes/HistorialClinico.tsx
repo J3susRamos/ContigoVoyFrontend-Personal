@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Paciente, UltimaAtencion } from "@/interface";
 import showToast from "@/components/ToastStyle";
 import { parseCookies } from "nookies";
-import DetallesPaciente from "../Historial/modalComponents/DetallesPaciente";
+import HistorialPaciente from "../Historial/modalComponents/HistorialPaciente";
 import { getPaciente } from "@/components/User/Pacientes/getPacienteData";
 import { getUltimaAtencion } from "@/components/User/Pacientes/getUltimaAtencionData";
 
@@ -208,7 +208,7 @@ const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
                 onClick={() => setShowCart(true)}
                 className="w-full bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground rounded-lg py-3 px-4 font-medium hover:bg-primary/90 dark:hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-[1.02]"
               >
-                📋 Ver Historial Completo
+                📋 Ver Historial Completoooo
               </button>
             </div>
           </div>
@@ -248,7 +248,7 @@ const HistorialClinico = ({ idPaciente }: {idPaciente:number | null}) => {
           />
           <div className="relative z-10 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="bg-card dark:bg-card rounded-xl shadow-xl border border-border dark:border-border">
-              <DetallesPaciente ultimaAtencion={ultimaAtencion} />
+             <HistorialPaciente idPaciente={idPaciente ?? 0} ultimaAtencion={ultimaAtencion}/>
             </div>
           </div>
         </div>

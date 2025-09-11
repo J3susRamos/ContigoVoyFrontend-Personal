@@ -1,17 +1,29 @@
-/* COLORES MAS SUAVES PARA DARK MODE */
+/* 🎨 Light Mode */
 :root {
-  --cal-bg-dark: #1A202C;                /* Fondo oscuro suave */
-  --cal-card-dark: #2D3748;              /* Tarjetas/headers oscuro */
-  --cal-border-dark: #4A5568;            /* Bordes suaves */
-  --cal-text-primary: #E2E8F0;           /* Texto principal suave */
-  --cal-text-secondary: #A0AEC0;         /* Texto secundario */
-  --cal-accent-purple: #7C3AED;          /* Púrpura suavizado */
-  --cal-accent-blue: #4299E1;            /* Azul suavizado */
-  --cal-accent-light: #90CDF4;           /* Azul muy suave */
+  --cal-bg: #ffffff;              /* Fondo blanco */
+  --cal-card: #f9fafb;            /* Tarjetas / headers claros */
+  --cal-border: #e5e7eb;          /* Bordes gris claro */
+  --cal-text-primary: #111827;    /* Texto principal (gris casi negro) */
+  --cal-text-secondary: #4b5563;  /* Texto secundario (gris medio) */
+  --cal-accent-purple: #7C3AED;   /* Púrpura base */
+  --cal-accent-blue: #2563eb;     /* Azul base */
+  --cal-accent-light: #3b82f6;    /* Azul claro */
 }
 
-/* SEMANA */
-.rbc-header {
+/* 🌙 Dark Mode */
+.dark {
+  --cal-bg: #1A202C;              /* Fondo oscuro */
+  --cal-card: #2D3748;            /* Tarjetas/headers oscuro */
+  --cal-border: #4A5568;          /* Bordes suaves */
+  --cal-text-primary: #E2E8F0;    /* Texto principal suave */
+  --cal-text-secondary: #A0AEC0;  /* Texto secundario */
+  --cal-accent-purple: #7C3AED;   /* Púrpura suavizado */
+  --cal-accent-blue: #4299E1;     /* Azul suavizado */
+  --cal-accent-light: #90CDF4;    /* Azul muy suave */
+}
+
+/* SEMANA - SOLO DARK MODE */
+.dark .rbc-header {
   background-color: var(--cal-card-dark, #2D3748) !important;
   color: var(--cal-text-primary, #E2E8F0) !important;
   font-weight: 500;
@@ -19,11 +31,13 @@
   border-bottom: 1px solid var(--cal-border-dark, #4A5568) !important;
 }
 
-.rbc-events-container {
+
+
+.dark .rbc-events-container {
   background-color: var(--cal-bg-dark, #1A202C) !important;
 }
 
-.rbc-time-slot {
+.dark .rbc-time-slot {
   color: var(--cal-text-secondary, #A0AEC0) !important;
   font-weight: 400;
   border-color: var(--cal-border-dark, #4A5568) !important;
@@ -167,8 +181,54 @@
   border-width: 1px;
 }
 
+
+/***********************AGREGADO****************************/
 /* TEXTO MÁS SUAVE EN TODO EL CALENDARIO */
 .rbc-calendar {
   color: var(--cal-text-primary, #E2E8F0) !important;
   font-weight: 400;
+}
+
+
+/* Fondo general del calendario */
+.rbc-calendar {
+  background-color: var(--cal-bg) !important;
+  color: var(--cal-text-primary) !important;
+}
+
+/* Celdas (días) */
+.rbc-month-view,
+.rbc-time-view,
+.rbc-day-bg,
+.rbc-month-row {
+  background-color: var(--cal-bg) !important;
+  border-color: var(--cal-border) !important;
+}
+
+/* Cabeceras de días (LUN, MAR, etc.) */
+.rbc-header {
+  background-color: var(--cal-card) !important;
+  color: var(--cal-text-secondary) !important;
+  border-color: var(--cal-border) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Eventos */
+.rbc-event {
+  background-color: var(--cal-accent-purple) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  padding: 2px 4px !important;
+}
+
+/* Día actual */
+.rbc-today {
+  background-color: var(--cal-accent-light) !important;
+}
+
+/* Bordes */
+.rbc-month-row + .rbc-month-row,
+.rbc-day-bg + .rbc-day-bg {
+  border-color: var(--cal-border) !important;
 }

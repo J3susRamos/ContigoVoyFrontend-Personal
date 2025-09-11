@@ -5,15 +5,17 @@ export const pageSizes = [
 ];
 
 export const estadosCita = [
-  { key: "1", label: "Sin pagar" },
-  { key: "2", label: "Pendiente" },
-  { key: "3", label: "Realizado" },
-  { key: "4", label: "Cancelado" },
-  { key: "5", label: "Reprogramado" },
+  { key: "Sin pagar", label: "Sin pagar" },
+  { key: "Pendiente", label: "Pendiente" },
+  { key: "Realizada", label: "Realizada" },
+  { key: "Cancelada", label: "Cancelada" },
+  { key: "Reprogramada", label: "Reprogramada" },
+  { key: "Ausente", label: "Ausente" },
 ]; 
 
 export const estadosVoucher = [
-  { key: "1", label: "Aceptado" },
-  { key: "2", label: "Rechazado" },
-  { key: "5", label: "Pendiente" },
+  { key: "aceptado", label: "Aceptado" },
+  { key: "rechazado", label: "Rechazado" },
+  { key: "pendiente", label: "Pendiente" },
+  { key: "Sin enviar", label: "Sin enviar" },
 ];

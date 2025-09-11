@@ -15,42 +15,100 @@ import {
   ActualizarPerfilCompletoPsicologo,
   EspecialidadesPsicologoResponse,
   PacienteDisabled,
+  Personal,
 } from "@/interface";
 import { parseCookies } from "nookies";
 
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
-    cache: 'force-cache' // Cache para generación estática
-  });
+  // En desarrollo usar cache: 'no-store', en producción usar revalidación
+  const cacheConfig = process.env.NODE_ENV === 'development' 
+    ? { cache: 'no-store' as const }
+    : { next: { revalidate: 0 } }; // Revalidar en cada request en producción
+    
+  // Usar URL diferente para desarrollo vs producción
+  const apiUrl = process.env.NODE_ENV === 'development' 
+    ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs`
+    : '/apicontigovoy/public/api/blogs';
+    
+  console.log('🔍 [BlogsWebSite] Environment:', process.env.NODE_ENV);
+  console.log('🔍 [BlogsWebSite] API URL:', apiUrl);
+  console.log('🔍 [BlogsWebSite] Cache Config:', cacheConfig);
+    
+  const res = await fetch(apiUrl, cacheConfig);
+  
+  console.log('🔍 [BlogsWebSite] Response Status:', res.status);
+  console.log('🔍 [BlogsWebSite] Response OK:', res.ok);
+  console.log('🔍 [BlogsWebSite] Response Headers:', Object.fromEntries(res.headers.entries()));
+  
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error('❌ [BlogsWebSite] Error Response Text:', errorText);
     throw new Error("Error al obtener los datos");
   }
-  return await res.json();
+  
+  const jsonData = await res.json();
+  console.log('✅ [BlogsWebSite] Success! Data received:', jsonData);
+  return jsonData;
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/categorias`, {
-    cache: 'force-cache' // Cache para generación estática
-  });
+  const cacheConfig = process.env.NODE_ENV === 'development' 
+    ? { cache: 'no-store' as const }
+    : { next: { revalidate: 0 } };
+    
+  // Usar URL diferente para desarrollo vs producción
+  const apiUrl = process.env.NODE_ENV === 'development' 
+    ? `${process.env.NEXT_PUBLIC_API_URL}api/categorias`
+    : '/apicontigovoy/public/api/categorias';
+    
+  console.log('🔍 [GetCagetories] Environment:', process.env.NODE_ENV);
+  console.log('🔍 [GetCagetories] API URL:', apiUrl);
+    
+  const res = await fetch(apiUrl, cacheConfig);
+  
+  console.log('🔍 [GetCagetories] Response Status:', res.status);
+  console.log('🔍 [GetCagetories] Response OK:', res.ok);
+  
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error('❌ [GetCagetories] Error Response Text:', errorText);
     throw new Error("Error al obtener los datos");
   }
-  return await res.json();
+  
+  const jsonData = await res.json();
+  console.log('✅ [GetCagetories] Success! Data received:', jsonData);
+  return jsonData;
 }
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`,
-    {
-      cache: 'force-cache' // Cache para generación estática
-    }
-  );
+  const cacheConfig = process.env.NODE_ENV === 'development' 
+    ? { cache: 'no-store' as const }
+    : { next: { revalidate: 0 } };
+    
+  // Usar URL diferente para desarrollo vs producción
+  const apiUrl = process.env.NODE_ENV === 'development' 
+    ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
+    : '/apicontigovoy/public/api/blogs/authors';
+    
+  console.log('🔍 [GetBlogsPreviewApi] Environment:', process.env.NODE_ENV);
+  console.log('🔍 [GetBlogsPreviewApi] API URL:', apiUrl);
+    
+  const res = await fetch(apiUrl, cacheConfig);
+  
+  console.log('🔍 [GetBlogsPreviewApi] Response Status:', res.status);
+  console.log('🔍 [GetBlogsPreviewApi] Response OK:', res.ok);
+  
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error('❌ [GetBlogsPreviewApi] Error Response Text:', errorText);
     throw new Error("Error al obtener los datos");
   }
-  return await res.json();
+  
+  const jsonData = await res.json();
+  console.log('✅ [GetBlogsPreviewApi] Success! Data received:', jsonData);
+  return jsonData;
 }
 
 export const GetPsicologos = async (
@@ -163,6 +221,7 @@ export const GetPsicologosInactivos = async (
   }
 };
 
+
 export async function GetPacientesDisabled(): Promise<PacienteDisabled[]> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/deshabilitados`,
@@ -185,6 +244,64 @@ export async function GetPacientesDisabled(): Promise<PacienteDisabled[]> {
     }
   });
 }
+
+//funcion agregada GetPacientesEnabled
+export async function GetPacientesEnabled(): Promise<PacienteDisabled[]> {
+  try {
+    if (typeof window === 'undefined') {
+      throw new Error("Función solo disponible en el cliente");
+    }
+    
+    // Buscar token en localStorage y sessionStorage primero
+    let token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    
+    // Si no está en storage, buscar en cookies
+    if (!token) {
+      const cookieMatch = document.cookie.match(/session=([^;]+)/);
+      if (cookieMatch) {
+        token = cookieMatch[1];
+        console.log('Token encontrado en cookies:', token);
+      }
+    }
+    
+    if (!token) {
+      console.log('No se encontró token en ningún lugar');
+      throw new Error("No se encontró token de autenticación");
+    }
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/habilitados`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || `Error ${res.status}: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    
+    if (data.status_message === "OK") {
+      return data.result;
+    }
+    
+    throw new Error(data.message || "Formato de respuesta inesperado");
+    
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Error desconocido al obtener pacientes habilitados");
+  }
+}
+//hasta aqui llega lo agregado
 
 export async function ActivarPaciente(
   id: number | null,
@@ -497,24 +614,28 @@ export async function GetEspecialidadesPsicologos(id: number): Promise<Especiali
   return await res.json();
 }
 
-// services/disponibilidad HISTORIAL ultimos 7 dias psicologos
-export async function GetDisponibilidadUltimos7Dias(
-  id: number | null
-): Promise<any> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/disponibilidad/ultimos-7-dias/${id}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      credentials: "include", // importante si se usa Sanctum
-    }
-  );
+
+//Crear citas en el perfil del paciente
+export async function CreatePersonal(values: Personal){
+  
+  const payload = {
+    ...values
+  };
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/personal`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
 
   if (!res.ok) {
-    throw new Error("Error al obtener la disponibilidad de los últimos 7 días");
+    const errorData = await res.json();
+    console.error("Error del backend:", errorData);
+    throw errorData;
   }
 
   return await res.json();

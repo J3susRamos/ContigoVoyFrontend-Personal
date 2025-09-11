@@ -25,7 +25,7 @@ export const DataView = ({
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   setIsSend: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {                                                                        
     e.preventDefault();
     try {
       const cookies = parseCookies();
