@@ -12,13 +12,18 @@ function AdminPacienteSection() {
     <div className="bg-[#f6f7f7] dark:bg-background min-h-screen flex flex-col">
       <AdminPacienteHeader />
       
-      {/* Selector de filtro - Solo esta línea es nueva */}
-      <div className="mx-5 flex justify-end items-center mt-4">
-        <PacienteFilterSelect 
-          filterStatus={filterStatus} 
-          onFilterChange={handleFilterChange} 
-        />
-      </div>
+     {/* Selector de filtro con estilos de psicólogos */}
+<div className="w-full h-16 bg-[#6364F4] dark:bg-primary flex items-center justify-between px-10 mx-5 mt-4">
+  <div className="flex items-center">
+    <h1 className="text-bold text-medium text-white dark:text-primary-foreground">
+      Listado de Pacientes {filterStatus === 'deshabilitados' ? 'Deshabilitados' : 'Habilitados'}
+    </h1>
+  </div>
+  <PacienteFilterSelect 
+    filterStatus={filterStatus} 
+    onFilterChange={handleFilterChange} 
+  />
+</div>
       
       {error && (
         <div className="p-4 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg mx-5">
