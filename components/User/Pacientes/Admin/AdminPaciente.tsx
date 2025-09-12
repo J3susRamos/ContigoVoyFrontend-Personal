@@ -8,9 +8,11 @@ import ModalConfirmarPacienteAdmin from "./modal/ModalConfirmarPacienteAdmin";
 export default function AdminPaciente({
   Data,
   refreshData,
+  llave
 }: {
   Data: PacienteDisabled[];
   refreshData: () => void;
+  llave: boolean;
 }) {
   const {
       isEstadoModalOpen,
@@ -23,7 +25,7 @@ export default function AdminPaciente({
     <>
       <div className="flex flex-col w-full">
         <div className="w-full mt-4">
-          <AdminPacienteTable data={Data} onDisable={openEstadoModal} />
+          <AdminPacienteTable data={Data} onDisable={openEstadoModal} llave={llave} />
         </div>
       </div>
 
@@ -32,6 +34,7 @@ export default function AdminPaciente({
         onClose={closeEstadoModal}
         estadoId={estadoId}
         refreshData={refreshData}
+        llave={llave}
       />
     </>
   );
