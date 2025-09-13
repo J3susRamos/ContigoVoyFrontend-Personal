@@ -5,7 +5,6 @@ import {
 } from "@/app/apiRoutes";
 import BlogPageComponentOptimized from "@/components/blog/BlogPageComponentOptimized";
 
-// Obtener datos durante el build (Server Component)
 async function getBlogData() {
   console.log('🔍 [getBlogData] Iniciando obtención de datos de blog...');
   console.log('🔍 [getBlogData] NODE_ENV:', process.env.NODE_ENV);
@@ -13,7 +12,6 @@ async function getBlogData() {
   console.log('🔍 [getBlogData] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
   
   try {
-    // Durante el build, si no hay servidor disponible, devolver datos vacíos
     const isBuilding = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL;
     console.log('🔍 [getBlogData] isBuilding:', isBuilding);
 
@@ -51,7 +49,6 @@ async function getBlogData() {
     console.error("❌ [getBlogData] Error mensaje:", (error as Error).message);
     console.error("❌ [getBlogData] Error stack:", (error as Error).stack);
     
-    // En caso de error, devolver estructuras vacías pero válidas
     return {
       data: { result: [] },
       categoria: { result: [] },
@@ -75,12 +72,10 @@ export default async function BlogPage() {
   console.log('  - Categorías length:', categoria?.result?.length);
   console.log('  - Autores length:', authors?.result?.length);
 
-  // Mostrar error en los logs si existe
   if (error) {
     console.error('❌ [BlogPage] Error en los datos:', error);
   }
 
-  // Siempre renderizar el componente, incluso con datos vacíos
   return (
     <BlogPageComponentOptimized
       Datos={data?.result || []}

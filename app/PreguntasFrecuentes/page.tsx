@@ -92,7 +92,6 @@ export default function App() {
           <AccordionQuest faqs={faqs} />
         </motion.div>
       </section>
-      {/* CTA Final */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-12">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
