@@ -7,11 +7,12 @@ import { PacienteDisabled } from "@/interface";
 interface AdminPacienteTableProps {
   data: PacienteDisabled[];
   onDisable: (id: number) => void;
+  llave: boolean;
 }
 
 const headers = ["Nombre", "Celular", "Género", "Correo", "ID", "Más"];
 
-const AdminPacienteTable: React.FC<AdminPacienteTableProps> = ({ data, onDisable }) => {
+const AdminPacienteTable: React.FC<AdminPacienteTableProps> = ({ data, onDisable, llave }) => {
   return (
     <DataTable
       headers={headers}
@@ -26,7 +27,7 @@ const AdminPacienteTable: React.FC<AdminPacienteTableProps> = ({ data, onDisable
             paciente.idPaciente.toString(),
           ]}
           onDisable={() => onDisable(paciente.idPaciente)}
-          llave={true}
+          llave={llave}
         />
       )}
       renderCard={(paciente) => (

@@ -6,7 +6,7 @@ interface ActionButtonProps {
   label: string;
   onClick: () => void;
   className?: string;
-  status?: 'habilitados' | 'deshabilitados'; // Nueva prop
+  llave?: boolean;
 }
 
 export const ActionButton: React.FC<ActionButtonProps> = ({
@@ -14,14 +14,19 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   label,
   onClick,
   className = "",
-  status = 'deshabilitados' // Valor por defecto
+  llave,
 }) => {
-  
-  // Determinar colores basados en el status
-  const colorStyles = status === 'deshabilitados' 
-    ? 'text-green-600 dark:text-green-400'  // Verde para deshabilitados
-    : 'text-red-600 dark:text-red-400';      // Rojo para habilitados
 
+  let estilos = "";
+
+  if (llave === undefined) {
+    estilos = "text-primary dark:text-[#bbbafe]";
+  } else if (!llave) {
+    estilos = "text-red-600 dark:text-red-400";      // Rojo para habilitados
+  } else {
+    estilos = "text-green-600 dark:text-green-400";  // Verde para deshabilitados
+  }
+  
 
 
   return (
@@ -29,8 +34,8 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       onClick={onClick}
       className={`flex flex-col items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-muted transition-colors ${className}`}
     >
-      <Icon className={`${colorStyles}`} size={30} />
-      <span className={`font-light text-sm ${colorStyles}`}>{label}</span>
+      <Icon className={`${estilos}`} size={30} />
+      <span className={`font-light text-sm ${estilos}`}>{label}</span>
     </button>
   );
 };

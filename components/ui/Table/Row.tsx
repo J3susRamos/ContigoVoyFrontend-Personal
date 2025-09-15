@@ -49,6 +49,7 @@ const Row: React.FC<RowProps> = ({
                     icon={Ban}
                     label={!llave ? "Deshabilitar" : "Habilitar"}
                     onClick={onDisable}
+                    llave={llave}
                   />
                 )}
                 {onBoucher && (
