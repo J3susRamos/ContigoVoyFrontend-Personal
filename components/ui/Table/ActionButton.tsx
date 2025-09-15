@@ -1,6 +1,5 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
-import { es } from 'date-fns/locale';
 
 interface ActionButtonProps {
   icon: LucideIcon;
