@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { DatePicker, DateValue } from "@heroui/react";
 
 import { ChevronLeft } from "lucide-react";
-
+import { NoDataBox } from "../components/NoDataBox";
 import HeaderPaciente from "../components/HeaderPaciente";
 import Pagination from "@/components/ui/Pagination";
 import Link from "next/link";
@@ -31,7 +31,8 @@ const Citas = () => {
   const [selectedCitaState, handlerChangeCitaState] = useSelector();
   const [selectedVoucherState, handlerChangeVoucherState] = useSelector();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = useRef(1);
+  const [requestedPage, setRequesedPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
   const [showedCitas, setShowedCitas] = useState<Cita[] | null>(null);
@@ -45,11 +46,15 @@ const Citas = () => {
 
     async function fetchData() {
       try {
+        let valPage = requestedPage;
+        if(valPage != currentPage.current){
+          valPage = currentPage.current;
+        }
         const data = await GetCitas(
-          currentPage,
+          valPage,
           +pageSize,
-          "",
-          "",
+          selectedCitaState,
+          selectedVoucherState,
           startDayFilter,
           endDayFilter,
           signal
@@ -64,6 +69,7 @@ const Citas = () => {
 
           setShowedCitas(formatCitas);
           setLastPage(citasResponse.last_page);
+          currentPage.current = citasResponse.current_page;
         }
 
         setLoading(false);
@@ -76,10 +82,18 @@ const Citas = () => {
         }
       }
     }
+
     fetchData();
 
     return () => controller.abort();
-  }, [currentPage, pageSize, startDayFilter, endDayFilter]);
+  }, [
+    requestedPage,
+    pageSize,
+    startDayFilter,
+    endDayFilter,
+    selectedCitaState,
+    selectedVoucherState,
+  ]);
 
   const errorDatePicker = { start: "", end: "" };
   if (startDayFilter && endDayFilter) {
@@ -126,7 +140,6 @@ const Citas = () => {
                 value={pageSize}
                 handleSelectionChange={(e) =>
                   handlerpageSize(e, () => {
-                    setCurrentPage(1);
                   })
                 }
                 label="Tamaño de página"
@@ -186,16 +199,22 @@ const Citas = () => {
                 ))}
               </div>
             ) : (
-              <p>Usted no tiene citas registradas</p>
+              <NoDataBox info="Usted no tiene citas registradas"/>
             )}
           </div>
 
           <div className="order-5">
             <Pagination
-              onNext={() => setCurrentPage((prev) => prev + 1)}
-              onPrevious={() => setCurrentPage((prev) => prev - 1)}
+              onNext={() => {
+                setRequesedPage(() => currentPage.current + 1);
+                currentPage.current += 1;
+              }}
+              onPrevious={() => {
+                setRequesedPage(() => currentPage.current - 1);
+                currentPage.current -= 1;
+              }}
               totalPages={lastPage}
-              currentPage={currentPage}
+              currentPage={currentPage.current}
             />
           </div>
         </div>

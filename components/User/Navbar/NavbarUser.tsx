@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ReactSVG } from "react-svg";
 import { DesktopNavUser } from "./DesktopNavUser";
@@ -42,7 +42,7 @@ const navItemsBase = [
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
-    role: "psico"
+    role: "both"
   },
   {
     name: "Psicologos",
@@ -118,7 +118,16 @@ const NavbarUser = () => {
           );
         }
 
-        setNavItems(items);
+      setNavItems(items);
+
+      // Aqui que SANDRO SE CONSUMA ESTE ENDPOINT PARA JALARSE LOS PERMISOS
+      // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/personal/permisos/${user.id}`, { 
+      //     headers: {
+      //       "Accept": "application/json",
+      //       "Authorization": `Bearer ${token}`,
+      //     },
+      //   })
+
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
