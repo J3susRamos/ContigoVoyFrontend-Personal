@@ -23,7 +23,6 @@ export default function HorariosList({
 }: HorariosListProps) {
   const formatTime = (time: string) => {
     try {
-      // Asegurar que el tiempo esté en formato HH:MM
       const [hours, minutes] = time.split(":");
       return `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`;
     } catch {
@@ -48,13 +47,13 @@ export default function HorariosList({
   const getStatusColor = (estado: string) => {
     switch (estado) {
       case "disponible":
-        return "border-green-400 bg-green-900/30";
+        return "border-green-400 dark:border-green-400 bg-green-100 dark:bg-green-900/30";
       case "ocupado":
-        return "border-red-400 bg-red-900/30";
+        return "border-red-400 dark:border-red-400 bg-red-100 dark:bg-red-900/30";
       case "bloqueado":
-        return "border-yellow-400 bg-yellow-900/30";
+        return "border-yellow-400 dark:border-yellow-400 bg-yellow-100 dark:bg-yellow-900/30";
       default:
-        return "border-gray-400 bg-gray-900/30";
+        return "border-gray-300 dark:border-gray-400 bg-gray-100 dark:bg-gray-900/30";
     }
   };
 
@@ -79,10 +78,10 @@ export default function HorariosList({
 
   if (loading) {
     return (
-      <div className="flex-1 bg-gray-800 border border-gray-600 rounded p-6 flex items-center justify-center">
+      <div className="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded p-6 flex items-center justify-center">
         <div className="flex items-center justify-center h-40">
-          <div className="text-blue-400 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400 mx-auto mb-4"></div>
+          <div className="text-blue-600 dark:text-blue-400 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 dark:border-blue-400 mx-auto mb-4"></div>
             <p>Cargando horarios...</p>
           </div>
         </div>
@@ -92,9 +91,9 @@ export default function HorariosList({
 
   if (error) {
     return (
-      <div className="flex-1 bg-gray-800 border border-gray-600 rounded p-6 flex items-center justify-center">
+      <div className="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded p-6 flex items-center justify-center">
         <div className="text-center w-full">
-          <div className="text-red-400 mb-4">
+          <div className="text-red-600 dark:text-red-400 mb-4">
             <p className="text-lg font-medium">Error al cargar horarios</p>
             <p className="text-sm mt-2">{error}</p>
           </div>
@@ -111,9 +110,9 @@ export default function HorariosList({
 
   if (!showResults) {
     return (
-      <div className="flex-1 bg-gray-800 border border-gray-600 rounded p-6 flex items-center justify-center">
+      <div className="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded p-6 flex items-center justify-center">
         <div className="text-center w-full">
-          <div className="text-gray-400 mb-6">
+          <div className="text-gray-600 dark:text-gray-400 mb-6">
             <h3 className="text-lg font-medium mb-2">Consulta de Horarios</h3>
             <p className="text-sm">
               Selecciona un psicólogo y rango de fechas, luego presiona
@@ -122,11 +121,11 @@ export default function HorariosList({
           </div>
 
           {/* Información de selección actual */}
-          <div className="bg-gray-700 p-4 rounded mt-6 mx-auto max-w-md">
-            <h4 className="text-blue-400 font-medium mb-2">
+          <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded mt-6 mx-auto max-w-md">
+            <h4 className="text-blue-600 dark:text-blue-400 font-medium mb-2">
               Selección Actual:
             </h4>
-            <div className="text-sm text-gray-300 space-y-1">
+            <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
               <p>
                 <strong>Psicólogo:</strong>{" "}
                 {selectedPsychologistData
@@ -141,14 +140,14 @@ export default function HorariosList({
   }
 
   return (
-    <div className="flex-1 bg-gray-800 border border-gray-600 rounded p-6 flex flex-col">
+    <div className="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded p-6 flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-blue-400 text-lg font-medium">
+        <h3 className="text-blue-600 dark:text-blue-400 text-lg font-medium">
           Horarios Encontrados
         </h3>
         <button
           onClick={onRetry}
-          className="text-sm text-blue-400 hover:text-blue-300 underline"
+          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline"
         >
           Actualizar
         </button>
@@ -166,24 +165,24 @@ export default function HorariosList({
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
-                    <h4 className="text-blue-300 font-medium mb-1">
+                    <h4 className="text-blue-700 dark:text-blue-300 font-medium mb-1">
                       {formatDate(horario.fecha)}
                     </h4>
-                    <div className="text-sm text-gray-300 space-y-1">
+                    <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                       <p>
-                        <span className="text-gray-400">Horario:</span>{" "}
+                        <span className="text-gray-500 dark:text-gray-400">Horario:</span>{" "}
                         {formatTime(horario.horaInicio)} -{" "}
                         {formatTime(horario.horaFin)}
                       </p>
                       <p>
-                        <span className="text-gray-400">Estado:</span>{" "}
+                        <span className="text-gray-500 dark:text-gray-400">Estado:</span>{" "}
                         <span
                           className={
                             horario.estado === "disponible"
-                              ? "text-green-400"
+                              ? "text-green-600 dark:text-green-400"
                               : horario.estado === "ocupado"
-                                ? "text-red-400"
-                                : "text-yellow-400"
+                                ? "text-red-600 dark:text-red-400"
+                                : "text-yellow-600 dark:text-yellow-400"
                           }
                         >
                           {getStatusText(horario.estado || "disponible")}
@@ -191,7 +190,7 @@ export default function HorariosList({
                       </p>
                       {horario.paciente && (
                         <p>
-                          <span className="text-gray-400">Paciente:</span>{" "}
+                          <span className="text-gray-500 dark:text-gray-400">Paciente:</span>{" "}
                           {horario.paciente}
                         </p>
                       )}
@@ -200,15 +199,15 @@ export default function HorariosList({
                 </div>
 
                 {horario.motivo && (
-                  <div className="mt-3 text-sm text-gray-300">
-                    <span className="text-gray-400">Motivo:</span>{" "}
+                  <div className="mt-3 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="text-gray-500 dark:text-gray-400">Motivo:</span>{" "}
                     {horario.motivo}
                   </div>
                 )}
 
                 {horario.notas && (
-                  <div className="mt-2 text-sm text-gray-300">
-                    <span className="text-gray-400">Notas:</span>{" "}
+                  <div className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="text-gray-500 dark:text-gray-400">Notas:</span>{" "}
                     {horario.notas}
                   </div>
                 )}
@@ -217,7 +216,7 @@ export default function HorariosList({
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-400">
+            <p className="text-gray-500 dark:text-gray-400">
               No se encontraron horarios para los criterios seleccionados
             </p>
           </div>
@@ -225,8 +224,8 @@ export default function HorariosList({
       </div>
 
       {showResults && (
-        <div className="mt-4 pt-4 border-t border-gray-600">
-          <p className="text-sm text-gray-400 text-center">
+        <div className="mt-4 pt-4 border-t border-gray-300 dark:border-gray-600">
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
             Total encontrados: {horarios.length} horarios
           </p>
         </div>

@@ -32,18 +32,18 @@ export default function DateRangePicker({
 
   return (
     <div className="w-full">
-      <label className="block text-blue-400 text-sm font-medium mb-2">
+      <label className="block text-blue-600 dark:text-blue-400 text-sm font-medium mb-2">
         Rango de Fechas
       </label>
 
       {/* Mostrar rango seleccionado */}
-      <div className="mb-3 p-2 bg-gray-800 border border-gray-600 rounded text-sm">
+      <div className="mb-3 p-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-sm">
         <div className="flex justify-between items-center">
-          <span className="text-gray-300">{formatDateRange()}</span>
+          <span className="text-gray-700 dark:text-gray-300">{formatDateRange()}</span>
           {(dateRange.start || dateRange.end) && (
             <button
               onClick={onClearDateRange}
-              className="text-red-400 hover:text-red-300 text-xs ml-2"
+              className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-xs ml-2"
             >
               Limpiar
             </button>
@@ -54,7 +54,7 @@ export default function DateRangePicker({
       {/* Selectores de fecha */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs text-gray-400 mb-1">
+          <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
             Fecha inicio
           </label>
           <DatePicker
@@ -63,23 +63,23 @@ export default function DateRangePicker({
             aria-label="Fecha de inicio"
             classNames={{
               inputWrapper:
-                "px-3 py-2 text-sm bg-transparent border border-blue-400/50 rounded focus:border-blue-400",
-              input: "text-blue-400 placeholder:text-blue-400/50",
-              segment: "text-blue-400",
+                "px-3 py-2 text-sm bg-white dark:bg-transparent border border-blue-600 dark:border-blue-400/50 rounded focus:border-blue-600 dark:focus:border-blue-400",
+              input: "text-gray-800 dark:text-blue-400 placeholder:text-gray-500 dark:placeholder:text-blue-400/50",
+              segment: "text-gray-800 dark:text-blue-400",
             }}
             calendarProps={{
               classNames: {
-                base: "bg-gray-800 border border-gray-600",
-                headerWrapper: "bg-gray-700",
-                gridHeader: "bg-gray-700",
-                cell: "text-blue-400",
+                base: "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600",
+                headerWrapper: "bg-gray-100 dark:bg-gray-700",
+                gridHeader: "bg-gray-100 dark:bg-gray-700",
+                cell: "text-gray-800 dark:text-blue-400",
               },
             }}
           />
         </div>
 
         <div>
-          <label className="block text-xs text-gray-400 mb-1">
+          <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">
             Fecha fin
           </label>
           <DatePicker
@@ -89,16 +89,16 @@ export default function DateRangePicker({
             minValue={dateRange.start || undefined}
             classNames={{
               inputWrapper:
-                "px-3 py-2 text-sm bg-transparent border border-blue-400/50 rounded focus:border-blue-400",
-              input: "text-blue-400 placeholder:text-blue-400/50",
-              segment: "text-blue-400",
+                "px-3 py-2 text-sm bg-white dark:bg-transparent border border-blue-600 dark:border-blue-400/50 rounded focus:border-blue-600 dark:focus:border-blue-400",
+              input: "text-gray-800 dark:text-blue-400 placeholder:text-gray-500 dark:placeholder:text-blue-400/50",
+              segment: "text-gray-800 dark:text-blue-400",
             }}
             calendarProps={{
               classNames: {
-                base: "bg-gray-800 border border-gray-600",
-                headerWrapper: "bg-gray-700",
-                gridHeader: "bg-gray-700",
-                cell: "text-blue-400",
+                base: "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600",
+                headerWrapper: "bg-gray-100 dark:bg-gray-700",
+                gridHeader: "bg-gray-100 dark:bg-gray-700",
+                cell: "text-gray-800 dark:text-blue-400",
               },
             }}
           />
@@ -107,7 +107,7 @@ export default function DateRangePicker({
 
       {/* Indicador visual del estado de selección */}
       {isSelectingEndDate && dateRange.start && !dateRange.end && (
-        <div className="mt-2 p-2 bg-blue-900/30 border border-blue-500/50 rounded text-blue-400 text-xs">
+        <div className="mt-2 p-2 bg-blue-100 dark:bg-blue-900/30 border border-blue-300 dark:border-blue-500/50 rounded text-blue-600 dark:text-blue-400 text-xs">
           Ahora selecciona la fecha de fin
         </div>
       )}
