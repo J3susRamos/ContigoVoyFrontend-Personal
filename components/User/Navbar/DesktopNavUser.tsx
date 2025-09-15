@@ -10,7 +10,6 @@ export const DesktopNavUser = ({ navItems }: { navItems: NavItems[] }) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const pathname = usePathname();
-  const router = useRouter();
 
   const toggleExpanded = (key: string) => {
     setExpandedItems(prev => {
