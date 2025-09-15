@@ -90,11 +90,11 @@ export default function AdminCalendarSection() {
   };
 
   return (
-    <div className="bg-background dark:bg-background min-h-screen flex flex-col">
+    <div className="bg-white dark:bg-background min-h-screen flex flex-col">
       {/* Header principal */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
         <div className="flex flex-col md:flex-row items-center gap-4">
-          <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-title dark:text-title">
+          <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-gray-800 dark:text-title">
             Calendario de Horarios
           </h1>
         </div>
@@ -105,7 +105,7 @@ export default function AdminCalendarSection() {
 
       {/* Contenido principal */}
       <div className="flex-1 px-4 md:px-8">
-        <div className="bg-gray-900 dark:bg-gray-800 border border-gray-600 dark:border-gray-700 p-4 md:p-6 rounded-lg max-w-6xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 p-4 md:p-6 rounded-lg max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Panel de controles izquierdo */}
             <div className="flex flex-col items-center space-y-6 lg:w-80">
@@ -133,7 +133,7 @@ export default function AdminCalendarSection() {
                 <button
                   onClick={handleObtenerHorarios}
                   disabled={!canFetchHorarios()}
-                  className="w-full border border-blue-400 text-blue-400 px-6 py-3 rounded hover:bg-blue-400 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 px-6 py-3 rounded hover:bg-blue-600 dark:hover:bg-blue-400 hover:text-white dark:hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loadingHorarios ? (
                     <div className="flex items-center justify-center">
@@ -147,9 +147,9 @@ export default function AdminCalendarSection() {
               </div>
 
               {/* Información adicional */}
-              <div className="w-full bg-gray-800 border border-gray-600 rounded p-4">
-                <h4 className="text-blue-400 font-medium mb-2">Información</h4>
-                <div className="text-xs text-gray-400 space-y-1">
+              <div className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded p-4">
+                <h4 className="text-blue-600 dark:text-blue-400 font-medium mb-2">Información</h4>
+                <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
                   <p>• Selecciona un psicólogo de la lista</p>
                   <p>• Elige el rango de fechas</p>
                   <p>• Presiona el botón para ver los horarios</p>
