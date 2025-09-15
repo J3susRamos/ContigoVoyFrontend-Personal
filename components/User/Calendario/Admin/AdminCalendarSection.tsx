@@ -70,14 +70,27 @@ export default function AdminCalendarSection() {
     setShowResults(false);
   };
 
-  const handleObtenerHorarios = async () => {
-    if (selectedPsychologist && dateRange.start && dateRange.end) {
-      setShowResults(true);
-      await refetchHorarios();
-    } else {
-      alert("Por favor selecciona un psicólogo y un rango de fechas");
+ // En AdminCalendarSection.tsx - modificar handleObtenerHorarios
+const handleObtenerHorarios = async () => {
+  if (dateRange.start && dateRange.end) {
+    const start = new Date(dateRange.start.toString());
+    const end = new Date(dateRange.end.toString());
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays > 31) {
+      // No mostrar alert, el mensaje ya está visible en el DateRangePicker
+      return;
     }
-  };
+  }
+  
+  if (selectedPsychologist && dateRange.start && dateRange.end) {
+    setShowResults(true);
+    await refetchHorarios();
+  } else {
+    alert("Por favor selecciona un psicólogo y un rango de fechas válido");
+  }
+};
 
   const canFetchHorarios = () => {
     return (
@@ -94,7 +107,7 @@ export default function AdminCalendarSection() {
       {/* Header principal */}
       <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full mt-6 md:mt-10 mb-4 md:mb-6 px-4 md:px-8 gap-4">
         <div className="flex flex-col md:flex-row items-center gap-4">
-          <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-gray-800 dark:text-title">
+          <h1 className="font-bold text-2xl md:text-[32px] leading-7 md:leading-[40px] text-purple-600 dark:text-title">
             Calendario de Horarios
           </h1>
         </div>
@@ -133,7 +146,7 @@ export default function AdminCalendarSection() {
                 <button
                   onClick={handleObtenerHorarios}
                   disabled={!canFetchHorarios()}
-                  className="w-full border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 px-6 py-3 rounded hover:bg-blue-600 dark:hover:bg-blue-400 hover:text-white dark:hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full border border-purple-600 dark:border-blue-400 text-purple-600 dark:text-blue-400 px-6 py-3 rounded hover:bg-purple-600 dark:hover:bg-blue-400 hover:text-white dark:hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loadingHorarios ? (
                     <div className="flex items-center justify-center">
@@ -148,7 +161,7 @@ export default function AdminCalendarSection() {
 
               {/* Información adicional */}
               <div className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded p-4">
-                <h4 className="text-blue-600 dark:text-blue-400 font-medium mb-2">Información</h4>
+                <h4 className="text-purple-600 dark:text-blue-400 font-medium mb-2">Información</h4>
                 <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
                   <p>• Selecciona un psicólogo de la lista</p>
                   <p>• Elige el rango de fechas</p>
