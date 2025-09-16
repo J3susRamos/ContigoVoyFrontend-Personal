@@ -119,11 +119,11 @@ export default function DashboardCitas() {
           <tbody>
             {cita.map((item) => (
               <tr key={item.id} className="border-b-1 border-[#BABAFF]">
-                <td className="font-light text-xl text-[#634AE2] dark:text-white border-r border-[#BABAFF] py-2 px-4">
+                <td className="font-light text-xl text-[#634AE2] border-r border-[#BABAFF] py-2 px-4">
 
                   {item.hora}
                 </td>
-                <td className="pr-32 font-light text-lg text-[#634AE2] dark:text-white py-2 px-4 ">
+                <td className="pr-32 font-light text-lg text-[#634AE2] py-2 px-4 ">
 
                   {citasPorHora[item.hora] && citasPorHora[item.hora].length > 0 ? (
                     citasPorHora[item.hora].map((cita, idx) => (

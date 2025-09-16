@@ -4,7 +4,7 @@ export const useModalState = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isEstadoModalOpen, setIsEstadoModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [estadoId, setEstadoId] = useState<number | null>(null);
+  const [estadoId, setEstadoId] = useState<number>(0);
 
   const openEditModal = (id: number) => {
     setSelectedId(id);
@@ -23,7 +23,7 @@ export const useModalState = () => {
 
   const closeEstadoModal = () => {
     setIsEstadoModalOpen(false);
-    setEstadoId(null);
+    setEstadoId(0);
   };
 
   return {

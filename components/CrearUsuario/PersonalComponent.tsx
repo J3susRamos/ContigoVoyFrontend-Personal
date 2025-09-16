@@ -34,7 +34,7 @@ export default function PersonalComponent() {
     ? JSON.parse(localStorage.getItem("user") || "{}")
     : {};
 
-  const isAdmin = userData.rol === "ADMIN";
+  const isAdmin = userData.rol === "ADMIN" || userData.rol === "ADMINISTRADOR"|| userData.rol === "COMUNICACION"||userData.rol === "MARKETING";
 
   React.useEffect(() => {
     if (!isAdmin) {
@@ -67,21 +67,25 @@ export default function PersonalComponent() {
   }
 
   return (
-    <>
-      {!IsSend ? (
-        currentView === "form" ? (
-          <PersonalForm onNext={handleNext} initialFormData={formData} />
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-7xl">
+        {!IsSend ? (
+          currentView === "form" ? (
+            <PersonalForm onNext={handleNext} initialFormData={formData} />
+          ) : (
+            <DataView
+              formData={formData}
+              onBack={handleBack}
+              setFormData={setFormData}
+              setIsSend={setIsSend}
+            />
+          )
         ) : (
-          <DataView
-            formData={formData}
-            onBack={handleBack}
-            setFormData={setFormData}
-            setIsSend={setIsSend}
-          />
-        )
-      ) : (
-        <Suceesfully setIsSend={() => resetForm()} />
-      )}
-    </>
+          <div className="max-w-6xl mx-auto">
+            <Suceesfully setIsSend={() => resetForm()} />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

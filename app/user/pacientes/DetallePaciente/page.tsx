@@ -17,13 +17,12 @@ const PageHome = () => {
   const [idPaciente, setIdPaciente] = useState<number | null>(null);
   const [paciente, setPaciente] = useState<Paciente | null>(null);
   const [viewModalCitas, setViewModalCitas] = useState<boolean>(false);
+
   const fetchPaciente = async (id: number) => {
     try {
       const token = parseCookies().session;
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/pacientes/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       if (res.ok) setPaciente(data.result);
@@ -47,10 +46,7 @@ const PageHome = () => {
         }
       }
     };
-
-    loadPaciente().catch(error => {
-      console.error("Error in loadPaciente:", error);
-    });
+    loadPaciente().catch((error) => console.error("Error in loadPaciente:", error));
   }, [router]);
 
   const navItems = [
@@ -58,19 +54,19 @@ const PageHome = () => {
     { name: "Historial Clínico", key: "historial" },
     { name: "Citas", key: "citas" },
   ];
-  const handleViewModalAddCitas = (view: boolean) =>{
-      setViewModalCitas(view)
-  }
-  console.log(paciente)
+
+  const handleViewModalAddCitas = (view: boolean) => {
+    setViewModalCitas(view);
+  };
 
   return (
-    <div className="min-h-screen bg-background dark:bg-background">
-      {/* Header mejorado */}
-      <div className="sticky top-0 z-50 bg-background/95 dark:bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border dark:border-border">
+    <div className="min-h-screen bg-background dark:bg-[#020202]">
+      {/* Header */}
+      <div className="sticky top-0 z-50 bg-background/95 dark:bg-[#020202]/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border dark:border-border">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link 
+              <Link
                 href="/user/pacientes/"
                 className="p-2 rounded-full bg-muted dark:bg-muted hover:bg-accent dark:hover:bg-accent transition-colors"
               >
@@ -84,17 +80,17 @@ const PageHome = () => {
                 />
               </Link>
               <div>
-                <h1 className="text-2xl font-bold text-foreground dark:text-foreground">
+                <h1 className="text-2xl font-bold text-foreground dark:text-white">
                   {paciente?.nombre} {paciente?.apellido}
                 </h1>
-                <p className="text-sm text-muted-foreground dark:text-muted-foreground">
+                <p className="text-sm text-muted-foreground dark:text-gray-400">
                   Paciente #{idPaciente}
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
-              <button 
+              <button
                 onClick={() => handleViewModalAddCitas(true)}
                 className="bg-primary dark:bg-primary text-primary-foreground dark:text-primary-foreground rounded-lg px-4 py-2 font-medium hover:bg-primary/90 dark:hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md"
               >
@@ -106,67 +102,60 @@ const PageHome = () => {
         </div>
       </div>
 
-      {/* Hero Section con imagen del paciente */}
+      {/* Hero Section */}
       <div className="relative">
-        <div className="h-64 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent">
+        <div className="h-64 dark:bg-[#020202] relative">
           {paciente?.imagen ? (
             <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 dark:opacity-10"
-              style={{
-                backgroundImage: `url("${paciente.imagen}")`,
-              }}
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url("${paciente.imagen}")` }}
             />
           ) : null}
-          
-          {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent dark:from-background/90" />
-          
-          {/* Patient avatar */}
+
+          {/* Overlay solo sutil en dark */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020202]/20 via-transparent to-transparent" />
+
+          {/* Avatar */}
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
             <div className="relative">
               {paciente?.imagen ? (
                 <div
-                  className="w-32 h-32 rounded-full border-4 border-background dark:border-background shadow-xl bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url("${paciente.imagen}")`,
-                  }}
+                  className="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl bg-cover bg-center"
+                  style={{ backgroundImage: `url("${paciente.imagen}")` }}
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full border-4 border-background dark:border-background shadow-xl bg-muted dark:bg-muted flex items-center justify-center">
-                  <span className="text-4xl font-bold text-muted-foreground dark:text-muted-foreground">
-                    {paciente?.nombre?.[0]}{paciente?.apellido?.[0]}
+                <div className="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl bg-muted dark:bg-muted flex items-center justify-center">
+                  <span className="text-4xl font-bold text-white dark:text-white">
+                    {paciente?.nombre?.[0]}
+                    {paciente?.apellido?.[0]}
                   </span>
                 </div>
               )}
-              
+
               {/* Status indicator */}
-              <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-background dark:border-background"></div>
+              <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-gray-800"></div>
             </div>
           </div>
         </div>
-        
-        {/* Patient basic info */}
+
+        {/* Info del paciente */}
         <div className="pt-20 pb-8 text-center">
-          <h2 className="text-3xl font-bold text-foreground dark:text-foreground mb-2">
+          <h2 className="text-3xl font-bold text-foreground dark:text-white mb-2">
             {paciente?.nombre} {paciente?.apellido}
           </h2>
-          <div className="flex justify-center gap-6 text-sm text-muted-foreground dark:text-muted-foreground">
+          <div className="flex justify-center gap-6 text-sm text-muted-foreground dark:text-white">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
               Activo
             </span>
-            {paciente?.edad && (
-              <span>{paciente.edad} años</span>
-            )}
-            {paciente?.genero && (
-              <span className="capitalize">{paciente.genero}</span>
-            )}
+            {paciente?.edad && <span>{paciente.edad} años</span>}
+            {paciente?.genero && <span className="capitalize">{paciente.genero}</span>}
           </div>
         </div>
       </div>
 
-      {/* Navigation tabs mejoradas */}
-      <div className="border-b border-border dark:border-border bg-background dark:bg-background sticky top-[73px] z-40">
+      {/* Navigation tabs */}
+      <div className="border-b border-border dark:border-border bg-background dark:bg-[#020202] sticky top-[73px] z-40">
         <div className="container mx-auto px-6">
           <div className="flex justify-center">
             <div className="flex bg-muted/50 dark:bg-muted/50 rounded-lg p-1 mx-auto">
@@ -176,8 +165,8 @@ const PageHome = () => {
                   onClick={() => setView(item.key)}
                   className={`relative px-6 py-3 rounded-md font-medium text-sm transition-all duration-300 ${
                     view === item.key
-                      ? "bg-background dark:bg-background text-primary dark:text-primary shadow-sm"
-                      : "text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-foreground hover:bg-background/50 dark:hover:bg-background/50"
+                      ? "bg-background dark:bg-[#020202] text-primary dark:text-primary shadow-sm"
+                      : "text-muted-foreground dark:text-gray-400 hover:text-foreground dark:hover:text-white hover:bg-background/50 dark:hover:bg-[#020202]/50"
                   }`}
                 >
                   {item.name}
@@ -191,7 +180,7 @@ const PageHome = () => {
         </div>
       </div>
 
-      {/* Contenido dinámico con mejor espaciado */}
+      {/* Contenido dinámico */}
       <div className="container mx-auto px-6 py-8">
         <div className="max-w-7xl mx-auto">
           {view === "datos" && idPaciente && <DatosPaciente idPaciente={idPaciente} />}
@@ -200,10 +189,13 @@ const PageHome = () => {
         </div>
       </div>
 
-      {/* Modal mejorado */}
+      {/* Modal */}
       {viewModalCitas && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm" onClick={() => handleViewModalAddCitas(false)} />
+          <div
+            className="absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
+            onClick={() => handleViewModalAddCitas(false)}
+          />
           <div className="relative z-10 max-w-2xl w-full mx-4">
             {paciente && (
               <AddCitas
@@ -212,7 +204,7 @@ const PageHome = () => {
                   nombre: paciente.nombre,
                   apellido: paciente.apellido,
                   codigo: paciente.codigo,
-                  idPaciente: paciente.idPaciente
+                  idPaciente: paciente.idPaciente,
                 }}
               />
             )}

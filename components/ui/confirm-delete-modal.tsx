@@ -72,7 +72,7 @@ export default function ConfirmDeleteModal({
             { filterStatus ? 
               isProcessing
                 ? "Eliminando..."
-                : filterStatus === 'inactivos'
+                : filterStatus === 'deshabilitados'
                   ? "Activar"
                   : "Desactivar"
             : isProcessing

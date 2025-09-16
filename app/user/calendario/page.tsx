@@ -1,30 +1,39 @@
 "use client";
 
-import CalendarioMain from "@/components/User/Calendario/CalendarioMain";
-import { useCitas } from "@/components/User/Calendario/hooks/useCitas";
+import AdminCalendarSection from "@/components/User/Calendario/Admin/AdminCalendarSection";
+import CalendarioMain from "@/components/User/Calendario/Psicologo/CalendarioMain";
+import LoadingSpinner from "@/components/User/Marketing/LoadingSpinner";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Calendario() {
-  const { citas, error, isLoading, isAuthorized } = useCitas();
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
-  if (isAuthorized === null || isLoading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-lg font-medium">Cargando citas...</div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user") || "{}");
+    if (userData.rol === "PSICOLOGO" || userData.rol === "ADMIN"||userData.rol === "ADMINISTRADOR"|| userData.rol === "COMUNICACION"||userData.rol === "MARKETING") {
+      setIsAuthorized(true);
+      setRole(userData.rol);
+    } else {
+      router.push("/unauthorized");
+    }
+  }, [router]);
 
-  if (error) {
+  if (isAuthorized === null) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-lg font-medium text-destructive dark:text-destructive">
-          {error}
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <CalendarioMain citas={citas} />
+    <>
+      {role === "PSICOLOGO" && <CalendarioMain />}
+
+      {role === "ADMIN" && <AdminCalendarSection />}
+    </>
   );
 }

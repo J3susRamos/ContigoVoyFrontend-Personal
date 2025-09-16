@@ -21,15 +21,30 @@ export default function ImageModal({
   onPrev,
   onGoTo
 }: ImageModalProps) {
-  if (!showModal || !blog.imagenes) return null;
+  // Validar si hay imágenes válidas
+  const validImages = blog.imagenes?.filter(img => img && img.trim() !== '') || [];
+  const fallbackImage = blog.imagen && blog.imagen.trim() !== '' ? blog.imagen : null;
+  
+  if (!showModal) return null;
+  
+  // Si no hay imágenes válidas, cerrar modal
+  if (validImages.length === 0 && !fallbackImage) {
+    return null;
+  }
+
+  const imagesToShow = validImages.length > 0 ? validImages : [fallbackImage].filter(Boolean) as string[];
+  const safeModalIndex = Math.min(modalImageIndex, imagesToShow.length - 1);
+  const currentImageUrl = imagesToShow[safeModalIndex];
+
+  if (!currentImageUrl) return null;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
         <div className="relative w-full h-full flex items-center justify-center">
           <Image
-            src={blog.imagenes[modalImageIndex]}
-            alt={`Imagen ${modalImageIndex + 1} de ${blog.tema}`}
+            src={currentImageUrl}
+            alt={`Imagen ${safeModalIndex + 1} de ${blog.tema}`}
             fill
             className="object-contain"
             sizes="100vw"
@@ -46,7 +61,7 @@ export default function ImageModal({
           </svg>
         </button>
 
-        {blog.imagenes.length > 1 && (
+        {imagesToShow.length > 1 && (
           <>
             <button
               onClick={onPrev}
@@ -63,16 +78,16 @@ export default function ImageModal({
             </button>
 
             <div className="absolute top-6 left-6 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm shadow-lg z-10">
-              {modalImageIndex + 1} de {blog.imagenes.length}
+              {safeModalIndex + 1} de {imagesToShow.length}
             </div>
 
             <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-10">
-              {blog.imagenes.map((_, index) => (
+              {imagesToShow.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => onGoTo(index)}
                   className={`transition-all duration-300 ${
-                    index === modalImageIndex 
+                    index === safeModalIndex
                       ? 'w-4 h-4 bg-white scale-110 shadow-lg' 
                       : 'w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-105'
                   } rounded-full backdrop-blur-sm`}

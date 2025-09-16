@@ -2,34 +2,22 @@
 
 import ListarCitasSinPagar from "@/components/User/CitasSinPagar/ListarCitasSinPagar";
 import { NavbarCitasSinPagar } from "@/components/User/CitasSinPagar/navbar/NavbarCitasSinPagar";
-import HeaderUser from '@/components/User/HeaderUser'
-import { FiltersCitasSinPagar } from '@/interface';
-import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react'
-
-
-const FiltersCitasInitialState: FiltersCitasSinPagar = {
-  genero: [],
-  edad: [],
-  fechaInicio: [],
-  codigo: [],
-};
+import HeaderUser from "@/components/User/HeaderUser";
+import { useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function CitasSinPagar() {
-
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [filterValue, setFilterValue] = useState("");
-  const [filters, setFilters] = useState<FiltersCitasSinPagar>(FiltersCitasInitialState);
   const [menuAbierto, setMenuAbierto] = useState(false);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
-
-    if (userData.rol !== "ADMIN") {
-      router.push("/unauthorized");
-    } else {
+    if (userData.rol === "ADMIN"||userData.rol === "ADMINISTRADOR"|| userData.rol === "COMUNICACION"||userData.rol === "MARKETING") {
       setIsAuthorized(true);
+    } else {
+      router.push("/unauthorized");
     }
   }, [router]);
 
@@ -44,16 +32,11 @@ export default function CitasSinPagar() {
       <HeaderUser title="Lista de citas sin pagar" />
       <NavbarCitasSinPagar
         filterValue={filterValue}
-        filters={filters}
-        setFilters={setFilters}
         onSearchChange={onSearchChange}
         menuOpen={menuAbierto}
         setMenuOpen={setMenuAbierto}
       />
-      <ListarCitasSinPagar
-        filters={filters}
-        filterValue={filterValue}
-      />
+      <ListarCitasSinPagar filterValue={filterValue} />
     </div>
-  )
+  );
 }

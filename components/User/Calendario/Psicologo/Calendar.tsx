@@ -15,7 +15,7 @@ import { useCalendarEvents } from "./hooks/useCalendarEvents";
 import CustomMonthHeader from "./custom/CustomMonthHeader";
 import CustomWeekHeader from "./custom/CustomWeekHeader";
 import CustomDayHeader from "./custom/CustomDayHeader";
-
+import "./styles/calendar-styles.css"; // agregado
 
 export default function Calendario({ citasPorDia, vista, date }: CalendarioProps) {
   const { selectedCita, isModalOpen, handleEventClick, closeModal } = useCalendarModal();
@@ -32,7 +32,7 @@ export default function Calendario({ citasPorDia, vista, date }: CalendarioProps
 
         <Calendar
           messages={CALENDAR_MESSAGES}
-          className="calendar-component bg-background dark:bg-background text-primary dark:text-primary-foreground"
+          className="calendar-component bg-background dark:bg-background text-primary dark:text-primary-foreground  "
           localizer={localizer}
           events={events}
           startAccessor="start"

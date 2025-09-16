@@ -1,12 +1,11 @@
-"use client";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/mainNavbar/Navbar";
-import { usePathname } from "next/navigation";
 import { Lexend } from "next/font/google";
 import { ToastContainer } from "react-toastify";
-import Footer from "@/components/footer/footer";
 import React from "react";
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
+// import ClientRedirect from "@/components/ClientRedirect"; // Temporalmente deshabilitado
 
 const lexend = Lexend({ subsets: ["latin"] });
 
@@ -15,34 +14,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const getBaseRoute = () => {
-    const pathParts = pathname.split("/");
-    return `/${pathParts[1]}`;
-  };
-
-  const baseRoute = getBaseRoute();
-  const hideLayout = ["/user", "/admin", "/paciente"].includes(baseRoute);
-
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${lexend.className} antialiased`}>
+      <head></head>
+      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
+      <body className={`${lexend.className} antialiased`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          {!hideLayout && <Navbar />}
-
-          <div className={`${baseRoute !== "/user" ? " min-h-[90vh]" : ""}`}>
-            {children}
-          </div>
-
-          {!hideLayout && <Footer />}
+          {/* <ClientRedirect /> Temporalmente deshabilitado para debugging */}
+          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </ThemeProvider>
         <ToastContainer />
       </body>
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ''} />
     </html>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { BlogPreviewData } from "@/interface";
 
 export const useImageCarousel = (selectedBlog: BlogPreviewData | null) => {
@@ -6,21 +6,54 @@ export const useImageCarousel = (selectedBlog: BlogPreviewData | null) => {
   const [isCarouselPlaying, setIsCarouselPlaying] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
+  
+  // Refs para cleanup
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const keyboardListenerRef = useRef<((e: KeyboardEvent) => void) | null>(null);
 
+  // Reset states cuando cambia el blog (solo si el blog es nullable)
   useEffect(() => {
-    if (!selectedBlog?.imagenes || selectedBlog.imagenes.length <= 1 || !isCarouselPlaying) return;
+    if (selectedBlog === null) {
+      setCurrentImageIndex(0);
+      setModalImageIndex(0);
+      setShowImageModal(false);
+      setIsCarouselPlaying(true);
+    }
+  }, [selectedBlog?.idBlog, selectedBlog]);
 
-    const interval = setInterval(() => {
+  // Carousel auto-play effect con cleanup mejorado
+  useEffect(() => {
+    if (!selectedBlog?.imagenes || selectedBlog.imagenes.length <= 1 || !isCarouselPlaying || showImageModal) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
+
+    intervalRef.current = setInterval(() => {
       setCurrentImageIndex((prev) => 
         prev === selectedBlog.imagenes!.length - 1 ? 0 : prev + 1
       );
-    }, 4000); 
+    }, 4000);
 
-    return () => clearInterval(interval);
-  }, [selectedBlog, isCarouselPlaying]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [selectedBlog?.imagenes, isCarouselPlaying, showImageModal, selectedBlog?.idBlog]);
 
+  // Keyboard event listener con cleanup mejorado
   useEffect(() => {
-    if (!showImageModal) return;
+    if (!showImageModal) {
+      if (keyboardListenerRef.current) {
+        window.removeEventListener('keydown', keyboardListenerRef.current);
+        keyboardListenerRef.current = null;
+      }
+      return;
+    }
 
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -37,9 +70,28 @@ export const useImageCarousel = (selectedBlog: BlogPreviewData | null) => {
       }
     };
 
+    keyboardListenerRef.current = handleKeyPress;
     window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [showImageModal, selectedBlog]);
+
+    return () => {
+      if (keyboardListenerRef.current) {
+        window.removeEventListener('keydown', keyboardListenerRef.current);
+        keyboardListenerRef.current = null;
+      }
+    };
+  }, [showImageModal, selectedBlog?.imagenes]);
+
+  // Cleanup general al desmontar componente
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      if (keyboardListenerRef.current) {
+        window.removeEventListener('keydown', keyboardListenerRef.current);
+      }
+    };
+  }, []);
 
   const nextImage = useCallback(() => {
     if (!selectedBlog?.imagenes) return;

@@ -125,7 +125,7 @@ const ListarCitas = ({
             paciente: cita.paciente,
             codigo: cita.codigo,
             fecha_inicio: cita.fecha_inicio,
-            fecha_limite:cita.fecha_limite,
+            fecha_limite: cita.fecha_limite,
             motivo: cita.motivo,
             estado: cita.estado,
             duracion: cita.duracion,

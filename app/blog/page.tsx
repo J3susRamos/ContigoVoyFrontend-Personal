@@ -1,55 +1,91 @@
-"use client";
 import {
   BlogsWebSite,
   GetBlogsPreviewApi,
   GetCagetories,
 } from "@/app/apiRoutes";
-import BlogPageComponent from "@/components/blog/BlogPageComponent";
-import BlogPageLoading from "@/components/blog/BlogPageLoading";
-import {
-  ApiResponse,
-  AuthorsApi,
-  CategoriaApi,
-} from "@/interface";
-import { useEffect, useState } from "react";
+import BlogPageComponentOptimized from "@/components/blog/BlogPageComponentOptimized";
 
-export default  function BlogPage() {
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [categoria, setCategoria] = useState<CategoriaApi | null>(null);
-  const [authors, setAuthors] = useState<AuthorsApi | null>(null);
-  const [error, setError] = useState<string | null>(null);
+// Obtener datos durante el build (Server Component)
+async function getBlogData() {
+  console.log('🔍 [getBlogData] Iniciando obtención de datos de blog...');
+  console.log('🔍 [getBlogData] NODE_ENV:', process.env.NODE_ENV);
+  console.log('🔍 [getBlogData] VERCEL_URL:', process.env.VERCEL_URL);
+  console.log('🔍 [getBlogData] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+  
+  try {
+    // Durante el build, si no hay servidor disponible, devolver datos vacíos
+    const isBuilding = process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL;
+    console.log('🔍 [getBlogData] isBuilding:', isBuilding);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const dato = await BlogsWebSite();
-        const category = await GetCagetories();
-        const author = await GetBlogsPreviewApi();
-        setData(dato);
-        setCategoria(category);
-        setAuthors(author);
-      } catch (error) {
-        setError("Error obteniendo blogs");
-        console.error(error);
-      }
+    if (isBuilding) {
+      console.log('⚠️ [getBlogData] En modo building, devolviendo datos vacíos');
+      return {
+        data: { result: [] },
+        categoria: { result: [] },
+        authors: { result: [] },
+        error: null
+      };
     }
-    fetchData().catch(error => {
-      console.error("Error in fetchData:", error);
-    });
-  }, []);
 
+    console.log('🔍 [getBlogData] Ejecutando llamadas a las APIs...');
+    
+    const [dato, category, author] = await Promise.all([
+      BlogsWebSite(),
+      GetCagetories(),
+      GetBlogsPreviewApi()
+    ]);
+
+    console.log('✅ [getBlogData] Datos obtenidos exitosamente:');
+    console.log('  - Blogs:', dato?.result?.length || 0, 'artículos');
+    console.log('  - Categorías:', category?.result?.length || 0, 'categorías');
+    console.log('  - Autores:', author?.result?.length || 0, 'autores');
+
+    return {
+      data: dato,
+      categoria: category,
+      authors: author,
+      error: null
+    };
+  } catch (error) {
+    console.error("❌ [getBlogData] Error completo:", error);
+    console.error("❌ [getBlogData] Error mensaje:", (error as Error).message);
+    console.error("❌ [getBlogData] Error stack:", (error as Error).stack);
+    
+    // En caso de error, devolver estructuras vacías pero válidas
+    return {
+      data: { result: [] },
+      categoria: { result: [] },
+      authors: { result: [] },
+      error: (error as Error).message
+    };
+  }
+}
+
+export default async function BlogPage() {
+  console.log('🔍 [BlogPage] Renderizando página de blog...');
+  
+  const { data, categoria, authors, error } = await getBlogData();
+
+  console.log('🔍 [BlogPage] Datos finales para renderizar:');
+  console.log('  - Blogs data:', data);
+  console.log('  - Categorías data:', categoria);
+  console.log('  - Autores data:', authors);
+  console.log('  - Error:', error);
+  console.log('  - Blogs length:', data?.result?.length);
+  console.log('  - Categorías length:', categoria?.result?.length);
+  console.log('  - Autores length:', authors?.result?.length);
+
+  // Mostrar error en los logs si existe
+  if (error) {
+    console.error('❌ [BlogPage] Error en los datos:', error);
+  }
+
+  // Siempre renderizar el componente, incluso con datos vacíos
   return (
-    <div>
-      {error && (
-        <p className="flex items-center justify-center h-screen">{error}</p>
-      )}
-      { (data && categoria && authors) ?
-        <BlogPageComponent
-          Datos={data.result}
-          Categories={categoria.result}
-          Authors={authors.result}
-        /> : <BlogPageLoading/>
-      }
-    </div>
+    <BlogPageComponentOptimized
+      Datos={data?.result || []}
+      Categories={categoria?.result || []}
+      Authors={authors?.result || []}
+    />
   );
 }

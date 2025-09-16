@@ -1,7 +1,5 @@
 "use client";
 import Image from "next/image";
-import useEmblaCarousel from "embla-carousel-react";
-import { useEffect } from "react";
 
 const enterprises = [
   {
@@ -37,34 +35,6 @@ const enterprises = [
 ];
 
 export default function RealiableCompanies() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: "start",
-    containScroll: "trimSnaps",
-  });
-
-  // Función para navegar a un slide específico
-  const scrollTo = (index: number) => {
-    if (emblaApi) {
-      emblaApi.scrollTo(index * 3);
-    }
-  };
-
-  // Autoplay
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    const autoplay = setInterval(() => {
-      if (emblaApi.canScrollNext()) {
-        emblaApi.scrollNext();
-      } else {
-        emblaApi.scrollTo(0);
-      }
-    }, 4000);
-
-    return () => clearInterval(autoplay);
-  }, [emblaApi]);
-
   return (
     <div className="w-full flex flex-col items-center justify-center dark:bg-gray-900 bg-white-100 lg:my-8 ">
       <p
@@ -74,53 +44,41 @@ export default function RealiableCompanies() {
         Empresas que confían en nuestra <br /> orientación psicológica
       </p>
 
-      {/* Contenido para pantallas grandes */}
-      <div className="lg:block hidden max-w-scv18 w-full">
-        <div className="flex justify-between mt-16 mb-scv8 h-scv9 w-full">
-          {enterprises.map((company, index) => (
-            <div key={index} className="h-full flex-1 relative ">
-              <Image
-                title={company.title}
-                src={company.icon}
-                alt={company.alt}
-                fill
-                className="object-contain dark:brightness-0 dark:saturate-100 dark:invert"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Contenido para pantallas pequeñas */}
-      <div className="block lg:hidden w-full mb-12 mt-scv6">
-        <div className="embla" ref={emblaRef}>
-          <div className="embla__container sm:h-scv9 h-scv8">
+      {/* Contenedor del carousel infinito */}
+      <div className="w-full max-w-7xl mx-auto mt-16 mb-scv8 overflow-hidden">
+        <div className="relative">
+          {/* Gradientes para el efecto fade */}
+          <div className="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-white dark:from-gray-900 to-transparent z-10"></div>
+          <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-white dark:from-gray-900 to-transparent z-10"></div>
+          
+          {/* Contenedor de logos con animación */}
+          <div className="flex animate-scroll-infinite">
+            {/* Primera copia de los logos */}
             {enterprises.map((company, index) => (
-              <div className="slide h-full" key={index}>
-                <div className="flex flex-col items-center justify-center p-6 relative h-full ">
-                  <Image
-                    title={company.title}
-                    src={company.icon}
-                    alt={company.alt}
-                    fill
-                    className="object-contain dark:brightness-0 dark:saturate-100 dark:invert"
-                  />
-                </div>
+              <div key={`first-${index}`} className="flex-shrink-0 mx-8 h-16 w-32 lg:h-20 lg:w-40 relative group">
+                <Image
+                  title={company.title}
+                  src={company.icon}
+                  alt={company.alt}
+                  fill
+                  className="object-contain dark:brightness-0 dark:saturate-100 dark:invert transition-all duration-300 group-hover:scale-110"
+                />
+              </div>
+            ))}
+            
+            {/* Segunda copia de los logos para el efecto infinito */}
+            {enterprises.map((company, index) => (
+              <div key={`second-${index}`} className="flex-shrink-0 mx-8 h-16 w-32 lg:h-20 lg:w-40 relative group">
+                <Image
+                  title={company.title}
+                  src={company.icon}
+                  alt={company.alt}
+                  fill
+                  className="object-contain dark:brightness-0 dark:saturate-100 dark:invert transition-all duration-300 group-hover:scale-110"
+                />
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Dots Navigation */}
-        <div className="flex justify-center mt-scv7 space-x-2">
-          {[0, 1].map((dotIndex) => (
-            <button
-              key={dotIndex}
-              onClick={() => scrollTo(dotIndex)}
-              aria-label={`Ir al grupo ${dotIndex + 1}`}
-              className={`w-3 h-3 rounded-full transition-all duration-300 bg-[#9494F3] hover:bg-[#634AE2]`}
-            />
-          ))}
         </div>
       </div>
     </div>

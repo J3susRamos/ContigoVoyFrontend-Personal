@@ -1,68 +1,121 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import DataTable from "@/components/ui/Table/DataTable";
 import Row from "@/components/ui/Table/Row";
 import DataCard from "@/components/ui/DataCard";
-import { Citas } from "@/interface";
-import { formatCitaDate, formatCitaTime } from "../../Citas/citas";
-
+import { CitaSinPagar } from "@/interface";
+import { formatCitaDate } from "../../Citas/citas";
+import { CitaSinPagarModal } from "../modal/CitaSinPagarModal";
+import { useCitasSinPagar } from "../hooks/useCitasSinPagar";
 
 interface TableCitasProps {
-  filteredCitas: Citas[];
+  filteredCitas: CitaSinPagar[];
 }
 
-const HEADERS = [
-  "Paciente",
-  "Código",
-  "Motivo",
-  "Estado",
-  "Fecha de Inicio",
-  "Duración",
-  "Más",
-];
+const HEADERS = ["Codigo", "Nombre", "Apellido", "Motivo", "Fecha", "Mas"];
 
 export const TableCitasSinPagar: React.FC<TableCitasProps> = ({
   filteredCitas,
 }) => {
+  const [selectedCita, setSelectedCita] = useState<CitaSinPagar | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { aceptarCita, rechazarCita } = useCitasSinPagar();
 
-  const renderTableRow = (cita: Citas) => (
+  const handleOpenModal = (cita: CitaSinPagar) => {
+    setSelectedCita(cita);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedCita(null);
+    setIsModalOpen(false);
+  };
+
+  const handleAceptarCita = async (
+    codigo: string,
+    idCita: string,
+    comentario: string,
+    numero: string,
+  ) => {
+    try {
+      await aceptarCita(codigo, idCita, comentario, numero);
+      // Opcional: Refrescar la lista de citas o actualizar el estado
+      handleCloseModal();
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error("Error en handleAceptarCita:", error);
+    }
+  };
+
+  const handleRechazarCita = async (
+    codigo: string,
+    comentario: string,
+    numero: string
+  ) => {
+    try {
+      await rechazarCita(codigo, comentario, numero);
+      // Opcional: Refrescar la lista de citas o actualizar el estado
+      handleCloseModal();
+    } catch (error) {
+      // El error ya se maneja en el hook
+      console.error("Error en handleRechazarCita:", error);
+    }
+  };
+  const renderTableRow = (cita: CitaSinPagar) => (
     <Row
       values={[
-        cita.paciente,
-        cita.codigo || '',
-        cita.motivo,
-        cita.estado,
-        cita.fecha_inicio,
-        cita.duracion,
+        cita.paciente.idPaciente.toString(),
+        cita.paciente.nombre,
+        cita.paciente.apellido,
+        cita.motivo_Consulta,
+        cita.fecha_cita,
       ]}
-    >
-    </Row>
+      {...(cita.boucher && {
+        onBoucher: () => {
+          handleOpenModal(cita);
+        },
+      })}
+    ></Row>
   );
 
-  const renderCard = (cita: Citas) => (
+  const renderCard = (cita: CitaSinPagar) => (
     <DataCard
       paciente={{
-        nombre: cita.paciente,
-        codigo: cita.codigo || ''
+        nombre: `${cita.paciente.nombre} ${cita.paciente.apellido}`,
+        codigo: cita.paciente.idPaciente.toString() || "",
       }}
       info={[
-        { label: "Estado", value: cita.estado },
-        { label: "Motivo", value: cita.motivo },
-        { label: "Fecha", value: formatCitaDate(cita.fecha_inicio) },
-        { label: "Hora", value: formatCitaTime(cita.fecha_inicio) },
-        { label: "Duración", value: cita.duracion },
+        { label: "Motivo", value: cita.motivo_Consulta },
+        { label: "Fecha", value: formatCitaDate(cita.fecha_cita) },
+        { label: "Hora", value: cita.hora_cita },
+        { label: "Duración", value: cita.duracion.toString() + " minutos" },
       ]}
-    >
-    </DataCard>
+      {...(cita.boucher && {
+        onBoucher: () => {
+          handleOpenModal(cita);
+        },
+      })}
+    ></DataCard>
   );
 
   return (
-    <DataTable
-      headers={HEADERS}
-      data={filteredCitas}
-      renderRow={renderTableRow}
-      renderCard={renderCard}
-    />
+    <>
+      <DataTable
+        headers={HEADERS}
+        data={filteredCitas}
+        renderRow={renderTableRow}
+        renderCard={renderCard}
+      />
+
+      <CitaSinPagarModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        cita={selectedCita}
+        imagen={selectedCita?.boucher?.imagen}
+        onAceptar={handleAceptarCita}
+        onRechazar={handleRechazarCita}
+      />
+    </>
   );
 };

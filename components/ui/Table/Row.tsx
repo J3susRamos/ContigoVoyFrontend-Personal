@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { Edit3, Ban} from "lucide-react";
+import { Edit3, Ban, Ticket } from "lucide-react";
 import { ActionButton } from "./ActionButton";
 
 interface RowProps {
@@ -9,6 +9,7 @@ interface RowProps {
   onClick?: () => void;
   onEdit?: () => void;
   onDisable?: () => void;
+  onBoucher?: () => void;
   children?: ReactNode;
   showActions?: boolean;
   llave?: boolean;
@@ -19,6 +20,7 @@ const Row: React.FC<RowProps> = ({
   onClick,
   onEdit,
   onDisable,
+  onBoucher,
   children,
   showActions = true,
   llave = false,
@@ -40,17 +42,22 @@ const Row: React.FC<RowProps> = ({
             {showActions && (
               <>
                 {onEdit && (
-                  <ActionButton
-                    icon={Edit3}
-                    label="Editar"
-                    onClick={onEdit}
-                  />
+                  <ActionButton icon={Edit3} label="Editar" onClick={onEdit} />
                 )}
                 {onDisable && (
                   <ActionButton
                     icon={Ban}
                     label={!llave ? "Deshabilitar" : "Habilitar"}
                     onClick={onDisable}
+                    llave={llave}
+                  />
+                )}
+                {onBoucher && (
+                  <ActionButton
+                    icon={Ticket}
+                    label={!llave ? "Boucher" : "Deshabilitar"}
+                    className=""
+                    onClick={onBoucher}
                   />
                 )}
               </>
