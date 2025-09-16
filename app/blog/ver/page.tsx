@@ -4,44 +4,79 @@ import BlogIndividualView from '@/components/blog/BlogIndividualView';
 import BlogStructuredData from '@/components/blog/BlogStructuredData';
 import { BlogPreviewData } from '@/interface';
 
-// Función para obtener un blog por tema (Server-side)
 async function getBlogByQuery(blogQuery: string): Promise<BlogPreviewData | null> {
+  console.log('🔍 [getBlogByQuery] Iniciando búsqueda de blog...');
+  console.log('🔍 [getBlogByQuery] Blog query recibido:', blogQuery);
+  console.log('🔍 [getBlogByQuery] NODE_ENV:', process.env.NODE_ENV);
+  console.log('🔍 [getBlogByQuery] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/';
-    
-    // Convertir el slug de vuelta a un término de búsqueda
-    const searchTerm = blogQuery.includes('-') 
-      ? blogQuery.replace(/-/g, ' ') 
+
+    const searchTerm = blogQuery.includes('-')
+      ? blogQuery.replace(/-/g, ' ')
       : decodeURIComponent(blogQuery);
-    
+
     const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
-    
-    // En desarrollo usar cache: 'no-store', en producción usar revalidación
-    const cacheConfig = process.env.NODE_ENV === 'development' 
+
+    console.log('🔍 [getBlogByQuery] Search term convertido:', searchTerm);
+    console.log('🔍 [getBlogByQuery] Endpoint final:', endpoint);
+    console.log('🔍 [getBlogByQuery] API URL base:', apiUrl);
+
+    const cacheConfig = process.env.NODE_ENV === 'development'
       ? { cache: 'no-store' as const }
       : { next: { revalidate: 0 } };
-    
+
+    console.log('🔍 [getBlogByQuery] Cache config:', cacheConfig);
+
     const response = await fetch(endpoint, {
       ...cacheConfig,
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    
+
+    console.log('🔍 [getBlogByQuery] Response status:', response.status);
+    console.log('🔍 [getBlogByQuery] Response ok:', response.ok);
+    console.log('🔍 [getBlogByQuery] Response headers:', Object.fromEntries(response.headers.entries()));
+    console.log('🔍 [getBlogByQuery] Response URL:', response.url);
+
     if (!response.ok) {
-      console.warn(`Blog "${searchTerm}" not found: ${response.status}`);
+      console.warn(`❌ [getBlogByQuery] Blog "${searchTerm}" not found: ${response.status}`);
+      console.warn(`❌ [getBlogByQuery] Response status text:`, response.statusText);
+
+      try {
+        const errorBody = await response.text();
+        console.warn(`❌ [getBlogByQuery] Error response body:`, errorBody);
+      } catch (bodyError) {
+        console.warn(`❌ [getBlogByQuery] No se pudo leer el body del error:`, bodyError);
+      }
+
       return null;
     }
-    
+
     const data = await response.json();
+    console.log('✅ [getBlogByQuery] Datos obtenidos exitosamente:');
+    console.log('✅ [getBlogByQuery] Data structure:', JSON.stringify(data, null, 2));
+    console.log('✅ [getBlogByQuery] Data.result exists:', !!data.result);
+    console.log('✅ [getBlogByQuery] Data.result type:', typeof data.result);
+
     return data.result || null;
   } catch (error) {
-    console.error('Error fetching blog:', error);
+    console.error('❌ [getBlogByQuery] Error completo al obtener blog:', error);
+    console.error('❌ [getBlogByQuery] Error message:', (error as Error).message);
+    console.error('❌ [getBlogByQuery] Error stack:', (error as Error).stack);
+    console.error('❌ [getBlogByQuery] Error name:', (error as Error).name);
+
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      console.error('❌ [getBlogByQuery] Posible problema de conectividad o CORS');
+      console.error('❌ [getBlogByQuery] Verificar que la URL del API sea accesible:', process.env.NEXT_PUBLIC_API_URL);
+    }
+
     return null;
   }
 }
 
-// Generar metadata dinámica para cada blog
 export async function generateMetadata(
   { searchParams }: { searchParams: Promise<{ blog?: string }> }
 ): Promise<Metadata> {
@@ -68,27 +103,22 @@ export async function generateMetadata(
     };
   }
 
-  // Crear descripción limpia del contenido
   const cleanContent = blog.contenido
-    .replace(/<[^>]*>/g, '') // Remover HTML
-    .replace(/\s+/g, ' ') // Normalizar espacios
+    .replace(/<[^>]*>/g, '') 
+    .replace(/\s+/g, ' ') 
     .trim();
   
-  // Si el contenido es muy corto o repetitivo, crear una descripción alternativa
   let description = '';
   
   if (cleanContent.length < 50 || isRepetitive(cleanContent)) {
-    // Crear descripción basada en el título y categoría
     description = `Descubre todo sobre ${blog.tema.toLowerCase()} en nuestro blog especializado en ${blog.categoria.toLowerCase()}. Artículo escrito por ${blog.psicologo} ${blog.psicologApellido}, especialista en psicología y bienestar mental.`;
   } else {
-    // Usar el contenido real pero limitado
     description = cleanContent.substring(0, 160).trim();
     if (cleanContent.length > 160) {
       description += '...';
     }
   }
 
-  // Función auxiliar para detectar contenido repetitivo
   function isRepetitive(text: string): boolean {
     const words = text.split(' ');
     if (words.length < 10) return true;
@@ -99,7 +129,6 @@ export async function generateMetadata(
     return firstHalf === secondHalf || text.includes(text.substring(0, 30).repeat(2));
   }
   
-  // Crear slug para la URL canónica
   const slug = blog.tema
     .toLowerCase()
     .replace(/[áéíóúñ]/g, (match) => {
@@ -168,10 +197,19 @@ export default async function BlogViewerPage({
 }: {
   searchParams: Promise<{ blog?: string }>;
 }) {
+  console.log('🔍 [BlogViewerPage] Iniciando renderizado de página de blog individual...');
+  console.log('🔍 [BlogViewerPage] NODE_ENV:', process.env.NODE_ENV);
+  console.log('🔍 [BlogViewerPage] VERCEL_ENV:', process.env.VERCEL_ENV);
+  console.log('🔍 [BlogViewerPage] VERCEL_URL:', process.env.VERCEL_URL);
+
   const resolvedSearchParams = await searchParams;
   const blogQuery = resolvedSearchParams.blog;
-  
+
+  console.log('🔍 [BlogViewerPage] Search params resueltos:', resolvedSearchParams);
+  console.log('🔍 [BlogViewerPage] Blog query extraído:', blogQuery);
+
   if (!blogQuery) {
+    console.warn('⚠️ [BlogViewerPage] No se proporcionó parámetro blog, mostrando página de error');
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
         <div className="text-center space-y-6 max-w-md px-6">
@@ -182,7 +220,7 @@ export default async function BlogViewerPage({
           <p className="text-gray-600 dark:text-gray-300">
             No se especificó qué artículo mostrar.
           </p>
-          <Link 
+          <Link
             href="/blog"
             className="inline-block px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
           >
@@ -192,10 +230,13 @@ export default async function BlogViewerPage({
       </div>
     );
   }
-  
+
+  console.log('🔍 [BlogViewerPage] Llamando a getBlogByQuery con:', blogQuery);
   const blog = await getBlogByQuery(blogQuery);
-  
+
   if (!blog) {
+    console.error('❌ [BlogViewerPage] No se encontró el blog, mostrando página de error 404');
+    console.error('❌ [BlogViewerPage] Blog query que falló:', blogQuery);
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
         <div className="text-center space-y-6 max-w-md px-6">
@@ -206,7 +247,7 @@ export default async function BlogViewerPage({
           <p className="text-gray-600 dark:text-gray-300">
             El artículo que buscas no existe o ha sido movido.
           </p>
-          <Link 
+          <Link
             href="/blog"
             className="inline-block px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
           >
@@ -216,6 +257,15 @@ export default async function BlogViewerPage({
       </div>
     );
   }
+
+  console.log('✅ [BlogViewerPage] Blog encontrado exitosamente:', {
+    tema: blog.tema,
+    categoria: blog.categoria,
+    psicologo: `${blog.psicologo} ${blog.psicologApellido}`,
+    fecha: blog.fecha
+  });
+
+  console.log('🔍 [BlogViewerPage] Renderizando componentes BlogStructuredData y BlogIndividualView');
 
   return (
     <>

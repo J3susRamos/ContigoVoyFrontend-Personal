@@ -22,15 +22,12 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  // En desarrollo usar cache: 'no-store', en producción usar revalidación
   const cacheConfig = process.env.NODE_ENV === 'development' 
     ? { cache: 'no-store' as const }
-    : { next: { revalidate: 0 } }; // Revalidar en cada request en producción
+    : { next: { revalidate: 0 } };
     
-  // Usar URL diferente para desarrollo vs producción
-  const apiUrl = process.env.NODE_ENV === 'development' 
-    ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs`
-    : '/apicontigovoy/public/api/blogs';
+  // Siempre usar la variable de entorno para la URL del API
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
     
   console.log('🔍 [BlogsWebSite] Environment:', process.env.NODE_ENV);
   console.log('🔍 [BlogsWebSite] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
@@ -63,10 +60,8 @@ export async function GetCagetories(): Promise<CategoriaApi> {
     ? { cache: 'no-store' as const }
     : { next: { revalidate: 0 } };
     
-  // Usar URL diferente para desarrollo vs producción
-  const apiUrl = process.env.NODE_ENV === 'development' 
-    ? `${process.env.NEXT_PUBLIC_API_URL}api/categorias`
-    : '/apicontigovoy/public/api/categorias';
+  // Siempre usar la variable de entorno para la URL del API
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/categorias`;
     
   console.log('🔍 [GetCagetories] Environment:', process.env.NODE_ENV);
   console.log('🔍 [GetCagetories] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
@@ -96,10 +91,8 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
     ? { cache: 'no-store' as const }
     : { next: { revalidate: 0 } };
     
-  // Usar URL diferente para desarrollo vs producción
-  const apiUrl = process.env.NODE_ENV === 'development' 
-    ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`
-    : '/apicontigovoy/public/api/blogs/authors';
+  // Siempre usar la variable de entorno para la URL del API
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`;
     
   console.log('🔍 [GetBlogsPreviewApi] Environment:', process.env.NODE_ENV);
   console.log('🔍 [GetBlogsPreviewApi] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
@@ -168,7 +161,7 @@ export const GetPsicologos = async (
     const data = await res.json();
 
     if (data.status_message === "OK") {
-      return data; // Retornar toda la respuesta
+      return data; 
     } else {
       throw new Error(data.message || "Error al obtener psicólogos");
     }
@@ -224,7 +217,7 @@ export const GetPsicologosInactivos = async (
     const data = await res.json();
 
     if (data.status_message === "OK") {
-      return data; // Retornar toda la respuesta
+      return data; 
     } else {
       throw new Error(data.message || "Error al obtener psicólogos");
     }
