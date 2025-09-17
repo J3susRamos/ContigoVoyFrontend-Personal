@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical:
-      "https://centropsicologicocontigovoy.com/servicios/terapia/familia",
+      "https://centropsicologicocontigovoy.com/servicios/terapia/familia/",
   },
   robots: {
     index: true,
