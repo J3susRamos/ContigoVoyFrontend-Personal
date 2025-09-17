@@ -182,7 +182,6 @@ export const DataView = ({
             {/* Introducción en mobile */}
             <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
               <Textarea
-                isRequired
                 value={formData.introduccion ?? ""}
                 minLength={100}
                 maxLength={350}
@@ -214,7 +213,6 @@ export const DataView = ({
             <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
               <Input
                 label="Años de experiencia"
-                isRequired
                 min={0}
                 placeholder="Ingrese los años de experiencia"
                 labelPlacement="outside"
@@ -239,7 +237,6 @@ export const DataView = ({
             {/* Especialidades en mobile */}
             <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
               <CheckboxGroup
-                isRequired
                 orientation="vertical"
                 description="Seleccione las especialidades que domina"
                 isInvalid={isInvalid}
@@ -314,7 +311,6 @@ export const DataView = ({
               <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700">
                 <Input
                   label="Años de experiencia"
-                  isRequired
                   min={0}
                   placeholder="Ingrese los años de experiencia"
                   labelPlacement="outside"
@@ -340,7 +336,6 @@ export const DataView = ({
             <div className="space-y-4">
               <div>
                 <Textarea
-                  isRequired
                   value={formData.introduccion ?? ""}
                   minLength={100}
                   maxLength={350}
@@ -370,7 +365,6 @@ export const DataView = ({
               
               <div>
                 <CheckboxGroup
-                  isRequired
                   orientation="vertical"
                   description="Seleccione las especialidades que domina"
                   isInvalid={isInvalid}

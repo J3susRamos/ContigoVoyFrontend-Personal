@@ -272,6 +272,11 @@ export interface PsicologoFilters {
   size?: number;
 }
 
+export interface UserPermission {
+  idUrls: number;
+  name: string;
+}
+
 export interface UsuarioLocalStorage {
   id: number;
   nombre: string;
@@ -280,6 +285,7 @@ export interface UsuarioLocalStorage {
   rol: string;
   imagen: string;
   idpsicologo?: number;
+  permissions: UserPermission[];
 }
 export interface UsuarioLocalStorageUpdate {
   id: number;

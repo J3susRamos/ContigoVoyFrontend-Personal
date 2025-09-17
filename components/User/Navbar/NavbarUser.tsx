@@ -105,28 +105,27 @@ const NavbarUser = () => {
         const user: UsuarioLocalStorage = JSON.parse(userJson);
         let items = [...navItemsBase];
 
-        if (user.rol === "PSICOLOGO") {
-          items = items.filter(
-            (item) =>
-              item.role === "psico" || item.role === "both"
-          );
+        if (user.permissions && user.permissions.length > 0) {
+          const allowedNames = user.permissions.map((p) => p.name);
+
+          items = items
+            .map((item) => {
+              if (item.hijos) {
+                const hijosPermitidos = item.hijos.filter((hijo) =>
+                  allowedNames.includes(hijo.name)
+                );
+                if (hijosPermitidos.length > 0) {
+                  return { ...item, hijos: hijosPermitidos };
+                }
+                return null;
+              }
+
+              return allowedNames.includes(item.name) ? item : null;
+            })
+            .filter(Boolean) as typeof navItemsBase;
         }
 
-        if (user.rol === "ADMIN") {
-          items = items.filter(
-            (item) => item.role === "admin" || item.role === "both"
-          );
-        }
-
-      setNavItems(items);
-
-      // Aqui que SANDRO SE CONSUMA ESTE ENDPOINT PARA JALARSE LOS PERMISOS
-      // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/personal/permisos/${user.id}`, { 
-      //     headers: {
-      //       "Accept": "application/json",
-      //       "Authorization": `Bearer ${token}`,
-      //     },
-      //   })
+        setNavItems(items);
 
       } catch (error) {
         console.error("Error parsing user data:", error);
@@ -150,7 +149,7 @@ const NavbarUser = () => {
         <nav className="bg-[#E7E7FF] dark:bg-[#19191a] h-[80px] flex items-center border-b border-gray-200 dark:border-gray-700">
           <div className="w-full px-6 flex items-center justify-between">
             <MobileNavUserHamburger navItems={navItems} />
-            
+
             <Link href="/" className="flex-1 flex justify-center">
               <ReactSVG
                 src="/logoHeader.svg"
@@ -182,7 +181,7 @@ const NavbarUser = () => {
               />
             </h1>
           </Link>
-          
+
           <div className="flex-1">
             <DesktopNavUser navItems={navItems} />
           </div>
