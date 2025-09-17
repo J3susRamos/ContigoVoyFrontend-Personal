@@ -1,8 +1,9 @@
 import { destroyCookie, setCookie } from "nookies";
 import { useState } from "react";
+import { UsuarioLocalStorage } from "@/interface"; 
 
 interface AuthState {
-  user: { id: number; email: string; rol: string } | null;
+  user: UsuarioLocalStorage | null;
   token: string | null;
   loading: boolean;
   error: string | null;
@@ -54,13 +55,13 @@ export const useAuth = () => {
         apellido: data.result.apellido,
         imagen: data.result.imagen,
         ...(data.result.idpsicologo && { idpsicologo: data.result.idpsicologo }),
-        permisos: data.result.permissions,
+        permissions: data.result.permissions || [],
       };
 
       localStorage.setItem("user", JSON.stringify(userDataToStore));
 
       setAuthState({
-        user: data.user,
+        user: userDataToStore,
         token: token,
         loading: false,
         error: null,
