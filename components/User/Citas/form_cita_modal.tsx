@@ -122,7 +122,7 @@ const useFormValidation = () => {
             newErrors.fecha_cita = "La fecha es requerida";
         }
         if (!formData.fecha_limite) {
-            newErrors.fecha_limite = "La fecha limite es requerida";
+            newErrors.fehca_limite = "La fecha limite es requerida";
         }
         if (!formData.hora_cita) {
             newErrors.hora_cita = "La hora es requerida";
@@ -197,8 +197,7 @@ const formatDateForInput = (dateTimeString: string): string => {
 };
 
 const formatDateLimitForInput=(dateTimeString: string): string =>{
-    console.log(dateTimeString);
-    return "2025-09-24";
+    return dateTimeString;
 }
 
 const getTodayDate = (): string => {
@@ -212,15 +211,20 @@ const prepareRequestData = (formData: FormData) => ({
     hora_cita: formatTimeForApi(formData.hora_cita)
 });
 
-const mapCitaToFormData = (cita: Citas): FormData => ({
-    idPaciente: cita.idPaciente.toString(),
-    fecha_cita: formatDateForInput(cita.fecha_inicio),
-    fecha_limite: formatDateLimitForInput(cita.fecha_limite),
-    hora_cita: formatTimeForInput(cita.fecha_inicio),
-    duracion: cita.duracion.replace(' minutos', '').replace(' min', '').trim(),
-    motivo_Consulta: cita.motivo,
-    estado_Cita: cita.estado
-});
+const mapCitaToFormData = (cita: Citas): FormData => {
+    console.log("Cita recibida en mapCitaToFormData:", cita);
+    console.log("fecha_limite recibida:", cita.fecha_limite);
+    return {
+        idPaciente: cita.idPaciente.toString(),
+        fecha_cita: formatDateForInput(cita.fecha_inicio),
+        fecha_limite: formatDateLimitForInput(cita.fecha_limite),
+        hora_cita: formatTimeForInput(cita.fecha_inicio),
+        duracion: cita.duracion.replace(' minutos', '').replace(' min.', '').trim(),
+        motivo_Consulta: cita.motivo,
+        estado_Cita: cita.estado
+    };
+};
+
 
 export const FormCita: React.FC<FormCitaProps> = ({
     isOpen,
