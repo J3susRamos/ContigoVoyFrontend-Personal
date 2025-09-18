@@ -114,10 +114,10 @@ export interface FormData {
   pais: string;
   email: string;
   password: string;
-  introduccion: string;
-  imagen: string;
-  experiencia: number;
-  especialidades: number[];
+  introduccion: string|null;
+  imagen: string|null;
+  experiencia: number|null;
+  especialidades: number[]|null;
   horario: {
     [key: string]: string[][];
   };
