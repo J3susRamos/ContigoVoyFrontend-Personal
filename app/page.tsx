@@ -9,7 +9,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Contigo Voy | Terapia Psicológica Online",
   description:
-    "Conecta con tu bienestar. Psicólogos online, comienza tu terapia hoy. Contigo Voy te acompaña desde el primer paso. Agenda tu cita, la primera es gratis.",
+    "Psicólogos online para tu bienestar. Empieza tu terapia hoy con Contigo Voy. Primera cita gratis y acompañamiento profesional.",
   authors: [{ name: "Contigo Voy" }],
   verification: {
     google: [
