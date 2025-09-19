@@ -1,86 +1,77 @@
 /* 🎨 Light Mode */
 :root {
-  --cal-bg: #ffffff;              /* Fondo blanco */
-  --cal-card: #f9fafb;            /* Tarjetas / headers claros */
-  --cal-border: #e5e7eb;          /* Bordes gris claro */
-  --cal-text-primary: #111827;    /* Texto principal (gris casi negro) */
-  --cal-text-secondary: #4b5563;  /* Texto secundario (gris medio) */
-  --cal-accent-purple: #7C3AED;   /* Púrpura base */
-  --cal-accent-blue: #2563eb;     /* Azul base */
-  --cal-accent-light: #3b82f6;    /* Azul claro */
+  --cal-bg: #ffffff;
+  --cal-card: #f9fafb;
+  --cal-border: #e5e7eb;
+  --cal-text-primary: #111827;
+  --cal-text-secondary: #4b5563;
+  --cal-accent-purple: #7C3AED;
+  --cal-accent-blue: #2563eb;
+  --cal-accent-light: #3b82f6;
 }
 
-/* 🌙 Dark Mode */
+/* 🌙 Dark Mode - Mejorado con mayor contraste */
 .dark {
-  --cal-bg: #1A202C;              /* Fondo oscuro */
-  --cal-card: #2D3748;            /* Tarjetas/headers oscuro */
-  --cal-border: #4A5568;          /* Bordes suaves */
-  --cal-text-primary: #E2E8F0;    /* Texto principal suave */
-  --cal-text-secondary: #A0AEC0;  /* Texto secundario */
-  --cal-accent-purple: #7C3AED;   /* Púrpura suavizado */
-  --cal-accent-blue: #4299E1;     /* Azul suavizado */
-  --cal-accent-light: #90CDF4;    /* Azul muy suave */
-}
-
-
-/* SEMANA - SOLO DARK MODE */
-/*
-.dark .rbc-header {
-  background-color: var(--cal-card-dark, #2D3748) !important;
-  color: var(--cal-text-primary, #E2E8F0) !important;
-  font-weight: 500;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--cal-border-dark, #4A5568) !important;
-}
-
-*/
-
-.dark .rbc-events-container {
-  background-color: var(--cal-bg-dark, #1A202C) !important;
-}
+  --cal-bg: #121826;
+  --cal-card: #1E293B;
+  --cal-border: #334155;
+  --cal-text-primary: #F1F5F9;
+  --cal-text-secondary: #CBD5E1;
+  --cal-accent-purple: #8B5CF6;
+  --cal-accent-blue: #60A5FA;
+  --cal-accent-light: #BAE6FD;
   
+  /* Nuevos colores para mejor contraste del día actual */
+  --cal-today-bg: rgba(139, 92, 246, 0.3);
+  --cal-today-border: rgba(167, 139, 250, 0.6);
+  --cal-hover-bg: rgba(30, 41, 59, 0.8);
+}
 
-
-.dark .rbc-time-slot {
-  color: var(--cal-text-secondary, #A0AEC0) !important;
+/* Fondo general del calendario */
+.rbc-calendar {
+  background-color: var(--cal-bg) !important;
+  color: var(--cal-text-primary) !important;
   font-weight: 400;
-  border-color: var(--cal-border-dark, #4A5568) !important;
-  opacity: 0.9;
 }
 
-
-/* MES */
-.rbc-month-view {
-  background-color: var(--cal-bg-dark, #1A202C) !important;
+/* MES - Mejorado */
+.dark .rbc-month-view {
+  background-color: var(--cal-bg, #121826) !important;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.1);
 }
 
-.rbc-date-cell {
-  color: var(--cal-text-primary, #E2E8F0) !important;
-  font-weight: 400;
-  opacity: 0.9;
+.dark .rbc-date-cell {
+  color: var(--cal-text-primary, #F1F5F9) !important;
+  font-weight: 500;
+  opacity: 1;
 }
 
-.rbc-day-bg {
-  background-color: var(--cal-card-dark, #2D3748) !important;
-  border-color: var(--cal-border-dark, #4A5568) !important;
-  opacity: 0.8;
+.dark .rbc-day-bg {
+  background-color: var(--cal-card, #1E293B) !important;
+  border-color: var(--cal-border, #334155) !important;
+  opacity: 1;
+  transition: background-color 0.2s ease;
+}
+
+.dark .rbc-day-bg:hover {
+  background-color: var(--cal-hover-bg, rgba(30, 41, 59, 0.8)) !important;
 }
 
 /* selector dia cuadrado */
-.rbc-row-bg {
-  background-color: var(--cal-card-dark, #2D3748) !important;
-  border-color: var(--cal-border-dark, #4A5568) !important;
-  opacity: 0.8;
+.dark .rbc-row-bg {
+  background-color: var(--cal-card, #1E293B) !important;
+  border-color: var(--cal-border, #334155) !important;
+  opacity: 1;
 }
-
 
 .rbc-current-time-indicator {
   background-color: var(--cal-accent-purple, #7C3AED) !important;
   height: 2px;
   opacity: 0.7;
 }
-
-
 
 /* TEXTOS Y ELEMENTOS GENERALES */
 .rbc-toolbar .rbc-toolbar-label {
@@ -90,21 +81,23 @@
   opacity: 0.95;
 }
 
-.rbc-event {
-  background-color: var(--cal-accent-purple, #7C3AED) !important;
-  
+.dark .rbc-event {
+  background-color: var(--cal-accent-purple, #8B5CF6) !important;
   color: white !important;
   border: none !important;
-  
-  border-radius: 4px;
+  border-radius: 6px;
   opacity: 0.9;
   transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+  padding: 4px 8px;
+  border: 1px solid rgba(167, 139, 250, 0.3);
 }
 
-.rbc-event:hover {
-  background-color: #8B5CF6 !important; /* Púrpura un poco más claro */
+.dark .rbc-event:hover {
+  background-color: var(--cal-accent-purple-light, #A78BFA) !important;
   opacity: 1;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
 }
 
 .rbc-off-range {
@@ -112,45 +105,55 @@
   opacity: 0.6;
 }
 
-/*
-.rbc-today {
-  background-color: rgba(124, 58, 237, 0.15) !important;
-}
-*/
-
-.rbc-today .rbc-date-cell {
-  color: var(--cal-accent-light, #90CDF4) !important;
-  font-weight: 500;
+/* Día actual - MEJORADO con mayor contraste */
+.dark .rbc-today {
+  background-color: var(--cal-today-bg, rgba(139, 92, 246, 0.3)) !important;
+  border: 2px solid var(--cal-today-border, rgba(167, 139, 250, 0.6)) !important;
 }
 
-/* HEADERS DE DÍAS  */
-.rbc-header {
-  color: var(--cal-text-secondary, #A0AEC0) !important;
+.dark .rbc-today .rbc-date-cell {
+  color: var(--cal-accent-light, #BAE6FD) !important;
+  font-weight: 700;
+}
+
+/* HEADERS DE DÍAS - Mejorado */
+.dark .rbc-header {
+  color: var(--cal-text-secondary, #CBD5E1) !important;
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  opacity: 0.9;
-}
-
-/* BOTONES DE NAVEGACIÓN */
-.rbc-toolbar button {
-  color: var(--cal-text-secondary, #A0AEC0) !important;
-  border-color: var(--cal-border-dark, #4A5568) !important;
-  background-color: transparent !important;
-  opacity: 0.8;
-}
-
-.rbc-toolbar button:hover {
-  background-color: rgba(124, 58, 237, 0.1) !important;
-  color: var(--cal-text-primary, #E2E8F0) !important;
   opacity: 1;
+  background-color: var(--cal-card, #1E293B) !important;
+  padding: 10px 0;
+  font-weight: 600;
+  border-bottom: 2px solid var(--cal-border, #334155) !important;
 }
 
-.rbc-toolbar button:active,
-.rbc-toolbar button.rbc-active {
-  background-color: var(--cal-accent-purple, #7C3AED) !important;
+/* BOTONES DE NAVEGACIÓN - Mejorado */
+.dark .rbc-toolbar button {
+  color: var(--cal-text-secondary, #CBD5E1) !important;
+  border-color: var(--cal-border, #334155) !important;
+  background-color: var(--cal-card, #1E293B) !important;
+  opacity: 1;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dark .rbc-toolbar button:hover {
+  background-color: rgba(139, 92, 246, 0.2) !important;
+  color: var(--cal-text-primary, #F1F5F9) !important;
+  border-color: var(--cal-accent-purple, #8B5CF6) !important;
+}
+
+.dark .rbc-toolbar button:active,
+.dark .rbc-toolbar button.rbc-active {
+  background-color: var(--cal-accent-purple, #8B5CF6) !important;
   color: white !important;
   opacity: 1;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.5);
+  border: 1px solid rgba(167, 139, 250, 0.4);
 }
 
 /* ESTADOS DE FOCO SUAVIZADOS */
@@ -160,22 +163,25 @@
   outline-offset: 1px;
 }
 
-/* SCROLLBAR SUAVIZADO */
-.rbc-time-content::-webkit-scrollbar {
-  width: 6px;
+/* SCROLLBAR SUAVIZADO - Mejorado */
+.dark .rbc-time-content::-webkit-scrollbar {
+  width: 8px;
 }
 
-.rbc-time-content::-webkit-scrollbar-track {
-  background: #2D3748;
+.dark .rbc-time-content::-webkit-scrollbar-track {
+  background: var(--cal-card, #1E293B);
+  border-radius: 4px;
 }
 
-.rbc-time-content::-webkit-scrollbar-thumb {
-  background: #4A5568;
-  border-radius: 3px;
+.dark .rbc-time-content::-webkit-scrollbar-thumb {
+  background: var(--cal-border, #334155);
+  border-radius: 4px;
+  border: 2px solid var(--cal-card, #1E293B);
 }
 
-.rbc-time-content::-webkit-scrollbar-thumb:hover {
-  background: #718096;
+.dark .rbc-time-content::-webkit-scrollbar-thumb:hover {
+  background: var(--cal-accent-purple, #8B5CF6);
+  cursor: pointer;
 }
 
 /* SUAVIZAR TRANSICIONES */
@@ -191,21 +197,6 @@
 .rbc-agenda-view {
   border-color: var(--cal-border-dark, #4A5568) !important;
   border-width: 1px;
-}
-
-
-/***********************AGREGADO****************************/
-/* TEXTO MÁS SUAVE EN TODO EL CALENDARIO */
-.rbc-calendar {
-  color: var(--cal-text-primary, #E2E8F0) !important;
-  font-weight: 400;
-}
-
-
-/* Fondo general del calendario */
-.rbc-calendar {
-  background-color: var(--cal-bg) !important;
-  color: var(--cal-text-primary) !important;
 }
 
 /* Celdas (días) */
@@ -234,78 +225,51 @@
   padding: 2px 4px !important;
 }
 
-/* Día actual */
-.rbc-today {
-  background-color: var(--cal-accent-light) !important;
-}
-
-
 /* Bordes */
 .rbc-month-row + .rbc-month-row,
 .rbc-day-bg + .rbc-day-bg {
   border-color: var(--cal-border) !important;
 }
 
-
-
-/*AGREGADO*/
-
 /* ESTILOS PASTELES PARA LAS CLASES que seleccionan el dia de la semana y el dia mismo */
 
 /* .rbc-time-column - Columna de horas */
 .rbc-time-view .rbc-time-column {
-  background-color: #f0f0ff !important; /* Pastel muy suave */
+  background-color: #f0f0ff !important;
   border-right: 1px solid #d7d7f7 !important;
 }
-
 
 .dark .rbc-time-view .rbc-time-column {
   background-color: rgba(151, 151, 246, 0.15) !important;
   border-right: 1px solid #6a6ae4 !important;
 }
 
-
-
 /* .rbc-day-slot - Celdas de día */
-
 .rbc-time-view .rbc-day-slot {
-  background-color: #fafaff !important; /* Blanco con tono pastel muy suave */
+  background-color: #fafaff !important;
   border-right: 1px solid #e8e8fd !important;
 }
-
 
 .dark .rbc-time-view .rbc-day-slot {
   background-color: rgba(151, 151, 246, 0.08) !important;
   border-right: 1px solid #7a7aeb !important;
 }
 
-
 /* .rbc-now - Elementos con hora actual */
 .rbc-now {
-  background-color: #e8e8ff !important; /* Pastel medio */
+  background-color: #e8e8ff !important;
   color: #5c5cbd !important;
 }
-
 
 .dark .rbc-now {
   background-color: rgba(151, 151, 246, 0.2) !important;
   color: #d0d0f9 !important;
 }
 
-
-
 /* .rbc-today - Día actual */
 .rbc-today {
-  background-color: #e3e3ff !important; /* Pastel más intenso */
+  background-color: #e3e3ff !important;
 }
-
-
-/*
-.dark .rbc-today {
-  background-color: rgba(151, 151, 246, 0.25) !important;
-}
-*/
-
 
 /* Estilo especial para la celda de hoy en la vista de día */
 .rbc-day-slot.rbc-today {
@@ -313,15 +277,11 @@
   box-shadow: inset 0 0 0 2px #9797F6;
 }
 
-
-/*AQUI ES DONDE DEBE CAMBIAR*/
-/*
+/* AQUI ES DONDE SE MEJORÓ EL CONTRASTE PARA EL DÍA ACTUAL */
 .dark .rbc-day-slot.rbc-today  {
-  background-color: rgb(206, 246, 151) ;
-  width: 100%;
-  box-shadow: inset 0 0 0 2px #b8b8f9;
+  background-color: rgba(139, 92, 246, 0.25) !important;
+  box-shadow: inset 0 0 0 2px var(--cal-today-border, rgba(167, 139, 250, 0.6));
 }
-*/
 
 /* Estilo para la hora actual en la columna de tiempo */
 .rbc-time-column .rbc-now {
@@ -329,24 +289,18 @@
   color: #5c5cbd !important;
 }
 
-
-
 .dark .rbc-time-column .rbc-now {
   color: #d0d0f9 !important;
 }
-
-
 
 /* Efectos de hover para mejor interactividad */
 .rbc-day-slot:hover {
   background-color: #f0f0ff !important;
 }
 
-
 .dark .rbc-day-slot:hover {
   background-color: rgba(151, 151, 246, 0.12) !important;
 }
-
 
 .rbc-today:hover {
   background-color: #d8d8ff !important;
@@ -355,10 +309,3 @@
 .dark .rbc-today:hover {
   background-color: rgba(151, 151, 246, 0.3) !important;
 }
-
-
-
-
-
-/*MODO OSCURO AGREGADO*/
-
