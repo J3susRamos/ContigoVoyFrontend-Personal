@@ -748,3 +748,46 @@ export interface Personal {
   rol: string,
   imagen: string | null
 }
+
+// ========== INTERFACES PARA GESTIÓN DE TRABAJADORES ==========
+
+export interface Worker {
+  user_id: number;
+  name: string;
+  apellido: string;
+  email: string;
+  rol: string;
+  estado: boolean;
+  fecha_creacion: string;
+}
+
+export interface WorkersApiResponse {
+  message: string;
+  result: {
+    data: {
+      data: Worker[];
+      current_page: number;
+      per_page: number;
+      total: number;
+      last_page: number;
+    };
+  };
+}
+
+export interface WorkerStatsResponse {
+  message: string;
+  result: {
+    [role: string]: {
+      total: number;
+      activos: number;
+      inactivos: number;
+    };
+  };
+}
+
+export interface WorkerFilterOptions {
+  rol: string;
+  estado: string;
+  page: number;
+  perPage: number;
+}
