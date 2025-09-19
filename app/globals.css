@@ -35,52 +35,6 @@ body {
   .animate-fade-exit-active {
     @apply opacity-0 transition-opacity duration-300;
   }
-
-  /* Animaciones para el detalle del paciente */
-  .patient-card {
-    @apply transition-all duration-300 ease-in-out;
-    animation: slideUpFade 0.6s ease-out;
-  }
-
-  .patient-info-item {
-    @apply transition-all duration-200 ease-in-out;
-  }
-
-  .patient-info-item:hover {
-    @apply scale-[1.02] shadow-sm;
-  }
-
-  .hero-gradient {
-    background: linear-gradient(135deg, hsl(var(--primary) / 0.1) 0%, hsl(var(--primary) / 0.05) 50%, transparent 100%);
-  }
-
-  .dark .hero-gradient {
-    background: linear-gradient(135deg, hsl(var(--primary) / 0.2) 0%, hsl(var(--primary) / 0.1) 50%, transparent 100%);
-  }
-
-  @keyframes slideUpFade {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes pulse-subtle {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
-  }
-
-  .status-indicator {
-    animation: pulse-subtle 2s infinite;
-  }
 }
 
 .embla {
@@ -290,11 +244,6 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-
-    /*agregados recien*/
-    --color-primary: #2563eb; /* Azul principal */
-    --color-primary-light: #3b82f6;
-    --color-primary-dark: #1e40af;
   }
   .dark {
     --background: 210 4% 19%;
@@ -322,16 +271,6 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-
-
-     /* Paleta para dark mode */
-    --color-primary: #60a5fa; /* Azul más claro para resaltar */
-    --color-primary-light: #93c5fd; /* intermedio */
-    --color-primary-dark: #1d4ed8; /* profundo */
-    
-    /* Colores intermedios de contraste */
-    --color-primary-contrast1: #4f83cc;
-    --color-primary-contrast2: #375a8c;
   }
 }
 
@@ -372,10 +311,15 @@ body {
   border-color: hsl(var(--border));
 }
 
-.dark .rbc-header,
-.dark .rbc-today {
+/* SEPARADO - Headers normales */
+.dark .rbc-header {
   background-color: hsl(var(--card));
   color: hsl(var(--card-foreground));
+}
+
+/* DÍA ACTUAL - Púrpura suave */
+.dark .rbc-today {
+  background-color: rgba(124, 58, 237, 0.15);
 }
 
 .dark .rbc-off-range-bg {
@@ -449,7 +393,6 @@ body {
   mask-repeat: no-repeat;
 }
 
-
 .mask-all-fade {
   -webkit-mask-image: -webkit-linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
   mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
@@ -475,118 +418,29 @@ body {
   background-color: transparent !important;
 }
 
-/* Animaciones para el registro familiar */
-.family-card {
-  @apply transition-all duration-500 ease-in-out;
-  animation: slideUpFade 0.6s ease-out;
-  animation-fill-mode: both;
+/* ===== SOLUCIÓN DEFINITIVA PARA DARK MODE - CALENDARIO ===== */
+
+/* Sombrear columna completa del día actual */
+.dark .rbc-time-view .rbc-day-column:has(.rbc-day-slot.rbc-today) {
+  background-color: rgba(124, 58, 237, 0.1) !important;
 }
 
-.family-card:nth-child(1) {
-  animation-delay: 0.1s;
+.dark .rbc-month-view .rbc-month-row:has(.rbc-day-bg.rbc-today) {
+  background-color: rgba(124, 58, 237, 0.08) !important;
 }
 
-.family-card:nth-child(2) {
-  animation-delay: 0.2s;
+/* Texto del día actual bien visible */
+.dark .rbc-date-cell.rbc-today {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
 }
 
-.family-card:nth-child(3) {
-  animation-delay: 0.3s;
+/* Para celdas individuales del día actual */
+.dark .rbc-day-slot.rbc-today {
+  background-color: rgba(124, 58, 237, 0.12) !important;
 }
 
-.family-card:hover {
-  @apply transform scale-[1.02] shadow-xl;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-@keyframes slideUpFade {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
-.family-section-header {
-  animation: bounceIn 0.8s ease-out;
-}
 
-/* Efectos hover para secciones internas */
-.family-subsection {
-  @apply transition-all duration-300;
-}
-
-.family-subsection:hover {
-  @apply transform translate-y-[-2px] shadow-md;
-}
-
-/* Gradientes animados para los fondos */
-.family-gradient-bg {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Efectos de pulso para elementos interactivos */
-.pulse-element {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .8;
-  }
-}
-
-@keyframes scroll-infinite {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-scroll-infinite {
-  animation: scroll-infinite 20s linear infinite;
-}
-
-.animate-scroll-infinite:hover {
-  animation-play-state: paused;
-}
