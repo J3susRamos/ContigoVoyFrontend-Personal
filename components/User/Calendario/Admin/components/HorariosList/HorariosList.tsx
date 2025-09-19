@@ -44,18 +44,18 @@ export default function HorariosList({
     }
   };
 
-  const getStatusColor = (estado: string) => {
-    switch (estado) {
-      case "disponible":
-        return "border-green-400 dark:border-green-400 bg-green-100 dark:bg-green-900/30";
-      case "ocupado":
-        return "border-red-400 dark:border-red-400 bg-red-100 dark:bg-red-900/30";
-      case "bloqueado":
-        return "border-yellow-400 dark:border-yellow-400 bg-yellow-100 dark:bg-yellow-900/30";
-      default:
-        return "border-gray-300 dark:border-gray-400 bg-gray-100 dark:bg-gray-900/30";
-    }
-  };
+const getStatusColor = (estado: string) => {
+  switch (estado) {
+    case "disponible":
+      return "border-[#D1D1F0] dark:border-[#A5A5E0] bg-[#F5F5FF] dark:bg-[#3D3D6B]/30"; // Gris morado pastel
+    case "ocupado":
+      return "border-[#E8B8F6] dark:border-[#D695E6] bg-[#FBF0FF] dark:bg-[#4F2D59]/30"; // Morado lila pastel
+    case "bloqueado":
+      return "border-[#9797F6] dark:border-[#7A7AE6] bg-[#F0F0FF] dark:bg-[#2D2D4F]/30"; // Morado pastel #9797F6
+    default:
+      return "border-[#E5E5E5] dark:border-[#A0A0A0] bg-[#F8F8F8] dark:bg-[#333333]/30"; // Gris pastel neutro
+  }
+};
 
   const getStatusText = (estado: string) => {
     switch (estado) {
@@ -122,7 +122,7 @@ export default function HorariosList({
 
           {/* Información de selección actual */}
           <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded mt-6 mx-auto max-w-md">
-            <h4 className="text-blue-600 dark:text-blue-400 font-medium mb-2">
+            <h4 className="text-purple-600 dark:text-blue-400 font-medium mb-2">
               Selección Actual:
             </h4>
             <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
@@ -142,12 +142,12 @@ export default function HorariosList({
   return (
     <div className="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded p-6 flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-blue-600 dark:text-blue-400 text-lg font-medium">
+        <h3 className="text-purple-600 dark:text-blue-400 text-lg font-medium">
           Horarios Encontrados
         </h3>
         <button
           onClick={onRetry}
-          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline"
+          className="text-sm text-purple-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 underline"
         >
           Actualizar
         </button>
@@ -165,7 +165,7 @@ export default function HorariosList({
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
-                    <h4 className="text-blue-700 dark:text-blue-300 font-medium mb-1">
+                    <h4 className="text-purple-700 dark:text-blue-300 font-medium mb-1">
                       {formatDate(horario.fecha)}
                     </h4>
                     <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
