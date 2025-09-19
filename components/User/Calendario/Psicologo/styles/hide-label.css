@@ -1,0 +1,18 @@
+.rbc-event-label {
+  display: none !important;
+}
+
+.rbc-toolbar {
+  display: none !important;
+}
+
+.rbc-allday-cell {
+  display: none !important;
+}
+
+.rbc-header {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  color: #7c3aed !important;
+}

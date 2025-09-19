@@ -1,0 +1,385 @@
+import { Color } from "@tiptap/extension-color";
+import ListItem from "@tiptap/extension-list-item";
+import TextAlign from "@tiptap/extension-text-align";
+import TextStyle from "@tiptap/extension-text-style";
+import Link from "@tiptap/extension-link";
+import Underline from "@tiptap/extension-underline";
+import { EditorProvider, useCurrentEditor } from "@tiptap/react";
+import { Editor as TiptapEditor } from "@tiptap/core";
+import StarterKit from "@tiptap/starter-kit";
+import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  Highlighter,
+  Italic,
+  Link2,
+  Link2Off,
+  Pilcrow,
+  Strikethrough,
+  UnderlineIcon,
+} from "lucide-react";
+import React, { useCallback } from "react";
+import Highlight from "@tiptap/extension-highlight";
+
+const MenuBar = () => {
+  const { editor } = useCurrentEditor();
+  const setLink = useCallback(() => {
+    if (!editor) return; // Validación dentro del callback
+
+    const previousUrl = editor.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    // cancelled
+    if (url === null) {
+      return;
+    }
+
+    // empty
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+
+    // update link
+    try {
+      editor
+        .chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
+    } catch (e) {
+      alert(e);
+    }
+  }, [editor]);
+
+  // Validación para el renderizado del componente
+  if (!editor) {
+    return null;
+  }
+  const buttonClass =
+    "px-3 py-1.5 rounded text-sm font-medium transition-colors";
+  const activeClass = "bg-primary dark:bg-gray-500 text-primary-foreground dark:text-primary-foreground";
+  const inactiveClass = "bg-muted dark:bg-gray-800 text-muted-foreground dark:text-muted-foreground hover:bg-muted/80 dark:hover:bg-muted/80";
+
+  return (
+    <div className="pb-4 border-b border-border dark:border-border">
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+          className={`${buttonClass} ${
+            editor.isActive("heading", { level: 1 })
+              ? activeClass
+              : inactiveClass
+          }`}
+          title="Encabezado 1"
+        >
+          H1
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+          className={`${buttonClass} ${
+            editor.isActive("heading", { level: 2 })
+              ? activeClass
+              : inactiveClass
+          }`}
+          title="Encabezado 2"
+        >
+          H2
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+          className={`${buttonClass} ${
+            editor.isActive("heading", { level: 3 })
+              ? activeClass
+              : inactiveClass
+          }`}
+          title="Encabezado 3"
+        >
+          H3
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setParagraph().run()}
+          className={`${buttonClass} ${
+            editor.isActive("paragraph") ? activeClass : inactiveClass
+          }`}
+          title="Párrafo"
+        >
+          <Pilcrow className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={`${buttonClass} ${
+            editor.isActive("bold") ? activeClass : inactiveClass
+          }`}
+          title="Negrita"
+        >
+          <Bold className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={`${buttonClass} ${
+            editor.isActive("italic") ? activeClass : inactiveClass
+          }`}
+          title="Cursiva"
+        >
+          <Italic className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={`${buttonClass} ${
+            editor.isActive("Underline") ? activeClass : inactiveClass
+          }`}
+          title="Subrayado"
+        >
+          <UnderlineIcon className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleHighlight().run()}
+          className={`${buttonClass} ${
+            editor.isActive("highlight") ? activeClass : inactiveClass
+          }`}
+          title="Marcador"
+        >
+          <Highlighter className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          className={`${buttonClass} ${
+            editor.isActive("strike") ? activeClass : inactiveClass
+          }`}
+          title="Tachado"
+        >
+          <Strikethrough className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          className={`${buttonClass} ${
+            editor.isActive({ textAlign: "left" }) ? activeClass : inactiveClass
+          }`}
+          title="Alinear a la izquierda"
+        >
+          <AlignLeft className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          className={`${buttonClass} ${
+            editor.isActive({ textAlign: "center" })
+              ? activeClass
+              : inactiveClass
+          }`}
+          title="Centrar"
+        >
+          <AlignCenter className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          className={`${buttonClass} ${
+            editor.isActive({ textAlign: "right" })
+              ? activeClass
+              : inactiveClass
+          }`}
+          title="Alinear a la derecha"
+        >
+          <AlignRight className="h-4 w-4" />
+        </button>
+        <button
+          onClick={setLink}
+          className={`${buttonClass} ${
+            editor.isActive({ textAlign: "link" }) ? activeClass : inactiveClass
+          }`}
+          title="Agregar enlace"
+        >
+          <Link2 className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => editor.chain().focus().unsetLink().run()}
+          disabled={!editor.isActive("link")}
+          className={`${buttonClass} ${
+            editor.isActive("link")
+              ? activeClass
+              : `${inactiveClass} opacity-50 cursor-not-allowed`
+          }`}
+          title="Quitar enlace"
+        >
+          <Link2Off className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const extensions = [
+  Color.configure({ types: [TextStyle.name, ListItem.name] }),
+  TextStyle.configure({}),
+  Underline,
+  Link.configure({
+    HTMLAttributes: {
+      class: "text-[#6364F4] underline hover:text-[#8484ed] cursor-pointer",
+      target: "_blank",
+      rel: "noopener noreferrer",
+    },
+    openOnClick: true,
+    autolink: true,
+    defaultProtocol: "https",
+    protocols: ["http", "https"],
+    isAllowedUri: (url, ctx) => {
+      try {
+        // construct URL
+        const parsedUrl = url.includes(":")
+          ? new URL(url)
+          : new URL(`${ctx.defaultProtocol}://${url}`);
+
+        // use default validation
+        if (!ctx.defaultValidate(parsedUrl.href)) {
+          return false;
+        }
+
+        // disallowed protocols
+        const disallowedProtocols = ["ftp", "file", "mailto"];
+        const protocol = parsedUrl.protocol.replace(":", "");
+
+        if (disallowedProtocols.includes(protocol)) {
+          return false;
+        }
+
+        // only allow protocols specified in ctx.protocols
+        const allowedProtocols = ctx.protocols.map((p) =>
+          typeof p === "string" ? p : p.scheme
+        );
+
+        if (!allowedProtocols.includes(protocol)) {
+          return false;
+        }
+
+        // disallowed domains
+        const disallowedDomains = [
+          "example-phishing.com",
+          "malicious-site.net",
+        ];
+        const domain = parsedUrl.hostname;
+
+        if (disallowedDomains.includes(domain)) {
+          return false;
+        }
+
+        // all checks have passed
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    shouldAutoLink: (url) => {
+      try {
+        // construct URL
+        const parsedUrl = url.includes(":")
+          ? new URL(url)
+          : new URL(`https://${url}`);
+
+        // only auto-link if the domain is not in the disallowed list
+        const disallowedDomains = [
+          "example-no-autolink.com",
+          "another-no-autolink.com",
+        ];
+        const domain = parsedUrl.hostname;
+
+        return !disallowedDomains.includes(domain);
+      } catch {
+        return false;
+      }
+    },
+  }),
+  Highlight.configure({
+    HTMLAttributes: {
+      class: "bg-[rgba(186,76,216,0.59)] ",
+    },
+  }),
+  TextAlign.configure({
+    types: ["heading", "paragraph"],
+  }),
+  StarterKit.configure({
+    bulletList: {
+      keepMarks: true,
+      keepAttributes: false,
+    },
+    orderedList: {
+      keepMarks: true,
+      keepAttributes: false,
+    },
+  }),
+];
+
+export const Tiptap = ({
+  setContenido,
+  contenido,
+}: {
+  contenido: string;
+  setContenido: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+
+  const handleUpdate = ({ editor }: { editor: TiptapEditor }) => {
+    const htmlContent = editor.getHTML();
+    setContenido(htmlContent);
+  };
+  
+  return (
+    <div className="[&>*:nth-child(2)]:grow min-h-0 [&>*:nth-child(2)]:flex [&>*:nth-child(2)]:flex-col flex flex-col w-full grow border-2 border-[#6364F4] p-4 mx-auto bg-card dark:bg-gray-700 text-card-foreground dark:text-gray-100 rounded-lg shadow-md">
+      <EditorProvider
+        slotBefore={<MenuBar />}
+        extensions={extensions}
+        onUpdate={handleUpdate}
+        content={contenido}
+        autofocus={true}
+        immediatelyRender={false}
+      >
+        <div className="prose prose-sm sm:prose lg:prose-lg mx-auto p-6 dark:prose-invert">
+          <style>{`
+          .ProseMirror {
+            flex-grow: 1;
+            min-height: 384px; /* equivalent to h-96 */
+            overflow-y: auto;
+            outline: none;
+            color: hsl(var(--foreground));
+            max-width: 100%;
+            overflow-x: hidden;
+            white-space: pre-wrap;   
+            word-break: break-word; 
+            max-height: 100%;
+            height: 0px;
+          }
+          .ProseMirror > * + * {
+            margin-top: 0.75em;
+          }
+          .ProseMirror ul,
+          .ProseMirror ol {
+            padding: 0 1rem;
+          }
+
+          .ProseMirror h1 {
+            font-size: 2em;
+          }
+          .ProseMirror h2 {
+            font-size: 1.5em;
+          }
+          .ProseMirror h3 {
+            font-size: 1.25em;
+          }
+          .ProseMirror mark {
+            color: inherit !important;
+          }
+        `}</style>
+        </div>
+      </EditorProvider>
+    </div>
+  );
+};
+
+export default Tiptap;

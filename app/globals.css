@@ -1,0 +1,446 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+@layer components {
+  .smooth-transition {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-fade-enter {
+    @apply opacity-0;
+  }
+
+  .animate-fade-enter-active {
+    @apply opacity-100 transition-opacity duration-300;
+  }
+
+  .animate-fade-exit {
+    @apply opacity-100;
+  }
+
+  .animate-fade-exit-active {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+}
+
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.slide {
+  flex: 0 0 33.33%;
+  min-width: 0;
+}
+
+.background_faq {
+  background-size: contain;
+}
+
+.circle-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #634ae2;
+  accent-color: #634ae2;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background: #fff;
+}
+
+.circle-checkbox:checked {
+  background-color: #634ae2;
+}
+
+.circle-checkbox:after {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: 2px auto;
+  border-radius: 50%;
+  background: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.circle-checkbox:checked:after {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .responsive-bg {
+    background-position: 70% 120%;
+    background-size: 200%;
+  }
+  .background_faq {
+    background-position: 70% 100%;
+    background-size: 180%;
+  }
+}
+.head {
+  text-align: center;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+}
+
+/*redes sociales */
+.wrapper {
+  display: inline-flex;
+  list-style: none;
+  height: 80px;
+  width: 100%;
+  padding-top: 25px;
+  font-family: "Poppins", sans-serif;
+  justify-content: start;
+}
+
+.wrapper .icon {
+  position: relative;
+  background: #ffffff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .tooltip {
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  background: #fff;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 5px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-weight: bold;
+}
+
+.wrapper .tooltip::before {
+  position: absolute;
+  content: "";
+  height: 8px;
+  width: 8px;
+  background: #fff;
+  bottom: -3px;
+  left: 50%;
+  transform: translate(-50%) rotate(45deg);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wrapper .icon:hover .tooltip {
+  top: -45px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.wrapper .icon:hover span,
+.wrapper .icon:hover .tooltip {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.wrapper .facebook:hover,
+.wrapper .facebook:hover .tooltip,
+.wrapper .facebook:hover .tooltip::before {
+  background: #1877f2;
+  color: #fff;
+}
+
+.wrapper .threads:hover,
+.wrapper .threads:hover .tooltip,
+.wrapper .threads:hover .tooltip::before {
+  background: #45aef0;
+  color: #fff;
+}
+
+.wrapper .instagram:hover,
+.wrapper .instagram:hover .tooltip,
+.wrapper .instagram:hover .tooltip::before {
+  background: #e1306c;
+  color: #fff;
+}
+
+.wrapper .whatsapp:hover,
+.wrapper .whatsapp:hover .tooltip,
+.wrapper .whatsapp:hover .tooltip::before {
+  background: #25d366;
+  color: #fff;
+}
+
+.wrapper .tiktok:hover,
+.wrapper .tiktok:hover .tooltip,
+.wrapper .tiktok:hover .tooltip::before {
+  background: #000;
+  color: #fff;
+}
+
+.wrapper .youtube:hover,
+.wrapper .youtube:hover .tooltip,
+.wrapper .youtube:hover .tooltip::before {
+  background: #ff0000;
+  color: #fff;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --title: 243 68% 53%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 261 80% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 210 4% 19%;
+    --foreground: 0 0% 98%;
+    --title: 0 0% 100%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 261 80% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Estilos para el modo oscuro del calendario */
+.dark .calendar-component {
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+.dark .rbc-toolbar button {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-toolbar button:active,
+.dark .rbc-toolbar button.rbc-active {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.dark .rbc-toolbar button:hover {
+  background-color: hsl(var(--muted));
+}
+
+.dark .rbc-month-view,
+.dark .rbc-agenda-view,
+.dark .rbc-time-view {
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--border));
+}
+
+/* SEPARADO - Headers normales */
+.dark .rbc-header {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+/* DÍA ACTUAL - Púrpura suave */
+.dark .rbc-today {
+  background-color: rgba(124, 58, 237, 0.15);
+}
+
+.dark .rbc-off-range-bg {
+  background-color: hsl(var(--muted));
+}
+
+.dark .rbc-off-range {
+  color: hsl(var(--muted-foreground));
+}
+
+.dark .rbc-event {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.dark .rbc-day-bg + .rbc-day-bg,
+.dark .rbc-month-row + .rbc-month-row,
+.dark .rbc-header + .rbc-header,
+.dark .rbc-time-header-content,
+.dark .rbc-time-content,
+.dark .rbc-day-slot .rbc-time-slot,
+.dark .rbc-timeslot-group {
+  border-color: hsl(var(--border));
+}
+
+.dark .rbc-time-content > * + * > *,
+.dark .rbc-header + .rbc-header {
+  border-left-color: hsl(var(--border));
+}
+
+.dark .rbc-current-time-indicator {
+  background-color: hsl(var(--primary));
+}
+
+.dark .rbc-label,
+.dark .rbc-toolbar-label {
+  color: hsl(var(--foreground));
+}
+
+.dark .rbc-agenda-empty {
+  color: hsl(var(--muted-foreground));
+  border-color: hsl(var(--border));
+}
+
+@layer components {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #babaff;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #babaff;
+  }
+}
+
+.mask-horizontal-fade {
+  -webkit-mask-image: -webkit-linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.mask-all-fade {
+  -webkit-mask-image: -webkit-linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* Estilos para autocompletado de Google en modo oscuro */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active,
+.dark input[type="password"]:-webkit-autofill,
+.dark input[type="password"]:-webkit-autofill:hover,
+.dark input[type="password"]:-webkit-autofill:focus,
+.dark input[type="password"]:-webkit-autofill:active {
+  -webkit-text-fill-color: #634AE2 !important;
+  font-weight: 700 !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  background-color: transparent !important;
+}
+
+/* ===== SOLUCIÓN DEFINITIVA PARA DARK MODE - CALENDARIO ===== */
+
+/* Sombrear columna completa del día actual */
+.dark .rbc-time-view .rbc-day-column:has(.rbc-day-slot.rbc-today) {
+  background-color: rgba(124, 58, 237, 0.1) !important;
+}
+
+.dark .rbc-month-view .rbc-month-row:has(.rbc-day-bg.rbc-today) {
+  background-color: rgba(124, 58, 237, 0.08) !important;
+}
+
+/* Texto del día actual bien visible */
+.dark .rbc-date-cell.rbc-today {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+
+/* Para celdas individuales del día actual */
+.dark .rbc-day-slot.rbc-today {
+  background-color: rgba(124, 58, 237, 0.12) !important;
+}
+
+
+
+
+
