@@ -668,7 +668,7 @@ export async function GetEspecialidadesPsicologos(
   return await res.json();
 }
 
-//Crear citas en el perfil del paciente
+//Crear personal
 export async function CreatePersonal(values: Personal) {
   const payload = {
     ...values,
@@ -687,6 +687,111 @@ export async function CreatePersonal(values: Personal) {
   if (!res.ok) {
     const errorData = await res.json();
     console.error("Error del backend:", errorData);
+    throw errorData;
+  }
+
+  return await res.json();
+}
+
+// ========== GESTIÓN DE TRABAJADORES ==========
+
+// Obtener todos los trabajadores
+export async function GetAllWorkers(params?: {
+  per_page?: number;
+  estado?: string;
+  rol?: string;
+  page?: number;
+}) {
+  const token = parseCookies()["session"];
+  const searchParams = new URLSearchParams();
+  
+  if (params?.per_page) searchParams.append("per_page", params.per_page.toString());
+  if (params?.estado !== undefined) searchParams.append("estado", params.estado);
+  if (params?.rol) searchParams.append("rol", params.rol);
+  if (params?.page) searchParams.append("page", params.page.toString());
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/users/workers?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw errorData;
+  }
+
+  return await res.json();
+}
+
+// Cambiar rol de un trabajador
+export async function ChangeWorkerRole(userId: number, newRole: string) {
+  const token = parseCookies()["session"];
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users/change-role`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      nuevo_rol: newRole,
+    }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw errorData;
+  }
+
+  return await res.json();
+}
+
+// Habilitar/Deshabilitar trabajador
+export async function ToggleWorkerStatus(userId: number, estado: boolean) {
+  const token = parseCookies()["session"];
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users/toggle-status`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      estado: estado,
+    }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw errorData;
+  }
+
+  return await res.json();
+}
+
+// Obtener estadísticas de trabajadores
+export async function GetWorkersStats() {
+  const token = parseCookies()["session"];
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users/workers/stats`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
     throw errorData;
   }
 
