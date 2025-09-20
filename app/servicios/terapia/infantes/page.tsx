@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia Infantil Online en Contigo Voy | Psicólogos para niños de 3 a 12 años",
+    "Terapia para niños – Crecer felices y seguros | Contigo Voy",
   description:
     " Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea.",
   authors: [{ name: "Contigo Voy" }],
