@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical:
-      "https://centropsicologicocontigovoy.com/servicios/terapia/adolescentes",
+      "https://centropsicologicocontigovoy.com/servicios/terapia/adolescentes/",
   },
   robots: {
     index: true,

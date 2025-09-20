@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical:
-      "https://centropsicologicocontigovoy.com/servicios/terapia/infantes",
+      "https://centropsicologicocontigovoy.com/servicios/terapia/infantes/",
   },
   robots: {
     index: true,

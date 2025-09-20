@@ -21,7 +21,7 @@ export default function PsychologistSelector({
 }: PsychologistSelectorProps) {
   return (
     <div className="w-full">
-      <label className="block text-blue-600 dark:text-blue-400 text-sm font-medium mb-2">
+      <label className="block text-purple-600 dark:text-blue-400 text-sm font-medium mb-2">
         Seleccionar Psicólogo
       </label>
 
@@ -38,7 +38,7 @@ export default function PsychologistSelector({
       )}
 
       <select
-        className="w-full bg-white dark:bg-transparent border border-blue-600 dark:border-blue-400 text-gray-800 dark:text-blue-400 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 transition-all"
+        className="w-full bg-white dark:bg-transparent border border-purple-600 dark:border-blue-400 text-gray-800 dark:text-blue-400 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-400 transition-all"
         value={selectedPsychologist}
         onChange={(e) => onPsychologistChange(e.target.value)}
         disabled={isLoading}

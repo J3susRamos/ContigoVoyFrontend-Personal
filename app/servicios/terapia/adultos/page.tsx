@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical:
-      "https://centropsicologicocontigovoy.com/servicios/terapia/adultos",
+      "https://centropsicologicocontigovoy.com/servicios/terapia/adultos/",
   },
   robots: {
     index: true,
