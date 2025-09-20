@@ -2,11 +2,11 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    default: "Blog | Centro Psicológico Contigo Voy",
+    default: "Blog de Psicología Online – Bienestar y consejos | Contigo Voy",
     template: "%s | Blog Contigo Voy"
   },
   description:
-    "En el Blog de Contigo Voy encontrarás inspiración para transformar tu vida. Desde como sanar emocionalmente hasta artículos que te harán vivir con conciencia.",
+    "Blog de psicología online con consejos para tu bienestar, manejo de emociones y desarrollo personal con Contigo Voy.",
   authors: [{ name: "Contigo Voy" }],
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",

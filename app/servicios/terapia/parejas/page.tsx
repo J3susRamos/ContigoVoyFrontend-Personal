@@ -5,7 +5,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia de Pareja Online | Contigo Voy Psicólogos para Relaciones Sanas y Conectadas",
+    "Terapia de pareja – Comunicación y conexión emocional | Contigo Voy",
   description:
     "Fortalece tu relación con terapia de pareja online. Mejora la comunicación, resuelve conflictos y recupera la conexión con apoyo profesional.",
   authors: [{ name: "Contigo Voy" }],
