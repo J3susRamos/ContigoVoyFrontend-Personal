@@ -1,12 +1,6 @@
 import { CreatePersonal } from "@/app/apiRoutes";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons/iconsvg";
-import {
-  FormData,
-  SelectItemI,
-  Roles,
-  Permissions,
-  Personal,
-} from "@/interface";
+import { FormData, SelectItemI, Roles, Personal } from "@/interface";
 import { Flags } from "@/utils/flagsPsicologos";
 import {
   Button,
@@ -18,7 +12,7 @@ import {
   SelectItem,
 } from "@heroui/react";
 import { getLocalTimeZone, today } from "@internationalized/date";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import showToast from "../ToastStyle";
 import { parseCookies } from "nookies";
 import { toast } from "react-toastify";
@@ -61,44 +55,10 @@ const roles: Roles[] = [
 ];
 
 // Permisos para ver secciones del sidebar
-const permissionsnav: Permissions[] = [
-  {
-    textValue: "Citas Sin Pagar", //Sandro ahora es de Citas sin pagar, pero adapta para Citas -> Citas sin pagar y Citas pagadas
-    showLabel: "Citas sin Pagar",
-  },
-  {
-    textValue: "Registro de personal", //Queda como tal
-    showLabel: "Registro de personal",
-  },
-  {
-    textValue: "Pacientes", //Queda como tal
-    showLabel: "Pacientes",
-  },
-  {
-    textValue: "Psicólogos", //Esto debe estar en AdministraciónAministradores -> Administradores, Psicologos, Marketing y Comunicaciones
-    showLabel: "Psicólogos",
-  },
-  {
-    textValue: "Calendario", //Esto queda como tal
-    showLabel: "Calendario",
-  },
-  {
-    textValue: "Estadísticas", //Debe modificarse para que tenga sentido -> Un admin debe ver otros tipo de graficos
-    showLabel: "Estadísticas",
-  },
-  {
-    textValue: "Blog",
-    showLabel: "Blog",
-  },
-  {
-    textValue: "Marketing",
-    showLabel: "Marketing",
-  },
-  {
-    textValue: "Politicas y privacidad",
-    showLabel: "Politicas y privacidad",
-  },
-];
+type Permission = {
+  id: number;
+  name: string;
+};
 
 // Obtener estos datos de manera dinamica
 const titles: SelectItemI[] = [
@@ -131,22 +91,75 @@ export const PersonalForm = ({
   onNext: (data: FormData) => void;
   initialFormData: FormData;
 }) => {
+  const [permissionsList, setPermissionsList] = useState<Permission[]>([]);
+
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const cookies = parseCookies();
+        const token = cookies["session"];
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}api/urls/enlaces`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log("Permisos obtenidos:", data.result);
+          setPermissionsList(data.result);
+        } else {
+          console.error("Error en la solicitud:", data);
+        }
+      } catch (error) {
+        console.error("Error al obtener permisos:", error);
+      }
+    };
+    fetchPermissions();
+  }, []);
+
   const [isSend, setIsSend] = useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
   const [formData, setFormData] = React.useState<FormData>(initialFormData);
   const [rol, setRol] = React.useState("PSICOLOGO");
-  const [permissions, setPermissions] = React.useState<string[]>([]);
+  const [permissions, setPermissions] = React.useState<number[]>([]);
   const resetForm = () => {
-  setFormData(initialFormData);
-  setRol("PSICOLOGO");
-  setPermissions([]);
-};
+    setFormData(initialFormData);
+    setRol("PSICOLOGO");
+    setPermissions([]);
+  };
   const toggleVisibility = () => setIsVisible(!isVisible);
   const handleSubmit = (e: React.FormEvent) => {
     console.log(formData);
     e.preventDefault();
     onNext(formData);
   };
+
+  // Función de utilidad para transformar fecha
+  const formatFechaNacimiento = (fecha: string | DateValue | Date): string => {
+    if (!fecha) return ""; // 👈 devolvemos string vacío en lugar de null
+
+    if (typeof fecha === "string") {
+      return fecha;
+    }
+
+    if (fecha instanceof Date) {
+      return fecha.toISOString().split("T")[0];
+    }
+
+    return `${fecha.year}-${String(fecha.month).padStart(2, "0")}-${String(
+      fecha.day
+    ).padStart(2, "0")}`;
+  };
+
   const handleSubmitCreatePersonal = async () => {
     try {
       setIsSend(true);
@@ -158,16 +171,26 @@ export const PersonalForm = ({
       const personalData: Personal = {
         apellido: updatedFormData.apellido,
         email: updatedFormData.email,
-        fecha_nacimiento: updatedFormData.fecha_nacimiento,
+        fecha_nacimiento: formatFechaNacimiento(
+          updatedFormData.fecha_nacimiento
+        ),
         name: updatedFormData.name,
         password: updatedFormData.password,
         permissions: updatedFormData.permissions,
         rol: rol,
         imagen: null,
       };
+      console.log(
+        "📤 Datos que se envían al backend:",
+        JSON.stringify(personalData, null, 2)
+      );
+
       const response = await CreatePersonal(personalData);
       showToast("success", "Personal creado exitosamente");
       console.log("Personal creado exitosamente:", response);
+
+      resetForm();
+      setIsSend(false);
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null) {
         const err = error as {
@@ -192,16 +215,6 @@ export const PersonalForm = ({
     setFormData((prev) => ({ ...prev, rol: value }));
   };
 
-  const handleDateChange = React.useCallback((date: DateValue | null) => {
-    if (!date) return;
-    setFormData((prev) => ({
-      ...prev,
-      fecha_nacimiento: `${String(date.day).padStart(2, "0")}/${String(
-        date.month
-      ).padStart(2, "0")}/${String(date.year)}`,
-    }));
-  }, []);
-
   const especialidadesMap: Record<string, number> = {
     "cognitivo-conductual": 1,
     neuropsicologia: 2,
@@ -220,7 +233,24 @@ export const PersonalForm = ({
 
       const cookies = parseCookies();
       const token = cookies["session"];
-      const especialidadesFinal = [especialidadesMap["default"]];
+
+      // Asegurar que la fecha vaya como YYYY-MM-DD
+      const fechaNacimiento = formData.fecha_nacimiento
+        ? formatFechaNacimiento(formData.fecha_nacimiento)
+        : null;
+
+      // Validar especialidades
+      const especialidadesFinal = especialidadesMap["default"]
+        ? [especialidadesMap["default"]]
+        : [];
+
+      const payload = {
+        ...formData,
+        fecha_nacimiento: fechaNacimiento,
+        especialidades: especialidadesFinal,
+      };
+
+      console.log(" Datos enviados al backend (Psicólogo):", payload);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}api/psicologos`,
@@ -231,10 +261,7 @@ export const PersonalForm = ({
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            ...formData,
-            especialidades: especialidadesFinal,
-          }),
+          body: JSON.stringify(payload),
         }
       );
 
@@ -242,8 +269,7 @@ export const PersonalForm = ({
 
       if (response.ok) {
         console.log("Éxito:", data.description);
-
-        setShowSuccessModal(true); // mostrar modal
+        setShowSuccessModal(true);
       } else {
         toast.warn(data.message || "Error al crear el psicólogo", {
           position: "bottom-right",
@@ -259,6 +285,34 @@ export const PersonalForm = ({
       console.error("Error al enviar al backend:", error);
     } finally {
       setIsSend(false);
+    }
+  };
+
+  const [errorFecha, setErrorFecha] = useState<string | null>(null);
+
+  const handleDateChange = (date: DateValue | null) => {
+    if (!date) {
+      setErrorFecha("La fecha de nacimiento es obligatoria.");
+      return;
+    }
+
+    const hoy = new Date();
+    const nacimiento = new Date(date.year, date.month - 1, date.day); // cuidado: month empieza en 0
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const m = hoy.getMonth() - nacimiento.getMonth();
+
+    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--; // aún no cumplió años este año
+    }
+
+    if (edad < 18) {
+      setErrorFecha("Debe ser mayor de 18 años.");
+    } else {
+      setErrorFecha(null);
+      setFormData((prev) => ({
+        ...prev,
+        fecha_nacimiento: date,
+      }));
     }
   };
 
@@ -324,8 +378,6 @@ export const PersonalForm = ({
                             <div className="w-full flex justify-center">
                               <div className="w-full">
                                 <DatePicker
-                                  aria-label="Fecha de nacimiento"
-                                  label="Fecha de nacimiento"
                                   labelPlacement="outside"
                                   isRequired
                                   variant="bordered"
@@ -334,12 +386,17 @@ export const PersonalForm = ({
                                   radius="lg"
                                   classNames={{
                                     inputWrapper:
-                                      "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                                      "flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full h-12", // <-- altura fija y centrado
                                     input:
-                                      "text-gray-900 dark:text-white px-4 py-3 text-center w-full",
+                                      "text-gray-900 dark:text-white text-center w-full placeholder:text-center",
                                   }}
                                   onChange={handleDateChange}
                                 />
+                                {errorFecha && (
+                                  <p className="text-red-500 text-sm mt-2">
+                                    {errorFecha}
+                                  </p>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -352,7 +409,6 @@ export const PersonalForm = ({
                             </label>
                           </div>
                           <Select
-                            label="Género"
                             labelPlacement="outside"
                             isRequired
                             radius="lg"
@@ -424,7 +480,6 @@ export const PersonalForm = ({
                             </label>
                           </div>
                           <Select
-                            label="Rol"
                             labelPlacement="outside"
                             isRequired
                             radius="lg"
@@ -498,7 +553,6 @@ export const PersonalForm = ({
                             <div className="w-full flex justify-center">
                               <div className="w-full">
                                 <Select
-                                  label="País"
                                   labelPlacement="outside"
                                   isRequired
                                   radius="lg"
@@ -601,7 +655,6 @@ export const PersonalForm = ({
                               </label>
                             </div>
                             <Select
-                              label="Título Profesional"
                               name="titulo"
                               isRequired
                               radius="lg"
@@ -629,9 +682,9 @@ export const PersonalForm = ({
                             >
                               {titles.map((title) => (
                                 <SelectItem
-                                  className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                  textValue={title.textValue}
                                   key={title.textValue}
+                                  textValue={title.textValue}
+                                  className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                                 >
                                   {title.showLabel}
                                 </SelectItem>
@@ -648,61 +701,61 @@ export const PersonalForm = ({
                               </label>
                             </div>
                             <Select
-                              label="Permisos"
                               name="permissions"
                               isRequired
                               radius="lg"
                               labelPlacement="outside"
-                              selectionMode="single"
+                              selectionMode="multiple"
                               aria-label="Seleccionar permisos"
                               placeholder="Seleccione el permiso del personal."
                               variant="bordered"
                               selectedKeys={
-                                permissions.length > 0
-                                  ? new Set([
-                                      permissions[permissions.length - 1],
-                                    ])
-                                  : new Set()
+                                new Set(permissions.map((p) => String(p)))
                               }
                               onSelectionChange={(keys) => {
-                                const selectedValue = String([...keys][0]);
-                                const newPermissions = permissions.includes(
-                                  selectedValue
-                                )
-                                  ? permissions
-                                  : [...permissions, selectedValue];
-
-                                setPermissions(newPermissions);
+                                const selected = Array.from(keys).map((k) =>
+                                  Number(k)
+                                ); // convierto a number
+                                setPermissions(selected);
                                 setFormData((prev) => ({
                                   ...prev,
-                                  permissions: newPermissions,
+                                  permissions: selected,
                                 }));
                               }}
                             >
-                              {permissionsnav.map((perm) => (
-                                <SelectItem
-                                  key={perm.textValue}
-                                  textValue={perm.textValue}
-                                >
-                                  {perm.showLabel}
-                                </SelectItem>
-                              ))}
+                              {permissionsList
+                                .filter(
+                                  (perm) =>
+                                    perm.id !== undefined && perm.id !== null
+                                )
+                                .map((perm) => (
+                                  <SelectItem
+                                    key={String(perm.id)}
+                                    textValue={perm.name}
+                                  >
+                                    {perm.name}
+                                  </SelectItem>
+                                ))}
                             </Select>
                           </div>
                         ) : (
                           <div></div>
                         )}
-
                         {permissions.length > 0 && rol !== "PSICOLOGO" && (
                           <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                            {permissions.map((perm, idx) => (
-                              <span
-                                key={idx}
-                                className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary font-medium border border-primary/30"
-                              >
-                                {perm}
-                              </span>
-                            ))}
+                            {permissions.map((permId, idx) => {
+                              const permName =
+                                permissionsList.find((p) => p.id === permId)
+                                  ?.name || permId;
+                              return (
+                                <span
+                                  key={idx}
+                                  className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary font-medium border border-primary/30"
+                                >
+                                  {permName}
+                                </span>
+                              );
+                            })}
                           </div>
                         )}
                       </div>
@@ -742,9 +795,9 @@ export const PersonalForm = ({
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                   <Suceesfully
                     setIsSend={() => {
-                      resetForm();              // limpiar el formulario
+                      resetForm(); // limpiar el formulario
                       setShowSuccessModal(false); // cerrar modal
-                      setIsSend(false); 
+                      setIsSend(false);
                     }}
                   />
                 </div>
