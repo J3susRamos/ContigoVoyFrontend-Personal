@@ -4,11 +4,25 @@ import { Card, CardFooter } from "@/components/ui/card";
 import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
 import { PrePaciente, PsicologoPreviewData } from "@/interface";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
 import Image from "next/image";
 import { User } from "lucide-react";
 import { countryPrefixes } from "@/utils/CountryPrefixes";
+
+// Función para obtener el nombre del país a partir del código
+const getNombrePais = (codigoPais: string): string => {
+  const paises: Record<string, string> = {
+    "MX": "Bandera de México",
+    "AR": "Bandera de Argentina",
+    "CO": "Bandera de Colombia",
+    "PE": "Bandera de Perú",
+    "CL": "Bandera de Chile",
+    "EC": "Bandera de Ecuador"
+  };
+  
+  return paises[codigoPais] || "Bandera del país del psicólogo";
+};
 
 export default function ReservarPsiPreview({
   psicologo,
@@ -187,6 +201,10 @@ export default function ReservarPsiPreview({
                       objectFit: "cover",
                     }}
                     countryCode={psicologo.pais}
+                    alt={getNombrePais(psicologo.pais)}
+                    title={getNombrePais(psicologo.pais)}
+                    aria-label={getNombrePais(psicologo.pais)}
+                    loading="lazy"
                   />
                 </div>
               </div>

@@ -66,6 +66,8 @@ export default function Footer() {
                 src="/logofooter.svg/"
                 className="w-[150px] h-[60px] text-[#634AE2] dark:text-white"
                 title="Contigo Voy - Terapia Psicológica"
+                role="img"
+                aria-label="Logo Contigo Voy"
               />
 
             </motion.div>
@@ -78,7 +80,7 @@ export default function Footer() {
 
           {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</h3>
+            <h2 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</h2>
 
 
 
@@ -128,7 +130,7 @@ export default function Footer() {
           {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h3 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</h3>
+              <h2 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</h2>
 
 
               <div className="flex flex-col space-y-3 items-start">
@@ -148,6 +150,8 @@ export default function Footer() {
                       src="/WSP.svg"
                       className="flex-shrink-0 w-[14px] h-[14px]"
                       title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
+                      role="img"
+                      aria-label="Icono de WhatsApp"
                       beforeInjection={(svg) => {
                         svg.classList.add(
                           "fill-[#634AE2]",     // modo claro
@@ -178,7 +182,9 @@ export default function Footer() {
                     <ReactSVG
                       src="/WSP.svg"
                       className="flex-shrink-0 w-[14px] h-[14px]"
-                      title="Whatsapp Terapia Psicológica Peru Online Contigo Voy"
+                      title="Whatsapp Terapia Psicológica Argentina Online Contigo Voy"
+                      role="img"
+                      aria-label="Icono de WhatsApp"
                       beforeInjection={(svg) => {
                         svg.classList.add(
                           "fill-[#634AE2]",     // modo claro

@@ -32,7 +32,7 @@ const terapiaEmpresarial: ServicesStructureProps = {
     <p>
       ¿Tu empresa enfrenta altos niveles de estrés y conflictos internos?
       Impulsa el bienestar de tu
-      <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+      <span className="text-yellow-300" /*className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent" */>
         {" "}
         equipo
       </span>{" "}
@@ -136,6 +136,7 @@ const terapiaEmpresarial: ServicesStructureProps = {
         { id: 4, text: "Psicólogos certificados con amplia experiencia." },
       ],
     },
+    /* 
     {
       id: 2,
       title: "Terapia empresarial",
@@ -202,6 +203,7 @@ const terapiaEmpresarial: ServicesStructureProps = {
         { id: 4, text: "Psicólogos certificados con amplia experiencia." },
       ],
     },
+    */
   ],
 };
 
