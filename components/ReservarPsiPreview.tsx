@@ -4,7 +4,7 @@ import { Card, CardFooter } from "@/components/ui/card";
 import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
 import { PrePaciente, PsicologoPreviewData } from "@/interface";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
 import Image from "next/image";
 import { User } from "lucide-react";
