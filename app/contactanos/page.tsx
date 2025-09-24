@@ -48,10 +48,13 @@ const ContactUs = () => {
                 className="text-cv8 sm:text-cv8 font-semibold mt-scv6 w-full max-w-scv16">
                   Beneficios de acercarte a un centro psicológico
                 </h2>
-                <h3 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
+
+                {/* Cambio de h3 a h2 */}
+                
+                <h2 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
                   className="text-cv8 sm:text-cv8 font-bold mt-scv6 w-full max-w-scv16">
                   Contáctanos
-                </h3>
+                </h2>
               </div>
               <div className="mt-scv5 w-full flex pb-scv9">
                 <FormContacto />
