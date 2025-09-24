@@ -38,15 +38,14 @@ const AdultoTerapias: ServicesStructureProps = {
   motto: (
     <p>
       ¿Sientes que las preocupaciones del día a día están afectando tu bienestar{" "}
-      <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+      <span className="text-yellow-300" /*className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent" */>
         {" "}
         emocional
       </span>
       ?
     </p>
   ),
-  background:
-    "/Services/adult/Terapia_adultos_Mujer_agarrándose_rostro_feliz.webp",
+  background:"/Services/adult/Terapia_adultos_Mujer_agarrándose_rostro_feliz.webp",
   bgdown: "/Services/adult/Terapia_adultos_Mujer_afro_feliz_tablet.webp",
   bgup: "/Services/adult/bgupadultos.webp",
   bgdownAlt:
@@ -149,6 +148,7 @@ const AdultoTerapias: ServicesStructureProps = {
         { id: 4, text: "Psicólogos certificados con amplia experiencia." },
       ],
     },
+    /* 
     {
       id: 1,
       title: "Terapia para adultos",
@@ -215,6 +215,7 @@ const AdultoTerapias: ServicesStructureProps = {
         { id: 4, text: "Psicólogos certificados con amplia experiencia." },
       ],
     },
+    */
   ],
 };
 

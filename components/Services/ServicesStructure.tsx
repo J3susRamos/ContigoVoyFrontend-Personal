@@ -102,7 +102,7 @@ export default function ServicesStructure({
                 >
                   {" "}
                   <Link href="/ReservarCita">
-                    <button className="group relative px-4 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-[#634AE2] via-[#7B5FE8] to-[#9494F3] text-white font-semibold rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden text-xs sm:text-sm w-full sm:w-auto">
+                    <button className="group relative px-4 py-3.5 sm:px-8 sm:py-4 bg-gradient-to-r from-[#634AE2] via-[#7B5FE8] to-[#9494F3] text-white font-semibold rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden text-sm sm:text-base w-full sm:w-auto min-h-[44px] min-w-[44px]">
                       <span className="relative z-10">Reservar Cita</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] via-[#6366f1] to-[#8b5cf6] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </button>
@@ -237,6 +237,8 @@ export default function ServicesStructure({
                 }),
               ]}
               className="w-full bg-transparent"
+              aria-label="Tarjetas de beneficios"
+              aria-roledescription="carrusel"
             >
               <CarouselContent>
                 {service.cards?.slice(0, 5).map((card, index) => (
@@ -259,6 +261,9 @@ export default function ServicesStructure({
                                       "fill-[#634AE2]",
                                       "dark:fill-gray-300"
                                     );
+                                    // Añadir atributos de accesibilidad al SVG
+                                    svg.setAttribute("role", "img");
+                                    svg.setAttribute("aria-label", card.title || "Icono de servicio");
                                   }}
                                 />
                               </div>
@@ -279,6 +284,7 @@ export default function ServicesStructure({
                 variant="ghost"
                 className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
                 defaultIcon={false}
+                aria-label="Ver tarjeta anterior"
               >
                 <ChevronLeft strokeWidth={4} className="!w-scv5 !h-scv5" />
               </CarouselPrevious>
@@ -286,6 +292,7 @@ export default function ServicesStructure({
                 variant="ghost"
                 defaultIcon={false}
                 className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
+                aria-label="Ver siguiente tarjeta"
               >
                 <ChevronRight strokeWidth={4} className="!w-scv5 !h-scv5" />
               </CarouselNext>
@@ -308,6 +315,8 @@ export default function ServicesStructure({
                     className=" flex-1 relative w-[100px] object-contain [&_div]:h-full"
                     beforeInjection={(svg) => {
                       svg.classList.add("fill-[#634AE2]", "dark:fill-gray-300");
+                      svg.setAttribute("role", "img");
+                      svg.setAttribute("aria-label", card.title || "Icono de servicio");
                     }}
                   />
 
@@ -337,13 +346,15 @@ export default function ServicesStructure({
                 <div className=" rounded-full w-32 h-32 p-scv5 bg-[#634AE2] flex items-center justify-center">
                   <div className="relative w-full h-full flex items-center ">
                     <ReactSVG
-                      src={icono.iconImage}
-                      title={icono.title}
-                      className="w-full [&_div]:h-full"
-                      beforeInjection={(svg) => {
-                        svg.classList.add("fill-gray-300");
-                      }}
-                    />
+                            src={icono.iconImage}
+                            title={icono.title}
+                            className="w-full [&_div]:h-full"
+                            beforeInjection={(svg) => {
+                              svg.classList.add("fill-gray-300");
+                              svg.setAttribute("role", "img");
+                              svg.setAttribute("aria-label", icono.title || "Icono de servicio");
+                            }}
+                          />
                   </div>
                 </div>
                 <p className="text-center pt-3 text-cv3 text-title font-semibold leading-[20px] max-w-[190px]">
@@ -383,6 +394,8 @@ export default function ServicesStructure({
                 }),
               ]}
               className="w-full bg-transparent "
+              aria-label="Iconos de servicios"
+              aria-roledescription="carrusel"
             >
               <CarouselContent>
                 {service.iconos?.slice(0, 5).map((icono, index) => (
@@ -399,6 +412,8 @@ export default function ServicesStructure({
                             className="w-[80%] [&_div]:h-full"
                             beforeInjection={(svg) => {
                               svg.classList.add("fill-gray-300");
+                              svg.setAttribute("role", "img");
+                              svg.setAttribute("aria-label", icono.title || "Icono de servicio");
                             }}
                           />
                         </div>
@@ -415,6 +430,7 @@ export default function ServicesStructure({
                 variant="ghost"
                 className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
                 defaultIcon={false}
+                aria-label="Ver icono anterior"
               >
                 <ChevronLeft strokeWidth={4} className="!w-scv5 !h-scv5" />
               </CarouselPrevious>
@@ -422,6 +438,7 @@ export default function ServicesStructure({
                 variant="ghost"
                 defaultIcon={false}
                 className="text-[#634AE2] hover:bg-violet-300 bg-inherit border-none hidden min-[400px]:block"
+                aria-label="Ver siguiente icono"
               >
                 <ChevronRight strokeWidth={4} className="!w-scv5 !h-scv5" />
               </CarouselNext>
