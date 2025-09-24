@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia para adolescentes – Confianza y bienestar emocional | Contigo Voy",
+    "Terapia para adolescentes – Confianza y bienestar | Contigo Voy",
   description:
     "Terapia para adolescentes online con psicólogos expertos. Mejora autoestima, manejo emocional, habilidades sociales y orientación vocacional segura.",
   authors: [{ name: "Contigo Voy" }],

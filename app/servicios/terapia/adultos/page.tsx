@@ -5,7 +5,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia para adultos – Bienestar y apoyo psicológico | Contigo Voy",
+    "Terapia para adultos – Bienestar y apoyo | Contigo Voy",
   description:
     "Terapia psicológica para adultos online. Manejo de estrés, ansiedad y duelo con psicólogos certificados. Mejora tu bienestar emocional hoy.",
   authors: [{ name: "Contigo Voy" }],
