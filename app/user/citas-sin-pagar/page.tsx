@@ -14,7 +14,8 @@ export default function CitasSinPagar() {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
-    if (userData.rol === "ADMIN"||userData.rol === "ADMINISTRADOR"|| userData.rol === "COMUNICACION"||userData.rol === "MARKETING") {
+    const rolesAutorizados = ["ADMIN", "ADMINISTRADOR", "COMUNICACION", "MARKETING"];
+    if (rolesAutorizados.includes(userData.rol)) {
       setIsAuthorized(true);
     } else {
       router.push("/unauthorized");
