@@ -40,7 +40,7 @@ const PageHome = () => {
         setUser(userData);
         
         // Si es administrador, redirigir directamente a citas sin pagar
-        if (userData.rol === "ADMIN") {
+        if (userData.rol === "ADMIN") {  //
           router.push("/user/citas-sin-pagar");
           return;
         }

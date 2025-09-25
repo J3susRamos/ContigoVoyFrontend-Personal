@@ -18,7 +18,7 @@ const navItemsBase = [
     name: "Dashboard",
     link: "/user/home",
     icono: Icons.dashboard,
-    role: "both",
+    role: "psico"
   },
   {
     name: "Citas",
