@@ -23,7 +23,10 @@ async function getBlogByQuery(
       blogQuery, // Tal como viene
       blogQuery.includes("-") ? blogQuery.replace(/-/g, " ") : blogQuery, // Convertir guiones a espacios
       decodeURIComponent(blogQuery), // Decodificar URL
-      blogQuery.replace(/[^\w\s-]/g, "").replace(/\s+/g, " ").trim(), // Limpiar caracteres especiales
+      blogQuery
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, " ")
+        .trim(), // Limpiar caracteres especiales
     ];
 
     // Eliminar duplicados
@@ -34,7 +37,7 @@ async function getBlogByQuery(
     // Probar cada variante hasta encontrar el blog
     for (const searchTerm of uniqueVariants) {
       const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
-      
+
       console.log("🔍 [getBlogByQuery] Probando endpoint:", endpoint);
 
       const cacheConfig =
@@ -50,58 +53,23 @@ async function getBlogByQuery(
       });
 
       console.log("🔍 [getBlogByQuery] Response status:", response.status);
-      
+
       if (response.ok) {
         const data = await response.json();
-        console.log("✅ [getBlogByQuery] Blog encontrado con variante:", searchTerm);
-        
+        console.log(
+          "✅ [getBlogByQuery] Blog encontrado con variante:",
+          searchTerm,
+        );
+
         if (data.success && data.result) {
           return data.result;
         }
       }
     }
-    
+
     // Si no se encontró con ninguna variante
     console.warn("⚠️ [getBlogByQuery] Blog no encontrado con ninguna variante");
     return null;
-    console.log(
-      "🔍 [getBlogByQuery] Response headers:",
-      Object.fromEntries(response.headers.entries()),
-    );
-    console.log("🔍 [getBlogByQuery] Response URL:", response.url);
-
-    if (!response.ok) {
-      console.warn(
-        `❌ [getBlogByQuery] Blog "${searchTerm}" not found: ${response.status}`,
-      );
-      console.warn(
-        `❌ [getBlogByQuery] Response status text:`,
-        response.statusText,
-      );
-
-      try {
-        const errorBody = await response.text();
-        console.warn(`❌ [getBlogByQuery] Error response body:`, errorBody);
-      } catch (bodyError) {
-        console.warn(
-          `❌ [getBlogByQuery] No se pudo leer el body del error:`,
-          bodyError,
-        );
-      }
-
-      return null;
-    }
-
-    const data = await response.json();
-    console.log("✅ [getBlogByQuery] Datos obtenidos exitosamente:");
-    console.log(
-      "✅ [getBlogByQuery] Data structure:",
-      JSON.stringify(data, null, 2),
-    );
-    console.log("✅ [getBlogByQuery] Data.result exists:", !!data.result);
-    console.log("✅ [getBlogByQuery] Data.result type:", typeof data.result);
-
-    return data.result || null;
   } catch (error) {
     console.error("❌ [getBlogByQuery] Error completo al obtener blog:", error);
     console.error(
