@@ -166,14 +166,13 @@ export const GetPsicologos = async (
 ): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
   if (filters) {
-    if (filters.pais && filters.pais.length)
-      params.append("pais", filters.pais.join(","));
-    if (filters.genero && filters.genero.length)
-      params.append("genero", filters.genero.join(","));
-    if (filters.idioma && filters.idioma.length)
-      params.append("idioma", filters.idioma.join(","));
-    if (filters.enfoque && filters.enfoque.length)
-      params.append("enfoque", filters.enfoque.join(","));
+    const filtersCampos = ["pais", "genero", "idioma", "enfoque"];
+    filtersCampos.forEach((campo) => {
+      const valor = filters[campo as keyof typeof filters];
+      if (Array.isArray(valor) && valor.length) {
+        params.append(campo, valor.join(","));
+      }
+    });
   }
 
   if (search) params.append("search", search);
@@ -224,14 +223,13 @@ export const GetPsicologosInactivos = async (
 ): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
   if (filters) {
-    if (filters.pais && filters.pais.length)
-      params.append("pais", filters.pais.join(","));
-    if (filters.genero && filters.genero.length)
-      params.append("genero", filters.genero.join(","));
-    if (filters.idioma && filters.idioma.length)
-      params.append("idioma", filters.idioma.join(","));
-    if (filters.enfoque && filters.enfoque.length)
-      params.append("enfoque", filters.enfoque.join(","));
+    const filtersCampos = ["pais", "genero", "idioma", "enfoque"];
+    filtersCampos.forEach((campo) => {
+      const valor = filters[campo as keyof typeof filters];
+      if (Array.isArray(valor) && valor.length) {
+        params.append(campo, valor.join(","));
+      }
+    });
   }
 
   if (search) params.append("search", search);

@@ -65,17 +65,14 @@ export const useAuth = () => {
         error: null,
       });
 
-      if (userDataToStore.rol === "PACIENTE") {
-        window.location.assign("/paciente");
-      }
+      const rolesCitas = ["ADMIN", "ADMINISTRADOR", "COMUNICACION", "MARKETING"];
 
-      if (userDataToStore.rol === "PSICOLOGO") {
-        window.location.assign("/user/home");
-      }
-
-      if (userDataToStore.rol === "ADMIN" || userDataToStore.rol === "ADMINISTRADOR"|| userDataToStore.rol === "COMUNICACION" || userDataToStore.rol === "MARKETING" 
-      ) {
+      if (rolesCitas.includes(userDataToStore.rol)) {
         window.location.assign("/user/citas-sin-pagar");
+      } else if (userDataToStore.rol === "PSICOLOGO") {
+        window.location.assign("/user/home");
+      } else {
+        window.location.assign("/paciente");
       }
 
     } catch (error: unknown) {
