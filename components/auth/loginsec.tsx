@@ -65,7 +65,7 @@ export const useAuth = () => {
         loading: false,
         error: null,
       });
-      
+      //implemenrtar el welcome
       window.location.assign("/user/welcome");
 
     } catch (error: unknown) {
