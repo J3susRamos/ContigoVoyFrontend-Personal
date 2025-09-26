@@ -1,8 +1,9 @@
 import { destroyCookie, setCookie } from "nookies";
 import { useState } from "react";
+import { UsuarioLocalStorage } from "@/interface"; 
 
 interface AuthState {
-  user: { id: number; email: string; rol: string } | null;
+  user: UsuarioLocalStorage | null;
   token: string | null;
   loading: boolean;
   error: string | null;
@@ -54,26 +55,19 @@ export const useAuth = () => {
         apellido: data.result.apellido,
         imagen: data.result.imagen,
         ...(data.result.idpsicologo && { idpsicologo: data.result.idpsicologo }),
+        permisos: data.result.permissions,
       };
 
       localStorage.setItem("user", JSON.stringify(userDataToStore));
 
       setAuthState({
-        user: data.user,
+        user: userDataToStore,
         token: token,
         loading: false,
         error: null,
       });
-
-      const rolesCitas = ["ADMIN", "ADMINISTRADOR", "COMUNICACION", "MARKETING"];
-
-      if (rolesCitas.includes(userDataToStore.rol)) {
-        window.location.assign("/user/citas-sin-pagar");
-      } else if (userDataToStore.rol === "PSICOLOGO") {
-        window.location.assign("/user/home");
-      } else {
-        window.location.assign("/paciente");
-      }
+      //implemenrtar el welcome
+      window.location.assign("/user/welcome");
 
     } catch (error: unknown) {
       const errorMessage =

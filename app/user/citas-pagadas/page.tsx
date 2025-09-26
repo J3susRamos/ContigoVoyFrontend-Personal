@@ -14,11 +14,10 @@ export default function CitasPagadas() {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user") || "{}");
-
-    if (userData.rol !== "ADMIN") {
-      router.push("/unauthorized");
-    } else {
+    if (userData.rol === "ADMIN" || userData.rol === "ADMINISTRADOR" || userData.rol === "COMUNICACION" || userData.rol === "MARKETING") {
       setIsAuthorized(true);
+    } else {
+      router.push("/unauthorized");
     }
   }, [router]);
 
