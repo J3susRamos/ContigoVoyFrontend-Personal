@@ -30,6 +30,9 @@ export const DataView = ({
     try {
       const cookies = parseCookies();
       const token = cookies["session"];
+
+       const especialidadesFinal = especialidad.length > 0 ? especialidad : [especialidadesMap["default"]];
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}api/psicologos`,
         {
@@ -39,7 +42,7 @@ export const DataView = ({
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ ...formData, especialidades: especialidad }),
+          body: JSON.stringify({ ...formData, especialidades: especialidadesFinal }),
         }
       );
       const data = await response.json();
@@ -97,6 +100,7 @@ export const DataView = ({
     psicopedagogia: 4,
     gestalt: 5,
     "racional-emotivo": 6,
+    "default":7,
   };
   
   const [base64Image, setBase64Image] = useState<string | null>(null);
@@ -114,7 +118,7 @@ export const DataView = ({
     setFormData({ ...formData, imagen: base64 });
   };
   
-  const [especialidad, setEspecialidad] = useState<number[]>([]);
+  const [especialidad, setEspecialidad] = useState<number[]>([especialidadesMap["default"]]);
   const [isInvalid, setIsInvalid] = useState(false);
   
   const handleEspecialidadesChange = (values: string[]) => {
@@ -147,7 +151,7 @@ export const DataView = ({
               <div className="relative border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary rounded-xl h-48 w-full flex justify-center items-center cursor-pointer overflow-hidden bg-white dark:bg-gray-700 transition-all duration-200 shadow-sm">
                 {base64Image ? (
                   <Image
-                    src={formData.imagen}
+                    src={base64Image}
                     alt="Imagen seleccionada"
                     width={300}
                     height={200}
@@ -204,7 +208,7 @@ export const DataView = ({
                 variant="bordered"
                 radius="lg"
                 description={`${
-                  formData.introduccion?.length || 0
+                  formData.introduccion?.length || null
                 }/350 caracteres (mínimo 100)`}
               />
             </div>
@@ -217,11 +221,11 @@ export const DataView = ({
                 placeholder="Ingrese los años de experiencia"
                 labelPlacement="outside"
                 radius="lg"
-                value={formData.experiencia.toString()}
+
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    experiencia: parseInt(e.target.value) || 0,
+                    experiencia: e.target.value ? parseInt(e.target.value) : null,
                   })
                 }
                 classNames={{
@@ -246,7 +250,7 @@ export const DataView = ({
                   description: "text-gray-600 dark:text-gray-400 mb-4",
                 }}
                 onValueChange={handleEspecialidadesChange}
-                defaultValue={[Object.keys(especialidadesMap)[0]]}
+                defaultValue={["default"]}
               >
                 <div className="grid grid-cols-1 gap-3 w-full mt-3">
                   {Object.keys(especialidadesMap).map((clave) => (
@@ -276,7 +280,7 @@ export const DataView = ({
                 <div className="relative border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-primary dark:hover:border-primary rounded-xl h-56 w-full flex justify-center items-center cursor-pointer overflow-hidden bg-white dark:bg-gray-700 transition-all duration-200 shadow-sm">
                   {base64Image ? (
                     <Image
-                      src={formData.imagen}
+                      src={base64Image}
                       alt="Imagen seleccionada"
                       width={300}
                       height={200}
@@ -315,11 +319,11 @@ export const DataView = ({
                   placeholder="Ingrese los años de experiencia"
                   labelPlacement="outside"
                   radius="lg"
-                  value={formData.experiencia.toString()}
+                  value={formData.experiencia?.toString()??""}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      experiencia: parseInt(e.target.value) || 0,
+                      experiencia: e.target.value ? parseInt(e.target.value) : null,
                     })
                   }
                   classNames={{
@@ -358,7 +362,7 @@ export const DataView = ({
                   variant="bordered"
                   radius="lg"
                   description={`${
-                    formData.introduccion?.length || 0
+                    formData.introduccion?.length || null
                   }/350 caracteres (mínimo 100)`}
                 />
               </div>
@@ -374,7 +378,7 @@ export const DataView = ({
                     description: "text-gray-600 dark:text-gray-400 pl-1",
                   }}
                   onValueChange={handleEspecialidadesChange}
-                  defaultValue={[Object.keys(especialidadesMap)[0]]}
+                  defaultValue={["default"]}
                 >
                   <div className="grid grid-cols-1 gap-3 w-full mt-3">
                     {Object.keys(especialidadesMap).map((clave) => (

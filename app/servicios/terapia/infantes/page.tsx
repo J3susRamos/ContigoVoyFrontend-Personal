@@ -4,9 +4,9 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia Infantil Online en Contigo Voy | Psicólogos para niños de 3 a 12 años",
+    "Terapia para niños – Crecer felices y seguros | Contigo Voy",
   description:
-    " Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea.",
+    "Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea.",
   authors: [{ name: "Contigo Voy" }],
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
@@ -33,13 +33,11 @@ const NinosTerapias: ServicesStructureProps = {
   edad: "De 3 a 12 años de edad",
   titleMobil: "Terapia infantil",
   edadMobil: "3 - 12",
+  
   motto: (
     <p>
-      ¿Por qué no darle a
-      <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-        {" "}
-        tu pequeño
-      </span>{" "}
+      ¿Por qué no darle a 
+      <span className="text-yellow-300" /*className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent" */> tu pequeño </span>
       la oportunidad de crecer emocionalmente con la ayuda de un profesional?
     </p>
   ),
@@ -152,9 +150,9 @@ const NinosTerapias: ServicesStructureProps = {
     {
       id: 2,
       title: "Terapia de pareja",
-      preciounit: "s/129",
+      preciounit: "s/90",
       cents: ".00",
-      regularprice: "Precio regular: s/90.00",
+      regularprice: "Precio regular: s/129.00",
       list: [
         {
           id: 1,

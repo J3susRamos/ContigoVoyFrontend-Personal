@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { Edit3, Ban, Ticket } from "lucide-react";
+import { Edit3, Ban, Ticket, CheckCircle } from "lucide-react";
 import { ActionButton } from "./ActionButton";
 
 interface RowProps {
@@ -46,7 +46,7 @@ const Row: React.FC<RowProps> = ({
                 )}
                 {onDisable && (
                   <ActionButton
-                    icon={Ban}
+                    icon={!llave ? Ban : CheckCircle}
                     label={!llave ? "Deshabilitar" : "Habilitar"}
                     onClick={onDisable}
                     llave={llave}

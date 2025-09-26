@@ -9,16 +9,22 @@ import { UsuarioLocalStorage } from "@/interface";
 
 const navItemsBase = [
   {
+    name: "Welcome",
+    link: "/user/welcome",
+    icono: Icons.alpharrow,
+    role: "both",
+  },
+  {
     name: "Dashboard",
     link: "/user/home",
     icono: Icons.dashboard,
-    role: "both"
+    role: "both",
   },
   {
     name: "Citas",
     icono: Icons.citas,
-    key: 'citas-parent',
-    role: 'admin',
+    key: "citas-parent",
+    role: "admin",
     hijos: [
       {
         name: "Citas sin Pagar",
@@ -29,12 +35,24 @@ const navItemsBase = [
         name: "Citas Pagadas",
         link: "/user/citas-pagadas",
         icono: Icons.citas,
-      }
-    ]
+      },
+    ],
   },
   {
     name: "Registro de personal",
     link: "/user/personal",
+    icono: Icons.personal,
+    role: "admin",
+  },
+  {
+    name: "Gestión de Trabajadores",
+    link: "/user/trabajadores",
+    icono: Icons.personal,
+    role: "admin"
+  },
+  {
+    name: "Gestión de Trabajadores",
+    link: "/user/trabajadores",
     icono: Icons.personal,
     role: "admin"
   },
@@ -42,58 +60,59 @@ const navItemsBase = [
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
-    role: "both"
+    role: "both",
   },
   {
     name: "Psicologos",
     link: "/user/psicologos",
     icono: Icons.psicologos,
-    role: "admin"
+    role: "admin",
   },
   {
     name: "Citas",
     link: "/user/citas",
     icono: Icons.citas,
-    role: 'psico'
+    role: "psico",
   },
   {
     name: "Historial",
     link: "/user/historial",
     icono: Icons.historial,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Calendario",
     link: "/user/calendario",
     icono: Icons.calendario,
-    role: "both"
+    role: "both",
   },
   {
     name: "Estadisticas",
     link: "/user/estadisticas",
     icono: Icons.estadisticas,
-    role: "both"
+    role: "both",
   },
   {
     name: "Blog",
     link: "/user/blog",
     icono: Icons.blog,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Marketing",
     link: "/user/marketing",
     icono: Icons.marketing,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Politicas y Privacidad",
     link: "/user/politicas",
     icono: Icons.politicasyPriv,
-    role: "psico"
+    role: "psico",
   },
 ];
 
+//consumir datos del local storage, (permisions)
 const NavbarUser = () => {
   const [navItems, setNavItems] = useState(navItemsBase);
   const [isLoading, setIsLoading] = useState(true);
@@ -105,28 +124,21 @@ const NavbarUser = () => {
         const user: UsuarioLocalStorage = JSON.parse(userJson);
         let items = [...navItemsBase];
 
-        if (user.permissions && user.permissions.length > 0) {
-          const allowedNames = user.permissions.map((p) => p.name);
-
-          items = items
-            .map((item) => {
-              if (item.hijos) {
-                const hijosPermitidos = item.hijos.filter((hijo) =>
-                  allowedNames.includes(hijo.name)
-                );
-                if (hijosPermitidos.length > 0) {
-                  return { ...item, hijos: hijosPermitidos };
-                }
-                return null;
-              }
-
-              return allowedNames.includes(item.name) ? item : null;
-            })
-            .filter(Boolean) as typeof navItemsBase;
+        if (user.rol === "PSICOLOGO") {
+          items = items.filter(
+            (item) => item.role === "psico" || item.role === "both"
+          );
+        } else if (user.rol === "ADMIN") {
+          items = items.filter(
+            (item) => item.role === "admin" || item.role === "both"
+          );
+        } else {
+          // Para cualquier otro rol, usamos SOLO los permisos
+          const permisosNombres = user.permisos.map((p) => p.name);
+          items = items.filter((item) => permisosNombres.includes(item.name));
         }
 
         setNavItems(items);
-
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
@@ -149,7 +161,6 @@ const NavbarUser = () => {
         <nav className="bg-[#E7E7FF] dark:bg-[#19191a] h-[80px] flex items-center border-b border-gray-200 dark:border-gray-700">
           <div className="w-full px-6 flex items-center justify-between">
             <MobileNavUserHamburger navItems={navItems} />
-
             <Link href="/" className="flex-1 flex justify-center">
               <ReactSVG
                 src="/logoHeader.svg"
@@ -160,7 +171,6 @@ const NavbarUser = () => {
                 }}
               />
             </Link>
-
             <div className="w-10"></div> {/* Espaciador para centrar el logo */}
           </div>
         </nav>

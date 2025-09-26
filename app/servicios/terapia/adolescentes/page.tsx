@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia para Adolescentes Online | Contigo Voy Psicólogos Especializados",
+    "Terapia para adolescentes – Confianza y bienestar | Contigo Voy",
   description:
     "Terapia para adolescentes online con psicólogos expertos. Mejora autoestima, manejo emocional, habilidades sociales y orientación vocacional segura.",
   authors: [{ name: "Contigo Voy" }],
@@ -39,7 +39,7 @@ const TeenTerapias: ServicesStructureProps = {
   motto: (
     <p>
       ¿Listo para dar el primer paso hacia el bienestar emocional de tu{" "}
-      <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+      <span className="text-yellow-300" /*className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent" */>
         {" "}
         hijo
       </span>
@@ -51,9 +51,9 @@ const TeenTerapias: ServicesStructureProps = {
   bgdown: "/Services/teen/psicologos-especializados-en-adolescentes.webp",
   bgdownAlt: "Adolescente feliz | Psicología Online",
   bgdownTitle:
-    " Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos.",
+    "Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos.",
   description:
-    " Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos",
+    "Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos",
   tittleIcon:
     "Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos.",
   iconos: [
