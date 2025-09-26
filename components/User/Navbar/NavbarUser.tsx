@@ -45,6 +45,12 @@ const navItemsBase = [
     role: "admin"
   },
   {
+    name: "Gestión de Roles en Usuarios",
+    link: "/user/gestion-roles-temporales",
+    icono: Icons.personal,
+    role: "admin"
+  },
+  {
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
@@ -100,6 +106,15 @@ const navItemsBase = [
   },
 ];
 
+// Interface debe estar FUERA del componente
+interface UsuarioConRolesTemporales {
+  id: number;
+  name: string;
+  email: string;
+  rol: string;
+  all_roles?: string[];
+}
+
 const NavbarUser = () => {
   const [navItems, setNavItems] = useState(navItemsBase);
   const [isLoading, setIsLoading] = useState(true);
@@ -108,31 +123,50 @@ const NavbarUser = () => {
     const userJson = localStorage.getItem("user");
     if (userJson) {
       try {
-        const user: UsuarioLocalStorage = JSON.parse(userJson);
+        const user: UsuarioConRolesTemporales = JSON.parse(userJson);
         let items = [...navItemsBase];
 
-        if (user.rol === "PSICOLOGO") {
-          items = items.filter(
-            (item) =>
-              item.role === "psico" || item.role === "both"
-          );
-        }
+        // Obtener todos los roles del usuario (permanentes + temporales)
+        const userRoles = user.all_roles || [user.rol];
 
-        if (user.rol === "ADMIN") {
+        console.log("Roles del usuario:", userRoles);
+
+        // Filtrar items basado en todos los roles del usuario
+        if (userRoles.includes("ADMIN")) {
           items = items.filter(
             (item) => item.role === "admin" || item.role === "both"
           );
+        } else if (userRoles.includes("PSICOLOGO")) {
+          items = items.filter(
+            (item) => item.role === "psico" || item.role === "both"
+          );
+        } else if (userRoles.includes("MARKETING")) {
+          items = items.filter(
+            (item) => item.role === "marketing" || item.role === "both"
+          );
+        } else if (userRoles.includes("PACIENTE")) {
+          items = items.filter(
+            (item) => item.role === "paciente" || item.role === "both"
+          );
         }
 
-      setNavItems(items);
+        // Lógica adicional para usuarios con múltiples roles
+        const hasAdmin = userRoles.includes("ADMIN");
+        const hasPsico = userRoles.includes("PSICOLOGO");
+        const hasMarketing = userRoles.includes("MARKETING");
 
-      // Aqui que SANDRO SE CONSUMA ESTE ENDPOINT PARA JALARSE LOS PERMISOS
-      // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/personal/permisos/${user.id}`, { 
-      //     headers: {
-      //       "Accept": "application/json",
-      //       "Authorization": `Bearer ${token}`,
-      //     },
-      //   })
+        if ((hasAdmin && hasPsico) || (hasAdmin && hasMarketing) || (hasPsico && hasMarketing)) {
+          // CORRECCIÓN: Define el tipo de allowedRoles
+          const allowedRoles: string[] = []; // ← AÑADE EL TIPO AQUÍ
+          if (hasAdmin) allowedRoles.push("admin");
+          if (hasPsico) allowedRoles.push("psico");
+          if (hasMarketing) allowedRoles.push("marketing");
+          allowedRoles.push("both");
+
+          items = items.filter(item => allowedRoles.includes(item.role));
+        }
+
+        setNavItems(items);
 
       } catch (error) {
         console.error("Error parsing user data:", error);
