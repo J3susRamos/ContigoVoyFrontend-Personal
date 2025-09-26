@@ -12,13 +12,13 @@ const navItemsBase = [
     name: "Dashboard",
     link: "/user/home",
     icono: Icons.dashboard,
-    role: "both"
+    role: "both",
   },
   {
     name: "Citas",
     icono: Icons.citas,
-    key: 'citas-parent',
-    role: 'admin',
+    key: "citas-parent",
+    role: "admin",
     hijos: [
       {
         name: "Citas sin Pagar",
@@ -29,12 +29,18 @@ const navItemsBase = [
         name: "Citas Pagadas",
         link: "/user/citas-pagadas",
         icono: Icons.citas,
-      }
-    ]
+      },
+    ],
   },
   {
     name: "Registro de personal",
     link: "/user/personal",
+    icono: Icons.personal,
+    role: "admin",
+  },
+  {
+    name: "Gestión de Trabajadores",
+    link: "/user/trabajadores",
     icono: Icons.personal,
     role: "admin"
   },
@@ -54,67 +60,59 @@ const navItemsBase = [
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
-    role: "both"
+    role: "both",
   },
   {
     name: "Psicologos",
     link: "/user/psicologos",
     icono: Icons.psicologos,
-    role: "admin"
+    role: "admin",
   },
   {
     name: "Citas",
     link: "/user/citas",
     icono: Icons.citas,
-    role: 'psico'
+    role: "psico",
   },
   {
     name: "Historial",
     link: "/user/historial",
     icono: Icons.historial,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Calendario",
     link: "/user/calendario",
     icono: Icons.calendario,
-    role: "both"
+    role: "both",
   },
   {
     name: "Estadisticas",
     link: "/user/estadisticas",
     icono: Icons.estadisticas,
-    role: "both"
+    role: "both",
   },
   {
     name: "Blog",
     link: "/user/blog",
     icono: Icons.blog,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Marketing",
     link: "/user/marketing",
     icono: Icons.marketing,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Politicas y Privacidad",
     link: "/user/politicas",
     icono: Icons.politicasyPriv,
-    role: "psico"
+    role: "psico",
   },
 ];
 
-// Interface debe estar FUERA del componente
-interface UsuarioConRolesTemporales {
-  id: number;
-  name: string;
-  email: string;
-  rol: string;
-  all_roles?: string[];
-}
-
+//consumir datos del local storage, (permisions)
 const NavbarUser = () => {
   const [navItems, setNavItems] = useState(navItemsBase);
   const [isLoading, setIsLoading] = useState(true);
@@ -126,48 +124,21 @@ const NavbarUser = () => {
         const user: UsuarioConRolesTemporales = JSON.parse(userJson);
         let items = [...navItemsBase];
 
-        // Obtener todos los roles del usuario (permanentes + temporales)
-        const userRoles = user.all_roles || [user.rol];
-
-        console.log("Roles del usuario:", userRoles);
-
-        // Filtrar items basado en todos los roles del usuario
-        if (userRoles.includes("ADMIN")) {
-          items = items.filter(
-            (item) => item.role === "admin" || item.role === "both"
-          );
-        } else if (userRoles.includes("PSICOLOGO")) {
+        if (user.rol === "PSICOLOGO") {
           items = items.filter(
             (item) => item.role === "psico" || item.role === "both"
           );
-        } else if (userRoles.includes("MARKETING")) {
+        } else if (user.rol === "ADMIN") {
           items = items.filter(
-            (item) => item.role === "marketing" || item.role === "both"
+            (item) => item.role === "admin" || item.role === "both"
           );
-        } else if (userRoles.includes("PACIENTE")) {
-          items = items.filter(
-            (item) => item.role === "paciente" || item.role === "both"
-          );
-        }
-
-        // Lógica adicional para usuarios con múltiples roles
-        const hasAdmin = userRoles.includes("ADMIN");
-        const hasPsico = userRoles.includes("PSICOLOGO");
-        const hasMarketing = userRoles.includes("MARKETING");
-
-        if ((hasAdmin && hasPsico) || (hasAdmin && hasMarketing) || (hasPsico && hasMarketing)) {
-          // CORRECCIÓN: Define el tipo de allowedRoles
-          const allowedRoles: string[] = []; // ← AÑADE EL TIPO AQUÍ
-          if (hasAdmin) allowedRoles.push("admin");
-          if (hasPsico) allowedRoles.push("psico");
-          if (hasMarketing) allowedRoles.push("marketing");
-          allowedRoles.push("both");
-
-          items = items.filter(item => allowedRoles.includes(item.role));
+        } else {
+          // Para cualquier otro rol, usamos SOLO los permisos
+          const permisosNombres = user.permisos.map((p) => p.name);
+          items = items.filter((item) => permisosNombres.includes(item.name));
         }
 
         setNavItems(items);
-
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
@@ -190,7 +161,6 @@ const NavbarUser = () => {
         <nav className="bg-[#E7E7FF] dark:bg-[#19191a] h-[80px] flex items-center border-b border-gray-200 dark:border-gray-700">
           <div className="w-full px-6 flex items-center justify-between">
             <MobileNavUserHamburger navItems={navItems} />
-            
             <Link href="/" className="flex-1 flex justify-center">
               <ReactSVG
                 src="/logoHeader.svg"
@@ -201,7 +171,6 @@ const NavbarUser = () => {
                 }}
               />
             </Link>
-
             <div className="w-10"></div> {/* Espaciador para centrar el logo */}
           </div>
         </nav>
@@ -222,7 +191,7 @@ const NavbarUser = () => {
               />
             </h1>
           </Link>
-          
+
           <div className="flex-1">
             <DesktopNavUser navItems={navItems} />
           </div>

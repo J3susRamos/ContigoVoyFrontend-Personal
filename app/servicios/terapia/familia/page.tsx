@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia Familiar Online | Contigo Voy fortalece los lazos en tu hogar",
+    "Terapia familiar – Armonía y vínculos saludables | Contigo Voy",
   description:
     "Recupera la armonía con terapia familiar online. Mejora la comunicación, resuelve conflictos y fortalece los vínculos entre los miembros de tu familia.",
   authors: [{ name: "Contigo Voy" }],

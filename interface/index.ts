@@ -271,7 +271,10 @@ export interface PsicologoFilters {
   page?: number;
   size?: number;
 }
-
+export interface Permisos{
+  idUrls: number;
+  name: string;
+}
 export interface UsuarioLocalStorage {
   id: number;
   nombre: string;
@@ -280,6 +283,7 @@ export interface UsuarioLocalStorage {
   rol: string;
   imagen: string;
   idpsicologo?: number;
+  permisos: Permisos[];
 }
 export interface UsuarioLocalStorageUpdate {
   id: number;
@@ -290,6 +294,7 @@ export interface UsuarioLocalStorageUpdate {
   imagen: string;
   idpsicologo?: number;
   especialidades: string[];
+  permisos:Permisos[];
 }
 
 //Usuario LocalStorage
@@ -744,7 +749,7 @@ export interface Personal {
   fecha_nacimiento: Date | string | DateValue,
   name: string,
   password: string,
-  permissions?: string[] | string,
+  permissions?: number[],
   rol: string,
   imagen: string | null
 }
