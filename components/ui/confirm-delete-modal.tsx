@@ -64,7 +64,7 @@ export default function ConfirmDeleteModal({
             Cancelar
           </Button>
           <Button
-            color="danger"
+            color={filterStatus === "activos" ? "danger" : "success"}
             onPress={handleConfirm}
             isLoading={isProcessing}
             disabled={isProcessing || (showPsicologoSelector && !selectedPsicologoId)}
@@ -72,7 +72,7 @@ export default function ConfirmDeleteModal({
             { filterStatus ? 
               isProcessing
                 ? "Eliminando..."
-                : filterStatus === 'deshabilitados'
+                : filterStatus === 'inactivos'
                   ? "Activar"
                   : "Desactivar"
             : isProcessing

@@ -1,7 +1,9 @@
 'use client'
 import AccordionQuest from "@/components/AccordionQuest";
 import { motion } from "framer-motion";
+/* 
 import Image from "next/image";
+*/
 import Link from "next/link";
 
 export default function App() {
@@ -37,6 +39,8 @@ export default function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
           >
+            {/*  
+
             <Image
               src="/preguntas-sobre-terapia-en-linea.webp"
               alt="wa"
@@ -44,7 +48,9 @@ export default function App() {
               width={800}
               height={200}
               className="hidden md:block h-auto absolute right-0 opacity-20 bottom-[-100]"
-            />
+              />
+
+            */}
           </motion.div>
 
           <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
@@ -86,7 +92,10 @@ export default function App() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y : 0 }}
-          transition={{ duration: 0.8 }}
+
+          /* Cambio de duracion 0.8 a 0.5*/
+
+          transition={{ duration: 0.5 }}
           className="max-w-7xl mx-auto px-scv6"
         >
           <AccordionQuest faqs={faqs} />

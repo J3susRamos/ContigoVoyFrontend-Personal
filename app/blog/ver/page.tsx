@@ -18,70 +18,58 @@ async function getBlogByQuery(
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/";
 
-    const searchTerm = blogQuery.includes("-")
-      ? blogQuery.replace(/-/g, " ")
-      : decodeURIComponent(blogQuery);
+    // Múltiples intentos de búsqueda para mayor flexibilidad
+    const searchVariants = [
+      blogQuery, // Tal como viene
+      blogQuery.includes("-") ? blogQuery.replace(/-/g, " ") : blogQuery, // Convertir guiones a espacios
+      decodeURIComponent(blogQuery), // Decodificar URL
+      blogQuery
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, " ")
+        .trim(), // Limpiar caracteres especiales
+    ];
 
-    const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
+    // Eliminar duplicados
+    const uniqueVariants = [...new Set(searchVariants)];
 
-    console.log("🔍 [getBlogByQuery] Search term convertido:", searchTerm);
-    console.log("🔍 [getBlogByQuery] Endpoint final:", endpoint);
-    console.log("🔍 [getBlogByQuery] API URL base:", apiUrl);
+    console.log("🔍 [getBlogByQuery] Variantes de búsqueda:", uniqueVariants);
 
-    const cacheConfig =
-      process.env.NODE_ENV === "development"
-        ? { cache: "no-store" as const }
-        : { next: { revalidate: 3600 } };
+    // Probar cada variante hasta encontrar el blog
+    for (const searchTerm of uniqueVariants) {
+      const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
 
-    console.log("🔍 [getBlogByQuery] Cache config:", cacheConfig);
+      console.log("🔍 [getBlogByQuery] Probando endpoint:", endpoint);
 
-    const response = await fetch(endpoint, {
-      ...cacheConfig,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      const cacheConfig =
+        process.env.NODE_ENV === "development"
+          ? { cache: "no-store" as const }
+          : { next: { revalidate: 3600 } };
 
-    console.log("🔍 [getBlogByQuery] Response status:", response.status);
-    console.log("🔍 [getBlogByQuery] Response ok:", response.ok);
-    console.log(
-      "🔍 [getBlogByQuery] Response headers:",
-      Object.fromEntries(response.headers.entries()),
-    );
-    console.log("🔍 [getBlogByQuery] Response URL:", response.url);
+      const response = await fetch(endpoint, {
+        ...cacheConfig,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (!response.ok) {
-      console.warn(
-        `❌ [getBlogByQuery] Blog "${searchTerm}" not found: ${response.status}`,
-      );
-      console.warn(
-        `❌ [getBlogByQuery] Response status text:`,
-        response.statusText,
-      );
+      console.log("🔍 [getBlogByQuery] Response status:", response.status);
 
-      try {
-        const errorBody = await response.text();
-        console.warn(`❌ [getBlogByQuery] Error response body:`, errorBody);
-      } catch (bodyError) {
-        console.warn(
-          `❌ [getBlogByQuery] No se pudo leer el body del error:`,
-          bodyError,
+      if (response.ok) {
+        const data = await response.json();
+        console.log(
+          "✅ [getBlogByQuery] Blog encontrado con variante:",
+          searchTerm,
         );
-      }
 
-      return null;
+        if (data.success && data.result) {
+          return data.result;
+        }
+      }
     }
 
-    const data = await response.json();
-    console.log("✅ [getBlogByQuery] Datos obtenidos exitosamente:");
-    console.log(
-      "✅ [getBlogByQuery] Data structure:",
-      JSON.stringify(data, null, 2),
-    );
-    console.log("✅ [getBlogByQuery] Data.result exists:", !!data.result);
-    console.log("✅ [getBlogByQuery] Data.result type:", typeof data.result);
-
-    return data.result || null;
+    // Si no se encontró con ninguna variante
+    console.warn("⚠️ [getBlogByQuery] Blog no encontrado con ninguna variante");
+    return null;
   } catch (error) {
     console.error("❌ [getBlogByQuery] Error completo al obtener blog:", error);
     console.error(
