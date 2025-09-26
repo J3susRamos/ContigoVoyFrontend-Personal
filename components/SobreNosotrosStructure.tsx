@@ -22,7 +22,15 @@ const ValueCard = ({ title, content, icon }: { title: string, content: string, i
     whileHover={{ y: -10 }}
     className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200"
   >
-    <div className="text-blue-500 dark:text-blue-400 text-4xl mb-4">{icon}</div>
+    <div className="mb-4 flex justify-center">
+      <Image
+        src={`/AboutUs/${icon}.webp`}
+        alt={title}
+        width={50}
+        height={50}
+        className="w-50 h-50"
+      />
+    </div>
     <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900">{title}</h3>
     <p className="dark:text-gray-300 text-gray-600 leading-relaxed">{content}</p>
   </motion.div>
@@ -152,7 +160,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             <ValueCard
               title="Empatía"
               content={qs[0].valor1}
-              icon="👂"
+              icon="empatia"
             />
           </motion.div>
           <motion.div
@@ -164,7 +172,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             <ValueCard
               title="Confianza"
               content={qs[0].valor2}
-              icon="🤝"
+              icon="confianza"
             />
           </motion.div>
           <motion.div
@@ -176,7 +184,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             <ValueCard
               title="Profesionalismo"
               content={qs[0].valor3}
-              icon="🎓"
+              icon="profesional"
             />
           </motion.div>
         </div>
