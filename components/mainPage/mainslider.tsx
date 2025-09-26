@@ -174,16 +174,11 @@ export default function MainSlider() {
             <button
               key={`nav-button-${index}`}
               onClick={() => scrollTo(index)}
-              aria-label={`Ir a la sección ${index + 1}`}
+              aria-label={`Ir a la sección ${index + 1}: ${sections[index].phrase}`} // ← Más específico
               aria-current={selectedIndex === index ? "true" : "false"}
-              role="tab"
-              aria-selected={selectedIndex === index}
-              tabIndex={selectedIndex === index ? 0 : -1}
-              style={{ willChange: 'background-color' }} // Optimización GPU
-              className={`
-            w-3 h-3 rounded-full transition-all duration-300 transform-gpu focus:outline-none focus:ring-2 focus:ring-[#634AE2] focus:ring-offset-2
-            ${selectedIndex === index ? "bg-[#634AE2]" : "bg-white"}
-          `}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                selectedIndex === index ? "bg-[#634AE2]" : "bg-white"
+              }`}
             />
           ))}
         </div>

@@ -37,6 +37,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="w-full overflow-hidden dark:bg-gray-900 bg-gray-100">
+      <h1 className="text-cv5 sm:text-cv7 text-center font-bold text-title lg:mb-scv3">
+        Terapia Psicológica Online | Contigo Voy
+      </h1>
       <MainSlider />
       <TherapyServices />
       <ChooseUs />

@@ -180,15 +180,10 @@ export default function ChooseUs() {
               <button
                 key={index}
                 onClick={() => scrollTo(index)}
-                aria-label={`Ir a la sección ${index + 1}`}
-                className={`
-                          w-3 h-3 rounded-full transition-all duration-300 
-                          ${
-                            selectedIndex === index
-                              ? "bg-[#634AE2]"
-                              : "bg-[#9494F3]"
-                          }
-                        `}
+                aria-label={`Ir a ${features[index].title}`} // ← Agregar esto
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  selectedIndex === index ? "bg-[#634AE2]" : "bg-[#9494F3]"
+                }`}
               />
             ))}
           </div>
