@@ -9,16 +9,22 @@ import { UsuarioLocalStorage } from "@/interface";
 
 const navItemsBase = [
   {
+    name: "Welcome",
+    link: "/user/welcome",
+    icono: Icons.alpharrow,
+    role: "both",
+  },
+  {
     name: "Dashboard",
     link: "/user/home",
     icono: Icons.dashboard,
-    role: "both"
+    role: "psico"
   },
   {
     name: "Citas",
     icono: Icons.citas,
-    key: 'citas-parent',
-    role: 'admin',
+    key: "citas-parent",
+    role: "admin",
     hijos: [
       {
         name: "Citas sin Pagar",
@@ -29,14 +35,14 @@ const navItemsBase = [
         name: "Citas Pagadas",
         link: "/user/citas-pagadas",
         icono: Icons.citas,
-      }
-    ]
+      },
+    ],
   },
   {
     name: "Registro de personal",
     link: "/user/personal",
     icono: Icons.personal,
-    role: "admin"
+    role: "admin",
   },
   {
     name: "Gestión de Trabajadores",
@@ -48,58 +54,59 @@ const navItemsBase = [
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
-    role: "both"
+    role: "both",
   },
   {
     name: "Psicologos",
     link: "/user/psicologos",
     icono: Icons.psicologos,
-    role: "admin"
+    role: "admin",
   },
   {
     name: "Citas",
     link: "/user/citas",
     icono: Icons.citas,
-    role: 'psico'
+    role: "psico",
   },
   {
     name: "Historial",
     link: "/user/historial",
     icono: Icons.historial,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Calendario",
     link: "/user/calendario",
     icono: Icons.calendario,
-    role: "both"
+    role: "both",
   },
   {
     name: "Estadisticas",
     link: "/user/estadisticas",
     icono: Icons.estadisticas,
-    role: "both"
+    role: "both",
   },
   {
     name: "Blog",
     link: "/user/blog",
     icono: Icons.blog,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Marketing",
     link: "/user/marketing",
     icono: Icons.marketing,
-    role: "psico"
+    role: "psico",
   },
   {
     name: "Politicas y Privacidad",
     link: "/user/politicas",
     icono: Icons.politicasyPriv,
-    role: "psico"
+    role: "psico",
   },
 ];
 
+//consumir datos del local storage, (permisions)
 const NavbarUser = () => {
   const [navItems, setNavItems] = useState(navItemsBase);
   const [isLoading, setIsLoading] = useState(true);
@@ -113,27 +120,19 @@ const NavbarUser = () => {
 
         if (user.rol === "PSICOLOGO") {
           items = items.filter(
-            (item) =>
-              item.role === "psico" || item.role === "both"
+            (item) => item.role === "psico" || item.role === "both"
           );
-        }
-
-        if (user.rol === "ADMIN") {
+        } else if (user.rol === "ADMIN") {
           items = items.filter(
             (item) => item.role === "admin" || item.role === "both"
           );
+        } else {
+          // Para cualquier otro rol, usamos SOLO los permisos
+          const permisosNombres = user.permisos.map((p) => p.name);
+          items = items.filter((item) => permisosNombres.includes(item.name));
         }
 
-      setNavItems(items);
-
-      // Aqui que SANDRO SE CONSUMA ESTE ENDPOINT PARA JALARSE LOS PERMISOS
-      // fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/personal/permisos/${user.id}`, { 
-      //     headers: {
-      //       "Accept": "application/json",
-      //       "Authorization": `Bearer ${token}`,
-      //     },
-      //   })
-
+        setNavItems(items);
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
@@ -156,7 +155,6 @@ const NavbarUser = () => {
         <nav className="bg-[#E7E7FF] dark:bg-[#19191a] h-[80px] flex items-center border-b border-gray-200 dark:border-gray-700">
           <div className="w-full px-6 flex items-center justify-between">
             <MobileNavUserHamburger navItems={navItems} />
-            
             <Link href="/" className="flex-1 flex justify-center">
               <ReactSVG
                 src="/logoHeader.svg"
@@ -167,7 +165,6 @@ const NavbarUser = () => {
                 }}
               />
             </Link>
-
             <div className="w-10"></div> {/* Espaciador para centrar el logo */}
           </div>
         </nav>
@@ -188,7 +185,7 @@ const NavbarUser = () => {
               />
             </h1>
           </Link>
-          
+
           <div className="flex-1">
             <DesktopNavUser navItems={navItems} />
           </div>

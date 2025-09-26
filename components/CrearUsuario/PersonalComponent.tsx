@@ -34,7 +34,8 @@ export default function PersonalComponent() {
     ? JSON.parse(localStorage.getItem("user") || "{}")
     : {};
 
-  const isAdmin = userData.rol === "ADMIN" || userData.rol === "ADMINISTRADOR"|| userData.rol === "COMUNICACION"||userData.rol === "MARKETING";
+  const adminRoles = ["ADMIN", "ADMINISTRADOR", "COMUNICACION", "MARKETING"];
+  const isAdmin = adminRoles.includes(userData.rol);
 
   React.useEffect(() => {
     if (!isAdmin) {
