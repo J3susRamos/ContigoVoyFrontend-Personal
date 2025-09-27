@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import DashboardComponents from "@/components/User/Dashboard/DashboardComponents";
+import DashboardAdmin from "@/components/User/Dashboard/DashboardAdmin";
 import { Citas, UsuarioLocalStorage } from "@/interface";
 import CerrarSesion from "@/components/CerrarSesion";
 import { GetCitasPsicologoPorMes } from "@/app/apiRoutes";
@@ -39,29 +40,26 @@ const PageHome = () => {
         const userData = JSON.parse(storedUser) as UsuarioLocalStorage;
         setUser(userData);
         
-        // Si es administrador, redirigir directamente a citas sin pagar
-        if (userData.rol === "ADMIN") {  //
-          router.push("/user/citas-sin-pagar");
-          return;
+        // Si es psicólogo, cargar sus citas del día
+        if (userData.rol === "PSICOLOGO") {
+          GetCitasPsicologoPorMes().then(res => {
+            const hoy = new Date();
+            const citasHoy = res.result.filter((cita: Citas) => {
+              const fecha = new Date(cita.fecha_inicio);
+              return (
+                fecha.getDate() === hoy.getDate() &&
+                fecha.getMonth() === hoy.getMonth() &&
+                fecha.getFullYear() === hoy.getFullYear() &&
+                (cita.estado === "Pendiente")
+              );
+            });
+            setCitasDelDia(citasHoy);
+          }).catch(err => {
+            console.log(err);
+            return showToast("success", "No tienes citas agendadas para hoy");
+          });
         }
       }
-
-      GetCitasPsicologoPorMes().then(res => {
-        const hoy = new Date();
-        const citasHoy = res.result.filter((cita: Citas) => {
-          const fecha = new Date(cita.fecha_inicio);
-          return (
-            fecha.getDate() === hoy.getDate() &&
-            fecha.getMonth() === hoy.getMonth() &&
-            fecha.getFullYear() === hoy.getFullYear() &&
-              (cita.estado === "Pendiente")
-          );
-        });
-        setCitasDelDia(citasHoy);
-      }).catch(err => {
-        console.log(err)
-        return showToast("success", "No tienes citas agendadas para hoy")}
-      );
     }
   }, [router]);
 
@@ -69,25 +67,20 @@ const PageHome = () => {
     return <div>Loading...</div>;
   }
 
+  console.log("🔍 Usuario detectado:", user.nombre, user.apellido, "Rol:", user.rol);
+
+  // Si es administrador, mostrar el dashboard de administrador
+  if (user.rol === "ADMIN" || user.rol === "ADMINISTRADOR" || user.rol === "COMUNICACION" || user.rol === "MARKETING") {
+    console.log("✅ Mostrando DashboardAdmin para rol:", user.rol);
+    return <DashboardAdmin />;
+  }
+
+  console.log("📊 Mostrando dashboard normal para rol:", user.rol);
+
   return (
     <section className="bg-white dark:bg-[#020202] min-h-screen pt-16 sm:pt-20 md:pt-6">
-
       <div className="flex flex-col md:flex-row justify-between">
         <div className="m-5 mt-2 sm:mt-4 md:mt-5">
-        {user.rol === "ADMIN" ? (
-        <>
-          <h1 className="text-2xl md:text-4xl font-bold text-primary dark:text-primary-foreground">
-            Bienvenido, administrador {user.nombre} {user.apellido}
-          </h1>
-          <p className="text-base md:text-xl font-normal text-primary dark:text-primary-foreground">
-            Este espacio está diseñado para la gestión estratégica del equipo.
-          </p>
-          <p className="text-base md:text-xl font-normal text-primary dark:text-primary-foreground">
-            Revisa y organiza el personal de forma eficiente.
-          </p>
-        </>
-      ) : (
-        <>
           {/* Saludo personalizado con hora al lado */}
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-lg p-4 mb-4 border-l-4 border-purple-600">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -123,32 +116,33 @@ const PageHome = () => {
               </div>
 
               {/* Hora actual al lado en desktop */}
-              <div className="lg:flex-shrink-0">
-                <div className="flex items-center gap-3 bg-white dark:bg-gray-700 rounded-lg p-4 shadow-sm border border-purple-200 dark:border-gray-600">
-                  <div className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg">
-                    <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Hora actual</p>
-                    <p className="text-lg font-bold text-purple-600 dark:text-purple-400 font-mono">
-                      {currentTime}
-                    </p>
-                  </div>
+              <div className="flex-shrink-0 lg:self-start">
+                <div className="flex items-center gap-2 bg-white dark:bg-gray-600 px-4 py-2 rounded-lg shadow-sm border border-purple-200 dark:border-gray-500">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-mono text-lg sm:text-xl font-bold text-purple-800 dark:text-white">
+                    {currentTime}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-        </>
-      )}
         </div>
-        <div className="mx-auto md:mx-0 m-4 md:m-5 mt-2 md:mt-5 flex items-center gap-4">
+
+        <div className="hidden md:flex justify-end items-start mt-3 mr-5">
           <CerrarSesion />
         </div>
       </div>
+
+      <div className="md:hidden flex justify-center items-center m-5">
+        <CerrarSesion />
+      </div>
+
       <DashboardComponents />
     </section>
   );
 };
+
 export default PageHome;
+

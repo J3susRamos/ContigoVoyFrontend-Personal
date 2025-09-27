@@ -14,6 +14,13 @@ const Welcome = () => {
       if (storedUser) {
         const userData = JSON.parse(storedUser) as UsuarioLocalStorage;
         setUser(userData);
+        
+        // Redirigir a dashboard si es admin
+        const adminRoles = ["ADMIN", "ADMINISTRADOR", "MARKETING", "COMUNICACION"];
+        if (adminRoles.includes(userData.rol)) {
+          router.push("/user/home");
+          return;
+        }
       }
     }
   }, [router]);

@@ -66,16 +66,8 @@ export const useAuth = () => {
         loading: false,
         error: null,
       });
-
-      const rolesCitas = ["ADMIN", "ADMINISTRADOR", "COMUNICACION", "MARKETING"];
-
-      if (rolesCitas.includes(userDataToStore.rol)) {
-        window.location.assign("/user/citas-sin-pagar");
-      } else if (userDataToStore.rol === "PSICOLOGO") {
-        window.location.assign("/user/home");
-      } else {
-        window.location.assign("/paciente");
-      }
+      //Redirigir al dashboard
+      window.location.assign("/user/home");
 
     } catch (error: unknown) {
       const errorMessage =
