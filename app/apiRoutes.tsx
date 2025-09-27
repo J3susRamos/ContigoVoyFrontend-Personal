@@ -166,13 +166,14 @@ export const GetPsicologos = async (
 ): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
   if (filters) {
-    const filtersCampos = ["pais", "genero", "idioma", "enfoque"];
-    filtersCampos.forEach((campo) => {
-      const valor = filters[campo as keyof typeof filters];
-      if (Array.isArray(valor) && valor.length) {
-        params.append(campo, valor.join(","));
-      }
-    });
+    if (filters.pais && filters.pais.length)
+      params.append("pais", filters.pais.join(","));
+    if (filters.genero && filters.genero.length)
+      params.append("genero", filters.genero.join(","));
+    if (filters.idioma && filters.idioma.length)
+      params.append("idioma", filters.idioma.join(","));
+    if (filters.enfoque && filters.enfoque.length)
+      params.append("enfoque", filters.enfoque.join(","));
   }
 
   if (search) params.append("search", search);
@@ -223,13 +224,14 @@ export const GetPsicologosInactivos = async (
 ): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
   if (filters) {
-    const filtersCampos = ["pais", "genero", "idioma", "enfoque"];
-    filtersCampos.forEach((campo) => {
-      const valor = filters[campo as keyof typeof filters];
-      if (Array.isArray(valor) && valor.length) {
-        params.append(campo, valor.join(","));
-      }
-    });
+    if (filters.pais && filters.pais.length)
+      params.append("pais", filters.pais.join(","));
+    if (filters.genero && filters.genero.length)
+      params.append("genero", filters.genero.join(","));
+    if (filters.idioma && filters.idioma.length)
+      params.append("idioma", filters.idioma.join(","));
+    if (filters.enfoque && filters.enfoque.length)
+      params.append("enfoque", filters.enfoque.join(","));
   }
 
   if (search) params.append("search", search);
@@ -666,7 +668,7 @@ export async function GetEspecialidadesPsicologos(
   return await res.json();
 }
 
-//Crear personal
+//Crear citas en el perfil del paciente
 export async function CreatePersonal(values: Personal) {
   const payload = {
     ...values,
@@ -691,25 +693,10 @@ export async function CreatePersonal(values: Personal) {
   return await res.json();
 }
 
-// ========== GESTIÓN DE TRABAJADORES ==========
-
-// Obtener todos los trabajadores
-export async function GetAllWorkers(params?: {
-  per_page?: number;
-  estado?: string;
-  rol?: string;
-  page?: number;
-}) {
-  const token = parseCookies()["session"];
-  const searchParams = new URLSearchParams();
-  
-  if (params?.per_page) searchParams.append("per_page", params.per_page.toString());
-  if (params?.estado !== undefined) searchParams.append("estado", params.estado);
-  if (params?.rol) searchParams.append("rol", params.rol);
-  if (params?.page) searchParams.append("page", params.page.toString());
-
+// Obtener estadísticas de trabajadores por rol
+export async function GetWorkersStats() {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/users/workers?${searchParams.toString()}`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/users/workers/stats`,
     {
       method: "GET",
       headers: {
@@ -721,65 +708,101 @@ export async function GetAllWorkers(params?: {
   );
 
   if (!res.ok) {
-    const errorData = await res.json();
-    throw errorData;
+    throw new Error(`HTTP error! status: ${res.status}`);
   }
 
   return await res.json();
 }
 
-// Cambiar rol de un trabajador
-export async function ChangeWorkerRole(userId: number, newRole: string) {
-  const token = parseCookies()["session"];
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users/change-role`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      user_id: userId,
-      nuevo_rol: newRole,
-    }),
-  });
+// Obtener estadísticas de citas para dashboard admin
+export async function GetCitasEstadisticas() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/estadisticas`,
+    {
+      method: "GET", 
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!res.ok) {
-    const errorData = await res.json();
-    throw errorData;
+    throw new Error(`HTTP error! status: ${res.status}`);
   }
 
   return await res.json();
 }
 
-// Habilitar/Deshabilitar trabajador
-export async function ToggleWorkerStatus(userId: number, estado: boolean) {
-  const token = parseCookies()["session"];
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users/toggle-status`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      user_id: userId,
-      estado: estado,
-    }),
-  });
+// Obtener citas sin pagar para dashboard
+export async function GetCitasSinPagarDashboard() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/sin-pagar`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json", 
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
 
   if (!res.ok) {
-    const errorData = await res.json();
-    throw errorData;
+    throw new Error(`HTTP error! status: ${res.status}`);
   }
 
   return await res.json();
 }
 
-// Obtener estadísticas de trabajadores
-export async function GetWorkersStats() {
-  const token = parseCookies()["session"];
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/users/workers/stats`, {
+// Obtener citas pagadas para dashboard
+export async function GetCitasPagadasDashboard() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/citas/pagadas`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json", 
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
+  return await res.json();
+}
+
+// Obtener lista de todos los trabajadores con paginación y filtros
+export async function GetAllWorkers(filters?: {
+  rol?: string;
+  estado?: string;
+  page?: number;
+  perPage?: number;
+}) {
+  const params = new URLSearchParams();
+  
+  if (filters?.rol && filters.rol !== 'all') {
+    params.append('rol', filters.rol);
+  }
+  if (filters?.estado && filters.estado !== 'all') {
+    params.append('estado', filters.estado);
+  }
+  if (filters?.page) {
+    params.append('page', filters.page.toString());
+  }
+  if (filters?.perPage) {
+    params.append('per_page', filters.perPage.toString());
+  }
+
+  const queryString = params.toString();
+  const url = `${process.env.NEXT_PUBLIC_API_URL}api/users/workers${queryString ? `?${queryString}` : ''}`;
+
+  const res = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -789,8 +812,51 @@ export async function GetWorkersStats() {
   });
 
   if (!res.ok) {
-    const errorData = await res.json();
-    throw errorData;
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
+  return await res.json();
+}
+
+// Cambiar rol de un trabajador
+export async function ChangeWorkerRole(workerId: number, newRole: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/users/change-role`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ user_id: workerId, rol: newRole }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
+  return await res.json();
+}
+
+// Cambiar estado (activo/inactivo) de un trabajador
+export async function ToggleWorkerStatus(workerId: number, newStatus: boolean) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/users/toggle-status`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ user_id: workerId, estado: newStatus }),
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
   }
 
   return await res.json();
