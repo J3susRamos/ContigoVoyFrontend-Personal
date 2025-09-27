@@ -66,8 +66,8 @@ export const useAuth = () => {
         loading: false,
         error: null,
       });
-      //Redirigir al dashboard
-      window.location.assign("/user/home");
+      //implemenrtar el welcome
+      window.location.assign("/user/welcome");
 
     } catch (error: unknown) {
       const errorMessage =
