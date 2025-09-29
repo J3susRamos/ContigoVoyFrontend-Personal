@@ -353,23 +353,6 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
-      // Validate contenido length
-      if (!contenido || contenido.replace(/<[^>]*>/g, "").trim().length < 50) {
-        showToast(
-          "error",
-          "El contenido debe tener al menos 50 caracteres de texto.",
-        );
-        return;
-      }
-
-      if (contenido.length > 50000) {
-        showToast(
-          "error",
-          "El contenido es demasiado largo. Máximo 50,000 caracteres.",
-        );
-        return;
-      }
-
       // Validate images - minimum 1, maximum 6
       const validUrls = urls.filter(
         (url) => url.trim() !== "" && url.startsWith("http"),
