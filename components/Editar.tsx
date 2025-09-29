@@ -192,6 +192,7 @@ function Editar({
         id: user?.id ?? 0,
         idpsicologo: user?.idpsicologo ?? 0,
         rol: user?.rol ?? "",
+        permisos: user?.permisos ?? [],
       };
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
