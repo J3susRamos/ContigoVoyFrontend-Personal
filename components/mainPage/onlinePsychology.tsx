@@ -191,11 +191,14 @@ export default function ChooseUs() {
                 <button
                   key={index}
                   onClick={() => scrollTo(index)}
-                  aria-label={`Ver ${features[index].title}`} // ← Agregar esto
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    selectedIndex === index ? "bg-[#9494F3]" : "bg-white"
-                  }`}
-                />
+                  aria-label={`Ver ${features[index].title}`}
+                  className="w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center"
+                >
+                  <span className={`
+                    w-3 h-3 rounded-full transition-all duration-300
+                    ${selectedIndex === index ? "bg-[#9494F3]" : "bg-white"}
+                  `} />
+                </button>
               ))}
             </div>
           </div>

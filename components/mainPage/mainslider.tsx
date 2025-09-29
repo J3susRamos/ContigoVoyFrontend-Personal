@@ -90,7 +90,14 @@ export default function MainSlider() {
       <div className="embla" ref={emblaRef} role="region" aria-label="Carrusel de servicios">
         <div className="embla__container">
           {sections.map((item, index) => (
-            <div className="relative embla__slide overflow-hidden" key={`slide-${index}`}>
+            <div 
+              className="relative embla__slide overflow-hidden" 
+              key={`slide-${index}`}
+              role="tabpanel"
+              id={`tabpanel-${index}`}
+              aria-labelledby={`tab-${index}`}
+              tabIndex={0}
+            >
               <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
               <div className="mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right">
                 <div className="h-full flex-1 relative">
@@ -100,9 +107,11 @@ export default function MainSlider() {
                     title={item.title}
                     fill
                     className="object-cover"
-                    priority={index === 0} // Solo la primera imagen tiene prioridad
+                    priority={index === 0}
                     fetchPriority={index === 0 ? "high" : "auto"}
                     loading={index === 0 ? "eager" : "lazy"}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+                    quality={index === 0 ? 80 : 75} // Reducir calidad en móvil
                   />
                 </div>
               </div>
@@ -128,13 +137,13 @@ export default function MainSlider() {
                           transition: { duration: 1 },
                         }}
                         exit={{ opacity: 0 }}
-                        style={{ willChange: 'opacity' }} // Optimización GPU
+                        style={{ willChange: 'opacity' }}
                       >
                         <div
                           style={{
                             textShadow:
                               "4px 5px 16px rgba(0,0,0,0.55), 2px 2px 3px rgba(0,0,0,0.85)",
-                            willChange: 'auto', // Evitar forced reflow
+                            willChange: 'auto',
                           }}
                           className="mr-scv6 max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
                         >
@@ -173,13 +182,23 @@ export default function MainSlider() {
           {sections.map((_, index) => (
             <button
               key={`nav-button-${index}`}
+              id={`tab-${index}`}
               onClick={() => scrollTo(index)}
-              aria-label={`Ir a la sección ${index + 1}: ${sections[index].phrase}`} // ← Más específico
-              aria-current={selectedIndex === index ? "true" : "false"}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                selectedIndex === index ? "bg-[#634AE2]" : "bg-white"
-              }`}
-            />
+              aria-label={`Ir a la sección ${index + 1}: ${sections[index].phrase}`}
+              aria-selected={selectedIndex === index}
+              aria-controls={`tabpanel-${index}`}
+              role="tab"
+              className={`
+                w-11 h-11 rounded-full transition-all duration-300 flex items-center justify-center 
+                focus:outline-none focus:ring-2 focus:ring-[#634AE2] focus:ring-offset-2
+                ${selectedIndex === index ? 'bg-[#634AE2]' : 'bg-white/20'}
+              `}
+            >
+              <span className={`
+                w-3 h-3 rounded-full transition-all duration-300
+                ${selectedIndex === index ? "bg-white" : "bg-white/60"}
+              `} />
+            </button>
           ))}
         </div>
       </div>
