@@ -36,6 +36,16 @@ const SectionHeader = ({ children }: { children: React.ReactNode }) => (
   </motion.h2>
 );
 
+// Mapeo de íconos a nombres de archivo reales
+const iconMap: { [key: string]: string } = {
+  "❤️": "empatia",
+  "🎓": "profesionalismo", 
+  "🔑": "accesibilidad",
+  "💡": "innovacion",
+  "🔒": "confidencialidad",
+  "🌈": "diversidad"
+};
+
 const ValueCard = ({ title, content, icon }: { title: string, content: string, icon: string }) => (
   <motion.div
     whileHover={{ y: -5 }}
@@ -44,12 +54,32 @@ const ValueCard = ({ title, content, icon }: { title: string, content: string, i
   >
     <div className="mb-4 flex justify-center">
       <Image
-        src={`/AboutUs/${icon}.webp`}
+        src={`/AboutUs/${iconMap[icon]}.webp`}
         alt={title}
-        width={50}
-        height={50}
-        className="w-50 h-50"
+        width={80}
+        height={80}
+        className="w-20 h-20 object-contain"
+        onError={(e) => {
+          // Fallback si la imagen no existe
+          const target = e.target as HTMLImageElement;
+          target.style.display = 'none';
+        }}
       />
+    </div>
+    <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900">{title}</h3>
+    <p className="dark:text-gray-300 text-gray-600 leading-relaxed">{content}</p>
+  </motion.div>
+);
+
+// Alternativa: Componente con íconos SVG en lugar de imágenes
+const ValueCardWithSVG = ({ title, content, icon }: { title: string, content: string, icon: string }) => (
+  <motion.div
+    whileHover={{ y: -5 }}
+    transition={{ type: "tween", duration: 0.2 }}
+    className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200"
+  >
+    <div className="mb-4 flex justify-center text-4xl">
+      {icon} {/* Muestra el emoji directamente */}
     </div>
     <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900">{title}</h3>
     <p className="dark:text-gray-300 text-gray-600 leading-relaxed">{content}</p>
@@ -64,7 +94,6 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
           <div className="absolute top-0 left-0 w-full h-full">
-            {/* Reducido número de elementos animados */}
             <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
             <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl"></div>
           </div>
@@ -121,6 +150,11 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
               priority={true}
               sizes="(max-width: 768px) 100vw, 50vw"
               quality={85}
+              onError={(e) => {
+                // Fallback para imagen principal
+                const target = e.target as HTMLImageElement;
+                target.src = '/AboutUs/fallback-therapy-session.jpg';
+              }}
             />
           </motion.div>
         </div>
@@ -149,14 +183,14 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
         </div>
       </section>
 
-      {/* Nuestros Valores Section */}
+      {/* Nuestros Valores Section - Usando SVG/Emoji version */}
       <section className="py-16 md:py-24 dark:bg-gray-900 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader>Nuestros Valores</SectionHeader>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <motion.div {...fadeInConfig} transition={{ duration: 0.4 }}>
-              <ValueCard 
+              <ValueCardWithSVG 
                 title="Empatía" 
                 content="Nos conectamos genuinamente con las experiencias y emociones de cada persona, creando un espacio de comprensión y respeto."
                 icon="❤️"
@@ -164,7 +198,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             </motion.div>
             
             <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.1 }}>
-              <ValueCard 
+              <ValueCardWithSVG 
                 title="Profesionalismo" 
                 content="Mantenemos los más altos estándares éticos y técnicos en nuestra práctica, con un compromiso constante con la actualización y la excelencia."
                 icon="🎓"
@@ -172,7 +206,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             </motion.div>
             
             <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.2 }}>
-              <ValueCard 
+              <ValueCardWithSVG 
                 title="Accesibilidad" 
                 content="Trabajamos para que la salud mental sea un derecho al alcance de todos, eliminando barreras económicas, geográficas y culturales."
                 icon="🔑"
@@ -180,7 +214,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             </motion.div>
             
             <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.1 }}>
-              <ValueCard 
+              <ValueCardWithSVG 
                 title="Innovación" 
                 content="Exploramos constantemente nuevas formas de mejorar nuestros servicios, integrando avances científicos y tecnológicos con enfoques terapéuticos probados."
                 icon="💡"
@@ -188,7 +222,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             </motion.div>
             
             <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.2 }}>
-              <ValueCard 
+              <ValueCardWithSVG 
                 title="Confidencialidad" 
                 content="Protegemos la privacidad y la confianza de quienes nos eligen, creando un entorno seguro para la expresión y el crecimiento."
                 icon="🔒"
@@ -196,7 +230,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             </motion.div>
             
             <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.3 }}>
-              <ValueCard 
+              <ValueCardWithSVG 
                 title="Diversidad" 
                 content="Celebramos y respetamos la singularidad de cada persona, reconociendo que la diversidad enriquece nuestra comunidad y nuestro trabajo."
                 icon="🌈"
