@@ -5,7 +5,7 @@ import { ReactSVG } from "react-svg";
 import { DesktopNavUser } from "./DesktopNavUser";
 import { Icons } from "@/icons";
 import { MobileNavUserHamburger } from "./MobileNavUserHamburger";
-
+import { UsuarioLocalStorage } from "@/interface";
 
 const navItemsBase = [
   {
@@ -122,7 +122,7 @@ const NavbarUser = () => {
     const userJson = localStorage.getItem("user");
     if (userJson) {
       try {
-        const user: UsuarioConRolesTemporales = JSON.parse(userJson);
+        const user: UsuarioLocalStorage = JSON.parse(userJson);
         let items = [...navItemsBase];
 
         if (user.rol === "PSICOLOGO") {
