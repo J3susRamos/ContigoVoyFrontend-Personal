@@ -28,7 +28,8 @@ const AccordionQuest: React.FC<AccordionQuestProps> = ({ faqs }) => {
 
   return (
     <Accordion
-      selectionMode="multiple"
+      selectionMode="single"
+      
       // selectedKeys={selectedKey ? new Set([selectedKey]) : new Set()}
       // onSelectionChange={(keys) => {
       //   const selected = Array.from(keys)[0] as string;

@@ -77,10 +77,10 @@ export default function TherapyServices() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group bg-gradient-to-br from-[#745DEA] to-[#5B47C7] hover:from-[#5B47C7] hover:to-[#4A3CB3]
-                          rounded-2xl p-5 text-white transition-all duration-300 
-                          hover:shadow-[0_8px_32px_rgba(116,93,234,0.4)] hover:scale-[1.02] 
-                          min-h-[200px] sm:min-h-[220px] flex flex-col justify-between cursor-pointer
-                          relative overflow-hidden"
+                  rounded-2xl p-5 text-white transition-all duration-300
+                  hover:shadow-[0_8px_32px_rgba(116,93,234,0.4)] hover:scale-[1.02]
+                  min-h-[200px] sm:min-h-[220px] flex flex-col justify-between cursor-pointer
+                  relative overflow-hidden"
                 onClick={() => router.push(`/servicios${service.id}`)}
               >
                 {/* Patrón de fondo sutil */}
@@ -92,11 +92,11 @@ export default function TherapyServices() {
                 {/* Contenido Superior */}
                 <div className="flex-1 relative z-10">
                   {/* Icono */}
-                  <div className="flex justify-end mb-3">
+                  <div className="flex justify-end mb-3 ">
                     <div
                       className="relative overflow-hidden rounded-lg bg-white/15 p-2.5 
-                                  group-hover:bg-white/25 transition-all duration-300 
-                                  group-hover:scale-110 backdrop-blur-sm"
+                        group-hover:bg-white/25 transition-all duration-300 
+                        group-hover:scale-110 backdrop-blur-sm"
                     >
                       <ReactSVG
                         className="w-10 h-10 sm:w-12 sm:h-12 object-contain filter brightness-0 invert"
@@ -112,7 +112,7 @@ export default function TherapyServices() {
                   {/* Título */}
                   <h3
                     className="text-lg sm:text-xl font-bold leading-tight mb-3
-                               group-hover:text-purple-100 transition-colors duration-300"
+                      group-hover:text-purple-100 transition-colors duration-300"
                   >
                     {service.title}
                   </h3>
@@ -122,15 +122,15 @@ export default function TherapyServices() {
                 <div className="flex justify-end relative z-10">
                   <button
                     className="group/btn flex items-center space-x-2 text-sm 
-                                   hover:text-purple-200 transition-all duration-300
-                                   bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg
-                                   backdrop-blur-sm"
+                      hover:text-purple-200 transition-all duration-300
+                      bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg
+                      backdrop-blur-sm"
                   >
                     <span className="relative text-white font-medium text-sm">
                       Ver más
                       <span
                         className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white 
-                                     group-hover/btn:w-full duration-500"
+                          group-hover/btn:w-full duration-500"
                       ></span>
                     </span>
                     <ArrowRight

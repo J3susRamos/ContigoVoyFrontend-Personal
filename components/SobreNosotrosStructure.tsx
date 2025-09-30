@@ -58,7 +58,11 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
               transition={{ duration: 0.8 }}
               className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8"
             >
-              Tu bienestar <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">emocional</span> es nuestro compromiso
+                Tu bienestar{" "}
+                <span className="bg-gradient-to-r text-white to-orange-300 bg-clip-text text-transparent">
+                  EMOCIONAL
+                </span>{" "}
+                <span className="block lg:inline">es nuestro</span> compromiso            
             </motion.h1>
 
             <motion.p
@@ -107,20 +111,20 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative h-96 rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300"
+            className="relative w-full rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300 h-64 sm:h-80 md:h-96"
           >
             <Image
               src="/AboutUs/terapeutas-especializados-familia-feliz.webp"
               alt="Sesión de terapia psicológica"
               fill
-              className="object-cover"
+              className="object-cover sm:object-cover "
             />
           </motion.div>
         </div>
       </section>
 
       {/* Misión y Visión */}
-      <section className="py-20 dark:bg-gray-900 bg-gray-100">
+      <section className="py-16 dark:bg-gray-900 bg-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12">
             <motion.div

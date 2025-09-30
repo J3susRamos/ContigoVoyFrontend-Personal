@@ -178,7 +178,7 @@ export default function ChooseUs() {
                       title={feature.title}
                       fill
                       sizes="100vw"
-                      className="mask-all-fade object-contain object-right"
+                      className="mask-all-fade object-contain object-right -translate-x-3"
                     />
                   </div>
                 </div>

@@ -92,18 +92,18 @@ export default function MainSlider() {
           {sections.map((item, index) => (
             <div className="relative embla__slide overflow-hidden" key={`slide-${index}`}>
               <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
-              <div className="mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right">
-                <div className="h-full flex-1 relative">
-                  <Image
-                    src={item.background}
-                    alt={item.alt}
-                    title={item.title}
-                    fill
-                    className="object-cover"
-                    priority={index === 0} // Solo la primera imagen tiene prioridad
-                    fetchPriority={index === 0 ? "high" : "auto"}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
+              <div className="mix-blend-multiply z-10 absolute inset-0 bg-cover bg-right ">
+                <div className="h-full flex-1 relative  ">
+                      <Image
+                        src={item.background}
+                        alt={item.alt}
+                        title={item.title}
+                        fill
+                        className="object-cover sm:object-cover object-center"
+                        priority={index === 0} // Solo la primera imagen tiene prioridad
+                        fetchPriority={index === 0 ? "high" : "auto"}
+                        loading={index === 0 ? "eager" : "lazy"}
+                      />
                 </div>
               </div>
               <div className="mx-auto relative max-w-scv18 w-full z-10 lg:min-h-[650px] min-h-[340px] md:pt-0 bg-cover flex items-center bg-left pl-[30px]">
@@ -136,7 +136,7 @@ export default function MainSlider() {
                               "4px 5px 16px rgba(0,0,0,0.55), 2px 2px 3px rgba(0,0,0,0.85)",
                             willChange: 'auto', // Evitar forced reflow
                           }}
-                          className="mr-scv6 max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
+                            className="mr-scv6 max-w-[50%] sm:max-w-scv14 text-cv3 lg:text-cv5 text-white tracking-[2%] lg:pb-14 lg:text-xl my-3 mb-scv7"
                         >
                           {item.smallPhrase}
                         </div>
