@@ -30,7 +30,7 @@ export default function TrabajadoresSection() {
       console.log("Token:", token ? "Token exists" : "No token found");
       
       const response = await GetAllWorkers({
-        per_page: filters.perPage,
+        perPage: filters.perPage,
         estado: filters.estado === "ALL" ? undefined : filters.estado,
         rol: filters.rol === "ALL" ? undefined : filters.rol,
         page: filters.page,
