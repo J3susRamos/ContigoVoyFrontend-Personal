@@ -26,6 +26,9 @@ export default function Page() {
   const [emailAdd, setEmailAdd] = useState("");
   const [selectedAdd, setSelectedAdd] = useState<string[]>([]);
   const [isSavingAdd, setIsSavingAdd] = useState(false);
+  // ✅ NUEVOS ESTADOS para búsqueda en agregar permisos
+  const [userAdd, setUserAdd] = useState<User | null>(null);
+  const [isSearchingAdd, setIsSearchingAdd] = useState(false);
 
   // -------------------- sección QUITAR permisos --------------------
   const [emailSearch, setEmailSearch] = useState("");
@@ -71,9 +74,54 @@ export default function Page() {
     fetchPermissions();
   }, []);
 
+  // -------------------- buscar usuario por email (AGREGAR) --------------------
+  const fetchUserForAdd = async () => {
+    if (!emailAdd) return toast.error("Debe ingresar un correo válido");
+
+    try {
+      setIsSearchingAdd(true);
+      const cookies = parseCookies();
+      const token = cookies["session"];
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}api/personal/permissions/by-email/${emailAdd}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        setUserAdd({
+          id: data.result.id,
+          name: data.result.name,
+          email: data.result.email,
+          rol: data.result.rol,
+          permissions: data.result.permissions,
+        });
+        setSelectedAdd([]); // Limpiar selección al buscar nuevo usuario
+        
+        toast.info(`Usuario encontrado con ${data.result.permissions.length} permisos existentes`);
+      } else {
+        toast.error(data.message || "Usuario no encontrado");
+        setUserAdd(null);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error al buscar usuario");
+      setUserAdd(null);
+    } finally {
+      setIsSearchingAdd(false);
+    }
+  };
+
   // -------------------- guardar permisos (AGREGAR) --------------------
   const handleSaveAdd = async () => {
-    if (!emailAdd) return toast.error("Debe ingresar un correo válido");
+    if (!userAdd || selectedAdd.length === 0) return;
+
     try {
       setIsSavingAdd(true);
       const cookies = parseCookies();
@@ -88,17 +136,36 @@ export default function Page() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            email: emailAdd,
-            permissions: selectedAdd, // enviamos los names de los permisos
+            email: userAdd.email,
+            permissions: selectedAdd,
           }),
         }
       );
 
       const data = await res.json();
+      
       if (res.ok) {
-        toast.success("Permisos actualizados correctamente");
+        toast.success(`✅ ${data.permissions_added} permisos agregados correctamente a ${userAdd.name}`);
+        
+        // ✅ ACTUALIZAR permisos del usuario localmente
+        setUserAdd({
+          ...userAdd,
+          permissions: [...userAdd.permissions, ...selectedAdd]
+        });
+        
+        // Limpiar selección pero mantener usuario
+        setSelectedAdd([]);
+        
       } else {
-        toast.error(data.message || "Error al actualizar permisos");
+        if (data.error_type === 'duplicate_permissions') {
+          const duplicateList = data.duplicate_permissions.join(', ');
+          toast.error(
+            `❌ Error: ${userAdd.name} ya cuenta con: ${duplicateList}`,
+            { autoClose: 8000 }
+          );
+        } else {
+          toast.error(data.message || "Error al agregar permisos");
+        }
       }
     } catch (err) {
       console.error(err);
@@ -150,28 +217,25 @@ export default function Page() {
 
   // -------------------- guardar permisos (QUITAR) --------------------
   const handleSaveRemove = async () => {
-    if (!userToEdit) return;
+    if (!userToEdit || selectedRemove.length === 0) return;
 
     try {
       setIsSavingRemove(true);
       const cookies = parseCookies();
       const token = cookies["session"];
 
-      const updatedPermissions = userToEdit.permissions.filter(
-        (perm) => !selectedRemove.includes(perm)
-      );
-
+      // ✅ Usar el nuevo endpoint DELETE para quitar permisos específicos
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/personal/permissions/update-by-email`,
+        `${process.env.NEXT_PUBLIC_API_URL}api/personal/permissions/remove-by-email`,
         {
-          method: "PUT",
+          method: "DELETE", // ✅ Cambiado a DELETE
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             email: userToEdit.email,
-            permissions: updatedPermissions,
+            permissions: selectedRemove, // ✅ Enviamos solo los permisos a quitar
           }),
         }
       );
@@ -179,10 +243,16 @@ export default function Page() {
       const data = await res.json();
       if (res.ok) {
         toast.success("Permisos eliminados correctamente");
+        
+        // Actualizar el estado local - quitar los permisos eliminados
+        const updatedPermissions = userToEdit.permissions.filter(
+          (perm) => !selectedRemove.includes(perm)
+        );
+        
         setUserToEdit({ ...userToEdit, permissions: updatedPermissions });
         setSelectedRemove([]);
       } else {
-        toast.error(data.message || "Error al actualizar permisos");
+        toast.error(data.message || "Error al eliminar permisos");
       }
     } catch (err) {
       console.error(err);
@@ -201,51 +271,111 @@ export default function Page() {
           Agregar permisos a un usuario
         </h2>
 
-        {/* Email del usuario */}
+        {/* Buscar usuario por correo - ✅ MODIFICADO */}
         <div className="mb-6">
           <label className="block mb-2 text-gray-700 dark:text-gray-300">
             Correo del usuario
           </label>
-          <input
-            type="email"
-            value={emailAdd}
-            onChange={(e) => setEmailAdd(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            placeholder="ejemplo@correo.com"
-          />
+          <div className="flex gap-2">
+            <input
+              type="email"
+              value={emailAdd}
+              onChange={(e) => {
+                setEmailAdd(e.target.value);
+                // ✅ Limpiar usuario cuando cambia el email
+                if (userAdd && userAdd.email !== e.target.value) {
+                  setUserAdd(null);
+                  setSelectedAdd([]);
+                }
+              }}
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              placeholder="ejemplo@correo.com"
+            />
+            <Button
+              onPress={fetchUserForAdd}
+              disabled={isSearchingAdd}
+              className="bg-primary text-white px-6"
+            >
+              {isSearchingAdd ? "Buscando..." : "Buscar"}
+            </Button>
+          </div>
         </div>
 
-        {/* Select de permisos */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-700 dark:text-gray-300">
-            Selecciona permisos
-          </label>
-          <Select
-            selectionMode="multiple"
-            placeholder="Selecciona uno o más permisos"
-            selectedKeys={new Set(selectedAdd)}
-            onSelectionChange={(keys) => {
-              setSelectedAdd(Array.from(keys) as string[]);
-            }}
-          >
-            {permissionsList.map((perm) => (
-              <SelectItem key={perm.name} textValue={perm.name}>
-                {perm.name}
-              </SelectItem>
-            ))}
-          </Select>
-        </div>
+        {/* ✅ NUEVO: Mostrar información del usuario encontrado */}
+        {userAdd && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h3 className="font-semibold text-blue-800 mb-2">
+              Usuario encontrado: {userAdd.name}
+            </h3>
+            <p className="text-sm text-blue-700 mb-2">
+              <strong>Email:</strong> {userAdd.email} | 
+              <strong> Rol:</strong> {userAdd.rol || 'No asignado'}
+            </p>
+            {userAdd.permissions.length > 0 ? (
+              <div>
+                <p className="text-sm text-blue-700 mb-1">
+                  <strong>Permisos existentes ({userAdd.permissions.length}):</strong>
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {userAdd.permissions.map((perm) => (
+                    <span 
+                      key={perm}
+                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                    >
+                      {perm}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-blue-700">
+                Este usuario no tiene permisos asignados.
+              </p>
+            )}
+          </div>
+        )}
 
-        {/* Botón guardar */}
-        <div className="flex justify-center">
-          <Button
-            onPress={handleSaveAdd}
-            disabled={isSavingAdd}
-            className="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
-          >
-            {isSavingAdd ? "Guardando..." : "Guardar cambios"}
-          </Button>
-        </div>
+        {/* Select de permisos - ✅ MODIFICADO: solo mostrar si hay usuario */}
+        {userAdd && (
+          <div className="mb-6">
+            <label className="block mb-2 text-gray-700 dark:text-gray-300">
+              Selecciona permisos para agregar
+            </label>
+            <Select
+              selectionMode="multiple"
+              placeholder="Selecciona los permisos a agregar"
+              selectedKeys={new Set(selectedAdd)}
+              onSelectionChange={(keys) => {
+                setSelectedAdd(Array.from(keys) as string[]);
+              }}
+            >
+              {permissionsList
+                .filter(perm => !userAdd.permissions.includes(perm.name)) // ✅ Filtrar permisos que ya tiene
+                .map((perm) => (
+                  <SelectItem key={perm.name} textValue={perm.name}>
+                    {perm.name}
+                  </SelectItem>
+                ))
+              }
+            </Select>
+            <p className="text-xs text-gray-500 mt-2">
+              Solo se muestran permisos que el usuario no tiene asignados
+            </p>
+          </div>
+        )}
+
+        {/* Botón guardar - ✅ MODIFICADO: solo mostrar si hay usuario */}
+        {userAdd && (
+          <div className="flex justify-center">
+            <Button
+              onPress={handleSaveAdd}
+              disabled={isSavingAdd || selectedAdd.length === 0}
+              className="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
+            >
+              {isSavingAdd ? "Guardando..." : `Agregar ${selectedAdd.length} permisos`}
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* ---------- SECCIÓN QUITAR PERMISOS ---------- */}
@@ -323,4 +453,3 @@ export default function Page() {
     </div>
   );
 }
-

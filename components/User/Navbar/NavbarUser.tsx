@@ -57,7 +57,7 @@ const navItemsBase = [
     role: "admin"
   },
   {
-    name: "Gestión de Roles en Usuarios",
+    name: "Gestión de Permisos en Usuarios",
     link: "/user/gestion-roles-temporales",
     icono: Icons.personal,
     role: "admin"
