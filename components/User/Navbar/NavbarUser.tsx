@@ -5,7 +5,7 @@ import { ReactSVG } from "react-svg";
 import { DesktopNavUser } from "./DesktopNavUser";
 import { Icons } from "@/icons";
 import { MobileNavUserHamburger } from "./MobileNavUserHamburger";
-import { UsuarioLocalStorage } from "@/interface";
+
 
 const navItemsBase = [
   {
