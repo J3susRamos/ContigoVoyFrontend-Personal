@@ -28,10 +28,7 @@ export default function ReservarCitaLoading() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              La mejor inversión es en{" "}
-              <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                ti mismo
-              </span>
+              La mejor inversión es en ti mismo
             </h1>
 
             <h2 className="text-2xl md:text-3xl font-semibold text-white/90 mb-4">

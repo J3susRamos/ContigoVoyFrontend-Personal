@@ -102,7 +102,11 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8">
-              Tu bienestar <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">emocional</span> es nuestro compromiso
+              Tu bienestar 
+              <span className="block text-white">
+                EMOCIONAL es nuestro
+              </span>
+              compromiso
             </h1>
 
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12">
@@ -140,22 +144,25 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
           </motion.div>
           <motion.div
             {...fadeInRightConfig}
-            className="relative h-96 rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300"
+            className="relative flex justify-center items-center"
           >
-            <Image
-              src="/AboutUs/terapeutas-especializados-familia-feliz.webp"
-              alt="Sesión de terapia psicológica"
-              fill
-              className="object-cover"
-              priority={true}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              quality={85}
-              onError={(e) => {
-                // Fallback para imagen principal
-                const target = e.target as HTMLImageElement;
-                target.src = '/AboutUs/fallback-therapy-session.jpg';
-              }}
-            />
+            <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl min-w-[300px] min-h-[300px] max-h-[500px] rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300">
+              <Image
+                src="/AboutUs/terapeutas-especializados-familia-feliz.webp"
+                alt="Sesión de terapia psicológica"
+                width={600}
+                height={400}
+                className="w-full h-full object-cover object-center"
+                priority={true}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw"
+                quality={85}
+                onError={(e) => {
+                  // Fallback para imagen principal
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/AboutUs/fallback-therapy-session.jpg';
+                }}
+              />
+            </div>
           </motion.div>
         </div>
       </section>
