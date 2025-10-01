@@ -18,24 +18,19 @@ async function getBlogByQuery(
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/";
 
-    const searchTerm = blogQuery.includes("-")
-      ? blogQuery.replace(/-/g, " ")
-      : decodeURIComponent(blogQuery);
+    // Intentar primero con el query tal como viene (podría ser URL-encoded)
+    let searchTerm = decodeURIComponent(blogQuery);
+    console.log("🔍 [getBlogByQuery] Primer intento con query decodificado:", searchTerm);
 
-    const endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
-
-    console.log("🔍 [getBlogByQuery] Search term convertido:", searchTerm);
-    console.log("🔍 [getBlogByQuery] Endpoint final:", endpoint);
-    console.log("🔍 [getBlogByQuery] API URL base:", apiUrl);
+    let endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
+    console.log("🔍 [getBlogByQuery] Endpoint original:", endpoint);
 
     const cacheConfig =
       process.env.NODE_ENV === "development"
         ? { cache: "no-store" as const }
         : { next: { revalidate: 3600 } };
 
-    console.log("🔍 [getBlogByQuery] Cache config:", cacheConfig);
-
-    const response = await fetch(endpoint, {
+    let response = await fetch(endpoint, {
       ...cacheConfig,
       headers: {
         "Content-Type": "application/json",
@@ -44,6 +39,25 @@ async function getBlogByQuery(
 
     console.log("🔍 [getBlogByQuery] Response status:", response.status);
     console.log("🔍 [getBlogByQuery] Response ok:", response.ok);
+
+    // Si el primer intento falla y hay guiones, intentar convirtiendo guiones a espacios
+    if (!response.ok && blogQuery.includes("-")) {
+      console.log("🔍 [getBlogByQuery] Primer intento falló, probando con guiones convertidos a espacios");
+      searchTerm = blogQuery.replace(/-/g, " ");
+      endpoint = `${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`;
+      console.log("🔍 [getBlogByQuery] Segundo intento con searchTerm:", searchTerm);
+      console.log("🔍 [getBlogByQuery] Segundo endpoint:", endpoint);
+      
+      response = await fetch(endpoint, {
+        ...cacheConfig,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      console.log("🔍 [getBlogByQuery] Segundo intento - Response status:", response.status);
+    }
+
     console.log(
       "🔍 [getBlogByQuery] Response headers:",
       Object.fromEntries(response.headers.entries()),
