@@ -262,194 +262,255 @@ export default function Page() {
     }
   };
 
+  const [activeTab, setActiveTab] = useState<'add' | 'remove'>('add');
+
   // -------------------- render --------------------
   return (
-    <div className="w-full flex flex-col gap-12 px-4">
-      {/* ---------- SECCIÓN AGREGAR PERMISOS ---------- */}
-      <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
-          Agregar permisos a un usuario
-        </h2>
-
-        {/* Buscar usuario por correo - ✅ MODIFICADO */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-700 dark:text-gray-300">
-            Correo del usuario
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="email"
-              value={emailAdd}
-              onChange={(e) => {
-                setEmailAdd(e.target.value);
-                // ✅ Limpiar usuario cuando cambia el email
-                if (userAdd && userAdd.email !== e.target.value) {
-                  setUserAdd(null);
-                  setSelectedAdd([]);
-                }
-              }}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="ejemplo@correo.com"
-            />
-            <Button
-              onPress={fetchUserForAdd}
-              disabled={isSearchingAdd}
-              className="bg-primary text-white px-6"
-            >
-              {isSearchingAdd ? "Buscando..." : "Buscar"}
-            </Button>
-          </div>
-        </div>
-
-        {/* ✅ NUEVO: Mostrar información del usuario encontrado */}
-        {userAdd && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="font-semibold text-blue-800 mb-2">
-              Usuario encontrado: {userAdd.name}
-            </h3>
-            <p className="text-sm text-blue-700 mb-2">
-              <strong>Email:</strong> {userAdd.email} | 
-              <strong> Rol:</strong> {userAdd.rol || 'No asignado'}
-            </p>
-            {userAdd.permissions.length > 0 ? (
-              <div>
-                <p className="text-sm text-blue-700 mb-1">
-                  <strong>Permisos existentes ({userAdd.permissions.length}):</strong>
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {userAdd.permissions.map((perm) => (
-                    <span 
-                      key={perm}
-                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-                    >
-                      {perm}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <p className="text-sm text-blue-700">
-                Este usuario no tiene permisos asignados.
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* Select de permisos - ✅ MODIFICADO: solo mostrar si hay usuario */}
-        {userAdd && (
-          <div className="mb-6">
-            <label className="block mb-2 text-gray-700 dark:text-gray-300">
-              Selecciona permisos para agregar
-            </label>
-            <Select
-              selectionMode="multiple"
-              placeholder="Selecciona los permisos a agregar"
-              selectedKeys={new Set(selectedAdd)}
-              onSelectionChange={(keys) => {
-                setSelectedAdd(Array.from(keys) as string[]);
-              }}
-            >
-              {permissionsList
-                .filter(perm => !userAdd.permissions.includes(perm.name)) // ✅ Filtrar permisos que ya tiene
-                .map((perm) => (
-                  <SelectItem key={perm.name} textValue={perm.name}>
-                    {perm.name}
-                  </SelectItem>
-                ))
-              }
-            </Select>
-            <p className="text-xs text-gray-500 mt-2">
-              Solo se muestran permisos que el usuario no tiene asignados
-            </p>
-          </div>
-        )}
-
-        {/* Botón guardar - ✅ MODIFICADO: solo mostrar si hay usuario */}
-        {userAdd && (
-          <div className="flex justify-center">
-            <Button
-              onPress={handleSaveAdd}
-              disabled={isSavingAdd || selectedAdd.length === 0}
-              className="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
-            >
-              {isSavingAdd ? "Guardando..." : `Agregar ${selectedAdd.length} permisos`}
-            </Button>
-          </div>
-        )}
+    <div className="w-full min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
+    <div className="max-w-6xl mx-auto">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+          Gestión de Permisos de Usuario
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Agrega o quita permisos específicos a los usuarios del sistema
+        </p>
       </div>
 
-      {/* ---------- SECCIÓN QUITAR PERMISOS ---------- */}
-      <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
-          Quitar permisos a un usuario
-        </h2>
-
-        {/* Buscar usuario por correo */}
-        <div className="mb-6">
-          <label className="block mb-2 text-gray-700 dark:text-gray-300">
-            Correo del usuario
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="email"
-              value={emailSearch}
-              onChange={(e) => setEmailSearch(e.target.value)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-              placeholder="ejemplo@correo.com"
-            />
-            <Button
-              onPress={fetchUserByEmail}
-              disabled={isSearching}
-              className="bg-primary text-white px-6"
-            >
-              {isSearching ? "Buscando..." : "Buscar"}
-            </Button>
-          </div>
+      {/* Contenedor con pestañas */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+        {/* Navegación por pestañas */}
+        <div className="flex border-b border-gray-200 dark:border-gray-700">
+          <button
+            className={`flex-1 py-4 px-6 text-center font-semibold transition-all ${
+              activeTab === 'add' 
+                ? 'bg-primary text-white border-b-2 border-primary' 
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
+            onClick={() => setActiveTab('add')}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <span>➕ Agregar Permisos</span>
+            </div>
+          </button>
+          <button
+            className={`flex-1 py-4 px-6 text-center font-semibold transition-all ${
+              activeTab === 'remove' 
+                ? 'bg-red-600 text-white border-b-2 border-red-600' 
+                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+            }`}
+            onClick={() => setActiveTab('remove')}
+          >
+            <div className="flex items-center justify-center gap-2">
+              <span>➖ Quitar Permisos</span>
+            </div>
+          </button>
         </div>
 
-        {/* Lista de permisos actuales */}
-        {userToEdit && (
-          <div>
-            <h3 className="text-lg font-semibold mb-2">
-              Permisos actuales de {userToEdit.name}:
-            </h3>
-            {userToEdit.permissions.length > 0 ? (
-              <>
-                <Select
-                  selectionMode="multiple"
-                  placeholder="Selecciona permisos a quitar"
-                  selectedKeys={new Set(selectedRemove)}
-                  onSelectionChange={(keys) =>
-                    setSelectedRemove(Array.from(keys) as string[])
-                  }
-                >
-                  {userToEdit.permissions.map((perm) => (
-                    <SelectItem key={perm} textValue={perm}>
-                      {perm}
-                    </SelectItem>
-                  ))}
-                </Select>
-
-                <div className="flex justify-center mt-6">
+        {/* Contenido de las pestañas */}
+        <div className="p-8">
+          {/* Sección AGREGAR PERMISOS */}
+          {activeTab === 'add' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white">
+                Agregar Permisos
+              </h2>
+              
+              {/* Buscar usuario por correo */}
+              <div className="mb-6">
+                <label className="block mb-2 text-gray-700 dark:text-gray-300">
+                  Correo del usuario
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={emailAdd}
+                    onChange={(e) => {
+                      setEmailAdd(e.target.value);
+                      if (userAdd && userAdd.email !== e.target.value) {
+                        setUserAdd(null);
+                        setSelectedAdd([]);
+                      }
+                    }}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    placeholder="ejemplo@correo.com"
+                  />
                   <Button
-                    onPress={handleSaveRemove}
-                    disabled={isSavingRemove || selectedRemove.length === 0}
-                    className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md"
+                    onPress={fetchUserForAdd}
+                    disabled={isSearchingAdd}
+                    className="bg-primary text-white px-6"
                   >
-                    {isSavingRemove
-                      ? "Guardando..."
-                      : "Quitar permisos seleccionados"}
+                    {isSearchingAdd ? "Buscando..." : "Buscar"}
                   </Button>
                 </div>
-              </>
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400">
-                Este usuario no tiene permisos asignados.
-              </p>
-            )}
-          </div>
-        )}
+              </div>
+
+              {/* Mostrar información del usuario encontrado */}
+              {userAdd && (
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <h3 className="font-semibold text-blue-800 mb-2">
+                    Usuario encontrado: {userAdd.name}
+                  </h3>
+                  <p className="text-sm text-blue-700 mb-2">
+                    <strong>Email:</strong> {userAdd.email} | 
+                    <strong> Rol:</strong> {userAdd.rol || 'No asignado'}
+                  </p>
+                  {userAdd.permissions.length > 0 ? (
+                    <div>
+                      <p className="text-sm text-blue-700 mb-1">
+                        <strong>Permisos existentes ({userAdd.permissions.length}):</strong>
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {userAdd.permissions.map((perm) => (
+                          <span 
+                            key={perm}
+                            className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                          >
+                            {perm}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-blue-700">
+                      Este usuario no tiene permisos asignados.
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Select de permisos - solo mostrar si hay usuario */}
+              {userAdd && (
+                <div className="mb-6">
+                  <label className="block mb-2 text-gray-700 dark:text-gray-300">
+                    Selecciona permisos para agregar
+                  </label>
+                  <Select
+                    selectionMode="multiple"
+                    placeholder="Selecciona los permisos a agregar"
+                    selectedKeys={new Set(selectedAdd)}
+                    onSelectionChange={(keys) => {
+                      setSelectedAdd(Array.from(keys) as string[]);
+                    }}
+                  >
+                    {permissionsList
+                      .filter(perm => !userAdd.permissions.includes(perm.name))
+                      .map((perm) => (
+                        <SelectItem key={perm.name} textValue={perm.name}>
+                          {perm.name}
+                        </SelectItem>
+                      ))
+                    }
+                  </Select>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Solo se muestran permisos que el usuario no tiene asignados
+                  </p>
+                </div>
+              )}
+
+              {/* Botón guardar - solo mostrar si hay usuario */}
+              {userAdd && (
+                <div className="flex justify-center">
+                  <Button
+                    onPress={handleSaveAdd}
+                    disabled={isSavingAdd || selectedAdd.length === 0}
+                    className="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl shadow-md"
+                  >
+                    {isSavingAdd ? "Guardando..." : `Agregar ${selectedAdd.length} permisos`}
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Sección QUITAR PERMISOS */}
+          {activeTab === 'remove' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white">
+                Quitar Permisos
+              </h2>
+
+              {/* Buscar usuario por correo */}
+              <div className="mb-6">
+                <label className="block mb-2 text-gray-700 dark:text-gray-300">
+                  Correo del usuario
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={emailSearch}
+                    onChange={(e) => setEmailSearch(e.target.value)}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    placeholder="ejemplo@correo.com"
+                  />
+                  <Button
+                    onPress={fetchUserByEmail}
+                    disabled={isSearching}
+                    className="bg-primary text-white px-6"
+                  >
+                    {isSearching ? "Buscando..." : "Buscar"}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Lista de permisos actuales */}
+              {userToEdit && (
+                <div>
+                  <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <h3 className="font-semibold text-orange-800 mb-2">
+                      Usuario: {userToEdit.name}
+                    </h3>
+                    <p className="text-sm text-orange-700">
+                      <strong>Email:</strong> {userToEdit.email} | 
+                      <strong> Rol:</strong> {userToEdit.rol || 'No asignado'}
+                    </p>
+                  </div>
+
+                  <h3 className="text-lg font-semibold mb-2">
+                    Permisos actuales de {userToEdit.name}:
+                  </h3>
+                  {userToEdit.permissions.length > 0 ? (
+                    <>
+                      <Select
+                        selectionMode="multiple"
+                        placeholder="Selecciona permisos a quitar"
+                        selectedKeys={new Set(selectedRemove)}
+                        onSelectionChange={(keys) =>
+                          setSelectedRemove(Array.from(keys) as string[])
+                        }
+                      >
+                        {userToEdit.permissions.map((perm) => (
+                          <SelectItem key={perm} textValue={perm}>
+                            {perm}
+                          </SelectItem>
+                        ))}
+                      </Select>
+
+                      <div className="flex justify-center mt-6">
+                        <Button
+                          onPress={handleSaveRemove}
+                          disabled={isSavingRemove || selectedRemove.length === 0}
+                          className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md"
+                        >
+                          {isSavingRemove
+                            ? "Guardando..."
+                            : "Quitar permisos seleccionados"}
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Este usuario no tiene permisos asignados.
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
+  </div>
   );
 }
