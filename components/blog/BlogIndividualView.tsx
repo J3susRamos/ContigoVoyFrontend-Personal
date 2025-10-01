@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import BlogCarousel from "./components/BlogCarousel";
 import ImageModal from "./components/ImageModal";
 import { useImageCarouselIndividual } from "./hooks/useImageCarouselIndividual";
+import { formatBlogContent } from "@/utils/contentUtils";
 
 interface BlogIndividualViewProps {
   blog: BlogPreviewData;
@@ -85,7 +86,7 @@ export default function BlogIndividualView({ blog }: BlogIndividualViewProps) {
                   </p>
                 </div>
               </div>
-              <h1 className="text-2xl lg:text-5xl font-bold leading-tight">
+              <h1 className="text-2xl lg:text-5xl font-bold leading-tight break-words">
                 {blog.tema}
               </h1>
             </div>
@@ -105,8 +106,13 @@ export default function BlogIndividualView({ blog }: BlogIndividualViewProps) {
             {/* Article Content */}
             <div className="p-8 lg:p-12">
               <div
-                className="blog-preview [&_a]:text-[#6228cb] [&_a]:font-bold dark:[&_a]:text-[#3498db] prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: blog.contenido }}
+                className="blog-content whitespace-pre-wrap [&_a]:text-[#6228cb] [&_a]:font-bold dark:[&_a]:text-[#3498db] prose prose-lg lg:prose-xl max-w-none text-gray-700 dark:text-gray-300 leading-relaxed [&_p]:mb-4 [&_p]:leading-7 [&_h1]:mt-8 [&_h1]:mb-4 [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:mt-4 [&_h3]:mb-2"
+                style={{ 
+                  whiteSpace: 'pre-wrap',
+                  wordWrap: 'break-word',
+                  lineHeight: '1.7'
+                }}
+                dangerouslySetInnerHTML={{ __html: formatBlogContent(blog.contenido) }}
               />
             </div>
           </article>

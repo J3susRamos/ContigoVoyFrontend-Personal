@@ -4,6 +4,7 @@ import { Image, User } from "@heroui/react";
 import { Calendar, Clock, ArrowRight, Tag } from "lucide-react";
 import Link from "next/link";
 import { createSlug } from "@/utils/slugUtils";
+import { extractFormattedExcerpt, getReadingTime } from "@/utils/contentUtils";
 
 export default function BlogPreview({ 
   Data,
@@ -18,12 +19,7 @@ export default function BlogPreview({
     });
   };
 
-  const getReadingTime = (content: string) => {
-    const wordsPerMinute = 200;
-    const words = content.replace(/<[^>]+>/g, "").split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min de lectura`;
-  };
+
 
   return (
     <article className="group transition-all duration-500 hover:scale-[1.02] p-8">
@@ -70,15 +66,32 @@ export default function BlogPreview({
 
           {/* Title - Now as a Link */}
           <Link href={`/blog/ver?blog=${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white leading-tight group-hover:text-[#634AE2] dark:group-hover:text-[#8b7cf6] transition-colors duration-300 line-clamp-2 cursor-pointer">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white leading-tight group-hover:text-[#634AE2] dark:group-hover:text-[#8b7cf6] transition-colors duration-300 cursor-pointer break-words">
               {Data.tema}
             </h2>
           </Link>
 
           {/* Excerpt */}
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3 text-lg">
-            {Data.contenido.replace(/<[^>]+>/g, "").slice(0, 200)}...
-          </p>
+          <div className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg overflow-hidden">
+            <div 
+              className="line-clamp-3"
+              style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                lineHeight: '1.5',
+                maxHeight: 'calc(1.5em * 3)', // 3 líneas
+                wordBreak: 'break-word'
+              }}
+              dangerouslySetInnerHTML={{
+                __html: extractFormattedExcerpt(Data.contenido, 200)
+                  .replace(/\n/g, '<br>')
+                  .replace(/\r/g, '')
+              }}
+            />
+          </div>
 
           {/* Read More Button - Now as a Link */}
           <div className="flex items-center justify-between pt-4">
