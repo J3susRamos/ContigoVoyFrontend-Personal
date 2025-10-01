@@ -19,12 +19,15 @@ import {
   Pilcrow,
   Strikethrough,
   UnderlineIcon,
+  ImageIcon,
 } from "lucide-react";
 import React, { useCallback } from "react";
 import Highlight from "@tiptap/extension-highlight";
+import { Image } from "./extensions/ImageExtension";
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor();
+  
   const setLink = useCallback(() => {
     if (!editor) return; // Validación dentro del callback
 
@@ -53,6 +56,101 @@ const MenuBar = () => {
     } catch (e) {
       alert(e);
     }
+  }, [editor]);
+
+  const addImage = useCallback(() => {
+    if (!editor) return;
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        try {
+          // Function to compress image for content
+          const compressImageForContent = (file: File): Promise<string> => {
+            return new Promise((resolve, reject) => {
+              const img = document.createElement('img');
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              
+              img.onload = () => {
+                // Calculate dimensions with max 500px width/height for content images
+                const maxSize = 500;
+                let { width, height } = img;
+                
+                if (width > maxSize || height > maxSize) {
+                  if (width > height) {
+                    height = (height * maxSize) / width;
+                    width = maxSize;
+                  } else {
+                    width = (width * maxSize) / height;
+                    height = maxSize;
+                  }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // Draw and compress
+                ctx?.drawImage(img, 0, 0, width, height);
+                
+                // Use WebP if supported, otherwise JPEG with good quality
+                let compressedDataUrl: string;
+                try {
+                  compressedDataUrl = canvas.toDataURL('image/webp', 0.8);
+                  // Check if WebP is actually supported (some browsers return PNG)
+                  if (!compressedDataUrl.startsWith('data:image/webp')) {
+                    compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                  }
+                } catch {
+                  compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                }
+                
+                resolve(compressedDataUrl);
+              };
+              
+              img.onerror = () => reject(new Error('Error loading image'));
+              
+              // Create object URL for the image
+              const url = URL.createObjectURL(file);
+              img.src = url;
+            });
+          };
+
+          // Compress the image
+          const compressedSrc = await compressImageForContent(file);
+          
+          // Insert the compressed image into the editor
+          if (compressedSrc) {
+            editor.chain().focus().setImage({ 
+              src: compressedSrc,
+              alt: file.name,
+              width: 300,
+              height: 200
+            }).run();
+          }
+        } catch (error) {
+          console.error('Error compressing image:', error);
+          // Fallback to original method if compression fails
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const src = event.target?.result as string;
+            if (src) {
+              editor.chain().focus().setImage({ 
+                src,
+                alt: file.name,
+                width: 300,
+                height: 200
+              }).run();
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    };
+    input.click();
   }, [editor]);
 
   // Validación para el renderizado del componente
@@ -212,6 +310,13 @@ const MenuBar = () => {
         >
           <Link2Off className="h-4 w-4" />
         </button>
+        <button
+          onClick={addImage}
+          className={`${buttonClass} ${inactiveClass}`}
+          title="Insertar imagen"
+        >
+          <ImageIcon className="h-4 w-4" />
+        </button>
       </div>
     </div>
   );
@@ -221,6 +326,12 @@ const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
   TextStyle.configure({}),
   Underline,
+  Image.configure({
+    allowBase64: true,
+    HTMLAttributes: {
+      class: 'rounded-lg',
+    },
+  }),
   Link.configure({
     HTMLAttributes: {
       class: "text-[#6364F4] underline hover:text-[#8484ed] cursor-pointer",
