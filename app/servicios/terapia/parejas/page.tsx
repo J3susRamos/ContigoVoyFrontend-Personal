@@ -121,9 +121,9 @@ const ParejaTerapias: ServicesStructureProps = {
     {
       id: 1,
       title: "Terapia de pareja",
-      preciounit: "s/129",
+      preciounit: "s/90",
       cents: ".00",
-      regularprice: "Precio regular: s/90.00",
+      regularprice: "Precio regular: s/129.00",
       list: [
         {
           id: 1,
