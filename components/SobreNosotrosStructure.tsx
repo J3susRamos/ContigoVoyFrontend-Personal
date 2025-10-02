@@ -101,15 +101,25 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8">
-              Tu bienestar 
-              <span className="block text-white">
-                EMOCIONAL es nuestro
-              </span>
-              compromiso
-            </h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8"
+            >
+                Tu bienestar{" "}
+                <span className="bg-gradient-to-r text-white to-orange-300 bg-clip-text text-transparent">
+                  EMOCIONAL
+                </span>{" "}
+                <span className="block lg:inline">es nuestro</span> compromiso            
+            </motion.h1>
 
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12"
+            >
               En Contigo Voy encontrás un espacio seguro donde crecer, sanar y descubrir tu mejor versión.
             </p>
           </div>
@@ -143,32 +153,24 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
             </ul>
           </motion.div>
           <motion.div
-            {...fadeInRightConfig}
-            className="relative flex justify-center items-center"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative w-full rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300 h-64 sm:h-80 md:h-96"
           >
-            <div className="w-full max-w-md lg:max-w-lg xl:max-w-xl min-w-[300px] min-h-[300px] max-h-[500px] rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300">
-              <Image
-                src="/AboutUs/terapeutas-especializados-familia-feliz.webp"
-                alt="Sesión de terapia psicológica"
-                width={600}
-                height={400}
-                className="w-full h-full object-cover object-center"
-                priority={true}
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw"
-                quality={85}
-                onError={(e) => {
-                  // Fallback para imagen principal
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/AboutUs/fallback-therapy-session.jpg';
-                }}
-              />
-            </div>
+            <Image
+              src="/AboutUs/terapeutas-especializados-familia-feliz.webp"
+              alt="Sesión de terapia psicológica"
+              fill
+              className="object-cover sm:object-cover "
+            />
           </motion.div>
         </div>
       </section>
 
       {/* Misión y Visión */}
-      <section className="py-20 dark:bg-gray-900 bg-gray-100">
+      <section className="py-16 dark:bg-gray-900 bg-gray-100">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12">
             <motion.div
