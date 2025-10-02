@@ -9,16 +9,22 @@ import { UsuarioLocalStorage } from "@/interface";
 
 const navItemsBase = [
   {
+    name: "Inicio",
+    link: "/user/welcome",
+    icono: Icons.alpharrow,
+    role: ["marketing", "comunicacion", "admin"],
+  },
+  {
     name: "Dashboard",
     link: "/user/home",
     icono: Icons.dashboard,
-    role: "both",
+    role: ["psico"],
   },
   {
     name: "Citas",
     icono: Icons.citas,
     key: "citas-parent",
-    role: "admin",
+    role: ["admin"],
     hijos: [
       {
         name: "Citas sin Pagar",
@@ -36,67 +42,73 @@ const navItemsBase = [
     name: "Registro de personal",
     link: "/user/personal",
     icono: Icons.personal,
-    role: "admin",
+    role: ["admin"],
   },
   {
     name: "Gestión de Trabajadores",
     link: "/user/trabajadores",
     icono: Icons.personal,
-    role: "admin"
+    role: ["admin"],
+  },
+  {
+    name: "Gestión de Trabajadores",
+    link: "/user/trabajadores",
+    icono: Icons.personal,
+    role: ["admin"],
   },
   {
     name: "Pacientes",
     link: "/user/pacientes",
     icono: Icons.pacientes,
-    role: "both",
+    role: ["admin"],
   },
   {
     name: "Psicologos",
     link: "/user/psicologos",
     icono: Icons.psicologos,
-    role: "admin",
+    role: ["admin"],
   },
   {
     name: "Citas",
     link: "/user/citas",
     icono: Icons.citas,
-    role: "psico",
+    role: ["psico"],
   },
   {
     name: "Historial",
     link: "/user/historial",
     icono: Icons.historial,
-    role: "psico",
+    role: ["psico"],
   },
   {
     name: "Calendario",
     link: "/user/calendario",
     icono: Icons.calendario,
-    role: "both",
+    role: ["psico"],
   },
   {
     name: "Estadisticas",
     link: "/user/estadisticas",
     icono: Icons.estadisticas,
-    role: "both",
+    role: ["admin"],
   },
   {
     name: "Blog",
     link: "/user/blog",
     icono: Icons.blog,
-    role: "psico",
+    role: ["psico"],
   },
   {
     name: "Marketing",
     link: "/user/marketing",
     icono: Icons.marketing,
-    role: "psico",
+    role: ["psico"],
   },
   {
     name: "Politicas y Privacidad",
     link: "/user/politicas",
     icono: Icons.politicasyPriv,
-    role: "psico",
+    role: ["psico", "admin"], //agregar rol de administrador
   },
 ];
 
@@ -114,16 +126,19 @@ const NavbarUser = () => {
 
         if (user.rol === "PSICOLOGO") {
           items = items.filter(
-            (item) => item.role === "psico" || item.role === "both"
+            (item) => Array.isArray(item.role) && item.role.includes("psico")
           );
         } else if (user.rol === "ADMIN") {
           items = items.filter(
-            (item) => item.role === "admin" || item.role === "both"
+            (item) => Array.isArray(item.role) && item.role.includes("admin")
           );
         } else {
-          // Para cualquier otro rol, usamos SOLO los permisos
+          // Para otros roles usamos SOLO permisos
           const permisosNombres = user.permisos.map((p) => p.name);
-          items = items.filter((item) => permisosNombres.includes(item.name));
+          items = items.filter(
+            (item) =>
+              item.name === "Inicio" || permisosNombres.includes(item.name)
+          );
         }
 
         setNavItems(items);

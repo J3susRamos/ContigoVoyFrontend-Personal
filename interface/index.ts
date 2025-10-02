@@ -337,7 +337,7 @@ export interface NavItems {
   name: string;
   icono: string;
   link?: string;
-  role?: string;
+  role?: string[];
   key?: string;
   hijos?: NavItems[]
 }
