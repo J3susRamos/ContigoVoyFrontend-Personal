@@ -121,7 +121,7 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
               className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12"
             >
               En Contigo Voy encontrás un espacio seguro donde crecer, sanar y descubrir tu mejor versión.
-            </p>
+            </motion.p>
           </div>
         </div>
       </section>
