@@ -9,13 +9,13 @@ import CitasSection from "./sections/CitasSection";
 import VentasSection from "./sections/VentasSection";
 import RendimientoSection from "./sections/RendimientoSection";
 import useStadistics from "./hooks/useStadistics";
+import { UserRole, ViewKey } from "./types";
+import { UsuarioLocalStorage } from "@/interface";
 
 export default function ShowStadistic() {
   const {
     view,
     setView,
-    userRole,
-    setUserRole,
     dateRange,
     setDateRange,
     isLoading,
@@ -24,26 +24,38 @@ export default function ShowStadistic() {
     visibleButtons,
     handleViewChange,
     getButtonClasses,
+    setUserRole,
+    allowedViews,
   } = useStadistics();
 
   useEffect(() => {
     try {
       const userJson = localStorage.getItem("user");
       if (userJson) {
-        const user = JSON.parse(userJson);
-        setUserRole(user.rol);
-        if (userRole !== "ADMIN") {
-          setView("clientes");
-          setIsLoading(false);
+        const user: UsuarioLocalStorage = JSON.parse(userJson);
+
+        // ✅ Guardar rol en el hook
+        setUserRole(user.rol as UserRole);
+
+        // ✅ Vista inicial → la primera permitida
+        if (allowedViews.length > 0) {
+          setView(allowedViews[0] as ViewKey);
         }
       }
+      setIsLoading(false);
     } catch (error) {
-      console.error("Error parsing user data from localStorage:", error);
+      console.error("Error parsing user data:", error);
+      setIsLoading(false);
     }
-  }, [setUserRole, setView, setIsLoading, userRole]);
+  }, [setUserRole, setIsLoading, allowedViews, setView]);
 
   if (isLoading) {
     return <LoadingSkeleton />;
+  }
+
+  // ✅ si no tiene vistas permitidas → sin permisos
+  if (allowedViews.length === 0) {
+    return <div>No tienes permisos para ver estadísticas 🚫</div>;
   }
 
   return (
@@ -84,12 +96,22 @@ export default function ShowStadistic() {
           <div role="tabpanel" className="p-6 md:p-8">
             <div className="relative min-h-[500px]">
               {/* Skeleton */}
-              <div className={`absolute inset-0 transition-opacity duration-300 ${isViewLoading ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+              <div
+                className={`absolute inset-0 transition-opacity duration-300 ${
+                  isViewLoading
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none"
+                }`}
+              >
                 <ViewLoadingSkeleton viewKey={view} />
               </div>
 
               {/* Contenido real */}
-              <div className={`transition-opacity duration-300 ${isViewLoading ? 'opacity-0' : 'opacity-100 delay-100'}`}>
+              <div
+                className={`transition-opacity duration-300 ${
+                  isViewLoading ? "opacity-0" : "opacity-100 delay-100"
+                }`}
+              >
                 {view === "clientes" && <ClientesSection />}
                 {view === "citas" && <CitasSection />}
                 {view === "ventas" && <VentasSection />}
