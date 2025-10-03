@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
 
   experimental: {
     optimizePackageImports: ['lucide-react', '@heroui/react'],
+
   },
 
 
@@ -34,6 +35,7 @@ const nextConfig: NextConfig = {
     ];
   },
 };
+
 
 
 export default withBundleAnalyzer(nextConfig);

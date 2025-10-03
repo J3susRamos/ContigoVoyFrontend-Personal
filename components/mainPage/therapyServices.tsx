@@ -108,10 +108,10 @@ export default function TherapyServices() {
                   </div>
                   
                   {/* Columna derecha: Texto + Botón */}
-                  <div className="flex-1 flex flex-col justify-around h-full lg:h-2/3">
+                  <div className="flex-1 flex flex-col justify-center w-100% h-full lg:h-2/3">
 
                     {/* Texto */}
-                    <div className="flex-1  flex justify-center items-center lg:justify-center ">
+                    <div className="flex-1  flex justify-center itrems-center lg:justify-center ">
                       <h3
                         className="text-lg sm:text-xl font-bold leading-tight text-center
                           group-hover:text-purple-100 transition-colors duration-300"
@@ -121,7 +121,7 @@ export default function TherapyServices() {
                     </div>
 
                     {/* Botón Ver Más */}
-                    <div className="flex justify-end mt-0 lg:mt-5  relative z-10">
+                    <div className="flex  justify-center mt-0 lg:mt-5  relative z-10">
                       <button
                         className="group/btn flex items-center space-x-2 text-sm 
                           hover:text-purple-200 transition-all duration-300

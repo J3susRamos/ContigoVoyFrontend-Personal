@@ -122,6 +122,7 @@ export default function MainSlider() {
                       alt={item.alt}
                       title={item.title}
                       fill
+                      sizes="(max-width: 430px) 100vw, 100vw" 
                       className="object-cover object-right lg:object-cover lg:object-right sm:object-left transform translate-x-[15%] lg:translate-x-[0%]"
                       style={{
                         WebkitMaskImage:
@@ -136,7 +137,9 @@ export default function MainSlider() {
                       priority={index === 0}
                       fetchPriority={index === 0 ? "high" : "auto"}
                       loading={index === 0 ? "eager" : "lazy"}
+                      
                     />
+
                   </picture>
                 </div>
               </div>
