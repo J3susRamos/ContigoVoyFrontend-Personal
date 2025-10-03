@@ -101,6 +101,9 @@ export default function MainSlider() {
             <div
               className="relative embla__slide overflow-hidden"
               key={`slide-${index}`}
+              id={`slide-${index}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${index}`}
             >
               <div className="bg-recursive-gradient absolute inset-0 z-0"></div>
               <div className="mix-blend-multiply z-10 absolute inset-0 bg-cover bg-white ">
@@ -215,7 +218,7 @@ export default function MainSlider() {
       {/* Botones de navegación */}
       <div className="lg:block hidden">
         <div
-          className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-2"
+          className="absolute right-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-3"
           role="tablist"
           aria-label="Navegación del carrusel"
         >
@@ -223,10 +226,12 @@ export default function MainSlider() {
             <button
               key={`nav-button-${index}`}
               id={`tab-${index}`}
+              role="tab"
+              aria-controls={`slide-${index}`}
               onClick={() => scrollTo(index)}
               aria-label={`Ir a la sección ${index + 1}: ${sections[index].phrase}`}
-              aria-current={selectedIndex === index ? "true" : "false"}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              aria-selected={selectedIndex === index ? "true" : "false"}
+              className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
                 selectedIndex === index ? "bg-[#634AE2]" : "bg-white"
               }`}
             />

@@ -1,12 +1,5 @@
 import type {NextConfig} from "next";
 
-import bundleAnalyzer from "@next/bundle-analyzer";
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-});
-
-
 const nextConfig: NextConfig = {
  
   images: {
@@ -19,8 +12,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', '@heroui/react'],
   },
 
-
-  async generateBuildId() { 
+  async generateBuildId() {
  
     return `blog-system-${Date.now()}`;
   },
@@ -35,5 +27,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;
