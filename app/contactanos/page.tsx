@@ -3,16 +3,15 @@ import FormContacto from "@/components/contactUs/FormContacto";
 
 export const metadata: Metadata = {
   title: "Contáctanos - Centro psicológico | Contigo Voy",
-  description:
-    "En Contigo Voy te escuchamos, llena nuestro formulario de contacto y da el primer paso hacia tu bienestar con un equipo psicológico que te acompaña siempre",
+  description: "En Contigo Voy te escuchamos, llena nuestro formulario de contacto y da el primer paso hacia tu bienestar con un equipo psicológico que te acompaña siempre",
   authors: [{ name: "Contigo Voy" }],
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
   },
   keywords: [
     "contacto",
-    "psicólogos ",
-    "psicólogos  lima",
+    "psicólogos",
+    "psicólogos lima",
     "primera cita",
     "gratis",
     "cita gratuita",
@@ -30,44 +29,57 @@ export const metadata: Metadata = {
 };
 
 const ContactUs = () => {
-  
   return (
-    <div className="flex flex-col justify-center min-h-screen w-full relative overflow-y-hidden overflow-x-clip bg-large-gradient dark:bg-gradient-to-br dark:from-purple-950 dark:via-indigo-900 dark:to-purple-900 transition-colors duration-300"> 
-      <div className="lg:relative overflow-y-hidden overflow-x-clip ">
-        <div role="img" aria-label="Contactanos Terapia Psicológica Contigo Voy Online"
-          className="mix-blend-multiply z-0 absolute pointer-events-none top-0 -left-[50px] lg:left-[700px] -bottom-[20px] -right-[0] sm:-right-[60px]  bg-[url('/consulta-asesoría-psicológica-online.webp')] bg-no-repeat bg-[length:850px] sm:bg-[length:1250px] bg-bottom"
-        ></div>
+    <main className="flex flex-col justify-center min-h-screen w-full relative overflow-y-hidden overflow-x-clip bg-large-gradient dark:bg-gradient-to-br dark:from-purple-950 dark:via-indigo-900 dark:to-purple-900 transition-colors duration-300">
+      <div className="lg:relative overflow-y-hidden overflow-x-clip">
+        {/* Imagen decorativa con mejor accesibilidad */}
+        <div 
+          role="img" 
+          aria-label="Persona recibiendo asesoría psicológica online en Contigo Voy"
+          className="mix-blend-multiply z-0 absolute pointer-events-none top-0 -left-[50px] lg:left-[700px] -bottom-[20px] -right-[0] sm:-right-[60px] bg-[url('/consulta-asesoría-psicológica-online.webp')] bg-no-repeat bg-[length:850px] sm:bg-[length:1250px] bg-bottom"
+        />
+        
         <div className="relative z-10 max-w-scv18 mx-auto">
-          <div className="container px-scv7 pt-scv7 sm:pt-scv8 sm:px-scv9">
-              <div className="text-white space-y-6 text-center flex flex-col items-center justify-center w-full">
-                <h1 style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}} 
-                    className="text-cv8 sm:text-cv9 sm:leading-[60px] font-bold w-full max-w-scv16">
-                  ¡La solución que buscas, empieza aquí!
-                </h1>
-                <h2 style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 2px 2px 3px rgba(0,0,0,0.45)"}}
-                className="text-cv8 sm:text-cv8 font-semibold mt-scv6 w-full max-w-scv16">
+          <div className="px-scv7 pt-scv7 sm:pt-scv8 sm:px-scv9">
+            {/* Header semánticamente correcto - CENTRADO según max-w-scv18 */}
+            <header className="text-white space-y-6 flex flex-col items-center justify-center w-full text-center">
+              <h1 
+                style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}} 
+                className="text-cv8 sm:text-cv9 sm:leading-[60px] font-bold w-full"
+              >
+                ¡La solución que buscas, empieza aquí!
+              </h1>
+              
+              <section aria-labelledby="beneficios-heading" className="w-full">
+                <h2 
+                  id="beneficios-heading"
+                  style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 2px 2px 3px rgba(0,0,0,0.45)"}}
+                  className="text-cv8 sm:text-cv8 font-semibold mt-scv6 w-full"
+                >
                   Beneficios de acercarte a un centro psicológico
                 </h2>
+              </section>
 
-                {/* Cambio de h3 a h2 */}
-                
-                <h2 style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
-                  className="text-cv8 sm:text-cv8 font-bold mt-scv6 w-full max-w-scv16">
+              <section aria-labelledby="contacto-heading" className="w-full">
+                <h2 
+                  id="contacto-heading"
+                  style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
+                  className="text-cv8 sm:text-cv8 font-bold mt-scv6 w-full"
+                >
                   Contáctanos
                 </h2>
-              </div>
-              <div className="mt-scv5 w-full flex pb-scv9">
-                <FormContacto />
-              </div>
+              </section>
+            </header>
+
+            {/* Formulario */}
+            <div className="mt-scv5 w-full flex pb-scv9 justify-center">
+              <FormContacto />
+            </div>
           </div>
         </div>
-        
       </div>
-      
-    </div>
-    
+    </main>
   );
 };
 
 export default ContactUs;
-
