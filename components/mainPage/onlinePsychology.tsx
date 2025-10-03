@@ -283,12 +283,15 @@ export default function ChooseUs() {
                     <div className="embla__slide" key={index}>
                       <div className="relative h-[800px] max-w-[500px] rounded-l-full mask-all-fade">
                         <Image
-                          src={item.background}
-                          alt={item.title}
-                          fill
-                          sizes="500px"
-                          className="object-cover rounded-l-full"
-                        />
+                            src={item.background}
+                            alt={item.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw,
+                                  (max-width: 1200px) 50vw,
+                                  500px"
+                            className="object-cover rounded-l-full"
+                          />
+
                       </div>
                     </div>
                   ))}
