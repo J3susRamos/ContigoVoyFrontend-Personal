@@ -93,7 +93,7 @@ export default function SliderPrice({
 
                             <div className="justify-center bottom-0 pt-9  flex  ">
                               <Link href="/ReservarCita">
-                                <button className="text-cv3 w-48 border-0 bottom-0 shadow-none bg-[#634AE2] items-center  text-white rounded-[34px] h-10 font-semibold text-center">
+                                <button className="text-cv3 w-48 border-0 bottom-0 shadow-none bg-[#634AE2] items-center text-white rounded-[34px] h-12 font-semibold text-center min-h-[44px] min-w-[44px]">
                                   Obtener una Cita
                                 </button>
                               </Link>

@@ -70,7 +70,7 @@ export default function FormContacto() {
   };
   return (
     <div
-      className="w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto md:mr-10 relative z-0"
+      className="w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto md:mr-10 relative z-0 md:-translate-x-72"
     >
       {/* Fondo con efecto glassmorphism y degradado más moderno */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/30 to-indigo-100/40 dark:from-purple-900/80 dark:via-indigo-900/70 dark:to-purple-800/80 backdrop-blur-2xl rounded-3xl border border-white/50 dark:border-purple-700/50 shadow-2xl md:shadow-3xl transition-colors duration-300"></div>

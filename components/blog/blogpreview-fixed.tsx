@@ -4,6 +4,7 @@ import { Image, User } from "@heroui/react";
 import { Calendar, Clock, ArrowRight, Tag } from "lucide-react";
 import Link from "next/link";
 import { createSlug } from "@/utils/slugUtils";
+import { extractFormattedExcerpt, getReadingTime } from "@/utils/contentUtils";
 
 export default function BlogPreview({ 
   Data,
@@ -18,12 +19,7 @@ export default function BlogPreview({
     });
   };
 
-  const getReadingTime = (content: string) => {
-    const wordsPerMinute = 200;
-    const words = content.replace(/<[^>]+>/g, "").split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min de lectura`;
-  };
+
 
   return (
     <article className="group transition-all duration-500 hover:scale-[1.02] p-8">
@@ -76,8 +72,8 @@ export default function BlogPreview({
           </Link>
 
           {/* Excerpt */}
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3 text-lg">
-            {Data.contenido.replace(/<[^>]+>/g, "").slice(0, 200)}...
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3 text-lg whitespace-pre-line">
+            {extractFormattedExcerpt(Data.contenido, 200)}
           </p>
 
           {/* Read More Button - Now as a Link */}

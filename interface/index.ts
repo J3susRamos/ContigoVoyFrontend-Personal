@@ -790,6 +790,36 @@ export interface WorkerStatsResponse {
   };
 }
 
+// ========== INTERFACES PARA DASHBOARD ADMINISTRADOR ==========
+
+export interface CitasEstadisticasResult {
+  sin_pagar: number;
+  pendientes: number;
+  canceladas: number;
+  realizadas: number;
+  ausentes: number;
+  reprogramadas: number;
+}
+
+export interface AdminDashboardStats {
+  citas: CitasEstadisticasResult;
+  trabajadores: {
+    [role: string]: {
+      total: number;
+      activos: number;
+      inactivos: number;
+    };
+  };
+  pacientes_total: number;
+  citas_hoy: number;
+}
+
+export interface AdminDashboardResponse {
+  status_code: number;
+  status_message: string;
+  result: AdminDashboardStats;
+}
+
 export interface WorkerFilterOptions {
   rol: string;
   estado: string;

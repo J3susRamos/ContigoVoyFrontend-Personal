@@ -37,7 +37,7 @@ const FamilyTerapias: ServicesStructureProps = {
   motto: (
     <p>
       ¿Sientes que los conflictos
-      <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+      <span className="text-yellow-300" /*className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent" */>
         {" "}
         familiares
       </span>{" "}

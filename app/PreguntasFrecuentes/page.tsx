@@ -1,124 +1,149 @@
 'use client'
 import AccordionQuest from "@/components/AccordionQuest";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 
+// Datos estáticos fuera del componente para evitar recreación
+const FAQS_DATA = [
+  {
+    Question: "¿Cuánto va a costar mi terapia?",
+    Answer:
+      "El costo de las terapias varía según el tipo de terapia que el paciente busque. Los precios varían entre 69 y 129 soles por sesión.",
+  },
+  {
+    Question: "¿Cuánto es el tiempo de duración de la consulta?",
+    Answer:
+      "Cada persona es única, por lo que no podemos estimar el tiempo ni el costo sin la consulta. Allí, el especialista brindará un diagnóstico preciso y personalizará tu terapia para garantizar los mejores resultados.",
+  },
+  {
+    Question: "¿Cuáles son los métodos de pago?",
+    Answer:
+      "Para facilitar el proceso, ofrecemos diversas formas de pago como transferencia bancaria, Yape o Plin.",
+  },
+  {
+    Question: "¿Qué tipos de terapia manejan los psicólogos?",
+    Answer:
+      "Nuestros especialistas están altamente capacitados en terapia cognitivo-conductual, uno de los enfoques más efectivos y respaldados científicamente en la actualidad para el tratamiento de diversas condiciones psicológicas.",
+  },
+];
+
+// Componente reutilizable para el fondo animado
+const AnimatedBackground = () => (
+  <div className="absolute inset-0">
+    <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
+    <div className="absolute top-0 left-0 w-full h-full">
+      <div className="absolute top-4 left-4 w-20 h-20 bg-white/10 rounded-full blur-lg animate-pulse sm:top-10 sm:left-10 sm:w-32 sm:h-32"></div>
+      <div className="absolute bottom-4 right-4 w-24 h-24 bg-white/10 rounded-full blur-lg animate-pulse delay-1000 sm:bottom-10 sm:right-10 sm:w-48 sm:h-48"></div>
+      <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-white/5 rounded-full blur-xl transform -translate-x-1/2 -translate-y-1/2 sm:w-64 sm:h-64"></div>
+    </div>
+  </div>
+);
+
 export default function App() {
-  const faqs = [
-    {
-      Question: "¿Cuánto va a costar mi terapia?",
-      Answer:
-        "El costo de las terapias varía según el tipo de terapia que el paciente busque. Los precios varían entre 69 y 129 soles por sesión.",
-    },
-    {
-      Question: "¿Cuánto es el tiempo de duración de la consulta?",
-      Answer:
-        "Cada persona es única, por lo que no podemos estimar el tiempo ni el costo sin la consulta. Allí, el especialista brindará un diagnóstico preciso y personalizará tu terapia para garantizar los mejores resultados.",
-    },
-    {
-      Question: "¿Cuáles son los métodos de pago?",
-      Answer:
-        "Para facilitar el proceso, ofrecemos diversas formas de pago como transferencia bancaria, Yape o Plin.",
-    },
-    {
-      Question: "¿Qué tipos de terapia manejan los psicólogos?",
-      Answer:
-        "Nuestros especialistas están altamente capacitados en terapia cognitivo-conductual, uno de los enfoques más efectivos y respaldados científicamente en la actualidad para el tratamiento de diversas condiciones psicológicas.",
-    },
-  ];
-
   return (
-    <div className="w-full relative overflow-y-hidden over overflow-x-clip min-h-0">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
-        <div className="absolute inset-0">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Image
-              src="/preguntas-sobre-terapia-en-linea.webp"
-              alt="wa"
-              priority
-              width={800}
-              height={200}
-              className="hidden md:block h-auto absolute right-0 opacity-20 bottom-[-100]"
-            />
-          </motion.div>
-
-          <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
-          <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
-          </div>
-        </div>
-
+    <div className="w-full relative overflow-hidden min-h-0">
+      {/* Hero Section Optimizada para Móvil */}
+      <section 
+        role="banner" 
+        className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-12 sm:py-20"
+      >
+        <AnimatedBackground />
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8"
+              transition={{ duration: 0.6 }}
+              className="text-3xl font-bold text-white mb-6 sm:text-4xl md:text-5xl lg:text-6xl"
             >
               Tus{" "}
               <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                dudas{" "}
+                dudas
               </span>{" "}
-              importan, y estamos aquí para ayudarte
+              importan
             </motion.h1>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-xl font-semibold text-white mb-4 sm:text-2xl md:text-3xl"
+            >
+              Estamos aquí para ayudarte
+            </motion.h2>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12"
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-lg text-white/90 max-w-2xl mx-auto mb-8 sm:text-xl"
             >
-              Encontrarás respuestas claras y cercanas para que te sientas
-              acompañado en cada paso de tu camino emocional.
+              Respuestas claras y cercanas para acompañarte en cada paso de tu camino emocional.
             </motion.p>
           </div>
         </div>
       </section>
-      <section className="py-12 pb-24  dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50">
+
+      {/* FAQs Section Optimizada */}
+      <section 
+        role="main" 
+        aria-label="Preguntas frecuentes sobre terapia psicológica"
+        className="py-8 pb-16 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50 sm:py-12 sm:pb-24"
+      >
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y : 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-7xl mx-auto px-scv6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto px-4 sm:px-6"
         >
-          <AccordionQuest faqs={faqs} />
+          <AccordionQuest faqs={FAQS_DATA} />
         </motion.div>
       </section>
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-12">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
-          <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
-            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2"></div>
-          </div>
-        </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* CTA Section Optimizada */}
+      <section 
+        role="complementary" 
+        aria-label="Contacta con nuestros especialistas"
+        className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-8 sm:py-12"
+      >
+        <AnimatedBackground />
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-white">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-2xl font-bold mb-4 text-white sm:text-3xl md:text-4xl"
+            >
               ¿Listo para comenzar tu camino hacia el bienestar?
-            </h2>
-            <p className="text-xl mb-8 text-white/90">
+            </motion.h2>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="text-lg mb-6 text-white/90 sm:text-xl"
+            >
               Agenda tu primera sesión y descubre cómo podemos ayudarte.
-            </p>
-            <Link href="/contactanos">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all"
-              >
-                Contactar Ahora
-              </motion.button>
-            </Link>
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <Link href="/contactanos" className="block w-full sm:w-auto">
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="bg-white text-blue-600 px-8 py-3 rounded-full font-bold text-base w-full max-w-xs mx-auto shadow-lg hover:shadow-xl transition-all sm:px-10 sm:py-4 sm:text-lg"
+                >
+                  Contactar Ahora
+                </motion.button>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>

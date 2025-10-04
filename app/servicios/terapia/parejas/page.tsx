@@ -5,7 +5,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Terapia de pareja – Comunicación y conexión emocional | Contigo Voy",
+    "Terapia de pareja – Comunicación y conexión | Contigo Voy",
   description:
     "Fortalece tu relación con terapia de pareja online. Mejora la comunicación, resuelve conflictos y recupera la conexión con apoyo profesional.",
   authors: [{ name: "Contigo Voy" }],
@@ -38,7 +38,7 @@ const ParejaTerapias: ServicesStructureProps = {
   motto: (
     <p>
       ¿
-      <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+      <span className="text-yellow-300" /*className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent" */>
         {" "}
         Tu relación
       </span>{" "}
@@ -121,9 +121,9 @@ const ParejaTerapias: ServicesStructureProps = {
     {
       id: 1,
       title: "Terapia de pareja",
-      preciounit: "s/129",
+      preciounit: "s/90",
       cents: ".00",
-      regularprice: "Precio regular: s/90.00",
+      regularprice: "Precio regular: s/129.00",
       list: [
         {
           id: 1,
