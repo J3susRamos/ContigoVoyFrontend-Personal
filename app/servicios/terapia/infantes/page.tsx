@@ -41,7 +41,9 @@ const NinosTerapias: ServicesStructureProps = {
       la oportunidad de crecer emocionalmente con la ayuda de un profesional?
     </p>
   ),
-  background: "/Services/niños/terapia-psicologica-para-ninos.webp",
+  backgroundDesktop: "/Services/niños/Escritorio-terapia-psicologica-para-ninos.webp",
+  backgroundMobile: "/Services/niños/terapia-psicologica-para-ninos.webp",
+
   bgdown: "/Services/niños/ayuda-emocional-para-ninos-madre-tablet.webp",
   bgdownTitle: "Niños en crecimiento emocional | Psicología Online Contigo Voy",
   bgdownAlt:

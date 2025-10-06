@@ -39,7 +39,8 @@ const terapiaEmpresarial: ServicesStructureProps = {
       con nuestra terapia empresarial
     </p>
   ),
-  background: "/Services/business/buisness.webp",
+  backgroundDesktop: "/Services/business/Escritorio-buisness.webp",
+  backgroundMobile: "/Services/business/buisness.webp",
   bgdown: "/Services/business/bgempre.webp",
   bgdownAlt: "Servicio Terapia Psicológica para Empresas Contigo Voy Online",
   bgdownTitle: "Terapia Empresarial | Contigo Voy Psicología Online",

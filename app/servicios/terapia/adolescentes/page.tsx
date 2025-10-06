@@ -46,7 +46,8 @@ const TeenTerapias: ServicesStructureProps = {
       ?
     </p>
   ),
-  background: "/Services/teen/terapia-psicologica-para-adolescentes.webp",
+  backgroundDesktop: "/Services/teen/Escritorio-terapia-psicologica-para-adolescentes.webp",
+  backgroundMobile: "/Services/teen/terapia-psicologica-para-adolescentes.webp",
   bgup: "/Services/teen/chica_Sentada.webp",
   bgdown: "/Services/teen/psicologos-especializados-en-adolescentes.webp",
   bgdownAlt: "Adolescente feliz | Psicología Online",
