@@ -45,7 +45,8 @@ const ParejaTerapias: ServicesStructureProps = {
       está en crisis? ¿Buscas fortalecer el vínculo?
     </p>
   ),
-  background: "/Services/couple/ayuda-para-parejas-en-crisis.webp",
+  backgroundDesktop: "/Services/couple/Escritorio-ayuda-para-parejas-en-crisis.webp",
+  backgroundMobile: "/Services/couple/ayuda-para-parejas-en-crisis.webp",
   bgdown: "/Services/couple/psicoterapia-para-relaciones-de-pareja.webp",
   bgup: "/Services/couple/bguppareja.webp",
   bgdownAlt: "",
@@ -121,9 +122,9 @@ const ParejaTerapias: ServicesStructureProps = {
     {
       id: 1,
       title: "Terapia de pareja",
-      preciounit: "s/129",
+      preciounit: "s/90",
       cents: ".00",
-      regularprice: "Precio regular: s/90.00",
+      regularprice: "Precio regular: s/129.00",
       list: [
         {
           id: 1,

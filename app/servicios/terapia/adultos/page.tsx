@@ -45,7 +45,8 @@ const AdultoTerapias: ServicesStructureProps = {
       ?
     </p>
   ),
-  background:"/Services/adult/Terapia_adultos_Mujer_agarrándose_rostro_feliz.webp",
+  backgroundDesktop:"/Services/adult/Escritorio-Terapia_adultos_Mujer_agarrándose_rostro_feliz.webp",
+  backgroundMobile: "/Services/adult/Terapia_adultos_Mujer_agarrándose_rostro_feliz.webp",
   bgdown: "/Services/adult/Terapia_adultos_Mujer_afro_feliz_tablet.webp",
   bgup: "/Services/adult/bgupadultos.webp",
   bgdownAlt:

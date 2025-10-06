@@ -41,7 +41,9 @@ const NinosTerapias: ServicesStructureProps = {
       la oportunidad de crecer emocionalmente con la ayuda de un profesional?
     </p>
   ),
-  background: "/Services/niños/terapia-psicologica-para-ninos.webp",
+  backgroundDesktop: "/Services/niños/Escritorio-terapia-psicologica-para-ninos.webp",
+  backgroundMobile: "/Services/niños/terapia-psicologica-para-ninos.webp",
+
   bgdown: "/Services/niños/ayuda-emocional-para-ninos-madre-tablet.webp",
   bgdownTitle: "Niños en crecimiento emocional | Psicología Online Contigo Voy",
   bgdownAlt:
@@ -145,31 +147,6 @@ const NinosTerapias: ServicesStructureProps = {
           text: "Juegos terapéuticos adaptados para niños.",
         },
         { id: 4, text: "Psicólogos expertos en desarrollo infantil." },
-      ],
-    },
-    {
-      id: 2,
-      title: "Terapia de pareja",
-      preciounit: "s/90",
-      cents: ".00",
-      regularprice: "Precio regular: s/129.00",
-      list: [
-        {
-          id: 1,
-          text: "Sesiones online de 40 a 50 minutos.",
-        },
-        {
-          id: 2,
-          text: "Fortalece la comunicación y conexión emocional.",
-        },
-        {
-          id: 3,
-          text: "Técnicas para resolver conflictos de forma constructiva.",
-        },
-        {
-          id: 4,
-          text: "Psicólogos especializados en relaciones de pareja.",
-        },
       ],
     },
   ],

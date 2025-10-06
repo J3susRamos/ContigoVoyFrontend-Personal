@@ -66,14 +66,20 @@ export const useAuth = () => {
         loading: false,
         error: null,
       });
-      //implemenrtar el welcome
-      window.location.assign("/user/welcome");
 
+      if(userDataToStore.rol =="PSICOLOGO"){
+        //implemenrtar el welcome
+      window.location.assign("/user/home");
+      }
+      else{
+        window.location.assign("/user/welcome");
+      }
+      
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "Se produjo un error desconocido";
+          : "Se produjo un error desconocido";//dg
 
       setAuthState({ ...authState, loading: false, error: errorMessage });
     }

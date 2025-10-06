@@ -1,6 +1,6 @@
-"use client";
+                                                     "use client";
 
-import { Autocomplete, AutocompleteItem, Button, Input } from "@heroui/react";
+import { Autocomplete, AutocompleteItem, Button, Input, Textarea } from "@heroui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Listarblog } from "./listarblog";
 import Tiptap from "./textEdit";
@@ -264,14 +264,29 @@ export default function BlogUsuarioCrear() {
   };
 
   const validateForm = (): boolean => {
+    // Sanitize title for validation (convert line breaks to spaces)
+    const sanitizedTema = tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
+    
     // Validate title - server requires at least 20 characters
-    if (!tema.trim()) {
+    if (!sanitizedTema) {
       showToast("error", "El título es requerido.");
       return false;
     }
 
-    if (tema.trim().length < 20) {
+    if (sanitizedTema.length < 20) {
       showToast("error", "El título debe tener al menos 20 caracteres.");
+      return false;
+    }
+
+    // Check for SVG/XML content in tema
+    if (sanitizedTema.includes('<svg') || sanitizedTema.includes('<?xml') || sanitizedTema.includes('viewBox')) {
+      showToast("error", "El título contiene código SVG o XML. Por favor usa un título simple.");
+      return false;
+    }
+
+    // Validate title length
+    if (sanitizedTema.length > 200) {
+      showToast("error", "El título es demasiado largo. Máximo 200 caracteres.");
       return false;
     }
 
@@ -342,13 +357,14 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
-      // Validate tema length
-      if (!tema || tema.trim().length < 5) {
+      // Validate tema length (sanitize first)
+      const sanitizedTemaCheck = tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
+      if (!sanitizedTemaCheck || sanitizedTemaCheck.length < 5) {
         showToast("error", "El título debe tener al menos 5 caracteres.");
         return;
       }
 
-      if (tema.length > 200) {
+      if (sanitizedTemaCheck.length > 200) {
         showToast("error", "El título no puede exceder 200 caracteres.");
         return;
       }
@@ -401,16 +417,12 @@ export default function BlogUsuarioCrear() {
         }
       }
 
-      // Combine all images
-      const allImages = [...base64Images, ...validUrls];
-
-      // Debug logging
+      // Debug logging (will be updated after image processing)
       console.log("Current user:", user);
       console.log("User ID:", user.id);
       console.log("User idpsicologo:", user.idpsicologo);
       console.log("Original ID Psicologo from blog:", originalIdPsicologo);
       console.log("Editing blog ID:", editingBlogId);
-      console.log("Total images:", allImages.length);
 
       let categoriaId: number | null;
       if (selectedKey !== null) {
@@ -432,24 +444,231 @@ export default function BlogUsuarioCrear() {
 
       console.log("Final ID Psicologo to use:", finalIdPsicologo);
 
+      // Function to clean image attributes for backend compatibility
+      const cleanContentForBackend = (htmlContent: string): string => {
+        try {
+          // Remove custom image attributes that are only used in the editor
+          let cleaned = htmlContent
+            .replace(/\s+data-position-x="[^"]*"/g, '')
+            .replace(/\s+data-position-y="[^"]*"/g, '')
+            .replace(/\s+data-mode="[^"]*"/g, '')
+            .replace(/\s+data-align="[^"]*"/g, '')
+            .replace(/\s+data-float="[^"]*"/g, '')
+            .replace(/\s+positionx="[^"]*"/gi, '') // Case insensitive
+            .replace(/\s+positiony="[^"]*"/gi, '') // Case insensitive
+            .replace(/\s+style="[^"]*transform:[^"]*translate[^"]*"/g, '') // Remove transform styles
+            .replace(/\s+style="[^"]*z-index:[^"]*"/g, '') // Remove z-index
+            .replace(/\s+style="[^"]*will-change:[^"]*"/g, '') // Remove will-change
+            .replace(/\s+style="[^"]*backface-visibility:[^"]*"/g, ''); // Remove backface-visibility
+          
+          // Clean empty style attributes
+          cleaned = cleaned.replace(/\s+style=""\s*/g, ' ');
+          cleaned = cleaned.replace(/\s+style="\s*"\s*/g, ' ');
+          
+          return cleaned;
+        } catch (error) {
+          console.error("Error cleaning content:", error);
+          return htmlContent; // Return original if cleaning fails
+        }
+      };
+
+      // Function to compress base64 images in content
+      const compressImagesInContent = (htmlContent: string): Promise<string> => {
+        return new Promise((resolve) => {
+          const base64ImageRegex = /data:image\/([^;]+);base64,([A-Za-z0-9+/=]+)/g;
+          let compressedContent = htmlContent;
+          const matches = Array.from(htmlContent.matchAll(base64ImageRegex));
+          
+          if (matches.length === 0) {
+            resolve(htmlContent);
+            return;
+          }
+
+          let processedCount = 0;
+          
+          matches.forEach((match) => {
+            const [fullMatch] = match;
+            
+            try {
+              // Create image element for compression
+              const img = document.createElement('img') as HTMLImageElement;
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              
+              img.onload = () => {
+                // Calculate new dimensions (max 400px width/height for content images)
+                const maxSize = 400; // Reducido aún más para minimizar tamaño
+                let { width, height } = img;
+                
+                if (width > maxSize || height > maxSize) {
+                  if (width > height) {
+                    height = (height * maxSize) / width;
+                    width = maxSize;
+                  } else {
+                    width = (width * maxSize) / height;
+                    height = maxSize;
+                  }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // Draw and compress with very low quality for content images
+                ctx?.drawImage(img, 0, 0, width, height);
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.3); // Reducido a 30% quality
+                
+                console.log(`Compressed content image: ${Math.round(fullMatch.length/1000)}KB -> ${Math.round(compressedBase64.length/1000)}KB`);
+                
+                // Replace in content
+                compressedContent = compressedContent.replace(fullMatch, compressedBase64);
+                
+                processedCount++;
+                if (processedCount === matches.length) {
+                  resolve(compressedContent);
+                }
+              };
+              
+              img.onerror = () => {
+                processedCount++;
+                if (processedCount === matches.length) {
+                  resolve(compressedContent);
+                }
+              };
+              
+              img.src = fullMatch;
+            } catch (error) {
+              console.error('Error compressing image:', error);
+              processedCount++;
+              if (processedCount === matches.length) {
+                resolve(compressedContent);
+              }
+            }
+          });
+        });
+      };
+
+      // Clean the content before sanitizing
+      const cleanedContenido = cleanContentForBackend(contenido);
+
+      console.log("Original content length:", contenido.length);
+      console.log("Cleaned content length:", cleanedContenido.length);
+      
+      // Show compression progress
+      showToast("info", "Optimizando imágenes...");
+      
+      // Debug: Count and analyze images before compression
+      const originalBase64Images = cleanedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
+      console.log(`Found ${originalBase64Images.length} base64 images in content`);
+      
+      if (originalBase64Images.length > 0) {
+        console.log("Sample image preview:", originalBase64Images[0]?.substring(0, 100) + "...");
+        console.log("Average image size:", Math.round(originalBase64Images.reduce((sum, img) => sum + img.length, 0) / originalBase64Images.length / 1000) + "KB");
+      }
+      
+      // IMPORTANTE: Las imágenes en el contenido HTML deben quedarse como parte del contenido
+      // NO las extraemos como imágenes separadas del carrusel
+      // Solo comprimimos las imágenes dentro del contenido si es necesario
+      
+      // Solo usar las imágenes del carrusel (base64Images y validUrls), NO las del contenido
+      const imagesToSend = [...base64Images, ...validUrls];
+      
+      console.log("Using compressed content approach - keeping images inline");
+      // Compress images in content if we're keeping them inline
+      const compressedContenido = await compressImagesInContent(cleanedContenido);
+      const finalContenido = compressedContenido;
+      
+      console.log("Final content length:", finalContenido.length);
+      console.log("Final content preview:", finalContenido.substring(0, 200) + "...");
+      
+      // Combine only carousel images (NOT content images)
+      const allImages = imagesToSend;
+      
+      console.log("Total carousel images:", allImages.length);
+      console.log("Content images remain inline in HTML");
+      
+      // Check if final processing was successful
+      if (!finalContenido || finalContenido.trim().length === 0) {
+        console.error("Content processing resulted in empty content");
+        showToast("error", "Error al procesar el contenido. Intenta nuevamente.");
+        return;
+      }
+
       // Sanitize contenido to prevent SQL injection
-      const sanitizedContenido = contenido
+      const sanitizedContenido = finalContenido
         .replace(/'/g, "''") // Escape single quotes
         .replace(/\\/g, "\\\\"); // Escape backslashes
+        
+      // Validate sanitized content
+      if (!sanitizedContenido || sanitizedContenido.trim().length === 0) {
+        console.error("Content sanitization resulted in empty content");
+        showToast("error", "Error al procesar el contenido. Intenta nuevamente.");
+        return;
+      }
+      
+      // Check content size limits - very strict due to PHP post_max_size = 8MB
+      const maxContentSize = 1500000; // 1.5MB máximo total para evitar límite PHP de 8MB (incluyendo otros datos)
+      
+      // Check if most of the content is images (base64)
+      const base64ImageMatches = sanitizedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
+      const imageContentSize = base64ImageMatches.join('').length;
+      const textContentSize = sanitizedContenido.length - imageContentSize;
+      
+      console.log(`Content analysis: Total: ${Math.round(sanitizedContenido.length/1000)}KB, Images: ${Math.round(imageContentSize/1000)}KB, Text: ${Math.round(textContentSize/1000)}KB`);
+      console.log(`Max allowed: ${Math.round(maxContentSize/1000)}KB (due to PHP post_max_size limit)`);
+      
+      if (sanitizedContenido.length > maxContentSize) {
+        console.error(`Content too large: ${sanitizedContenido.length} characters (max: ${maxContentSize})`);
+        if (imageContentSize > 0) {
+          showToast("error", `El contenido con imágenes es muy pesado (${Math.round(sanitizedContenido.length/1000)}KB). Máximo: ${Math.round(maxContentSize/1000)}KB. Usa imágenes más pequeñas o menos imágenes en el contenido.`);
+        } else {
+          showToast("error", `El contenido es demasiado largo (${Math.round(sanitizedContenido.length/1000)}KB). Límite máximo: ${Math.round(maxContentSize/1000)}KB.`);
+        }
+        return;
+      }
+
+      // Check for SVG content that shouldn't be in blog text
+      if (sanitizedContenido.includes('<svg') || sanitizedContenido.includes('<?xml')) {
+        console.error("SVG or XML content detected in blog content");
+        showToast("error", "El contenido contiene código SVG o XML que no es válido para un blog. Por favor usa solo texto e imágenes.");
+        return;
+      }
 
       // Create a dataApi object here, after all variables are declared
       const dataToSend: BlogApi = {
         idCategoria: categoriaId,
-        tema: tema.trim(),
-        contenido: sanitizedContenido,
-        imagenes: allImages, // Enviar array de imágenes
+        tema: tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim(), // Sanitizar título: convertir saltos de línea a espacios y normalizar espacios
+        contenido: sanitizedContenido, // Contiene HTML con imágenes inline
+        imagenes: allImages, // Solo imágenes del carrusel, NO las del contenido
         idPsicologo: finalIdPsicologo,
       };
 
       console.log("Final data to send:", {
         ...dataToSend,
+        contenido: `Content length: ${dataToSend.contenido.length} chars`,
         imagenes: `Array of ${allImages.length} images`, // Log only counts for brevity
       });
+
+      // Additional debugging for content with images
+      const contentImages = sanitizedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
+      const totalRequestSize = JSON.stringify(dataToSend).length;
+      const phpPostLimit = 8000000; // 8MB en bytes (PHP post_max_size)
+      
+      console.log("Content debugging:", {
+        totalContentSize: sanitizedContenido.length,
+        contentImagesCount: contentImages.length,
+        carouselImagesCount: allImages.length,
+        contentImagesSizeKB: contentImages.length > 0 ? Math.round(contentImages.join('').length / 1000) : 0,
+        totalRequestSizeKB: Math.round(totalRequestSize / 1000),
+        phpPostLimitKB: Math.round(phpPostLimit / 1000),
+        willExceedPHPLimit: totalRequestSize > phpPostLimit * 0.9 // 90% del límite
+      });
+
+      // Check if total request will exceed PHP limits
+      if (totalRequestSize > phpPostLimit * 0.9) { // 90% del límite para margen de seguridad
+        console.error(`Total request too large: ${Math.round(totalRequestSize/1000)}KB (PHP limit: ${Math.round(phpPostLimit/1000)}KB)`);
+        showToast("error", `La solicitud total es demasiado grande (${Math.round(totalRequestSize/1000)}KB). Límite del servidor: ${Math.round(phpPostLimit * 0.9/1000)}KB. Reduce las imágenes en el contenido o usa menos imágenes.`);
+        return;
+      }
 
       // Add validation for required fields
       if (!dataToSend.idPsicologo) {
@@ -475,27 +694,50 @@ export default function BlogUsuarioCrear() {
 
       console.log("Sending request to:", apiUrl);
       console.log("Method:", method);
-      console.log(
-        "Data size:",
-        JSON.stringify(dataToSend).length,
-        "characters",
-      );
+      console.log("Data size:", JSON.stringify(dataToSend).length, "characters");
+      console.log("Headers:", {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token ? 'TOKEN_EXISTS' : 'NO_TOKEN'}`,
+      });
+      
+      // Log sanitized content details (with safety checks)
+      if (sanitizedContenido) {
+        console.log("Sanitized content length:", sanitizedContenido.length);
+        console.log("Has images in content:", sanitizedContenido.includes('<img'));
+        
+        // Check for potential problematic characters
+        const problematicChars = sanitizedContenido.match(/[^\x00-\x7F]/g);
+        if (problematicChars) {
+          console.log("Non-ASCII characters found:", problematicChars.length);
+        }
+      } else {
+        console.warn("sanitizedContenido is undefined or null");
+      }
 
       // Show loading toast
       showToast("info", "Enviando datos...");
 
-      const response = await fetch(apiUrl, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      let response;
+      try {
+        response = await fetch(apiUrl, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(dataToSend),
+        });
+      } catch (fetchError) {
+        console.error("Network error during fetch:", fetchError);
+        showToast("error", "Error de conexión. Verifica tu conexión a internet.");
+        return;
+      }
 
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
+      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
 
       let data;
       try {
@@ -503,6 +745,7 @@ export default function BlogUsuarioCrear() {
         console.log("Response data:", data);
       } catch (parseError) {
         console.error("Error parsing response JSON:", parseError);
+        console.log("Raw response text:", await response.text().catch(() => "Unable to get text"));
         showToast("error", "Error al procesar la respuesta del servidor");
         return; // Exit the function early
       }
@@ -549,10 +792,14 @@ export default function BlogUsuarioCrear() {
             "Error interno del servidor. Intenta con una imagen más pequeña o verifica el contenido.";
         }
 
-        console.error("Server error details:", {
+        // Safe logging for server error details (using console.log to avoid Next.js dev tools issues)
+        console.log("Server error details:", {
           status: response.status,
           statusText: response.statusText,
           data: data,
+          requestUrl: apiUrl,
+          requestMethod: method,
+          contentLength: JSON.stringify(dataToSend).length,
         });
 
         // Handle specific server validation messages
@@ -563,7 +810,8 @@ export default function BlogUsuarioCrear() {
         }
       }
     } catch (error) {
-      console.error("Submission error:", error);
+      // Safe logging for submission error (using console.log to avoid Next.js dev tools issues)
+      console.log("Submission error:", error);
 
       let errorMessage = "Error inesperado. Por favor intenta nuevamente.";
 
@@ -693,19 +941,30 @@ export default function BlogUsuarioCrear() {
               <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
                 Titulo
               </h1>
-              <Input
+              <Textarea
                 aria-label="Titulo"
-                placeholder="Ingresar Titulo"
+                placeholder="Ingresar Titulo (los saltos de línea se convertirán a espacios al guardar)"
                 classNames={{
-                  input: "dark:!text-gray-100 ",
+                  input: "dark:!text-gray-100 whitespace-pre-wrap",
                   inputWrapper:
                     "!bg-white dark:!bg-gray-700 border-2 border-[#634AE2] rounded-lg",
                 }}
-                radius="full"
-                height={43}
+                radius="lg"
+                minRows={2}
+                maxRows={4}
                 value={tema}
                 onChange={(e) => setTema(e.target.value)}
               />
+              {tema && (
+                <div className="mt-2 p-2 bg-gray-100 dark:bg-gray-600 rounded-lg border">
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                    Preview del título como se guardará:
+                  </p>
+                  <p className="text-sm text-gray-800 dark:text-gray-200 break-words hyphens-auto max-w-full overflow-hidden" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                    {tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim()}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Categoria */}

@@ -7,7 +7,7 @@ import RealiableCompanies from "@/components/mainPage/ReliableCompanies";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terapia Psicológica Online | Contigo Voy",
+  title: "Contigo Voy | Terapia Psicológica Online",
   description:
     "Conecta con tu bienestar. Psicólogos online, comienza tu terapia hoy. Contigo Voy te acompaña desde el primer paso. Agenda tu cita, la primera es gratis.",
   authors: [{ name: "Contigo Voy" }],
@@ -38,7 +38,9 @@ export default function Home() {
   return (
     <div className="w-full overflow-hidden dark:bg-gray-900 bg-gray-100">
       <h1 className="text-cv5 sm:text-cv7 text-center font-bold text-title lg:mb-scv3">
-        Terapia Psicológica Online | Contigo Voy
+        <span className="hidden sm:inline">Contigo Voy |&nbsp;</span>
+        <span className="block sm:hidden">Contigo Voy |&nbsp;</span>
+        Terapia Psicológica Online
       </h1>
       <MainSlider />
       <TherapyServices />

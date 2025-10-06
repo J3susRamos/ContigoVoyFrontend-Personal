@@ -47,7 +47,8 @@ export interface ServicesStructureProps {
   edad: string;
   edadMobil: string;
   motto: React.ReactElement;
-  background: string;
+  backgroundDesktop: string;
+  backgroundMobile: string;
   bgdown: string;
   bgdownAlt: string;
   bgdownTitle: string;
@@ -337,7 +338,7 @@ export interface NavItems {
   name: string;
   icono: string;
   link?: string;
-  role?: string;
+  role?: string[];
   key?: string;
   hijos?: NavItems[]
 }

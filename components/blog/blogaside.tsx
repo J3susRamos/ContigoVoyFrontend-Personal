@@ -1,6 +1,8 @@
+"use client";
 import { Authors, Categoria } from "@/interface";
 import { Avatar, Button } from "@heroui/react";
 import { Tag, Users, TrendingUp, BarChart3, User } from "lucide-react";
+import Link from "next/link";
 
 export default function BlogAside({
   Categories,
@@ -18,7 +20,6 @@ export default function BlogAside({
   activeAuthors: number[];
 }) {
   const authorsArray = Array.isArray(Authors) ? Authors : [];
-
   return (
     <div className="space-y-8">
       {/* Categories Section */}
@@ -167,9 +168,16 @@ export default function BlogAside({
           <p className="text-white font-medium text-sm mb-2">
             ¿Necesitas ayuda profesional?
           </p>
-          <button className="w-full px-4 py-2 bg-white/20 text-white rounded-lg text-sm font-medium hover:bg-white/30 transition-colors">
-            Reservar Cita
-          </button>
+          
+          {/* Opción 1: Link (primera opción) */}
+          <Link href="/ReservarCita" className="block w-full">
+            <Button
+              className="w-full bg-white/20 text-white hover:bg-white/30 transition-colors"
+              variant="flat"
+            >
+              Reservar Cita
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
