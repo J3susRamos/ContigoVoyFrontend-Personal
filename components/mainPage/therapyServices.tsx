@@ -107,6 +107,7 @@ export default function TherapyServices() {
                     />
                   </div>
                   
+<<<<<<< HEAD
                   {/* Texto - Centrado y con espacio flexible */}
                   <div className="flex-1 flex flex-col justify-center items-center text-center">
                     <h3
@@ -138,6 +139,42 @@ export default function TherapyServices() {
                         className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300"
                       />
                     </button>
+=======
+                  {/* Columna derecha: Texto + Botón */}
+                  <div className="flex-1 flex flex-col justify-center w-100% h-full lg:h-2/3">
+
+                    {/* Texto */}
+                    <div className="flex-1  flex justify-center itrems-center lg:justify-center ">
+                      <h3
+                        className="text-lg sm:text-xl font-bold leading-tight text-center
+                          group-hover:text-purple-100 transition-colors duration-300"
+                      >
+                        {service.title}
+                      </h3>
+                    </div>
+
+                    {/* Botón Ver Más */}
+                    <div className="flex  justify-center mt-0 lg:mt-5  relative z-10">
+                      <button
+                        className="group/btn flex items-center space-x-2 text-sm 
+                          hover:text-purple-200 transition-all duration-300
+                          bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg
+                          backdrop-blur-sm"
+                      >
+                        <span className="relative text-white font-medium text-sm">
+                          Ver más
+                          <span
+                            className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white 
+                              group-hover/btn:w-full duration-500"
+                          ></span>
+                        </span>
+                        <ArrowRight
+                          strokeWidth={2.5}
+                          className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300"
+                        />
+                      </button>
+                    </div>
+>>>>>>> 04fcebfc083d68a1d7ab22a1569b7c05670082c5
                   </div>
                 </div>
               </motion.div>
