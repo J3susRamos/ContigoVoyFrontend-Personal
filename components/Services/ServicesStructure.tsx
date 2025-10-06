@@ -51,7 +51,7 @@ export default function ServicesStructure({
         {/* Desktop - Background Image */}
         <div className="hidden xl:block absolute inset-0">
           <Image
-            src={service.background}
+            src={service.backgroundDesktop}
             alt={service.bgdownAlt}
             title={service.bgdownTitle}
             fill
@@ -141,12 +141,12 @@ export default function ServicesStructure({
                 <div className="relative w-full h-full rounded-xl overflow-hidden">
                   {" "}
                   <Image
-                    src={service.background}
+                    src={service.backgroundMobile}
                     alt={service.bgdownAlt}
                     title={service.bgdownTitle}
                     fill
                     className="object-cover object-right w-full h-full transform hover:scale-105 transition-transform duration-700"
-                    priority
+                    loading = "lazy"
                   />
                   {/* Modern gradient overlay */}
                   <div className="absolute inset-0 pointer-events-none">
@@ -180,12 +180,12 @@ export default function ServicesStructure({
                     <div className="relative w-full h-full rounded-3xl overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50">
                       {" "}
                       <Image
-                        src={service.background}
+                        src={service.backgroundMobile}
                         alt={service.bgdownAlt}
                         title={service.bgdownTitle}
                         fill
                         className="object-cover object-right hover:scale-105 transition-transform duration-700"
-                        priority
+                        loading = "lazy"
                       />
                       {/* Gradient overlays */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10"></div>
@@ -219,6 +219,7 @@ export default function ServicesStructure({
           title={service.bgdownTitle}
           fill
           className="object-cover object-center mask-all-fade"
+          loading="lazy"
         />
       </div>
       <div className="flex flex-col pt-scv8 px-scv3">
@@ -354,6 +355,7 @@ export default function ServicesStructure({
                               svg.setAttribute("role", "img");
                               svg.setAttribute("aria-label", icono.title || "Icono de servicio");
                             }}
+                            
                           />
                   </div>
                 </div>
@@ -371,6 +373,8 @@ export default function ServicesStructure({
             title={service.bgdownTitle}
             src={service.bgdown}
             className="object-cover object-right mask-horizontal-fade"
+            loading="lazy"
+
           />
         </div>
       </div>

@@ -16,6 +16,7 @@ const schema = yup.object().shape({
 
 export default function FormContacto() {
   const [action, setAction] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -30,8 +31,27 @@ export default function FormContacto() {
 
   const formValues = watch();
 
+  const showNotification = (message: string, type: 'success' | 'error') => {
+    if (type === 'success') {
+      setAction(message);
+      setError(null);
+    } else {
+      setError(message);
+      setAction(null);
+    }
+
+    setTimeout(() => {
+      if (type === 'success') {
+        setAction(null);
+      } else {
+        setError(null);
+      }
+    }, 6000);
+  };
+
   const onSubmit = async (data: Contact) => {
     setLoading(true);
+    setError(null);
 
     if (data.celular) {
       data.celular = String(data.celular);
@@ -50,28 +70,36 @@ export default function FormContacto() {
         }
       );
 
-      const result: { message?: string } = await response.json();
+      const result: { message?: string; error?: string } = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "Error al enviar el formulario");
+        // Manejar errores específicos del servidor
+        if (response.status === 500) {
+          throw new Error("El número de celular o correo electrónico ya está registrado. Por favor, utiliza otros datos de contacto.");
+        } else if (response.status === 400) {
+          throw new Error(result.message || "Datos inválidos. Por favor, verifica la información ingresada.");
+        } else {
+          throw new Error(result.message || "Error al enviar el formulario. Por favor, intenta nuevamente.");
+        }
       }
 
-      setAction("¡Mensaje enviado! Nuestro equipo se pondrá en contacto contigo lo antes posible.");
+      showNotification(
+        "¡Mensaje enviado! Nuestro equipo se pondrá en contacto contigo lo antes posible.", 
+        'success'
+      );
       reset();
 
-      setTimeout(() => {
-        setAction(null);
-      }, 6000);
     } catch (err: unknown) {
       console.error("Error:", err);
+      const errorMessage = err instanceof Error ? err.message : "Error inesperado. Por favor, intenta nuevamente.";
+      showNotification(errorMessage, 'error');
     } finally {
       setLoading(false);
     }
   };
+
   return (
-    <div
-      className="w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto md:mr-10 relative z-0 md:-translate-x-72"
-    >
+    <div className="w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto md:mr-10 relative z-0 md:-translate-x-72">
       {/* Fondo con efecto glassmorphism y degradado más moderno */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/30 to-indigo-100/40 dark:from-purple-900/80 dark:via-indigo-900/70 dark:to-purple-800/80 backdrop-blur-2xl rounded-3xl border border-white/50 dark:border-purple-700/50 shadow-2xl md:shadow-3xl transition-colors duration-300"></div>
 
@@ -110,10 +138,35 @@ export default function FormContacto() {
           </div>
         )}
 
+        {/* Mensaje de error */}
+        {error && (
+          <div className="absolute top-4 left-4 right-4 bg-gradient-to-r from-red-500/95 to-orange-500/95 backdrop-blur-sm rounded-2xl z-20 border border-red-400/30 p-4 shadow-lg">
+            <div className="flex items-start space-x-3">
+              <div className="inline-flex items-center justify-center w-8 h-8 bg-white/20 rounded-full flex-shrink-0 mt-0.5">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-white font-medium text-sm leading-relaxed">
+                  {error}
+                </p>
+                <button
+                  onClick={() => setError(null)}
+                  className="text-white/80 hover:text-white text-xs mt-2 underline transition-colors"
+                >
+                  Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Grid para campos en desktop, stack en móvil */}
         <div className="w-full relative grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-8">
           {/* Columna izquierda: Nombre y Apellido */}
-          <div className="space-y-5">            {/* Campo Nombre */}
+          <div className="space-y-5">
+            {/* Campo Nombre */}
             <div className="relative group">
               <Input
                 size="lg"
@@ -135,7 +188,8 @@ export default function FormContacto() {
                 isInvalid={!!errors.nombre}
                 errorMessage={errors.nombre?.message}
               />
-            </div>            {/* Campo Apellido */}
+            </div>
+            {/* Campo Apellido */}
             <div className="relative group">
               <Input
                 size="lg"
@@ -160,7 +214,8 @@ export default function FormContacto() {
             </div>
           </div>
           {/* Columna derecha: Celular y Email */}
-          <div className="space-y-5">            {/* Campo Celular */}
+          <div className="space-y-5">
+            {/* Campo Celular */}
             <div className="relative group">
               <Input
                 size="lg"
@@ -182,7 +237,8 @@ export default function FormContacto() {
                 isInvalid={!!errors.celular}
                 errorMessage={errors.celular?.message}
               />
-            </div>            {/* Campo Email */}
+            </div>
+            {/* Campo Email */}
             <div className="relative group">
               <Input
                 size="lg"
@@ -205,7 +261,8 @@ export default function FormContacto() {
                 errorMessage={errors.email?.message}
               />
             </div>
-          </div>          {/* Campo Comentario: ocupa ambas columnas */}
+          </div>
+          {/* Campo Comentario: ocupa ambas columnas */}
           <div className="md:col-span-2">
             <div className="relative group">
               <textarea
@@ -220,7 +277,8 @@ export default function FormContacto() {
                 <span className="text-red-500 text-xs mt-1 block">{errors.comentario.message}</span>
               )}
             </div>
-          </div>          {/* Botón de envío: ocupa ambas columnas */}
+          </div>
+          {/* Botón de envío: ocupa ambas columnas */}
           <div className="md:col-span-2 w-full flex justify-center pt-6">
             <Button
               className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 dark:from-purple-700 dark:to-indigo-800 dark:hover:from-purple-800 dark:hover:to-indigo-900 text-white font-bold py-4 px-12 rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-base md:text-lg lg:text-xl"

@@ -144,10 +144,10 @@ export default function ChooseUs() {
               alt="Atención psicológica online que se adapta a ti"
               title="Atención Psicológica Online para ti"
               fill
-              sizes="(max-width: 768px) 50vw, 25vw"
-              className="object-cover"
-              loading="lazy"
-              quality={75}
+              className="objet-cover"
+              priority 
+              sizes="(max-width: 768px) 100vw, 50vw"
+              
             />
           </div>
         </div>

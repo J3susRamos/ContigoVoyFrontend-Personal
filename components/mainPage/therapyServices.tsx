@@ -71,7 +71,7 @@ export default function TherapyServices() {
           {/* Grid Responsive de Servicios */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4">
             {services.map((service, index) => (
-             <motion.div
+              <motion.div
                 key={service.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,7 @@ export default function TherapyServices() {
                 className="group bg-gradient-to-br from-[#745DEA] to-[#5B47C7] hover:from-[#5B47C7] hover:to-[#4A3CB3]
                   rounded-2xl p-5 text-white transition-all duration-300
                   hover:shadow-[0_8px_32px_rgba(116,93,234,0.4)] hover:scale-[1.02]
-                      min-h-[130px] sm:min-h-[180px] lg:min-h-[150px] flex flex-col justify-between cursor-pointer
+                  min-h-[130px] sm:min-h-[180px] lg:min-h-[150px] flex items-center cursor-pointer
                   relative overflow-hidden"
                 onClick={() => router.push(`/servicios${service.id}`)}
               >
@@ -89,16 +89,16 @@ export default function TherapyServices() {
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-white dark:bg-gray-900 rounded-full translate-y-12 -translate-x-12"></div>
                 </div>
 
-                {/* Contenido */}
-                <div className="flex flex-row lg:flex-row items-center lg:items-center h-full justify-between relative z-10 gap-3">
+                {/* Contenido - Todo en una línea horizontal */}
+                <div className="flex flex-row items-center justify-between w-full h-full relative z-10 gap-4">
                   {/* Icono */}
                   <div
                     className="relative overflow-hidden rounded-lg bg-white/15 p-2.5 
                       group-hover:bg-white/25 transition-all duration-300 
-                      group-hover:scale-110 backdrop-blur-sm"
+                      group-hover:scale-110 backdrop-blur-sm flex-shrink-0"
                   >
                     <ReactSVG
-                      className="w-10 h-10 lg:w-10 lg:h-10 sm:w-20 sm:h-20 object-contain filter brightness-0 invert"
+                      className="w-10 h-10 sm:w-12 sm:h-12 object-contain filter brightness-0 invert"
                       src={service.icon}
                       title={service.name}
                       beforeInjection={(svg) => {
@@ -107,47 +107,39 @@ export default function TherapyServices() {
                     />
                   </div>
                   
-                  {/* Columna derecha: Texto + Botón */}
-                  <div className="flex-1 flex flex-col justify-around h-full lg:h-2/3">
+                  {/* Texto */}
+                  <div className="flex-1">
+                    <h3
+                      className="text-lg sm:text-xl font-bold leading-tight text-center
+                        group-hover:text-purple-100 transition-colors duration-300"
+                    >
+                      {service.title}
+                    </h3>
+                  </div>
 
-                    {/* Texto */}
-                    <div className="flex-1  flex justify-center items-center lg:justify-center ">
-                      <h3
-                        className="text-lg sm:text-xl font-bold leading-tight text-center
-                          group-hover:text-purple-100 transition-colors duration-300"
-                      >
-                        {service.title}
-                      </h3>
-                    </div>
-
-                    {/* Botón Ver Más */}
-                    <div className="flex justify-end mt-0 lg:mt-5  relative z-10">
-                      <button
-                        className="group/btn flex items-center space-x-2 text-sm 
-                          hover:text-purple-200 transition-all duration-300
-                          bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg
-                          backdrop-blur-sm"
-                      >
-                        <span className="relative text-white font-medium text-sm">
-                          Ver más
-                          <span
-                            className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white 
-                              group-hover/btn:w-full duration-500"
-                          ></span>
-                        </span>
-                        <ArrowRight
-                          strokeWidth={2.5}
-                          className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300"
-                        />
-                      </button>
-                    </div>
+                  {/* Botón Ver Más */}
+                  <div className="flex-shrink-0 relative z-10">
+                    <button
+                      className="group/btn flex items-center space-x-2 text-sm 
+                        hover:text-purple-200 transition-all duration-300
+                        bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg
+                        backdrop-blur-sm"
+                    >
+                      <span className="relative text-white font-medium text-sm">
+                        Ver más
+                        <span
+                          className="absolute bottom-0 left-0 w-0 transition-all h-0.5 bg-white 
+                            group-hover/btn:w-full duration-500"
+                        ></span>
+                      </span>
+                      <ArrowRight
+                        strokeWidth={2.5}
+                        className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300"
+                      />
+                    </button>
                   </div>
                 </div>
-                
-
-                
               </motion.div>
-
             ))}
           </div>
         </div>

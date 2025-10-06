@@ -45,7 +45,8 @@ const ParejaTerapias: ServicesStructureProps = {
       está en crisis? ¿Buscas fortalecer el vínculo?
     </p>
   ),
-  background: "/Services/couple/ayuda-para-parejas-en-crisis.webp",
+  backgroundDesktop: "/Services/couple/Escritorio-ayuda-para-parejas-en-crisis.webp",
+  backgroundMobile: "/Services/couple/ayuda-para-parejas-en-crisis.webp",
   bgdown: "/Services/couple/psicoterapia-para-relaciones-de-pareja.webp",
   bgup: "/Services/couple/bguppareja.webp",
   bgdownAlt: "",

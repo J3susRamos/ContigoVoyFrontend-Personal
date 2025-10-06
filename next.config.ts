@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
 
   experimental: {
     optimizePackageImports: ['lucide-react', '@heroui/react'],
+
   },
 
   async generateBuildId() {

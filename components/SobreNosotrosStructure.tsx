@@ -1,8 +1,10 @@
 "use client";
+
 import { QuienesSomos } from "@/interface";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { FC } from "react";
 
 // Configuraciones de animación optimizadas
 const fadeInConfig = {
@@ -26,7 +28,8 @@ const fadeInRightConfig = {
   transition: { duration: 0.4 }
 };
 
-const SectionHeader = ({ children }: { children: React.ReactNode }) => (
+// Componente para el header de cada sección
+const SectionHeader: FC<{ children: React.ReactNode }> = ({ children }) => (
   <motion.h2
     {...fadeInConfig}
     className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 relative pb-4 dark:text-white text-gray-900"
@@ -46,11 +49,19 @@ const iconMap: { [key: string]: string } = {
   "🌈": "diversidad"
 };
 
-const ValueCard = ({ title, content, icon }: { title: string, content: string, icon: string }) => (
+// Tipado para el ValueCard
+interface ValueCardProps {
+  title: string;
+  content: string;
+  icon: string;
+}
+
+// Componente de tarjeta de valor con imágenes
+const ValueCard: FC<ValueCardProps> = ({ title, content, icon }) => (
   <motion.div
     whileHover={{ y: -5 }}
     transition={{ type: "tween", duration: 0.2 }}
-    className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200"
+    className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200 h-full flex flex-col"
   >
     <div className="mb-4 flex justify-center">
       <Image
@@ -60,35 +71,48 @@ const ValueCard = ({ title, content, icon }: { title: string, content: string, i
         height={80}
         className="w-20 h-20 object-contain"
         onError={(e) => {
-          // Fallback si la imagen no existe
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';
         }}
       />
     </div>
-    <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900">{title}</h3>
-    <p className="dark:text-gray-300 text-gray-600 leading-relaxed">{content}</p>
+    <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900 text-center">{title}</h3>
+    <p className="dark:text-gray-300 text-gray-600 leading-relaxed flex-grow">{content}</p>
   </motion.div>
 );
 
-// Alternativa: Componente con íconos SVG en lugar de imágenes
-const ValueCardWithSVG = ({ title, content, icon }: { title: string, content: string, icon: string }) => (
+// Componente con íconos SVG/emoji como alternativa
+const ValueCardWithSVG: FC<ValueCardProps> = ({ title, content, icon }) => (
   <motion.div
     whileHover={{ y: -5 }}
     transition={{ type: "tween", duration: 0.2 }}
-    className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200"
+    className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200 h-full flex flex-col"
   >
     <div className="mb-4 flex justify-center text-4xl">
-      {icon} {/* Muestra el emoji directamente */}
+      {icon}
     </div>
-    <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900">{title}</h3>
-    <p className="dark:text-gray-300 text-gray-600 leading-relaxed">{content}</p>
+    <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900 text-center">{title}</h3>
+    <p className="dark:text-gray-300 text-gray-600 leading-relaxed flex-grow">{content}</p>
   </motion.div>
 );
 
-export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
+interface AboutUsPageProps {
+  qs: QuienesSomos[];
+}
+
+export default function AboutUsPage({ qs }: AboutUsPageProps) {
+  // Datos de valores para renderizar
+  const valores = [
+    { title: "Empatía", content: qs[0]?.valor1 || "Nos conectamos genuinamente con las experiencias y emociones de cada persona.", icon: "❤️" },
+    { title: "Profesionalismo", content: qs[0]?.valor2 || "Mantenemos los más altos estándares éticos y técnicos.", icon: "🎓" },
+    { title: "Accesibilidad", content: qs[0]?.valor3 || "Trabajamos para que la salud mental sea un derecho al alcance de todos.", icon: "🔑" },
+    { title: "Innovación", content: "Exploramos constantemente nuevas formas de mejorar nuestros servicios.", icon: "💡" },
+    { title: "Confidencialidad", content: "Protegemos la privacidad y la confianza de quienes nos eligen.", icon: "🔒" },
+    { title: "Diversidad", content: "Celebramos y respetamos la singularidad de cada persona.", icon: "🌈" }
+  ];
+
   return (
-    <div className="w-full dark:bg-gray-900">
+    <div className="w-full dark:bg-gray-900 bg-gray-50">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#634AE2] via-[#9494F3] to-[#7B5FE8] dark:from-purple-900 dark:via-indigo-800 dark:to-blue-900 py-20">
         <div className="absolute inset-0">
@@ -99,152 +123,120 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
           </div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8"
-            >
-                Tu bienestar{" "}
-                <span className="bg-gradient-to-r text-white to-orange-300 bg-clip-text text-transparent">
-                  EMOCIONAL
-                </span>{" "}
-                <span className="block lg:inline">es nuestro</span> compromiso            
-            </motion.h1>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8"
+          >
+            Tu bienestar{" "}
+              EMOCIONAL 
+            <span className="block lg:inline"> es nuestro</span> compromiso
+          </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12"
-            >
-              En Contigo Voy encontrás un espacio seguro donde crecer, sanar y descubrir tu mejor versión.
-            </motion.p>
-          </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12"
+          >
+            En Contigo Voy encontrás un espacio seguro donde crecer, sanar y descubrir tu mejor versión.
+          </motion.p>
         </div>
       </section>
 
       {/* Nuestra Historia */}
-      <section className="py-24 dark:bg-gray-900 bg-gray-100">
-        <SectionHeader>Nuestra Historia</SectionHeader>
-        <div className="grid lg:grid-cols-2 gap-16 items-center px-6 max-w-7xl mx-auto">
-          <motion.div
-            {...fadeInLeftConfig}
-            className="space-y-6"
-          >
-            <p className="text-lg dark:text-gray-300 text-gray-600 leading-relaxed">
-              {qs[0].quienesSomos}
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <span className="text-blue-500 dark:text-blue-400 mr-3">✓</span>
-                <span className="dark:text-gray-300 text-gray-700">Terapia online accesible desde cualquier lugar</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-500 dark:text-blue-400 mr-3">✓</span>
-                <span className="dark:text-gray-300 text-gray-700">Equipo multidisciplinario de especialistas</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-500 dark:text-blue-400 mr-3">✓</span>
-                <span className="dark:text-gray-300 text-gray-700">Enfoque personalizado para cada paciente</span>
-              </li>
-            </ul>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative w-full rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300 h-64 sm:h-80 md:h-96"
-          >
-            <Image
-              src="/AboutUs/terapeutas-especializados-familia-feliz.webp"
-              alt="Sesión de terapia psicológica"
-              fill
-              className="object-cover sm:object-cover "
-            />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Misión y Visión */}
-      <section className="py-16 dark:bg-gray-900 bg-gray-100">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12">
+      <section className="py-16 md:py-24 dark:bg-gray-900 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader>Nuestra Historia</SectionHeader>
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
-              {...fadeInConfig}
-              className="dark:bg-white/5 bg-white/90 p-10 rounded-xl backdrop-blur-sm dark:border-white/10 border-gray-400 border shadow-lg"
+              {...fadeInLeftConfig}
+              className="space-y-6"
             >
-              <h3 className="text-2xl font-bold mb-6 text-blue-500 dark:text-blue-400">Misión</h3>
-              <p className="dark:text-gray-300 text-gray-600 leading-relaxed">{qs[0].mision}</p>
+              <p className="text-lg dark:text-gray-300 text-gray-600 leading-relaxed">
+                {qs[0]?.quienesSomos || "Somos un equipo de profesionales comprometidos con tu bienestar emocional."}
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <span className="text-blue-500 dark:text-blue-400 mr-3">✓</span>
+                  <span className="dark:text-gray-300 text-gray-700">Terapia online accesible desde cualquier lugar</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 dark:text-blue-400 mr-3">✓</span>
+                  <span className="dark:text-gray-300 text-gray-700">Equipo multidisciplinario de especialistas</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 dark:text-blue-400 mr-3">✓</span>
+                  <span className="dark:text-gray-300 text-gray-700">Enfoque personalizado para cada paciente</span>
+                </li>
+              </ul>
             </motion.div>
+
             <motion.div
-              {...fadeInConfig}
-              transition={{ duration: 0.4, delay: 0.2 }}
-              className="dark:bg-white/5 bg-white/90 p-10 rounded-xl backdrop-blur-sm dark:border-white/10 border-gray-400 border shadow-lg"
+              {...fadeInRightConfig}
+              className="relative w-full rounded-2xl overflow-hidden shadow-2xl dark:shadow-gray-800/30 shadow-gray-300 h-64 sm:h-80 md:h-96"
             >
-              <h3 className="text-2xl font-bold mb-6 text-purple-500 dark:text-purple-400">Visión</h3>
-              <p className="dark:text-gray-300 text-gray-600 leading-relaxed">{qs[0].vision}</p>
+              <Image
+                src="/AboutUs/terapeutas-especializados-familia-feliz.webp"
+                alt="Sesión de terapia psicológica"
+                fill
+                className="object-cover"
+                priority
+              />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Nuestros Valores Section - Usando SVG/Emoji version */}
+      {/* Misión y Visión */}
+      <section className="py-16 md:py-20 dark:bg-gray-900 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+            <motion.div
+              {...fadeInConfig}
+              className="dark:bg-white/5 bg-white/90 p-8 lg:p-10 rounded-xl backdrop-blur-sm dark:border-white/10 border-gray-400 border shadow-lg"
+            >
+              <h3 className="text-2xl font-bold mb-6 text-blue-500 dark:text-blue-400">Misión</h3>
+              <p className="dark:text-gray-300 text-gray-600 leading-relaxed">
+                {qs[0]?.mision || "Brindar apoyo psicológico accesible y de calidad."}
+              </p>
+            </motion.div>
+
+            <motion.div
+              {...fadeInConfig}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="dark:bg-white/5 bg-white/90 p-8 lg:p-10 rounded-xl backdrop-blur-sm dark:border-white/10 border-gray-400 border shadow-lg"
+            >
+              <h3 className="text-2xl font-bold mb-6 text-purple-500 dark:text-purple-400">Visión</h3>
+              <p className="dark:text-gray-300 text-gray-600 leading-relaxed">
+                {qs[0]?.vision || "Ser referentes en salud mental online en Latinoamérica."}
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Nuestros Valores */}
       <section className="py-16 md:py-24 dark:bg-gray-900 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader>Nuestros Valores</SectionHeader>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <motion.div {...fadeInConfig} transition={{ duration: 0.4 }}>
-              <ValueCardWithSVG 
-                title="Empatía" 
-                content="Nos conectamos genuinamente con las experiencias y emociones de cada persona, creando un espacio de comprensión y respeto."
-                icon="❤️"
-              />
-            </motion.div>
-            
-            <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.1 }}>
-              <ValueCardWithSVG 
-                title="Profesionalismo" 
-                content="Mantenemos los más altos estándares éticos y técnicos en nuestra práctica, con un compromiso constante con la actualización y la excelencia."
-                icon="🎓"
-              />
-            </motion.div>
-            
-            <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.2 }}>
-              <ValueCardWithSVG 
-                title="Accesibilidad" 
-                content="Trabajamos para que la salud mental sea un derecho al alcance de todos, eliminando barreras económicas, geográficas y culturales."
-                icon="🔑"
-              />
-            </motion.div>
-            
-            <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.1 }}>
-              <ValueCardWithSVG 
-                title="Innovación" 
-                content="Exploramos constantemente nuevas formas de mejorar nuestros servicios, integrando avances científicos y tecnológicos con enfoques terapéuticos probados."
-                icon="💡"
-              />
-            </motion.div>
-            
-            <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.2 }}>
-              <ValueCardWithSVG 
-                title="Confidencialidad" 
-                content="Protegemos la privacidad y la confianza de quienes nos eligen, creando un entorno seguro para la expresión y el crecimiento."
-                icon="🔒"
-              />
-            </motion.div>
-            
-            <motion.div {...fadeInConfig} transition={{ duration: 0.4, delay: 0.3 }}>
-              <ValueCardWithSVG 
-                title="Diversidad" 
-                content="Celebramos y respetamos la singularidad de cada persona, reconociendo que la diversidad enriquece nuestra comunidad y nuestro trabajo."
-                icon="🌈"
-              />
-            </motion.div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {valores.map((valor, index) => (
+              <motion.div
+                key={valor.title}
+                {...fadeInConfig}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
+                <ValueCardWithSVG 
+                  title={valor.title}
+                  content={valor.content}
+                  icon={valor.icon}
+                />
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -253,7 +245,9 @@ export default function AboutUsPage({ qs }: { qs: QuienesSomos[] }) {
       <section className="py-16 md:py-24 dark:bg-gray-800 bg-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div {...fadeInConfig}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 dark:text-white text-gray-900">¿Listo para comenzar tu camino de transformación?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 dark:text-white text-gray-900">
+              ¿Listo para comenzar tu camino de transformación?
+            </h2>
             <p className="text-xl dark:text-gray-300 text-gray-600 mb-10 max-w-3xl mx-auto">
               Da el primer paso hacia tu bienestar emocional. Nuestro equipo de profesionales está aquí para acompañarte.
             </p>
