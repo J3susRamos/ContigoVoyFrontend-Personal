@@ -4,7 +4,9 @@ import React from "react";
 import PsicologoTable from "./table/PsicologoTable";
 import ModalEditarPsicologo from "./modal/ModalEditarPsicologo";
 import ModalConfirmarEstado from "./modal/ModalConfirmarEstado";
+import ModalEliminarPsicologo from "./modal/ModalEliminarPsicologo";
 import { useModalState } from "./hooks/useModalState";
+import { useModalEliminar } from "./hooks/useModalEliminar";
 
 export default function AllPsicologos({
   Data,
@@ -12,7 +14,7 @@ export default function AllPsicologos({
   refreshData,
 }: {
   Data: PsicologoPreviewData[];
-  filterStatus: 'activos' | 'inactivos';
+  filterStatus: "activos" | "inactivos";
   refreshData: () => void;
 }) {
   const {
@@ -26,7 +28,15 @@ export default function AllPsicologos({
     closeEstadoModal,
   } = useModalState();
 
-  const llave = true ? filterStatus === 'inactivos' : false;
+  const {
+    deleteId,
+    isLoading,
+    handleDelete,
+    openDeleteModal,
+    closeDeleteModal,
+  } = useModalEliminar(refreshData);
+
+  const llave = true ? filterStatus === "inactivos" : false;
 
   return (
     <>
@@ -36,6 +46,7 @@ export default function AllPsicologos({
             data={Data}
             onEdit={openEditModal}
             onDisable={openEstadoModal}
+            onDelete={openDeleteModal}
             llave={llave}
           />
         </div>
@@ -54,6 +65,13 @@ export default function AllPsicologos({
         estadoId={estadoId}
         filterStatus={filterStatus}
         refreshData={refreshData}
+      />
+
+      <ModalEliminarPsicologo
+        isOpen={!!deleteId}
+        onClose={closeDeleteModal}
+        onConfirm={() => handleDelete(deleteId)}
+        isLoading={isLoading}
       />
     </>
   );

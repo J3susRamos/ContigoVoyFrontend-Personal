@@ -376,7 +376,7 @@ export async function ActivarPaciente(
   }
 }
 
-export async function DeletePsycologo(id: number | null): Promise<void> {
+export async function DeletePsicologo(id: number | null): Promise<void> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${id}`,
     {
