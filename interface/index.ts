@@ -752,7 +752,8 @@ export interface Personal {
   password: string,
   permissions?: number[],
   rol: string,
-  imagen: string | null
+  imagen: string | null,
+  especialidades?: number[] | null,
 }
 
 // ========== INTERFACES PARA GESTIÓN DE TRABAJADORES ==========

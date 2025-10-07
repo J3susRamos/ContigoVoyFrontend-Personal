@@ -179,6 +179,7 @@ export const PersonalForm = ({
         permissions: updatedFormData.permissions,
         rol: rol,
         imagen: null,
+        especialidades: null,
       };
       console.log(
         "📤 Datos que se envían al backend:",
@@ -222,7 +223,6 @@ export const PersonalForm = ({
     psicopedagogia: 4,
     gestalt: 5,
     "racional-emotivo": 6,
-    default: 7,
   };
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
