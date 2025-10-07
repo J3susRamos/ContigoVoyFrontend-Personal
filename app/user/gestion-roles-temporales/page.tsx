@@ -39,40 +39,34 @@ export default function Page() {
 
   // -------------------- cargar lista de permisos dinámicos --------------------
   useEffect(() => {
-    const fetchPermissions = async () => {
-      try {
-        const cookies = parseCookies();
-        const token = cookies["session"];
+  const fetchPermissions = async () => {
+    try {
+      const cookies = parseCookies();
+      const token = cookies["session"];
 
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/urls/enlaces`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-            },
-          }
-        );
-
-        const data = await res.json();
-        if (res.ok) {
-          setPermissionsList(
-            data.result.map((p: any) => ({
-              id: p.id,
-              name: p.name,
-            }))
-          );
-        } else {
-          toast.error(data.message || "Error al cargar permisos");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}api/urls/enlaces`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
         }
-      } catch (err) {
-        console.error(err);
-        toast.error("Error de conexión al cargar permisos");
-      }
-    };
+      );
 
-    fetchPermissions();
-  }, []);
+      const data = await res.json();
+
+      const permissions: Permission[] = data.result as Permission[];
+      setPermissionsList(permissions);
+      
+    } catch (err) {
+      console.error(err);
+      toast.error("Error de conexión al cargar permisos");
+    }
+  };
+
+  fetchPermissions();
+}, []);
 
   // -------------------- buscar usuario por email (AGREGAR) --------------------
   const fetchUserForAdd = async () => {

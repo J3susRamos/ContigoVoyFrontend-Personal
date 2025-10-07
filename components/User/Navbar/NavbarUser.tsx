@@ -9,10 +9,10 @@ import { UsuarioLocalStorage } from "@/interface";
 
 const navItemsBase = [
   {
-    name: "Inicio",
+    name: "Welcome",
     link: "/user/welcome",
     icono: Icons.alpharrow,
-    role: ["marketing", "comunicacion", "admin"],
+    role: ["both"],
   },
   {
     name: "Dashboard",

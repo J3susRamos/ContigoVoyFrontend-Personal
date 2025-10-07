@@ -44,7 +44,8 @@ const FamilyTerapias: ServicesStructureProps = {
       están afectando el bienestar de tu hogar?
     </p>
   ),
-  background: "/Services/family/terapia-familiar-online.webp",
+  backgroundDesktop: "/Services/family/Escritorio-terapia-familiar-online.webp",
+  backgroundMobile: "/Services/family/terapia-familiar-online.webp",
   bgdown: "/Services/family/terapia-para-mejorar-relaciones-familiares.webp",
   bgdownAlt: "",
   bgdownTitle: "",

@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Fade from "embla-carousel-fade";
@@ -106,14 +106,9 @@ export default function ChooseUs() {
     ]
   );
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (emblaApi) {
-      emblaApi.on("select", () => {
-        const currentIndex = emblaApi.selectedScrollSnap();
-        setSelectedIndex(currentIndex);
-      });
     }
   }, [emblaApi]);
 

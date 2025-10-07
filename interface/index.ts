@@ -47,7 +47,8 @@ export interface ServicesStructureProps {
   edad: string;
   edadMobil: string;
   motto: React.ReactElement;
-  background: string;
+  backgroundDesktop: string;
+  backgroundMobile: string;
   bgdown: string;
   bgdownAlt: string;
   bgdownTitle: string;
@@ -788,36 +789,6 @@ export interface WorkerStatsResponse {
       inactivos: number;
     };
   };
-}
-
-// ========== INTERFACES PARA DASHBOARD ADMINISTRADOR ==========
-
-export interface CitasEstadisticasResult {
-  sin_pagar: number;
-  pendientes: number;
-  canceladas: number;
-  realizadas: number;
-  ausentes: number;
-  reprogramadas: number;
-}
-
-export interface AdminDashboardStats {
-  citas: CitasEstadisticasResult;
-  trabajadores: {
-    [role: string]: {
-      total: number;
-      activos: number;
-      inactivos: number;
-    };
-  };
-  pacientes_total: number;
-  citas_hoy: number;
-}
-
-export interface AdminDashboardResponse {
-  status_code: number;
-  status_message: string;
-  result: AdminDashboardStats;
 }
 
 export interface WorkerFilterOptions {

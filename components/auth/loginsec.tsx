@@ -55,7 +55,7 @@ export const useAuth = () => {
         apellido: data.result.apellido,
         imagen: data.result.imagen,
         ...(data.result.idpsicologo && { idpsicologo: data.result.idpsicologo }),
-        permisos: data.result.permissions,
+        permissions: data.result.permissions || [],
       };
 
       localStorage.setItem("user", JSON.stringify(userDataToStore));
