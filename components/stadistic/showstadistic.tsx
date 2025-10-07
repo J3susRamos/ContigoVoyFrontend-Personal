@@ -9,8 +9,7 @@ import CitasSection from "./sections/CitasSection";
 import VentasSection from "./sections/VentasSection";
 import RendimientoSection from "./sections/RendimientoSection";
 import useStadistics from "./hooks/useStadistics";
-import { UserRole, ViewKey } from "./types";
-import { UsuarioLocalStorage } from "@/interface";
+import { ViewKey } from "./types";
 
 export default function ShowStadistic() {
   const {
@@ -24,7 +23,6 @@ export default function ShowStadistic() {
     visibleButtons,
     handleViewChange,
     getButtonClasses,
-    setUserRole,
     allowedViews,
   } = useStadistics();
 
@@ -32,11 +30,9 @@ export default function ShowStadistic() {
     try {
       const userJson = localStorage.getItem("user");
       if (userJson) {
-        const user: UsuarioLocalStorage = JSON.parse(userJson);
-
-        // ✅ Guardar rol en el hook
-        setUserRole(user.rol as UserRole);
-
+        // ✅ Solo verificamos que exista el usuario, no necesitamos parsearlo
+        // ya que la lógica de permisos está en el hook useStadistics
+        
         // ✅ Vista inicial → la primera permitida
         if (allowedViews.length > 0) {
           setView(allowedViews[0] as ViewKey);
@@ -47,7 +43,7 @@ export default function ShowStadistic() {
       console.error("Error parsing user data:", error);
       setIsLoading(false);
     }
-  }, [setUserRole, setIsLoading, allowedViews, setView]);
+  }, [setIsLoading, allowedViews, setView]);
 
   if (isLoading) {
     return <LoadingSkeleton />;

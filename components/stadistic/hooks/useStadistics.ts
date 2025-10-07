@@ -1,27 +1,26 @@
 import { useState, useMemo } from "react";
-import { UserRole, ViewKey } from "../types";
+import { ViewKey } from "../types";
 import { UsuarioLocalStorage } from "@/interface";
 
 export default function useStadistics() {
-  const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [view, setView] = useState<ViewKey>("clientes");
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
-  null,
-  null,
+    null,
+    null,
   ]);
   const [isLoading, setIsLoading] = useState(true);
   const [isViewLoading, setIsViewLoading] = useState(false);
 
-  // todas las vistas disponibles
-  const allViews: ViewKey[] = ["clientes", "citas", "ventas", "rendimiento"];
-
-  // calcular vistas permitidas
+  // calcular vistas permitidas - CORREGIDO
   const allowedViews = useMemo(() => {
     try {
       const userJson = localStorage.getItem("user");
       if (!userJson) return [];
 
       const user: UsuarioLocalStorage = JSON.parse(userJson);
+
+      // Definir allViews dentro del useMemo para evitar dependencia externa
+      const allViews: ViewKey[] = ["clientes", "citas", "ventas", "rendimiento"];
 
       // Si es admin → todas las vistas
       if (user.rol === "ADMIN") {
@@ -39,20 +38,22 @@ export default function useStadistics() {
       console.error("Error parsing user data:", error);
       return [];
     }
-  }, [userRole]);
+  }, []); // ✅ Dependencias vacías porque solo usa localStorage
 
-  // botones visibles en UI
-  const visibleButtons = allowedViews.map((key) => ({
-    key,
-    name:
-      key === "clientes"
-        ? "Clientes"
-        : key === "citas"
-        ? "Citas"
-        : key === "ventas"
-        ? "Ventas"
-        : "Rendimiento",
-  }));
+  // botones visibles en UI - memoizado para optimización
+  const visibleButtons = useMemo(() => {
+    return allowedViews.map((key) => ({
+      key,
+      name:
+        key === "clientes"
+          ? "Clientes"
+          : key === "citas"
+          ? "Citas"
+          : key === "ventas"
+          ? "Ventas"
+          : "Rendimiento",
+    }));
+  }, [allowedViews]);
 
   const handleViewChange = (newView: ViewKey) => {
     setIsViewLoading(true);
@@ -80,7 +81,6 @@ export default function useStadistics() {
     visibleButtons,
     handleViewChange,
     getButtonClasses,
-    setUserRole,
     allowedViews,
   };
 }

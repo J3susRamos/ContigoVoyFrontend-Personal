@@ -104,12 +104,15 @@ const NoResultsMessage = memo(({ onClearFilters }: { onClearFilters: () => void 
 
 NoResultsMessage.displayName = "NoResultsMessage";
 
-// Componente wrapper para el preview con lazy loading
+// Componente wrapper para el preview con lazy loading - CORREGIDO
 const LazyPsicologoCard = memo(({ item }: { item: PsicologoPreviewData; index: number }) => {
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Guardar la referencia actual en una variable local
+    const currentCardRef = cardRef.current;
+    
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -119,13 +122,13 @@ const LazyPsicologoCard = memo(({ item }: { item: PsicologoPreviewData; index: n
       { rootMargin: '50px' }
     );
 
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
+    if (currentCardRef) {
+      observer.observe(currentCardRef);
     }
 
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
+      if (currentCardRef) {
+        observer.unobserve(currentCardRef);
       }
     };
   }, []);

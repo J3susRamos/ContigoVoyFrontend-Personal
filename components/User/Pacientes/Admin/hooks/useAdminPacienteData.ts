@@ -8,41 +8,66 @@ export const useAdminPacienteData = () => {
   const [loading, setLoading] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>('deshabilitados');
 
-  const fetchData = async (status: string = filterStatus) => {
-    setLoading(true);
-    setError(null);
-    try {
-      let response;
-      if (status === 'deshabilitados') {
-        response = await GetPacientesDisabled();
-      } else {
-        response = await GetPacientesEnabled();
-      }
-      setData(response);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al cargar pacientes';
-      setError(errorMessage);
-      console.error('Error fetching patients:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleFilterChange = (newStatus:string) => {
-    setFilterStatus(newStatus);
-    fetchData(newStatus);
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        let response;
+        if (filterStatus === 'deshabilitados') {
+          response = await GetPacientesDisabled();
+        } else {
+          response = await GetPacientesEnabled();
+        }
+        setData(response);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Error al cargar pacientes';
+        setError(errorMessage);
+        console.error('Error fetching patients:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, [filterStatus]);
+  }, [filterStatus]); // ✅ Solo depende de filterStatus
+
+  const handleFilterChange = (newStatus: string) => {
+    setFilterStatus(newStatus);
+    // No necesitamos llamar fetchData aquí porque el useEffect se disparará automáticamente
+  };
+
+  // Si necesitas una función para re-fetch manual
+  const refetch = () => {
+    const fetchData = async () => {
+      // ... misma implementación que arriba
+      setLoading(true);
+      setError(null);
+      try {
+        let response;
+        if (filterStatus === 'deshabilitados') {
+          response = await GetPacientesDisabled();
+        } else {
+          response = await GetPacientesEnabled();
+        }
+        setData(response);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Error al cargar pacientes';
+        setError(errorMessage);
+        console.error('Error fetching patients:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  };
 
   return {
     data,
     error,
     loading,
     filterStatus,
-    fetchData,
-    handleFilterChange, // ✅ Asegúrate de que esto esté incluido
+    fetchData: refetch, // Exportamos la función para re-fetch manual
+    handleFilterChange,
   };
 };
