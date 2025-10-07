@@ -31,7 +31,7 @@ export default function Calendario() {
 
   return (
     <>
-      {role === "PSICOLOGO" && <CalendarioMain />}
+      <CalendarioMain />
 
       {role === "ADMIN" && <AdminCalendarSection />}
     </>
