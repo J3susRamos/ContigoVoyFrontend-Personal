@@ -20,7 +20,7 @@ const getNombrePais = (codigoPais: string): string => {
     "CL": "Bandera de Chile",
     "EC": "Bandera de Ecuador"
   };
-  
+
   return paises[codigoPais] || "Bandera del país del psicólogo";
 };
 
@@ -223,21 +223,22 @@ export default function ReservarPsiPreview({
             <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-600 to-transparent mb-4"></div>
             {/* Descripción */}
             <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3 md:h-[67px]">
-              {psicologo.introduccion?.slice(0, 120) || ''}...
+              {psicologo.introduccion ? psicologo.introduccion.slice(0, 120) + "..." : "Sin descripción disponible"}
             </p>
+
             {/* Especialidades */}
           </div>
           <div>
             <div className="mb-2">
               <div className="flex overflow-x-auto gap-2 pb-scv4">
                 {psicologo.especialidades?.slice(0, 3).map((especialidad, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 flex-shrink-0 text-xs font-medium text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-700"
-                    >
-                      {especialidad}
-                    </span>
-                  ))}
+                  <span
+                    key={index}
+                    className="px-3 py-1 flex-shrink-0 text-xs font-medium text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-900/30 rounded-full border border-indigo-100 dark:border-indigo-700"
+                  >
+                    {especialidad}
+                  </span>
+                ))}
                 {psicologo.especialidades && psicologo.especialidades.length > 3 && (
                   <span className="px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full">
                     +{psicologo.especialidades.length - 3}
