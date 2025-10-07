@@ -1,6 +1,6 @@
 import { Ban, Ticket } from "lucide-react";
 import React, { ReactNode } from "react";
-
+import { Trash2 } from "lucide-react"
 type InfoItem = {
   label: string;
   value: string;
@@ -15,6 +15,7 @@ interface Props {
   onEdit?: () => void;
   onBoucher?: () => void;
   onDisable?: () => void;
+  onDelete?: () => void;
   info?: InfoItem[];
   children?: ReactNode;
   llave?: boolean;
@@ -23,6 +24,7 @@ interface Props {
 const DataCard = ({
   onEdit,
   onDisable,
+  onDelete,
   onBoucher,
   paciente,
   info,
@@ -100,6 +102,17 @@ const DataCard = ({
             <Ban className="text-primary dark:text-[#bbbafe]" size={30} />
             <span className="text-xs text-primary dark:text-[#bbbafe] mt-1">
               {!llave ? "Deshabilitar" : "Habilitar"}
+            </span>
+          </button>
+        )}
+        {onDelete && (
+          <button
+            onClick={onDelete}
+            className="flex flex-col items-center p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+          >
+            <Trash2 className="text-red-600 dark:text-red-400" size={30} />
+            <span className="text-xs text-red-600 dark:text-red-400 mt-1">
+              Eliminar
             </span>
           </button>
         )}

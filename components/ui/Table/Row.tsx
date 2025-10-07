@@ -3,12 +3,14 @@
 import React, { ReactNode } from "react";
 import { Edit3, Ban, Ticket, CheckCircle } from "lucide-react";
 import { ActionButton } from "./ActionButton";
+import { Trash2 } from "lucide-react";
 
 interface RowProps {
   values: string[];
   onClick?: () => void;
   onEdit?: () => void;
   onDisable?: () => void;
+  onDelete?: () => void;
   onBoucher?: () => void;
   children?: ReactNode;
   showActions?: boolean;
@@ -20,6 +22,7 @@ const Row: React.FC<RowProps> = ({
   onClick,
   onEdit,
   onDisable,
+  onDelete,
   onBoucher,
   children,
   showActions = true,
@@ -50,6 +53,13 @@ const Row: React.FC<RowProps> = ({
                     label={!llave ? "Deshabilitar" : "Habilitar"}
                     onClick={onDisable}
                     llave={llave}
+                  />
+                )}
+                {onDelete && (
+                  <ActionButton
+                    icon={Trash2}
+                    label="Eliminar"
+                    onClick={onDelete}
                   />
                 )}
                 {onBoucher && (

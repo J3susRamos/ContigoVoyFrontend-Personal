@@ -19,14 +19,16 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
 
   let estilos = "";
 
-  if (llave === undefined) {
+   // Detectar automáticamente si es el botón de eliminar
+  if (label?.toLowerCase() === "eliminar") {
+    estilos = "text-red-600 dark:text-red-400";
+  } else if (llave === undefined) {
     estilos = "text-primary dark:text-[#bbbafe]";
   } else if (!llave) {
-    estilos = "text-red-600 dark:text-red-400";      // Rojo para habilitados
+    estilos = "text-red-600 dark:text-red-400"; // Rojo para habilitados
   } else {
-    estilos = "text-green-600 dark:text-green-400";  // Verde para deshabilitados
+    estilos = "text-green-600 dark:text-green-400"; // Verde para deshabilitados
   }
-  
 
 
   return (
