@@ -108,7 +108,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
   const fechaActual = dias[diaSeleccionado];
   const fechaStr = fechaActual.toISOString().split("T")[0];
   const diaNombre = fechaActual.toLocaleDateString("es-ES", { weekday: "long" }).toLowerCase();
-  const diaCapitalizado = diaNombre.charAt(0).toUpperCase() + diaNombre.slice(1);
+  const diaCapitalizado = diaNombre ? diaNombre.charAt(0).toUpperCase() + diaNombre.slice(1) : "";
 
   const horasDisponibles = (horario[diaCapitalizado] || []).flatMap(([inicio, fin]) =>
     generarHorarios(inicio, fin, zonaHoraria)
@@ -191,7 +191,7 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
             {dias.map((fecha) => {
               const fechaStr = fecha.toISOString().split("T")[0];
               const diaNombre = fecha.toLocaleDateString("es-ES", { weekday: "long" }).toLowerCase();
-              const diaCapitalizado = diaNombre.charAt(0).toUpperCase() + diaNombre.slice(1);
+              const diaCapitalizado = diaNombre ? diaNombre.charAt(0).toUpperCase() + diaNombre.slice(1) : "";
               const horasDisponibles = (horario[diaCapitalizado] || []).flatMap(([inicio, fin]) =>
                 generarHorarios(inicio, fin, zonaHoraria)
               );
@@ -291,7 +291,8 @@ export default function HorarioPsicologo({ idPsicologo, horario, onClose, onOpen
         <div className="flex gap-2 overflow-x-auto pb-2 mb-4 -mx-4 px-4 scrollbar-hide">
           {dias.map((fecha, index) => {
             const diaNombre = fecha.toLocaleDateString("es-ES", { weekday: "long" });
-            const diaCorto = diaNombre.slice(0, 3).charAt(0).toUpperCase() + diaNombre.slice(1, 3);
+            const diaCorto = diaNombre ? 
+  diaNombre.slice(0, 3).charAt(0).toUpperCase() + diaNombre.slice(1, 3) : "";
             const etiqueta = obtenerEtiquetaDia(fecha, hoyISO, mananaISO, formateadorFecha);
             
             return (
