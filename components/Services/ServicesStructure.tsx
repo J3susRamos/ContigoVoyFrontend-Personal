@@ -146,7 +146,7 @@ export default function ServicesStructure({
                     title={service.bgdownTitle}
                     fill
                     className="object-cover object-right w-full h-full transform hover:scale-105 transition-transform duration-700"
-                    loading = "lazy"
+                    priority
                   />
                   {/* Modern gradient overlay */}
                   <div className="absolute inset-0 pointer-events-none">

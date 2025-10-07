@@ -71,7 +71,11 @@ export const EyeFilledIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export default function Login() {
   const [isVisible, setIsVisible] = React.useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const toggleVisibility = React.useCallback(() => {
+  setIsVisible((prev) => !prev);
+  }, []);
+
 
   const [credentials, setCredentials] = useState({
     email: "",
@@ -79,18 +83,21 @@ export default function Login() {
   });
   const { login, loading, error } = useAuth();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCredentials((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setCredentials((prev) => ({ ...prev, [name]: value }));
+    },
+    []
+  );
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = React.useCallback(
+  async (e: React.FormEvent) => {
     e.preventDefault();
     await login(credentials.email, credentials.password);
-  };
+  },
+  [credentials, login]
+);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e3d7fa] via-[#d1c4e9] to-[#b39ddb] dark:from-gray-900 dark:via-purple-900 dark:to-gray-800 transition-all duration-500">
       {/* Fondo con elementos decorativos */}
@@ -131,6 +138,7 @@ export default function Login() {
                   height={200}
                   className="w-36 h-36 lg:w-48 lg:h-48 object-contain drop-shadow-lg"
                   priority
+                  
                 />
                 <div className="text-center">
                   <h2 className="text-3xl lg:text-5xl font-bold text-[#634AE2] dark:text-[#9494F3] leading-tight">
