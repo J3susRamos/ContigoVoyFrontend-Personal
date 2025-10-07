@@ -23,7 +23,7 @@ const HeroHeader = memo(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -105,7 +105,7 @@ const NoResultsMessage = memo(({ onClearFilters }: { onClearFilters: () => void 
 NoResultsMessage.displayName = "NoResultsMessage";
 
 // Componente wrapper para el preview con lazy loading
-const LazyPsicologoCard = memo(({ item, index }: { item: PsicologoPreviewData; index: number }) => {
+const LazyPsicologoCard = memo(({ item }: { item: PsicologoPreviewData; index: number }) => {
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -166,12 +166,12 @@ export default function ReservarComponents({
 
   // Detectar móvil para ajustar debounce
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     const resizeHandler = () => {
       // Throttle resize events
@@ -182,7 +182,7 @@ export default function ReservarComponents({
         }, 200);
       }
     };
-    
+
     window.addEventListener('resize', resizeHandler, { passive: true });
     return () => window.removeEventListener('resize', resizeHandler);
   }, []);
@@ -196,7 +196,7 @@ export default function ReservarComponents({
       if (filterTimeoutRef.current) {
         clearTimeout(filterTimeoutRef.current);
       }
-      
+
       filterTimeoutRef.current = setTimeout(() => {
         onFilterChange(newFilters as PsicologoFilters, searchTerm);
       }, debounceTime);
@@ -206,7 +206,7 @@ export default function ReservarComponents({
 
   useEffect(() => {
     debouncedFilterChange(filters);
-    
+
     return () => {
       if (filterTimeoutRef.current) {
         clearTimeout(filterTimeoutRef.current);
@@ -279,7 +279,7 @@ export default function ReservarComponents({
   return (
     <div className="w-full bg-gray-50 dark:bg-gray-900">
       <HeroHeader />
-      
+
       <div ref={sectionTopRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
           <div className="lg:w-80 flex-shrink-0">
@@ -288,7 +288,7 @@ export default function ReservarComponents({
               setFilters={setFilters}
             />
           </div>
-          
+
           <div className="flex-1">
             {data.length > 0 ? (
               psychologistGrid

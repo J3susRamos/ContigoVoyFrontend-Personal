@@ -40,14 +40,7 @@ const SectionHeader: FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 // Mapeo de íconos a nombres de archivo reales
-const iconMap: { [key: string]: string } = {
-  "❤️": "empatia",
-  "🎓": "profesionalismo", 
-  "🔑": "accesibilidad",
-  "💡": "innovacion",
-  "🔒": "confidencialidad",
-  "🌈": "diversidad"
-};
+
 
 // Tipado para el ValueCard
 interface ValueCardProps {
@@ -57,29 +50,7 @@ interface ValueCardProps {
 }
 
 // Componente de tarjeta de valor con imágenes
-const ValueCard: FC<ValueCardProps> = ({ title, content, icon }) => (
-  <motion.div
-    whileHover={{ y: -5 }}
-    transition={{ type: "tween", duration: 0.2 }}
-    className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200 h-full flex flex-col"
-  >
-    <div className="mb-4 flex justify-center">
-      <Image
-        src={`/AboutUs/${iconMap[icon]}.webp`}
-        alt={title}
-        width={80}
-        height={80}
-        className="w-20 h-20 object-contain"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.style.display = 'none';
-        }}
-      />
-    </div>
-    <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900 text-center">{title}</h3>
-    <p className="dark:text-gray-300 text-gray-600 leading-relaxed flex-grow">{content}</p>
-  </motion.div>
-);
+
 
 // Componente con íconos SVG/emoji como alternativa
 const ValueCardWithSVG: FC<ValueCardProps> = ({ title, content, icon }) => (

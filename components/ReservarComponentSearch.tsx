@@ -43,11 +43,11 @@ interface ReservarComponentSearchProps {
 
 // Pre-compilar el icono de búsqueda fuera del componente
 const SearchIcon = React.memo(() => {
-  const iconHtml = useMemo(() => 
-    Icons.loup.replace(/<svg /, '<svg fill="currentColor" '), 
+  const iconHtml = useMemo(() =>
+    Icons.loup.replace(/<svg /, '<svg fill="currentColor" '),
     []
   );
-  
+
   return (
     <span
       className="text-gray-400 dark:text-gray-500 absolute left-4 top-1/2 transform -translate-y-1/2"
@@ -77,7 +77,7 @@ const FilterSection = React.memo(function FilterSection({
 }: FilterSectionProps) {
   // Lazy rendering para móvil - solo renderiza cuando es visible
   const [shouldRender, setShouldRender] = useState(isVisible);
-  
+
   useEffect(() => {
     if (isVisible && !shouldRender) {
       setShouldRender(true);
@@ -156,14 +156,14 @@ export default function ReservarComponentSearch({
   // Detectar móvil de manera más eficiente
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
+
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 640);
     };
-    
+
     // Check inicial
     checkMobile();
-    
+
     // Throttled resize handler para móvil
     const handleResize = () => {
       if (resizeTimeoutRef.current) {
@@ -171,7 +171,7 @@ export default function ReservarComponentSearch({
       }
       resizeTimeoutRef.current = setTimeout(checkMobile, 100);
     };
-    
+
     window.addEventListener('resize', handleResize, { passive: true });
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -201,12 +201,12 @@ export default function ReservarComponentSearch({
     value: string
   ) => {
     setTouchedFilters(prev => new Set(prev).add(filterKey));
-    
+
     setLocalFilters((prev) => {
       const currentValues = prev[filterKey];
       const updatedValues = currentValues.includes(value)
-        ? currentValues.filter((v) => v !== value) 
-        : [...currentValues, value]; 
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
 
       return {
         ...prev,
@@ -219,11 +219,11 @@ export default function ReservarComponentSearch({
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value;
     setSearchTerm(term);
-    
+
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-    
+
     // Debounce más largo en móvil para ahorrar procesamiento
     searchTimeoutRef.current = setTimeout(() => {
       onSearchChange(term);
@@ -247,11 +247,11 @@ export default function ReservarComponentSearch({
     if (filterTimeoutRef.current) {
       clearTimeout(filterTimeoutRef.current);
     }
-    
+
     filterTimeoutRef.current = setTimeout(() => {
       setFilters(localFilters);
     }, isMobile ? 200 : 100);
-    
+
     return () => {
       if (filterTimeoutRef.current) {
         clearTimeout(filterTimeoutRef.current);
@@ -277,7 +277,7 @@ export default function ReservarComponentSearch({
     return (
       <>
         {sections.map(({ key, title }) => (
-          <FilterSection 
+          <FilterSection
             key={key}
             title={title}
             filterKey={key}
@@ -291,7 +291,7 @@ export default function ReservarComponentSearch({
   }, [isMobile, isFiltersOpen, localFilters, handleCheckboxChange, touchedFilters]);
 
   // Input de búsqueda común - optimizado para móvil
-  const SearchInput = useMemo(() => ({ isMobile = false }: { isMobile?: boolean }) => (
+  const SearchInput: React.FC<{ isMobile?: boolean }> = ({ isMobile = false }) => (
     <div className={`relative ${isMobile ? 'sm:hidden' : 'hidden sm:block'} ${isMobile ? 'mb-3' : 'mb-4'}`}>
       <input
         name="nombre"
@@ -305,7 +305,7 @@ export default function ReservarComponentSearch({
       />
       <SearchIcon />
     </div>
-  ), [searchTerm, handleSearchChange]);
+  );
 
   // Efecto para limpiar touched filters cuando se cierran los filtros en móvil
   useEffect(() => {
@@ -316,7 +316,7 @@ export default function ReservarComponentSearch({
   }, [isFiltersOpen, isMobile]);
 
   return (
-    <div 
+    <div
       ref={filtersRef}
       className="w-full p-4 sm:p-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-lg sm:shadow-2xl"
     >
@@ -329,7 +329,7 @@ export default function ReservarComponentSearch({
           Filtra por tus preferencias
         </p>
       </div>
-      
+
       {/* Mobile: Search and Filters button */}
       <div className="flex flex-col gap-3 sm:hidden">
         <SearchInput isMobile />
@@ -346,12 +346,12 @@ export default function ReservarComponentSearch({
           )}
         </button>
       </div>
-      
+
       {/* Desktop: Search only */}
       <SearchInput />
-      
+
       {/* Filters content con transición optimizada para móvil */}
-      <div 
+      <div
         className={`
           ${isMobile ? 'overflow-hidden transition-all duration-300 ease-in-out' : 'block'}
           ${isFiltersOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}

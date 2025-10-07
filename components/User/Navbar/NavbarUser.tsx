@@ -12,7 +12,7 @@ const navItemsBase = [
     name: "Welcome",
     link: "/user/welcome",
     icono: Icons.alpharrow,
-    role: "both",
+    role: ["both"],
   },
   {
     name: "Dashboard",
