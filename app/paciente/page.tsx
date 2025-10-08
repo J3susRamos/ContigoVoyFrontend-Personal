@@ -76,9 +76,9 @@ const getEstadoColor = (estado: string) => {
   }
 };
 
-const joinVideoCall = (link: string | undefined | null) => {
+/*const joinVideoCall = (link: string | undefined | null) => {
   if (link) window.open(link, "_blank");
-};
+};*/
 
 type EstadosCita = {
   "Sin pagar": number;
@@ -161,8 +161,12 @@ const Paciente = () => {
     return () => abortController.abort();
   }, []);
 
-  const joinVideoCall = (citaId: number) => {
-    window.open(`/videocall/${citaId}`, "_blank");
+  const joinVideoCall = (jitsiUrl: string | null) => {
+    if (jitsiUrl) {
+      window.open(jitsiUrl, "_blank");
+    } else {
+      alert("No hay enlace disponible para la videollamada.");
+    }
   };
 
   const handleReagendar = (cita: Cita) => {
@@ -520,9 +524,8 @@ const Paciente = () => {
                             onClick={() => {
                               const link = document.createElement("a"); // Crea un elemento <a>
                               link.href = pago.imagen; // Asigna el origen del archivo
-                              link.download = `comprobante-${
-                                pago.codigo
-                              }.${pago.imagen.split(".").pop()}`; // Sugiere nombre de descarga
+                              link.download = `comprobante-${pago.codigo
+                                }.${pago.imagen.split(".").pop()}`; // Sugiere nombre de descarga
                               link.click(); // Dispara la descarga
                             }}
                           >
