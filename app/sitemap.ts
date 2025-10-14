@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next';
 import { createSlug } from '@/utils/slugUtils';
 
+export const dynamic = "force-static";
+
 interface Blog {
   tema: string;
   fecha: string;
@@ -104,7 +106,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Obtener blogs dinámicamente
   const blogs = await getBlogs();
   const blogUrls: MetadataRoute.Sitemap = blogs.map((blog) => ({
-    url: `${baseUrl}/blog/ver?blog=${encodeURIComponent(createSlug(blog.tema))}`,
+    url: `${baseUrl}/blog/ver/${createSlug(blog.tema)}/`,
     lastModified: new Date(blog.fecha),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
