@@ -1,4 +1,25 @@
-import { Metadata } from "next";
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/blogs/slugs`,
+    );
+
+    if (!res.ok) throw new Error("Fallo al obtener slugs");
+
+    const data = await res.json();
+    if (!data.result || !Array.isArray(data.result)) throw new Error("Datos inválidos");
+
+    return data.result.map((b: { slug: string }) => ({ blog: b.slug.toString() }));
+  } catch (err) {
+    console.warn("⚠ No se pudo acceder a la API, usando rutas de fallback");
+    return [
+      { blog: "bienestar-emocional" },
+      { blog: "autoestima-y-confianza" },
+    ];
+  }
+}
+
+
 import Link from "next/link";
 import BlogIndividualView from "@/components/blog/BlogIndividualView";
 import BlogStructuredData from "@/components/blog/BlogStructuredData";
