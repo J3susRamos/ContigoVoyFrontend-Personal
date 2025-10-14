@@ -1,13 +1,35 @@
-"use client";
-import { useParams } from "next/navigation";
+// app/user/gestion-roles-temporales/[id]/page.tsx
+import UserRoleDetail from "./UserRoleDetail";
 
-export default function UserRoleDetail() {
-  const { id } = useParams();
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/personal/permissions/ids`,
+      { cache: "no-store" }
+    );
 
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Detalle del usuario</h1>
-      <p>ID recibido en la URL: {id}</p>
-    </div>
-  );
+    if (!res.ok) {
+      console.warn("⚠ No se pudieron obtener los IDs, usando valores por defecto");
+      return [{ id: "1" }]; // 👈 fallback
+    }
+
+    const data = await res.json();
+
+    if (!Array.isArray(data.result) || data.result.length === 0) {
+      console.warn("⚠ API devolvió lista vacía, usando valores por defecto");
+      return [{ id: "1" }];
+    }
+
+    return data.result.map((item: { id: number | string }) => ({
+      id: item.id.toString(),
+    }));
+  } catch (err) {
+    console.error("Error al generar params:", err);
+    return [{ id: "1" }]; // 👈 fallback por error
+  }
 }
+
+export default function Page() {
+  return <UserRoleDetail />;
+}
+// cambio
