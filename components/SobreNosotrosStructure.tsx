@@ -228,7 +228,7 @@ export default function AboutUsPage({ qs }: AboutUsPageProps) {
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg"
             >
-              <Link href="/contacto" className="text-white no-underline">
+              <Link href="/ReservarCita" className="text-white no-underline">
                 Agenda tu consulta
               </Link>
             </motion.button>
