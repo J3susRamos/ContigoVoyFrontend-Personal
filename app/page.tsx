@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "nueva cita",
   ],
   alternates: {
-    canonical: "https://centropsicologicocontigovoy.com/",
+    canonical: "https://www.centropsicologicocontigovoy.com/",
   },
   robots: {
     index: true,

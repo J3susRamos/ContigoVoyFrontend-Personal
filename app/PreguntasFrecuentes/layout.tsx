@@ -12,7 +12,7 @@ export const metadata = {
     "psicología accesible",
   ],
   alternates: {
-    canonical: "https://centropsicologicocontigovoy.com/PreguntasFrecuentes/",
+    canonical: "https://www.centropsicologicocontigovoy.com/PreguntasFrecuentes/",
   },
   robots: {
     index: true,

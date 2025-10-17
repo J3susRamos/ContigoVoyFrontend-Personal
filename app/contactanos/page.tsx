@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "ayuda psicológica",
   ],
   alternates: {
-    canonical: "https://centropsicologicocontigovoy.com/contactanos/",
+    canonical: "https://www.centropsicologicocontigovoy.com/contactanos/",
   },
   robots: {
     index: true,

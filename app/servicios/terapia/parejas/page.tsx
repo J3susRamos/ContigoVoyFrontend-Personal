@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical:
-      "https://centropsicologicocontigovoy.com/servicios/terapia/parejas/",
+      "https://www.centropsicologicocontigovoy.com/servicios/terapia/parejas/",
   },
   robots: {
     index: true,

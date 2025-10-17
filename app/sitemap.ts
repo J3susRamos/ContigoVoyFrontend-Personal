@@ -19,7 +19,7 @@ async function getBlogs(): Promise<Blog[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://centropsicologicocontigovoy.com';
+  const baseUrl = 'https://www.centropsicologicocontigovoy.com';
   
   // URLs estáticas del sitio
   const staticUrls: MetadataRoute.Sitemap = [
