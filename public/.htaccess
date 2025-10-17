@@ -2,9 +2,6 @@
   RewriteEngine On
   RewriteBase /
 
-  RewriteCond %{HTTP_HOST} ^centropsicologicocontigovoy\.com$ [NC]
-  RewriteRule ^(.*)$ https://www.centropsicologicocontigovoy.com/$1 [L,R=301]
-
   RewriteCond %{REQUEST_URI} ^/apicontigovoy/
   RewriteRule ^(.*)$ - [L]
 
