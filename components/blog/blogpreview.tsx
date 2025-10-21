@@ -23,7 +23,7 @@ export default function BlogPreview({
 
   return (
     <article className="group transition-all duration-500 hover:scale-[1.02] p-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
         {/* Content Section */}
         <div className="lg:col-span-2 space-y-6">
           {/* Author & Meta Info */}
@@ -104,18 +104,20 @@ export default function BlogPreview({
           </div>
         </div>        
         
-        {/* Image Section */}
-        <div className="lg:col-span-1">
+        {/* Image Section - SOLUCIÓN AL PROBLEMA */}
+        <div className="lg:col-span-1 flex justify-center">
           <Link href={`/blog/ver?blog=${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
-            <div className="relative aspect-[4/3] lg:aspect-[3/4] overflow-hidden rounded-2xl group-hover:shadow-2xl transition-all duration-500 border border-[#634AE2]/10 cursor-pointer">
-              {/* Solo mostrar la primera imagen como portada */}
+            <div className="relative w-full h-80 lg:h-96 overflow-hidden rounded-2xl group-hover:shadow-2xl transition-all duration-500 border border-[#634AE2]/10 cursor-pointer">
               <Image
                 src={Data.imagenes?.[0] || Data.imagen}
                 alt={`Imagen ilustrativa del artículo: ${Data.tema}`}
                 title={`${Data.tema} - Por ${Data.psicologo} ${Data.psicologApellido}`}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                classNames={{
+                  wrapper: "w-full h-full",
+                  img: "w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                }}
                 width={400}
-                height={300}
+                height={400}
                 radius="none"
               />
               
@@ -126,12 +128,13 @@ export default function BlogPreview({
                 </div>
               )}
               
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {/* Gradiente mejorado que cubre toda la imagen */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40 opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
               
               {/* Overlay Content */}
               <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <p className="text-sm font-medium bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full inline-block">
-                  Ver más
+                <p className="text-sm font-medium bg-black/60 backdrop-blur-sm px-3 py-2 rounded-full inline-block text-center w-full">
+                  Ver artículo completo
                 </p>
               </div>
             </div>

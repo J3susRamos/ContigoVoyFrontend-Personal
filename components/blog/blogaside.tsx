@@ -32,30 +32,33 @@ export default function BlogAside({
             Categorías
           </h3>
         </div>
+        {/* Barra de categorías con scroll - SOLO PARA CATEGORÍAS */}
+        <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-[#634AE2] scrollbar-track-gray-100 dark:scrollbar-track-gray-700 scrollbar-thumb-rounded-full scrollbar-track-rounded-full pr-2">
           <div className="space-y-3">
-          {Categories?.map((item) => {
-            const isActive = activeCategories.includes(item.idCategoria);
-            return (
-              <Button
-                key={item.idCategoria}
-                variant={isActive ? "solid" : "bordered"}
-                className={`w-full justify-start text-left transition-all duration-300 hover:scale-105 ${
-                  isActive
-                    ? "bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white shadow-lg shadow-[#634AE2]/25"
-                    : "bg-white/80 border-[#634AE2]/40 text-[#634AE2] dark:bg-gray-700/80 dark:text-gray-200 dark:border-gray-500 hover:bg-gradient-to-r hover:from-[#634AE2]/20 hover:to-[#8b7cf6]/20 hover:border-[#634AE2] backdrop-blur-sm font-semibold"
-                }`}
-                onPress={() => onCategoryClick(item.idCategoria)}
-                radius="lg"
-                size="lg"
-              >
-                <span className="truncate font-medium">{item.nombre}</span>
-              </Button>
-            );
-          })}
+            {Categories?.map((item) => {
+              const isActive = activeCategories.includes(item.idCategoria);
+              return (
+                <Button
+                  key={item.idCategoria}
+                  variant={isActive ? "solid" : "bordered"}
+                  className={`w-full justify-start text-left transition-all duration-300 hover:scale-105 ${
+                    isActive
+                      ? "bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white shadow-lg shadow-[#634AE2]/25"
+                      : "bg-white/80 border-[#634AE2]/40 text-[#634AE2] dark:bg-gray-700/80 dark:text-gray-200 dark:border-gray-500 hover:bg-gradient-to-r hover:from-[#634AE2]/20 hover:to-[#8b7cf6]/20 hover:border-[#634AE2] backdrop-blur-sm font-semibold"
+                  }`}
+                  onPress={() => onCategoryClick(item.idCategoria)}
+                  radius="lg"
+                  size="lg"
+                >
+                  <span className="truncate font-medium">{item.nombre}</span>
+                </Button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Authors Section */}
+      {/* Authors Section - SIN BARRA DE SCROLL */}
       <div>
         <div className="flex items-center gap-3 mb-6">
           <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] rounded-xl">
@@ -65,7 +68,7 @@ export default function BlogAside({
             Nuestros Especialistas
           </h3>
         </div>
-          <div className="space-y-3">
+        <div className="space-y-3">
           {authorsArray.length > 0 ? (
             authorsArray.map((item) => {
               const isActive = activeAuthors.includes(item.id);
@@ -79,7 +82,8 @@ export default function BlogAside({
                       : "bg-white/80 border-[#634AE2]/40 text-[#634AE2] dark:bg-gray-700/80 dark:text-gray-200 dark:border-gray-500 hover:bg-gradient-to-r hover:from-[#634AE2]/20 hover:to-[#8b7cf6]/20 hover:border-[#634AE2] backdrop-blur-sm font-semibold"
                   }`}
                   onPress={() => onAuthorClick(item.id)}
-                  radius="lg"                  startContent={
+                  radius="lg"
+                  startContent={
                     item.photo ? (
                       <Avatar 
                         src={item.photo} 
@@ -88,7 +92,6 @@ export default function BlogAside({
                       />
                     ) : (
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-800 dark:to-indigo-800 flex items-center justify-center ring-2 ring-white/50">
-                        {/* Basándose en el género del autor o un icono genérico */}
                         <User className="w-4 h-4 text-indigo-600 dark:text-indigo-300" />
                       </div>
                     )
@@ -169,7 +172,6 @@ export default function BlogAside({
             ¿Necesitas ayuda profesional?
           </p>
           
-          {/* Opción 1: Link (primera opción) */}
           <Link href="/ReservarCita" className="block w-full">
             <Button
               className="w-full bg-white/20 text-white hover:bg-white/30 transition-colors"
