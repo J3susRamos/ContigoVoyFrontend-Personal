@@ -128,14 +128,71 @@ export const PersonalForm = ({
 
   const [isSend, setIsSend] = useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
-  const [formData, setFormData] = React.useState<FormData>(initialFormData);
+  // AGREGADO: Asegurar que initialFormData incluya idioma
+  const [formData, setFormData] = React.useState<FormData>({
+    ...initialFormData,
+    idioma: initialFormData.idioma || "" // Inicializar idioma
+  });
   const [rol, setRol] = React.useState("PSICOLOGO");
   const [permissions, setPermissions] = React.useState<number[]>([]);
+  
+  // AGREGADO: Estado para idiomas dinámicos
+  const [idiomasList, setIdiomasList] = useState<SelectItemI[]>([]);
+  const [selectedIdiomas, setSelectedIdiomas] = React.useState<string[]>([]);
+
+  // AGREGADO: useEffect para cargar idiomas dinámicamente
+  useEffect(() => {
+    const fetchIdiomas = async () => {
+      if (rol !== "PSICOLOGO") return;
+      
+      try {
+        const cookies = parseCookies();
+        const token = cookies["session"];
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/idiomas/disponibles`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Idiomas obtenidos del backend:", data);
+          
+          // Transformar la respuesta del backend al formato SelectItemI
+          const idiomasFormateados = data.result.map((idioma: any) => ({
+            textValue: idioma.codigo,
+            showLabel: idioma.nombre,
+          }));
+          
+          setIdiomasList(idiomasFormateados);
+        } else {
+          console.error("Error al obtener idiomas:", response.status);
+        }
+      } catch (error) {
+        console.error("Error al obtener idiomas:", error);
+      }
+    };
+
+    fetchIdiomas();
+  }, [rol]);
+
   const resetForm = () => {
-    setFormData(initialFormData);
+    setFormData({
+      ...initialFormData,
+      idioma: "" // Resetear idioma también
+    });
     setRol("PSICOLOGO");
     setPermissions([]);
+    setSelectedIdiomas([]); // Resetear idiomas seleccionados
   };
+
   const toggleVisibility = () => setIsVisible(!isVisible);
   const handleSubmit = (e: React.FormEvent) => {
     console.log(formData);
@@ -145,7 +202,7 @@ export const PersonalForm = ({
 
   // Función de utilidad para transformar fecha
   const formatFechaNacimiento = (fecha: string | DateValue | Date): string => {
-    if (!fecha) return ""; // 👈 devolvemos string vacío en lugar de null
+    if (!fecha) return "";
 
     if (typeof fecha === "string") {
       return fecha;
@@ -244,13 +301,15 @@ export const PersonalForm = ({
         ? [especialidadesMap["default"]]
         : [];
 
+      // CORREGIDO: Incluir idioma en el payload
       const payload = {
         ...formData,
         fecha_nacimiento: fechaNacimiento,
         especialidades: especialidadesFinal,
+        idioma: formData.idioma, // Incluir el campo idioma
       };
 
-      console.log(" Datos enviados al backend (Psicólogo):", payload);
+      console.log("📤 Datos enviados al backend (Psicólogo):", payload);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}api/psicologos`,
@@ -268,21 +327,21 @@ export const PersonalForm = ({
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Éxito:", data.description);
+        console.log("✅ Éxito:", data.description);
         setShowSuccessModal(true);
       } else {
         toast.warn(data.message || "Error al crear el psicólogo", {
           position: "bottom-right",
           autoClose: 2000,
         });
-        console.error("Error en la solicitud:", data);
+        console.error("❌ Error en la solicitud:", data);
       }
     } catch (error) {
       toast.error("Error de conexión. Intenta más tarde.", {
         position: "top-center",
         autoClose: 2000,
       });
-      console.error("Error al enviar al backend:", error);
+      console.error("❌ Error al enviar al backend:", error);
     } finally {
       setIsSend(false);
     }
@@ -297,12 +356,12 @@ export const PersonalForm = ({
     }
 
     const hoy = new Date();
-    const nacimiento = new Date(date.year, date.month - 1, date.day); // cuidado: month empieza en 0
+    const nacimiento = new Date(date.year, date.month - 1, date.day);
     let edad = hoy.getFullYear() - nacimiento.getFullYear();
     const m = hoy.getMonth() - nacimiento.getMonth();
 
     if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-      edad--; // aún no cumplió años este año
+      edad--;
     }
 
     if (edad < 18) {
@@ -386,7 +445,7 @@ export const PersonalForm = ({
                                   radius="lg"
                                   classNames={{
                                     inputWrapper:
-                                      "flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full h-12", // <-- altura fija y centrado
+                                      "flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full h-12",
                                     input:
                                       "text-gray-900 dark:text-white text-center w-full placeholder:text-center",
                                   }}
@@ -693,6 +752,56 @@ export const PersonalForm = ({
                           </div>
                         ) : null}
 
+                        {/* AGREGADO: Campo de idiomas dinámicos para psicólogos */}
+                        {rol === "PSICOLOGO" ? (
+                          <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
+                            <div className="text-center">
+                              <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
+                                Idiomas que domina
+                              </label>
+                            </div>
+                            <Select
+                              name="idiomas"
+                              isRequired
+                              radius="lg"
+                              labelPlacement="outside"
+                              selectionMode="multiple"
+                              aria-label="Seleccionar idiomas"
+                              placeholder="Seleccione los idiomas que domina"
+                              variant="bordered"
+                              selectedKeys={new Set(selectedIdiomas)}
+                              classNames={{
+                                trigger:
+                                  "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                                value:
+                                  "text-gray-900 dark:text-white text-center",
+                                listboxWrapper: "dark:bg-gray-800",
+                                popoverContent:
+                                  "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                              }}
+                              onSelectionChange={(keys) => {
+                                const selected = Array.from(keys) as string[];
+                                setSelectedIdiomas(selected);
+                                // Guardar idiomas como string separado por comas en formData
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  idioma: selected.join(","),
+                                }));
+                              }}
+                            >
+                              {idiomasList.map((idioma) => (
+                                <SelectItem
+                                  key={idioma.textValue}
+                                  textValue={idioma.textValue}
+                                  className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                >
+                                  {idioma.showLabel}
+                                </SelectItem>
+                              ))}
+                            </Select>
+                          </div>
+                        ) : null}
+
                         {rol !== "PSICOLOGO" ? (
                           <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                             <div className="text-center">
@@ -715,7 +824,7 @@ export const PersonalForm = ({
                               onSelectionChange={(keys) => {
                                 const selected = Array.from(keys).map((k) =>
                                   Number(k)
-                                ); // convierto a number
+                                );
                                 setPermissions(selected);
                                 setFormData((prev) => ({
                                   ...prev,
@@ -795,8 +904,8 @@ export const PersonalForm = ({
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                   <Suceesfully
                     setIsSend={() => {
-                      resetForm(); // limpiar el formulario
-                      setShowSuccessModal(false); // cerrar modal
+                      resetForm();
+                      setShowSuccessModal(false);
                       setIsSend(false);
                     }}
                   />
