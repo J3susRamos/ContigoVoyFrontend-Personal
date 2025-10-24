@@ -43,6 +43,11 @@ function Editar({
   
   const [loading, setLoading] = useState(false);
 
+  // --- INICIO: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
+  const [showOtrasEspecialidades, setShowOtrasEspecialidades] = useState(false);
+  const [otrasEspecialidadesInput, setOtrasEspecialidadesInput] = useState("");
+  // --- FIN: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -141,6 +146,36 @@ function Editar({
       console.log(error);
     }
   };
+
+  // --- INICIO: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
+  // Función simplificada para manejar especialidades personalizadas
+  const handleOtrasEspecialidades = () => {
+    if (!otrasEspecialidadesInput.trim()) {
+      showToast("error", "Por favor ingresa al menos una especialidad");
+      return;
+    }
+
+    const nuevasEspecialidades = otrasEspecialidadesInput
+      .split(',')
+      .map(esp => esp.trim())
+      .filter(esp => esp.length > 0);
+
+    if (nuevasEspecialidades.length === 0) {
+      showToast("error", "Por favor ingresa especialidades válidas");
+      return;
+    }
+
+    // Solo agregar al array local - el backend se encargará de crearlas automáticamente
+    setEspecialidades(prev => [
+      ...prev.filter(esp => esp !== "Otras"),
+      ...nuevasEspecialidades
+    ]);
+
+    setOtrasEspecialidadesInput("");
+    setShowOtrasEspecialidades(false);
+    showToast("success", "Especialidades agregadas correctamente");
+  };
+  // --- FIN: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
 
   // Enviar formulario
   const handleSubmit = async (e: React.FormEvent) => {
@@ -509,7 +544,55 @@ function Editar({
                           <span className="text-sm text-[#634AE2] dark:text-gray-300">{esp.nombre}</span>
                         </label>
                       ))}
+                      
+                      {/* --- INICIO: AGREGADO CHECKBOX "OTRAS" --- */}
+                      <label className="flex items-center gap-2 dark:text-gray-300">
+                        <input
+                          type="checkbox"
+                          checked={showOtrasEspecialidades}
+                          onChange={(e) => {
+                            setShowOtrasEspecialidades(e.target.checked);
+                            if (!e.target.checked) {
+                              setOtrasEspecialidadesInput("");
+                            }
+                          }}
+                          className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
+                        />
+                        <span className="text-sm text-[#634AE2] dark:text-gray-300">Otras</span>
+                      </label>
+                      {/* --- FIN: AGREGADO CHECKBOX "OTRAS" --- */}
                     </div>
+                    
+                    {/* --- INICIO: AGREGADO INPUT PARA OTRAS ESPECIALIDADES --- */}
+                    {showOtrasEspecialidades && (
+                      <div className="mt-4 p-4 bg-white/50 dark:bg-[#232324]/50 rounded-lg border border-[#634AE2]/30">
+                        <label className="block text-sm font-medium text-[#634AE2] dark:text-gray-300 mb-2">
+                          Especifica otras especialidades (separadas por coma)
+                        </label>
+                        <div className="flex gap-2">
+                          <Input
+                            value={otrasEspecialidadesInput}
+                            onChange={(e) => setOtrasEspecialidadesInput(e.target.value)}
+                            placeholder="Ej: Terapia familiar, Psicología deportiva, etc."
+                            className="flex-1"
+                            classNames={{
+                              input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                              inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20"
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            onPress={handleOtrasEspecialidades}
+                            className="bg-[#634AE2] text-white rounded-full"
+                            size="sm"
+                          >
+                            Agregar
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    {/* --- FIN: AGREGADO INPUT PARA OTRAS ESPECIALIDADES --- */}
+
                     <div className="mt-2 flex flex-wrap gap-2">
                       {especialidades.map((esp) => (
                         <span
@@ -555,7 +638,55 @@ function Editar({
                         <span className="text-[#634AE2] dark:text-gray-300">{esp.nombre}</span>
                       </label>
                     ))}
+                    
+                    {/* --- INICIO: AGREGADO CHECKBOX "OTRAS" PARA OTROS ROLES --- */}
+                    <label className="flex items-center gap-2 dark:text-gray-300">
+                      <input
+                        type="checkbox"
+                        checked={showOtrasEspecialidades}
+                        onChange={(e) => {
+                          setShowOtrasEspecialidades(e.target.checked);
+                          if (!e.target.checked) {
+                            setOtrasEspecialidadesInput("");
+                          }
+                        }}
+                        className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
+                      />
+                      <span className="text-[#634AE2] dark:text-gray-300">Otras</span>
+                    </label>
+                    {/* --- FIN: AGREGADO CHECKBOX "OTRAS" PARA OTROS ROLES --- */}
                   </div>
+                  
+                  {/* --- INICIO: AGREGADO INPUT PARA OTRAS ESPECIALIDADES PARA OTROS ROLES --- */}
+                  {showOtrasEspecialidades && (
+                    <div className="mt-4 p-4 bg-white/50 dark:bg-[#232324]/50 rounded-lg border border-[#634AE2]/30">
+                      <label className="block text-sm font-medium text-[#634AE2] dark:text-gray-300 mb-2">
+                        Especifica otras especialidades (separadas por coma)
+                      </label>
+                      <div className="flex gap-2">
+                        <Input
+                          value={otrasEspecialidadesInput}
+                          onChange={(e) => setOtrasEspecialidadesInput(e.target.value)}
+                          placeholder="Ej: Terapia familiar, Psicología deportiva, etc."
+                          className="flex-1"
+                          classNames={{
+                            input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                            inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20"
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          onPress={handleOtrasEspecialidades}
+                          className="bg-[#634AE2] text-white rounded-full"
+                          size="sm"
+                        >
+                          Agregar
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  {/* --- FIN: AGREGADO INPUT PARA OTRAS ESPECIALIDADES PARA OTROS ROLES --- */}
+
                   <div className="mt-2 flex flex-wrap gap-2">
                     {especialidades.map((esp) => (
                       <span

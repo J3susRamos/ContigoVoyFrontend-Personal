@@ -121,6 +121,55 @@ export const DataView = ({
   const [especialidad, setEspecialidad] = useState<number[]>([especialidadesMap["default"]]);
   const [isInvalid, setIsInvalid] = useState(false);
   
+  // --- INICIO: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
+  const [showOtrasEspecialidades, setShowOtrasEspecialidades] = useState(false);
+  const [otrasEspecialidadesInput, setOtrasEspecialidadesInput] = useState("");
+
+  // Función simplificada para manejar especialidades personalizadas
+  const handleOtrasEspecialidades = () => {
+    if (!otrasEspecialidadesInput.trim()) {
+      toast.error("Por favor ingresa al menos una especialidad", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    const nuevasEspecialidades = otrasEspecialidadesInput
+      .split(',')
+      .map(esp => esp.trim())
+      .filter(esp => esp.length > 0);
+
+    if (nuevasEspecialidades.length === 0) {
+      toast.error("Por favor ingresa especialidades válidas", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    // Para DataView, necesitamos un ID temporal para las nuevas especialidades
+    // Usaremos IDs negativos como temporales (el backend las creará automáticamente)
+    const nuevasEspecialidadesIds = nuevasEspecialidades.map((_, index) => -(index + 1));
+    
+    // Agregar a las especialidades seleccionadas
+    setEspecialidad(prev => [...prev, ...nuevasEspecialidadesIds]);
+    
+    // Actualizar el formData
+    setFormData(prev => ({
+      ...prev,
+      especialidades: [...prev.especialidades || [], ...nuevasEspecialidadesIds]
+    }));
+
+    setOtrasEspecialidadesInput("");
+    setShowOtrasEspecialidades(false);
+    toast.success("Especialidades agregadas correctamente", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  };
+  // --- FIN: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
+  
   const handleEspecialidadesChange = (values: string[]) => {
     const especialidadesNumeros = values.map(
       (value) => especialidadesMap[value]
@@ -267,8 +316,59 @@ export const DataView = ({
                       </Checkbox>
                     </div>
                   ))}
+                  
+                  {/* --- INICIO: AGREGADO CHECKBOX "OTRAS" PARA MOBILE --- */}
+                  <div className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <Checkbox
+                      color="primary"
+                      classNames={{
+                        label: "text-gray-900 dark:text-white font-medium capitalize",
+                        wrapper: "before:border-gray-300 dark:before:border-gray-600",
+                      }}
+                      value="otras"
+                      isSelected={showOtrasEspecialidades}
+                      onValueChange={(isSelected) => {
+                        setShowOtrasEspecialidades(isSelected);
+                        if (!isSelected) {
+                          setOtrasEspecialidadesInput("");
+                        }
+                      }}
+                    >
+                      Otras
+                    </Checkbox>
+                  </div>
+                  {/* --- FIN: AGREGADO CHECKBOX "OTRAS" PARA MOBILE --- */}
                 </div>
               </CheckboxGroup>
+
+              {/* --- INICIO: AGREGADO INPUT PARA OTRAS ESPECIALIDADES EN MOBILE --- */}
+              {showOtrasEspecialidades && (
+                <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Especifica otras especialidades (separadas por coma)
+                  </label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={otrasEspecialidadesInput}
+                      onChange={(e) => setOtrasEspecialidadesInput(e.target.value)}
+                      placeholder="Ej: Terapia familiar, Psicología deportiva, etc."
+                      classNames={{
+                        inputWrapper: "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700",
+                        input: "text-gray-900 dark:text-white"
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      onPress={handleOtrasEspecialidades}
+                      className="bg-primary text-white"
+                      size="sm"
+                    >
+                      Agregar
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {/* --- FIN: AGREGADO INPUT PARA OTRAS ESPECIALIDADES EN MOBILE --- */}
             </div>
           </div>
 
@@ -395,8 +495,59 @@ export const DataView = ({
                         </Checkbox>
                       </div>
                     ))}
+                    
+                    {/* --- INICIO: AGREGADO CHECKBOX "OTRAS" PARA DESKTOP --- */}
+                    <div className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <Checkbox
+                        color="primary"
+                        classNames={{
+                          label: "text-gray-900 dark:text-white font-medium capitalize",
+                          wrapper: "before:border-gray-300 dark:before:border-gray-600",
+                        }}
+                        value="otras"
+                        isSelected={showOtrasEspecialidades}
+                        onValueChange={(isSelected) => {
+                          setShowOtrasEspecialidades(isSelected);
+                          if (!isSelected) {
+                            setOtrasEspecialidadesInput("");
+                          }
+                        }}
+                      >
+                        Otras
+                      </Checkbox>
+                    </div>
+                    {/* --- FIN: AGREGADO CHECKBOX "OTRAS" PARA DESKTOP --- */}
                   </div>
                 </CheckboxGroup>
+
+                {/* --- INICIO: AGREGADO INPUT PARA OTRAS ESPECIALIDADES EN DESKTOP --- */}
+                {showOtrasEspecialidades && (
+                  <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Especifica otras especialidades (separadas por coma)
+                    </label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={otrasEspecialidadesInput}
+                        onChange={(e) => setOtrasEspecialidadesInput(e.target.value)}
+                        placeholder="Ej: Terapia familiar, Psicología deportiva, etc."
+                        classNames={{
+                          inputWrapper: "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700",
+                          input: "text-gray-900 dark:text-white"
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        onPress={handleOtrasEspecialidades}
+                        className="bg-primary text-white"
+                        size="sm"
+                      >
+                        Agregar
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                {/* --- FIN: AGREGADO INPUT PARA OTRAS ESPECIALIDADES EN DESKTOP --- */}
               </div>
             </div>
           </div>
