@@ -64,6 +64,11 @@ export default function BlogPreview({
             </div>
           )}
 
+          {/* Línea de separación */}
+          {Data.categoria && (
+            <div className="my-4 border-t border-gray-200 dark:border-gray-700"></div>
+          )}
+
           {/* Title - Now as a Link */}
           <Link href={`/blog/ver?blog=${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white leading-tight group-hover:text-[#634AE2] dark:group-hover:text-[#8b7cf6] transition-colors duration-300 cursor-pointer break-words">
