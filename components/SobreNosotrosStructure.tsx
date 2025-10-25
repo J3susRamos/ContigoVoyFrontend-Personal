@@ -52,15 +52,21 @@ interface ValueCardProps {
 // Componente de tarjeta de valor con imágenes
 
 
-// Componente con íconos SVG/emoji como alternativa
+// Componente con íconos webp
 const ValueCardWithSVG: FC<ValueCardProps> = ({ title, content, icon }) => (
   <motion.div
     whileHover={{ y: -5 }}
     transition={{ type: "tween", duration: 0.2 }}
     className="dark:bg-white/5 bg-white/90 backdrop-blur-lg p-8 rounded-xl dark:border-white/10 border-gray-400 border shadow-lg dark:shadow-gray-800/20 shadow-gray-200 h-full flex flex-col"
   >
-    <div className="mb-4 flex justify-center text-4xl">
-      {icon}
+    <div className="mb-4 flex justify-center">
+      <Image
+        src={`/AboutUs/${icon}.webp`}
+        alt={title}
+        width={50}
+        height={50}
+        className="w-50 h-50"
+      />
     </div>
     <h3 className="text-xl font-semibold mb-3 dark:text-white text-gray-900 text-center">{title}</h3>
     <p className="dark:text-gray-300 text-gray-600 leading-relaxed flex-grow">{content}</p>
@@ -74,12 +80,12 @@ interface AboutUsPageProps {
 export default function AboutUsPage({ qs }: AboutUsPageProps) {
   // Datos de valores para renderizar
   const valores = [
-    { title: "Empatía", content: qs[0]?.valor1 || "Nos conectamos genuinamente con las experiencias y emociones de cada persona.", icon: "❤️" },
-    { title: "Profesionalismo", content: qs[0]?.valor2 || "Mantenemos los más altos estándares éticos y técnicos.", icon: "🎓" },
-    { title: "Accesibilidad", content: qs[0]?.valor3 || "Trabajamos para que la salud mental sea un derecho al alcance de todos.", icon: "🔑" },
-    { title: "Innovación", content: "Exploramos constantemente nuevas formas de mejorar nuestros servicios.", icon: "💡" },
-    { title: "Confidencialidad", content: "Protegemos la privacidad y la confianza de quienes nos eligen.", icon: "🔒" },
-    { title: "Diversidad", content: "Celebramos y respetamos la singularidad de cada persona.", icon: "🌈" }
+    { title: "Empatía", content: qs[0]?.valor1 || "Nos conectamos genuinamente con las experiencias y emociones de cada persona.", icon: "empatia" },
+    { title: "Profesionalismo", content: qs[0]?.valor2 || "Mantenemos los más altos estándares éticos y técnicos.", icon: "profesional" },
+    { title: "Accesibilidad", content: qs[0]?.valor3 || "Trabajamos para que la salud mental sea un derecho al alcance de todos.", icon: "accesibilidad" },
+    { title: "Innovación", content: "Exploramos constantemente nuevas formas de mejorar nuestros servicios.", icon: "innovacion" },
+    { title: "Confidencialidad", content: "Protegemos la privacidad y la confianza de quienes nos eligen.", icon: "confianza" },
+    { title: "Diversidad", content: "Celebramos y respetamos la singularidad de cada persona.", icon: "diversidad" }
   ];
 
   return (
