@@ -45,7 +45,7 @@ const ContactUs = () => {
             <header className="text-white space-y-6 flex flex-col items-center justify-center w-full text-center">
               <h1 
                 style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}} 
-                className="text-cv8 sm:text-cv9 sm:leading-[60px] font-bold w-full"
+                className="text-cv6 sm:text-cv9 sm:leading-[60px] font-bold w-full"
               >
                 ¡La solución que buscas, empieza aquí!
               </h1>
@@ -54,7 +54,7 @@ const ContactUs = () => {
                 <h2 
                   id="beneficios-heading"
                   style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 2px 2px 3px rgba(0,0,0,0.45)"}}
-                  className="text-cv8 sm:text-cv8 font-semibold mt-scv6 w-full"
+                  className="text-cv5 sm:text-cv8 font-semibold mt-scv4 w-full"
                 >
                   Beneficios de acercarte a un centro psicológico
                 </h2>
@@ -64,7 +64,7 @@ const ContactUs = () => {
                 <h2 
                   id="contacto-heading"
                   style={{textShadow: "4px 5px 16px rgba(0,0,0,0.35), 2px 2px 3px rgba(0,0,0,0.45)"}} 
-                  className="text-cv8 sm:text-cv8 font-bold mt-scv6 w-full"
+                  className="text-cv5 sm:text-cv8 font-bold mt-scv4 w-full"
                 >
                   Contáctanos
                 </h2>

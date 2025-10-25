@@ -142,34 +142,29 @@ export default function ChooseUs() {
               className="objet-cover"
               priority 
               sizes="(max-width: 768px) 100vw, 50vw"
-              
             />
           </div>
         </div>
 
-        {/* Columna derecha - Carrusel automático SIN dots */}
-        <div className="flex flex-col justify-center items-center mr-[15px] py-scv7">
-          <div className="embla w-full" ref={emblaRef}>
-            <div className="embla__container">
-              {features.map((feature, index) => (
-                <div className="flex max-w-[550px] embla__slide" key={index}>
-                  <div className="flex-1 flex flex-col items-center gap-y-scv4">
-                    <div className="flex flex-col items-center justify-center w-28 h-28 rounded-full bg-[#634AE2] backdrop-blur-sm transition-all duration-300">
-                      <div className="bg-transparent rounded-full transition-colors duration-300 w-16">
-                        {feature.icon}
-                      </div>
-                    </div>
-
-                    <h3 className="text-cv4 font-bold text-center tracking-normal text-[#634AE2] pb-3 leading-5 px-2">
-                      {feature.title}
-                    </h3>
+        {/* Columna derecha - Lista vertical de features */}
+        <div className="flex flex-col justify-start items-start mr-[15px] py-scv4">
+          <div className="flex flex-col gap-3 w-full">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-3"
+              >
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#634AE2] shrink-0">
+                  <div className="bg-transparent rounded-full w-8">
+                    {feature.icon}
                   </div>
                 </div>
-              ))}
-            </div>
+                <h3 className="text-cv3 font-bold text-[#634AE2]">
+                  {feature.title}
+                </h3>
+              </div>
+            ))}
           </div>
-
-          {/* Eliminado completamente el contenedor de dots para móvil */}
         </div>
       </div>
 

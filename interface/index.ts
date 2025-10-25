@@ -122,6 +122,8 @@ export interface FormData {
   horario: {
     [key: string]: string[][];
   };
+  // AGREGAR ESTA PROPIEDAD
+  idioma?: string; // o string si es requerido
 }
 
 export interface Especialidad {

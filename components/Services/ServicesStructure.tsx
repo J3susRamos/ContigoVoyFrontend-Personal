@@ -122,7 +122,7 @@ export default function ServicesStructure({
                         }}
                         className="px-4 py-2.5 sm:px-6 sm:py-3 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/30 hover:border-white/50 transition-all duration-300 shadow-lg text-xs sm:text-sm w-full sm:w-auto"
                       >
-                        Ver Promociones
+                        Ver Promocion
                       </button>
                     )}
                 </motion.div>

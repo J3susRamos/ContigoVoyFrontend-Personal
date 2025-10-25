@@ -28,7 +28,7 @@ export default function SliderPrice({
       {promotions.length > 0 && (
         <div className="h-[680px] w-full items-center bg-large-gradient">
           <h1 className="text-center p-10 text-4xl text-white font-semibold  ">
-            Promociones
+            Promocion
           </h1>
           <div className="flex justify-center">
             <div className="block max-w-scv17 lg:max-w-scv18 w-full">
