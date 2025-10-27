@@ -14,6 +14,7 @@ import {
   actulizarPsicologo,
   ActualizarPerfilCompletoPsicologo,
   EspecialidadesPsicologoResponse,
+  EspecialidadesResponse,	 
   PacienteDisabled,
   Personal,
 } from "@/interface";
@@ -668,6 +669,65 @@ export async function GetEspecialidadesPsicologos(
   return await res.json();
 }
 
+//Obtener las especialidades
+export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener las especialidades");
+  }
+
+  return await res.json();
+}
+
+//Añadir especialidades nuevas
+export async function addEspecialidad(nombre: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ nombre }),
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al agregar la especialidad");
+  }
+}
+
+//Remover especialidad
+export async function removeEspecialidad(id: number) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al remover la especialidad");
+  }
+}
 //Crear citas en el perfil del paciente
 export async function CreatePersonal(values: Personal) {
   const payload = {

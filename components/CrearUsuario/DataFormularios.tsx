@@ -1,6 +1,7 @@
 import { CreatePersonal } from "@/app/apiRoutes";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons/iconsvg";
 import { FormData, SelectItemI, Roles, Personal } from "@/interface";
+import { GetEspecialidades } from "@/app/apiRoutes";
 import { Flags } from "@/utils/flagsPsicologos";
 import {
   Button,
@@ -16,6 +17,7 @@ import showToast from "../ToastStyle";
 import { parseCookies } from "nookies";
 import { toast } from "react-toastify";
 import { Suceesfully } from "./SuccesFull";
+import DatePickerCustom from "./DatePickerCustom";
 
 // Obtener estos datos de manera dinamica
 const genders: SelectItemI[] = [
@@ -83,6 +85,11 @@ const titles: SelectItemI[] = [
   },
 ];
 
+interface Especialidad {
+  idEspecialidad: number;
+  nombre: string;
+}
+
 export const PersonalForm = ({
   onNext,
   initialFormData,
@@ -91,6 +98,17 @@ export const PersonalForm = ({
   initialFormData: FormData;
 }) => {
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]);
+  const [especialidadesList, setEspecialidadesList] = useState<Especialidad[]>([]);
+  const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] = useState<number[]>([]);
+
+  useEffect(() => {
+    GetEspecialidades().then((res) => {
+      const data = Array.isArray(res.result) ? res.result : [];
+      setEspecialidadesList(data as Especialidad[]);
+    }).catch((err) =>
+      console.error("Error cargando especialidades:", err)
+    );
+  }, []);
 
   useEffect(() => {
     const fetchPermissions = async () => {
@@ -272,15 +290,6 @@ export const PersonalForm = ({
     setFormData((prev) => ({ ...prev, rol: value }));
   };
 
-  const especialidadesMap: Record<string, number> = {
-    "cognitivo-conductual": 1,
-    neuropsicologia: 2,
-    psicoanalisis: 3,
-    psicopedagogia: 4,
-    gestalt: 5,
-    "racional-emotivo": 6,
-  };
-
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleSubmitCreatePsicologo = async () => {
@@ -295,16 +304,11 @@ export const PersonalForm = ({
         ? formatFechaNacimiento(formData.fecha_nacimiento)
         : null;
 
-      // Validar especialidades
-      const especialidadesFinal = especialidadesMap["default"]
-        ? [especialidadesMap["default"]]
-        : [];
-
       // CORREGIDO: Incluir idioma en el payload
       const payload = {
         ...formData,
         fecha_nacimiento: fechaNacimiento,
-        especialidades: especialidadesFinal,
+        especialidades: especialidadesSeleccionadas,
         idioma: formData.idioma, // Incluir el campo idioma
       };
 
@@ -351,7 +355,7 @@ export const PersonalForm = ({
   const handleDateChange = (date: DateValue | null) => {
     if (!date) {
       setErrorFecha("La fecha de nacimiento es obligatoria.");
-      return;
+      return false;
     }
 
     const hoy = new Date();
@@ -365,12 +369,14 @@ export const PersonalForm = ({
 
     if (edad < 18) {
       setErrorFecha("Debe ser mayor de 18 años.");
+      return false;
     } else {
       setErrorFecha(null);
       setFormData((prev) => ({
         ...prev,
         fecha_nacimiento: date,
       }));
+      return true;
     }
   };
 
@@ -435,19 +441,7 @@ export const PersonalForm = ({
                             </div>
                             <div className="w-full flex justify-center">
                               <div className="w-full">
-                                <DatePicker
-                                  labelPlacement="outside"
-                                  isRequired
-                                  variant="bordered"
-                                  maxValue={today(getLocalTimeZone())}
-                                  showMonthAndYearPickers
-                                  radius="lg"
-                                  classNames={{
-                                    inputWrapper:
-                                      "flex items-center justify-center border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full h-12",
-                                    input:
-                                      "text-gray-900 dark:text-white text-center w-full placeholder:text-center",
-                                  }}
+                                <DatePickerCustom
                                   onChange={handleDateChange}
                                 />
                                 {errorFecha && (
@@ -753,52 +747,87 @@ export const PersonalForm = ({
 
                         {/* AGREGADO: Campo de idiomas dinámicos para psicólogos */}
                         {rol === "PSICOLOGO" ? (
-                          <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                            <div className="text-center">
-                              <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                                Idiomas que domina
-                              </label>
+                          <>
+                            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
+                              <div className="text-center">
+                                <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
+                                  Idiomas que domina
+                                </label>
+                              </div>
+                              <Select
+                                name="idiomas"
+                                isRequired
+                                radius="lg"
+                                labelPlacement="outside"
+                                selectionMode="multiple"
+                                aria-label="Seleccionar idiomas"
+                                placeholder="Seleccione los idiomas que domina"
+                                variant="bordered"
+                                selectedKeys={new Set(selectedIdiomas)}
+                                classNames={{
+                                  trigger:
+                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                                  value: "text-gray-900 dark:text-white text-center",
+                                  listboxWrapper: "dark:bg-gray-800",
+                                  popoverContent:
+                                    "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                                }}
+                                onSelectionChange={(keys) => {
+                                  const selected = Array.from(keys) as string[];
+                                  setSelectedIdiomas(selected);
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    idioma: selected.join(","),
+                                  }));
+                                }}
+                              >
+                                {idiomasList.map((idioma) => (
+                                  <SelectItem
+                                    key={idioma.textValue}
+                                    textValue={idioma.textValue}
+                                    className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                  >
+                                    {idioma.showLabel}
+                                  </SelectItem>
+                                ))}
+                              </Select>
                             </div>
-                            <Select
-                              name="idiomas"
-                              isRequired
-                              radius="lg"
-                              labelPlacement="outside"
-                              selectionMode="multiple"
-                              aria-label="Seleccionar idiomas"
-                              placeholder="Seleccione los idiomas que domina"
-                              variant="bordered"
-                              selectedKeys={new Set(selectedIdiomas)}
-                              classNames={{
-                                trigger:
-                                  "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                                value:
-                                  "text-gray-900 dark:text-white text-center",
-                                listboxWrapper: "dark:bg-gray-800",
-                                popoverContent:
-                                  "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
-                              }}
-                              onSelectionChange={(keys) => {
-                                const selected = Array.from(keys) as string[];
-                                setSelectedIdiomas(selected);
-                                // Guardar idiomas como string separado por comas en formData
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  idioma: selected.join(","),
-                                }));
-                              }}
-                            >
-                              {idiomasList.map((idioma) => (
-                                <SelectItem
-                                  key={idioma.textValue}
-                                  textValue={idioma.textValue}
-                                  className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                >
-                                  {idioma.showLabel}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </div>
+
+                            {/* Especialidades */}
+                            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full mt-6">
+                              <div className="text-center">
+                                <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
+                                  Especialidades
+                                </label>
+                              </div>
+                              <Select
+                                selectionMode="multiple"
+                                radius="lg"
+                                variant="bordered"
+                                placeholder="Seleccione una o varias especialidades"
+                                selectedKeys={new Set(especialidadesSeleccionadas.map(String))}
+                                onSelectionChange={(keys) => {
+                                  const selected = Array.from(keys).map((k) => Number(k));
+                                  setEspecialidadesSeleccionadas(selected);
+                                  setFormData((prev) => ({ ...prev, especialidades: selected }));
+                                }}
+                                classNames={{
+                                  trigger:
+                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                                  value: "text-gray-900 dark:text-white text-center",
+                                  listboxWrapper: "dark:bg-gray-800",
+                                  popoverContent:
+                                    "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                                }}
+                              >
+                                {especialidadesList.map((esp) => (
+                                  <SelectItem key={String(esp.idEspecialidad)} textValue={esp.nombre}>
+                                    {esp.nombre}
+                                  </SelectItem>
+                                ))}
+                              </Select>
+                            </div>
+                          </>
                         ) : null}
 
                         {rol !== "PSICOLOGO" ? (
