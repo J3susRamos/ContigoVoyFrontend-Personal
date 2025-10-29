@@ -26,7 +26,114 @@ const FILTER_OPTIONS = {
     { nombre: "Pareja", valor: "pareja" },
     { nombre: "Adulto", valor: "adulto" },
   ],
+  // 🔄 ESPECIALIDADES: Ahora es un array vacío que se llenará desde el backend
+  especialidad: [] as { nombre: string; valor: string }[],
 };
+
+// 🔄 TEMPORAL: Función con debug completo
+async function GetEspecialidades(): Promise<{ nombre: string; valor: string }[]> {
+  try {
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`;
+    console.log('🔄 [GetEspecialidades] Iniciando petición...');
+    console.log('🔍 [GetEspecialidades] URL completa:', apiUrl);
+    console.log('🔍 [GetEspecialidades] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+    
+    const res = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    console.log('📡 [GetEspecialidades] Response Status:', res.status);
+    console.log('📡 [GetEspecialidades] Response OK:', res.ok);
+    console.log('📡 [GetEspecialidades] Response URL:', res.url);
+    
+    if (!res.ok) {
+      console.error('❌ [GetEspecialidades] HTTP Error:', res.status, res.statusText);
+      throw new Error(`HTTP error! status: ${res.status} - ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    console.log('📊 [GetEspecialidades] Respuesta completa recibida:', data);
+    console.log('🔍 [GetEspecialidades] Tipo de data:', typeof data);
+    console.log('🔍 [GetEspecialidades] Keys de data:', Object.keys(data));
+    console.log('🔍 [GetEspecialidades] Es array?:', Array.isArray(data));
+    
+    if (data && typeof data === 'object') {
+      console.log('🔍 [GetEspecialidades] Propiedades del objeto:');
+      Object.keys(data).forEach(key => {
+        console.log(`   - ${key}:`, data[key], `(tipo: ${typeof data[key]}, es array: ${Array.isArray(data[key])})`);
+      });
+    }
+    
+    // Probar diferentes formatos de respuesta
+    let especialidadesData = [];
+    
+    if (data.status_code === 200 && data.data && Array.isArray(data.data)) {
+      console.log('✅ [GetEspecialidades] Formato detectado: { status_code: 200, data: [...] }');
+      especialidadesData = data.data;
+    } else if (Array.isArray(data)) {
+      console.log('✅ [GetEspecialidades] Formato detectado: [...] (array directo)');
+      especialidadesData = data;
+    } else if (data.result && Array.isArray(data.result)) {
+      console.log('✅ [GetEspecialidades] Formato detectado: { result: [...] }');
+      especialidadesData = data.result;
+    } else if (data.especialidades && Array.isArray(data.especialidades)) {
+      console.log('✅ [GetEspecialidades] Formato detectado: { especialidades: [...] }');
+      especialidadesData = data.especialidades;
+    } else if (data.status_message === "OK" && data.result && Array.isArray(data.result)) {
+      console.log('✅ [GetEspecialidades] Formato detectado: { status_message: "OK", result: [...] }');
+      especialidadesData = data.result;
+    } else {
+      console.log('🔍 [GetEspecialidades] Buscando arrays en la respuesta...');
+      // Buscar cualquier array en la respuesta
+      const arrays = Object.values(data).filter(value => Array.isArray(value));
+      console.log('🔍 [GetEspecialidades] Arrays encontrados:', arrays.length);
+      
+      if (arrays.length > 0) {
+        especialidadesData = arrays[0];
+        console.log('✅ [GetEspecialidades] Usando primer array encontrado:', arrays[0]);
+      } else {
+        console.log('❌ [GetEspecialidades] No se encontraron arrays en la respuesta');
+        console.log('🔍 [GetEspecialidades] Data completa para análisis:', JSON.stringify(data, null, 2));
+      }
+    }
+    
+    console.log('🔢 [GetEspecialidades] Especialidades extraídas:', especialidadesData);
+    console.log('🔢 [GetEspecialidades] Cantidad de especialidades:', especialidadesData.length);
+    
+    if (especialidadesData.length > 0) {
+      // Formatear las especialidades
+      const formatted = especialidadesData.map((esp: any, index: number) => {
+        console.log(`🔍 [GetEspecialidades] Procesando especialidad ${index}:`, esp);
+        
+        // Manejar diferentes estructuras de objeto
+        const nombre = esp.nombre || esp.name || esp.especialidad || esp;
+        const valor = esp.valor || esp.value || esp.id || nombre;
+// ELIMINA completamente la normalización que convierte espacios a guiones
+        
+        const result = {
+          nombre: typeof nombre === 'string' ? nombre : String(nombre),
+          valor: typeof valor === 'string' ? valor : String(valor)
+        };
+        
+        console.log(`🔍 [GetEspecialidades] Especialidad ${index} formateada:`, result);
+        return result;
+      });
+      
+      console.log('✨ [GetEspecialidades] Especialidades finales formateadas:', formatted);
+      return formatted;
+    }
+    
+    console.error('❌ [GetEspecialidades] No se pudieron extraer especialidades');
+    throw new Error("No se pudieron extraer especialidades de la respuesta");
+  } catch (error) {
+    console.error("💥 [GetEspecialidades] Error completo:", error);
+    throw error;
+  }
+}
 
 interface ReservarComponentSearchProps {
   onSearchChange: (term: string) => void;
@@ -36,6 +143,7 @@ interface ReservarComponentSearchProps {
       genero: string[];
       idioma: string[];
       enfoque: string[];
+      especialidad: string[];
     }>
   >;
 }
@@ -46,12 +154,56 @@ export default function ReservarComponentSearch({
 }: ReservarComponentSearchProps) {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filterOptions, setFilterOptions] = useState(FILTER_OPTIONS);
+  const [isLoadingEspecialidades, setIsLoadingEspecialidades] = useState(true);
   const [localFilters, setLocalFilters] = useState({
     pais: [] as string[],
     genero: [] as string[],
     idioma: [] as string[],
     enfoque: [] as string[],
+    especialidad: [] as string[],
   });
+
+  // 🔄 CORREGIDO: Usar la función de la API
+  useEffect(() => {
+    const loadEspecialidades = async () => {
+      try {
+        setIsLoadingEspecialidades(true);
+        console.log('🔄 [Componente] Iniciando carga de especialidades...');
+        
+        const especialidades = await GetEspecialidades();
+        
+        console.log('✅ [Componente] Especialidades cargadas exitosamente:', especialidades);
+        
+        setFilterOptions(prev => ({
+          ...prev,
+          especialidad: especialidades
+        }));
+      } catch (error) {
+        console.error('💥 [Componente] Error cargando especialidades:', error);
+        // Usar especialidades por defecto si hay error
+        console.log('🔄 [Componente] Usando especialidades por defecto...');
+        setFilterOptions(prev => ({
+          ...prev,
+          especialidad: [
+            { nombre: "Cognitivo-conductual", valor: "cognitivo-conductual" },
+            { nombre: "Gestalt humanista", valor: "gestalt-humanista" },
+            { nombre: "Neuropsicología", valor: "neuropsicologia" },
+            { nombre: "Psicoanálisis", valor: "psicoanalisis" },
+            { nombre: "Psicología Deportiva", valor: "psicologia-deportiva" },
+            { nombre: "Psicologia Familiar", valor: "psicologia-familiar" },
+            { nombre: "Psicología forense", valor: "psicologia-forense" },
+            { nombre: "Psicopedagogía", valor: "psicopedagogia" },
+          ]
+        }));
+      } finally {
+        setIsLoadingEspecialidades(false);
+        console.log('✅ [Componente] Carga de especialidades finalizada');
+      }
+    };
+
+    loadEspecialidades();
+  }, []);
 
   const handleCheckboxChange = (
     filterKey: keyof typeof FILTER_OPTIONS,
@@ -71,6 +223,8 @@ export default function ReservarComponentSearch({
   };
 
   useEffect(() => {
+    console.log('🔍 [Componente] Filtros actualizados:', localFilters);
+  console.log('🔍 [Componente] Especialidades seleccionadas:', localFilters.especialidad);
     setFilters(localFilters);
   }, [localFilters, setFilters]);
 
@@ -83,6 +237,7 @@ export default function ReservarComponentSearch({
     setSearchTerm(term);
     onSearchChange(term);
   };
+
   const renderFilterSection = (
     title: string,
     filterKey: keyof typeof FILTER_OPTIONS
@@ -93,30 +248,44 @@ export default function ReservarComponentSearch({
         {title}
       </h4>
       <div className="space-y-3">
-        {FILTER_OPTIONS[filterKey].map((item, index) => (
-          <div
-            key={`${filterKey}-${index}`}
-            className="flex items-center space-x-3 p-2 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-colors duration-200"
-          >
-            <Checkbox
-              id={`${filterKey}-${index}`}
-              checked={localFilters[filterKey].includes(item.valor)}
-              onCheckedChange={() =>
-                handleCheckboxChange(filterKey, item.valor)
-              }
-              className="text-lg rounded-md border-2 border-gray-300 dark:border-gray-500 data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-purple-500 data-[state=checked]:to-indigo-500 data-[state=checked]:border-transparent"
-            />
-            <label
-              htmlFor={`${filterKey}-${index}`}
-              className="text-base font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200 flex-1"
+        {filterKey === 'especialidad' && isLoadingEspecialidades ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="flex items-center space-x-3 p-2">
+              <div className="w-5 h-5 bg-gray-300 dark:bg-gray-600 rounded-md animate-pulse"></div>
+              <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4 animate-pulse"></div>
+            </div>
+          ))
+        ) : filterOptions[filterKey].length > 0 ? (
+          filterOptions[filterKey].map((item, index) => (
+            <div
+              key={`${filterKey}-${index}`}
+              className="flex items-center space-x-3 p-2 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-colors duration-200"
             >
-              {item.nombre}
-            </label>
-          </div>
-        ))}
+              <Checkbox
+                id={`${filterKey}-${index}`}
+                checked={localFilters[filterKey].includes(item.valor)}
+                onCheckedChange={() =>
+                  handleCheckboxChange(filterKey, item.valor)
+                }
+                className="text-lg rounded-md border-2 border-gray-300 dark:border-gray-500 data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-purple-500 data-[state=checked]:to-indigo-500 data-[state=checked]:border-transparent"
+              />
+              <label
+                htmlFor={`${filterKey}-${index}`}
+                className="text-base font-medium text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200 flex-1"
+              >
+                {item.nombre}
+              </label>
+            </div>
+          ))
+        ) : (
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+            No hay opciones disponibles
+          </p>
+        )}
       </div>
     </div>
   );
+
   return (
     <div className="w-full p-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl">
       <div className="mb-6">
@@ -192,6 +361,8 @@ export default function ReservarComponentSearch({
         {renderFilterSection("Género", "genero")}
         {renderFilterSection("Idioma", "idioma")}
         {renderFilterSection("Enfoque", "enfoque")}
+        {/* 🔄 ESPECIALIDADES: Ahora se cargan dinámicamente desde el backend correcto */}
+        {renderFilterSection("Especialidad", "especialidad")}
       </div>
     </div>
   );

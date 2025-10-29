@@ -11,34 +11,45 @@ export default function ReservarCitaPage() {
     pais: [],
     genero: [],
     idioma: [],
-    enfoque: []
+    enfoque: [],
+    especialidad: [] // ✅ INICIALIZAR LA NUEVA PROPIEDAD
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [page, setPage] = useState(1);
-  const [perPage] = useState(6);  const [lastPage, setLastPage] = useState<number>(1);
+  const [perPage] = useState(6);
+  const [lastPage, setLastPage] = useState<number>(1);
   const [error, setError] = useState<string | null>(null);
 
   const handleFilterChange = useCallback((newFilters: PsicologoFilters, newSearchTerm?: string) => {
+    console.log('🔍 [PAGE] handleFilterChange llamado con:', newFilters);
+    console.log('🔍 [PAGE] Especialidades seleccionadas:', newFilters.especialidad);
+    
     setPage(1);
     setFilters(newFilters);
     if (newSearchTerm !== undefined) {
       setSearchTerm(newSearchTerm);
     }
-  }, []);  useEffect(() => {
+  }, []);
+
+  useEffect(() => {
     async function fetchData() {
       try {
+        console.log('🔍 [PAGE] Llamando GetPsicologos con filtros:', filters);
+        
         const data = await GetPsicologos(
           {
             pais: filters.pais || [],
             genero: filters.genero || [],
             idioma: filters.idioma || [],
-            enfoque: filters.enfoque || []
+            enfoque: filters.enfoque || [],
+            especialidad: filters.especialidad || [] // 🔄 AGREGAR ESTO
           }, 
           searchTerm,
           page, 
           perPage
         );
         
+        console.log('✅ [PAGE] Psicólogos recibidos:', data.result.data.length);
         setPsicologos(data.result.data);
         setLastPage(data.result.pagination.last_page);
         setError(null);
@@ -55,7 +66,8 @@ export default function ReservarCitaPage() {
     <div>
       {error && (
         <p className="flex items-center justify-center h-screen">{error}</p>
-      )}      {psicologos ? (
+      )}
+      {psicologos ? (
         <ReservarComponents
           data={psicologos}
           onFilterChange={handleFilterChange}
