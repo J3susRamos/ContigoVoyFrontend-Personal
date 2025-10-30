@@ -14,6 +14,10 @@ import { Flags } from "@/utils/flagsPsicologos";
 
 type Especialidad = { idEspecialidad: number; nombre: string };
 
+// --- INICIO: AGREGADO TIPO PARA IDIOMAS ---
+type Idioma = { codigo: string; nombre: string };
+// --- FIN: AGREGADO TIPO PARA IDIOMAS ---
+
 function Editar({
   isEditOpen,
   setIsEditOpen,
@@ -41,6 +45,11 @@ function Editar({
   const [especialidades, setEspecialidades] = useState<string[]>([]);
   const [allEspecialidades, setAllEspecialidades] = useState<Especialidad[]>([]);
   
+  // --- INICIO: AGREGADO ESTADOS PARA IDIOMAS ---
+  const [idiomas, setIdiomas] = useState<string[]>([]);
+  const [allIdiomas, setAllIdiomas] = useState<Idioma[]>([]);
+  // --- FIN: AGREGADO ESTADOS PARA IDIOMAS ---
+  
   const [loading, setLoading] = useState(false);
 
   // --- INICIO: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
@@ -59,6 +68,17 @@ function Editar({
         setEmail(parsed.email || "");
         setImagen(parsed.imagen || "");
         setEspecialidades(parsed.especialidades || []);
+        
+        // --- INICIO: AGREGADO CARGAR IDIOMAS DEL USUARIO ---
+        if ((parsed as any).idioma) {
+          const idiomasArray = typeof (parsed as any).idioma === 'string' 
+            ? (parsed as any).idioma.split(',').filter(Boolean)
+            : Array.isArray((parsed as any).idioma) 
+              ? (parsed as any).idioma 
+              : [];
+          setIdiomas(idiomasArray);
+        }
+        // --- FIN: AGREGADO CARGAR IDIOMAS DEL USUARIO ---
         
         // Fetch additional psicólogo data if it's a psychologist
         if (parsed.rol === 'PSICOLOGO' && parsed.idpsicologo) {
@@ -86,6 +106,17 @@ function Editar({
         setGenero(psicologoData.genero || "");
         setExperiencia(psicologoData.experiencia || 0);
         setFechaNacimiento(psicologoData.fecha_nacimiento || "");
+        
+        // --- INICIO: AGREGADO CARGAR IDIOMAS DEL PSICÓLOGO ---
+        if (psicologoData.idioma) {
+          const idiomasArray = typeof psicologoData.idioma === 'string' 
+            ? psicologoData.idioma.split(',').filter(Boolean)
+            : Array.isArray(psicologoData.idioma) 
+              ? psicologoData.idioma 
+              : [];
+          setIdiomas(idiomasArray);
+        }
+        // --- FIN: AGREGADO CARGAR IDIOMAS DEL PSICÓLOGO ---
       }
     } catch (error) {
       console.error("Error fetching psicólogo data:", error);
@@ -110,6 +141,95 @@ function Editar({
     };
     fetchAllEspecialidades();
   }, []);
+
+// --- INICIO: AGREGADO CARGAR IDIOMAS DISPONIBLES ---
+useEffect(() => {
+  const fetchAllIdiomas = async () => {
+    try {
+      console.log("🔍 Iniciando carga de idiomas desde API pública...");
+
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/';
+      const url = `${API_URL}api/psicologos/idiomas/disponibles`;
+      
+      console.log("🌐 URL de la API:", url);
+
+      // Como la ruta es pública, no necesitamos token
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+
+      console.log("📡 Response status:", response.status);
+      console.log("📡 Response ok:", response.ok);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log("✅ Respuesta COMPLETA de la API:", data);
+        
+        // Verificar la estructura según el método del backend
+        // El método devuelve: { result: array_de_idiomas }
+        if (data && data.result && Array.isArray(data.result)) {
+          console.log("🎯 Idiomas encontrados en data.result:", data.result);
+          console.log("📊 Cantidad de idiomas:", data.result.length);
+          setAllIdiomas(data.result);
+        } else {
+          console.warn("⚠️ Estructura de respuesta inesperada, usando fallback");
+          // Fallback con datos básicos
+          const fallbackIdiomas = [
+            { codigo: 'es', nombre: 'Español' },
+            { codigo: 'en', nombre: 'Inglés' }
+          ];
+          setAllIdiomas(fallbackIdiomas);
+        }
+      } else {
+        console.error("❌ Error HTTP:", response.status, response.statusText);
+        
+        // Intentar obtener más detalles del error
+        try {
+          const errorText = await response.text();
+          console.error("📄 Detalles del error:", errorText);
+        } catch (e) {
+          console.error("📄 No se pudieron obtener detalles del error");
+        }
+        
+        // Fallback con datos básicos en caso de error
+        const fallbackIdiomas = [
+          { codigo: 'es', nombre: 'Español' },
+          { codigo: 'en', nombre: 'Inglés' },
+          { codigo: 'fr', nombre: 'Francés' },
+          { codigo: 'pt', nombre: 'Portugués' }
+        ];
+        setAllIdiomas(fallbackIdiomas);
+      }
+    } catch (error) {
+      console.error("💥 Error de conexión:", error);
+      // Fallback en caso de error de red
+      const fallbackIdiomas = [
+        { codigo: 'es', nombre: 'Español' },
+        { codigo: 'en', nombre: 'Inglés' }
+      ];
+      setAllIdiomas(fallbackIdiomas);
+    }
+  };
+
+  if (isEditOpen && user?.rol === 'PSICOLOGO') {
+    console.log("🎬 Condiciones cumplidas - ejecutando fetchAllIdiomas");
+    console.log("👤 Usuario actual:", user?.rol);
+    fetchAllIdiomas();
+  } else {
+    console.log("⏸️ Condiciones no cumplidas:", {
+      isEditOpen,
+      userRol: user?.rol,
+      esPsicologo: user?.rol === 'PSICOLOGO'
+    });
+  }
+}, [isEditOpen, user?.rol]);
+// --- FIN: AGREGADO CARGAR IDIOMAS DISPONIBLES ---
+
+
 
   useEffect(() => {
     const fetchEspecialidadesPsicologo = async () => {
@@ -198,6 +318,9 @@ function Editar({
           genero,
           experiencia,
           especialidades,
+          // --- INICIO: AGREGADO INCLUIR IDIOMAS EN EL PAYLOAD ---
+          idioma: idiomas.join(","), // Convertir array a string separado por comas
+          // --- FIN: AGREGADO INCLUIR IDIOMAS EN EL PAYLOAD ---
         };
 
         await actualizarPerfilCompletoPsicologo(id as number, dataCompleta);
@@ -217,13 +340,16 @@ function Editar({
       setIsEditOpen(false);
 
       // Actualiza el estado user y el localStorage en el componente padre
-      const updatedUser: UsuarioLocalStorageUpdate = {
+      const updatedUser: UsuarioLocalStorageUpdate & { idioma?: string } = {
         ...user,
         nombre,
         apellido,
         email: user?.email || email, // Mantener el email original
         imagen,
         especialidades,
+        // --- INICIO: AGREGADO ACTUALIZAR IDIOMAS EN EL USER ---
+        idioma: idiomas.join(","),
+        // --- FIN: AGREGADO ACTUALIZAR IDIOMAS EN EL USER ---
         id: user?.id ?? 0,
         idpsicologo: user?.idpsicologo ?? 0,
         rol: user?.rol ?? "",
@@ -511,6 +637,53 @@ function Editar({
                       />
                     </div>
                   </div>
+
+                  {/* --- INICIO: AGREGADO SECCIÓN IDIOMAS --- */}
+                  <div>
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
+                      Idiomas que Domina
+                    </label>
+                    <Select
+                      selectionMode="multiple"
+                      selectedKeys={new Set(idiomas)}
+                      onSelectionChange={(keys) => {
+                        const selected = Array.from(keys) as string[];
+                        setIdiomas(selected);
+                      }}
+                      placeholder="Selecciona los idiomas que dominas"
+                      className="w-full"
+                      classNames={{
+                        trigger: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
+                        popoverContent: "dark:bg-[#232324] dark:border-white/20",
+                        listbox: "dark:bg-[#232324]",
+                      }}
+                    >
+                      {allIdiomas.map((idioma) => (
+                        <SelectItem 
+                          key={idioma.codigo}
+                          classNames={{
+                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
+                          }}
+                        >
+                          {idioma.nombre}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {idiomas.map((idiomaCodigo) => {
+                        const idiomaInfo = allIdiomas.find(idioma => idioma.codigo === idiomaCodigo);
+                        return (
+                          <span
+                            key={idiomaCodigo}
+                            className="bg-[#634AE2] dark:bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs"
+                          >
+                            {idiomaInfo ? idiomaInfo.nombre : idiomaCodigo}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {/* --- FIN: AGREGADO SECCIÓN IDIOMAS --- */}
 
                   {/* Especialidades */}
                   <div>
