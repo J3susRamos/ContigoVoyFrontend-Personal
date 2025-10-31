@@ -1,5 +1,5 @@
 "use client";
-// cambio
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   Popover,
@@ -13,14 +13,12 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import { today, getLocalTimeZone, CalendarDate, CalendarDateTime, ZonedDateTime } from "@internationalized/date";
+import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
 
 interface DatePickerCustomProps extends CalendarProps {
-  onConfirm?: (date: CalendarDate | null) => void;
+  onConfirm?: (date: any) => void;
   label?: string;
 }
-
-type DateType = CalendarDate | CalendarDateTime | ZonedDateTime;
 
 export default function DatePickerCustom({
   onConfirm,
@@ -28,14 +26,10 @@ export default function DatePickerCustom({
   ...props
 }: DatePickerCustomProps) {
   const defaultDate = new CalendarDate(today(getLocalTimeZone()).year - 100, today(getLocalTimeZone()).month, 1); //100 años antes para evitar bypass de fecha
-  const [tempDate, setTempDate] = useState<DateType>(
-    (props.value as DateType) || defaultDate
+  const [tempDate, setTempDate] = useState<any>(props.value || defaultDate);
+  const [confirmedDate, setConfirmedDate] = useState<any>(
+    props.value || defaultDate
   );
-
-  const [confirmedDate, setConfirmedDate] = useState<CalendarDate | null>(
-    (props.value as CalendarDate) || defaultDate
-  );
-
   const [isOpen, setIsOpen] = useState(false);
 
   const calendarWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -68,11 +62,17 @@ export default function DatePickerCustom({
     return () => mo.disconnect();
   }, [isOpen, tempDate]);
 
-  const formatDate = (date: CalendarDate | null): string => {
+  const formatDate = (date: any) => {
     if (!date) return "";
-
-    const d = date.toDate(getLocalTimeZone());
-    return d.toLocaleDateString("es-PE", {
+    if (typeof date.toDate === "function") {
+      const d = date.toDate(getLocalTimeZone());
+      return d.toLocaleDateString("es-PE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    }
+    return new Date(date).toLocaleDateString("es-PE", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -89,9 +89,12 @@ export default function DatePickerCustom({
 
   useEffect(() => {
     if (!tempDate) return;
-    const y = Math.min(Math.max(tempDate.year, minYear), currentYear);
-    const m = tempDate.month || 1;
+    let y = tempDate.year;
+    let m = tempDate.month || 1;
     let d = tempDate.day || 1;
+
+    if (y > currentYear) y = currentYear;
+    if (y < minYear) y = minYear;
 
     const maxDay = new Date(y, m, 0).getDate();
     if (d > maxDay) d = maxDay;
@@ -99,7 +102,7 @@ export default function DatePickerCustom({
     if (y !== tempDate.year || d !== tempDate.day) {
       setTempDate(new CalendarDate(y, m, d));
     }
-  }, [tempDate, currentYear, minYear]);
+  }, []);
 
   const handleMonthChange = (month: number) => {
     const currentDay = (tempDate && tempDate.day) || 1;
@@ -122,20 +125,8 @@ export default function DatePickerCustom({
   };
 
   const handleConfirm = () => {
-    let calendarDate: CalendarDate | null = null;
-
-    if (!tempDate) {
-      calendarDate = null;
-    } else if (tempDate instanceof CalendarDate) {
-      calendarDate = tempDate;
-    } else if ("toCalendarDate" in tempDate && typeof tempDate.toCalendarDate === "function") {
-      calendarDate = tempDate.toCalendarDate();
-    } else {
-      calendarDate = null;
-    }
-
-    setConfirmedDate(calendarDate);
-    if (onConfirm) onConfirm(calendarDate);
+    setConfirmedDate(tempDate);
+    if (onConfirm) onConfirm(tempDate);
     setIsOpen(false);
   };
 

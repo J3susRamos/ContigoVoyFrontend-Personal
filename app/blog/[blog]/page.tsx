@@ -225,7 +225,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
       ...blog.tema.split(" ").filter((word) => word.length > 3),
     ],
     alternates: {
-      canonical: `https://centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
+      canonical: `https://www.centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
     },
     robots: {
       index: true,

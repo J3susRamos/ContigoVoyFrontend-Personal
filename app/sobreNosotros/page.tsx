@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     "consulta virtual",
   ],
   alternates: {
-    canonical: "https://centropsicologicocontigovoy.com/sobreNosotros/",
+    canonical: "https://www.centropsicologicocontigovoy.com/sobreNosotros/",
   },
   robots: {
     index: true,
