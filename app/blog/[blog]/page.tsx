@@ -1,4 +1,6 @@
-export async function generateStaticParams() {
+
+export const dynamic = "force-dynamic"; 
+/*export async function generateStaticParams() {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}api/blogs/slugs`,
@@ -11,13 +13,13 @@ export async function generateStaticParams() {
 
     return data.result.map((b: { slug: string }) => ({ blog: b.slug.toString() }));
   } catch (err) {
-    console.warn("⚠ No se pudo acceder a la API, usando rutas de fallback");
+    console.warn("⚠ No se pudo acceder a la API, usando rutas de fallback "+err);
     return [
       { blog: "bienestar-emocional" },
       { blog: "autoestima-y-confianza" },
     ];
   }
-}
+}*/
 // cambio
 
 import Link from "next/link";
