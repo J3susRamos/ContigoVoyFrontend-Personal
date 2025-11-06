@@ -1,6 +1,5 @@
 
-export const dynamic = "force-dynamic"; 
-/*export async function generateStaticParams() {
+export async function generateStaticParams() {
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}api/blogs/slugs`,
@@ -19,7 +18,7 @@ export const dynamic = "force-dynamic";
       { blog: "autoestima-y-confianza" },
     ];
   }
-}*/
+}
 // cambio
 
 import Link from "next/link";
