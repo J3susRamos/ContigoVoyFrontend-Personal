@@ -2,5 +2,7 @@ User-Agent: *
 Allow: /
 Disallow: /user/
 Disallow: /paciente/
+Disallow: /manifest.json
+Disallow: /favicon.ico
 
 Sitemap: https://centropsicologicocontigovoy.com/sitemap.xml
