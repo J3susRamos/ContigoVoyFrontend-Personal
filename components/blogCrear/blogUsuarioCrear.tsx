@@ -640,6 +640,15 @@ export default function BlogUsuarioCrear() {
         contenido: sanitizedContenido, // Contiene HTML con imágenes inline
         imagenes: allImages, // Solo imágenes del carrusel, NO las del contenido
         idPsicologo: finalIdPsicologo,
+        metaTitle: metaTitle.trim(),
+        keywords: keywords.trim(),
+        metaDescription: metaDescription.trim(),
+        imagenesMeta: allImages.map((img) => ({
+          url: img,
+          altText: "",   // puedes agregar inputs para esto si quieres
+          title: "",
+        })),
+        
       };
 
       console.log("Final data to send:", {
@@ -894,6 +903,11 @@ export default function BlogUsuarioCrear() {
     setOriginalIdPsicologo(null);
   }, []);
 
+
+const [metaTitle, setMetaTitle] = useState<string>(""); // Título Meta
+const [keywords, setKeywords] = useState<string>("");   // Keywords
+const [metaDescription, setMetaDescription] = useState<string>(""); // Descripción Meta
+
   return (
     <div className="dark:bg-[#020202] min-h-screen">
       <div className="w-full h-16 bg-[#4d0b73] items-center justify-start flex">
@@ -936,6 +950,71 @@ export default function BlogUsuarioCrear() {
       {view === "crear" ? (
         <div className="flex flex-col md:flex-row gap-10 mx-auto px-10 mt-8 mb-8 max-w-scv18 h-full">
           <div className="flex-1 flex flex-col justify-between gap-y-scv8 items-center w-full mx-auto bg-slate-200 dark:bg-[#121212] border border-[#f0f0f0] dark:border dark:border-white/20 rounded-lg p-scv4">
+
+
+            {/* Metadatos SEO */}
+            <div className="w-full">
+              <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
+                Metadatos SEO
+              </h1>
+
+              {/* Título Meta */}
+              <div className="mb-scv4">
+                <label className="block mb-1 text-gray-700 dark:text-gray-200 font-medium">
+                  Título Meta <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  placeholder="Título para SEO"
+                  classNames={{
+                    input: "dark:!text-gray-100",
+                    inputWrapper:
+                      "!bg-white dark:!bg-[#19191a] border-2 border-[#634AE2] rounded-lg",
+                  }}
+                  radius="lg"
+                  value={metaTitle}
+                  onChange={(e) => setMetaTitle(e.target.value)}
+                />
+              </div>
+
+              {/* Keywords */}
+              <div className="mb-scv4">
+                <label className="block mb-1 text-gray-700 dark:text-gray-200 font-medium">
+                  Keywords (separadas por comas) <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  placeholder="ejemplo: react, tailwind, seo"
+                  classNames={{
+                    input: "dark:!text-gray-100",
+                    inputWrapper:
+                      "!bg-white dark:!bg-[#19191a] border-2 border-[#634AE2] rounded-lg",
+                  }}
+                  radius="lg"
+                  value={keywords}
+                  onChange={(e) => setKeywords(e.target.value)}
+                />
+              </div>
+
+
+              {/* Descripción Meta */}
+              <div className="mb-scv4">
+                <label className="block mb-1 text-gray-700 dark:text-gray-200 font-medium">
+                  Descripción Meta
+                </label>
+                <Textarea
+                  placeholder="Breve descripción para SEO (opcional)"
+                  classNames={{
+                    input: "dark:!text-gray-100",
+                    inputWrapper:
+                      "!bg-white dark:!bg-[#19191a] border-2 border-[#634AE2] rounded-lg",
+                  }}
+                  radius="lg"
+                  minRows={2}
+                  maxRows={4}
+                  value={metaDescription}
+                  onChange={(e) => setMetaDescription(e.target.value)}
+                />
+              </div>
+            </div>
 
             {/* Titulo */}
             <div className="w-full">
@@ -1098,6 +1177,8 @@ export default function BlogUsuarioCrear() {
                   </div>
                 ))}
 
+                
+
                 {/* Mostrar preview de URLs válidas */}
                 {urls.filter(
                   (url) => url.trim() !== "" && url.startsWith("http"),
@@ -1179,5 +1260,6 @@ export default function BlogUsuarioCrear() {
         </div>
       )}
     </div>
+    
   );
 }

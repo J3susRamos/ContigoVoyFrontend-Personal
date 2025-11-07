@@ -146,6 +146,17 @@ export interface BlogApi {
   contenido: string;
   imagenes: string[]; // Array de imágenes
   idPsicologo: number | null;
+
+  metaTitle?: string;         // Título SEO
+  keywords?: string;          // Palabras clave
+  metaDescription?: string;   // Descripción SEO
+
+  // ✅ Metadatos de las imágenes (opcional)
+  imagenesMeta?: {
+    url: string;              // URL o base64 de la imagen
+    altText?: string;         // Texto alternativo
+    title?: string;           // Título de la imagen
+  }[];
 }
 
 export interface BlogApiGEt {
