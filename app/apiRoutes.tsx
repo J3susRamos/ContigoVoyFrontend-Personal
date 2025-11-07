@@ -160,6 +160,7 @@ export const GetPsicologos = async (
     genero: string[];
     idioma: string[];
     enfoque: string[];
+    especialidad: string[]; // 🔄 AGREGAR ESTO
   },
   search?: string,
   page?: number,
@@ -175,6 +176,8 @@ export const GetPsicologos = async (
       params.append("idioma", filters.idioma.join(","));
     if (filters.enfoque && filters.enfoque.length)
       params.append("enfoque", filters.enfoque.join(","));
+    if (filters.especialidad && filters.especialidad.length) // 🔄 AGREGAR ESTO
+      params.append("especialidad", filters.especialidad.join(","));
   }
 
   if (search) params.append("search", search);
@@ -218,6 +221,7 @@ export const GetPsicologosInactivos = async (
     genero: string[];
     idioma: string[];
     enfoque: string[];
+    especialidad: string[]; // 🔄 AGREGAR ESTO
   },
   search?: string,
   page?: number,
@@ -233,6 +237,8 @@ export const GetPsicologosInactivos = async (
       params.append("idioma", filters.idioma.join(","));
     if (filters.enfoque && filters.enfoque.length)
       params.append("enfoque", filters.enfoque.join(","));
+    if (filters.especialidad && filters.especialidad.length) // 🔄 AGREGAR ESTO
+      params.append("especialidad", filters.especialidad.join(","));
   }
 
   if (search) params.append("search", search);
@@ -920,4 +926,37 @@ export async function ToggleWorkerStatus(workerId: number, newStatus: boolean) {
   }
 
   return await res.json();
+}
+
+
+// Agregar esta función para obtener especialidades
+export async function GetEspecialidades(): Promise<{ nombre: string; valor: string }[]> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    
+    if (data.status_code === 200 && data.data) {
+      // Formatear las especialidades al formato que necesita el frontend
+      return data.data.map((esp: any) => ({
+        nombre: esp.nombre,
+        valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
+      }));
+    }
+    
+    throw new Error("Formato de respuesta inesperado");
+  } catch (error) {
+    console.error("Error al obtener especialidades:", error);
+    throw error;
+  }
 }

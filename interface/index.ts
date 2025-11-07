@@ -270,6 +270,7 @@ export interface PsicologoFilters {
   genero?: string[];
   idioma?: string[];
   enfoque?: string[];
+  especialidad?: string[]; // ✅ NUEVA PROPIEDAD AGREGADA
   search?: string;
   page?: number;
   size?: number;

@@ -162,6 +162,7 @@ export default function ReservarComponents({
     genero: [] as string[],
     idioma: [] as string[],
     enfoque: [] as string[],
+    especialidad:[] as string[],
   });
 
   const sectionTopRef = useRef<HTMLDivElement>(null);
@@ -195,7 +196,7 @@ export default function ReservarComponents({
 
   // Debounced filter change para evitar múltiples llamadas
   const debouncedFilterChange = useCallback(
-    (newFilters: { pais: string[]; genero: string[]; idioma: string[]; enfoque: string[] }, searchTerm?: string) => {
+    (newFilters: { pais: string[]; genero: string[]; idioma: string[]; enfoque: string[];especialidad:string[] }, searchTerm?: string) => {
       if (filterTimeoutRef.current) {
         clearTimeout(filterTimeoutRef.current);
       }
@@ -255,6 +256,7 @@ export default function ReservarComponents({
       genero: [],
       idioma: [],
       enfoque: [],
+      especialidad: [],
     });
   }, [setSearchTerm]);
 
