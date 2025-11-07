@@ -14,7 +14,7 @@ import {
   actulizarPsicologo,
   ActualizarPerfilCompletoPsicologo,
   EspecialidadesPsicologoResponse,
-  EspecialidadesResponse,	 
+  /*   EspecialidadesResponse,	  */
   PacienteDisabled,
   Personal,
 } from "@/interface";
@@ -187,9 +187,8 @@ export const GetPsicologos = async (
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
   }
-  const url = `${
-    process.env.NEXT_PUBLIC_API_URL
-  }api/psicologos?${params.toString()}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL
+    }api/psicologos?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -248,9 +247,8 @@ export const GetPsicologosInactivos = async (
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
   }
-  const url = `${
-    process.env.NEXT_PUBLIC_API_URL
-  }api/psicologos/inactivo?${params.toString()}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL
+    }api/psicologos/inactivo?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -676,7 +674,7 @@ export async function GetEspecialidadesPsicologos(
 }
 
 //Obtener las especialidades
-export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
+/* export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
     {
@@ -694,7 +692,7 @@ export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
   }
 
   return await res.json();
-}
+} */
 
 //Añadir especialidades nuevas
 export async function addEspecialidad(nombre: string) {
@@ -785,7 +783,7 @@ export async function GetCitasEstadisticas() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/estadisticas`,
     {
-      method: "GET", 
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -808,7 +806,7 @@ export async function GetCitasSinPagarDashboard() {
     {
       method: "GET",
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
@@ -830,7 +828,7 @@ export async function GetCitasPagadasDashboard() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json", 
+        Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
     }
@@ -851,7 +849,7 @@ export async function GetAllWorkers(filters?: {
   perPage?: number;
 }) {
   const params = new URLSearchParams();
-  
+
   if (filters?.rol && filters.rol !== 'all') {
     params.append('rol', filters.rol);
   }
@@ -945,7 +943,7 @@ export async function GetEspecialidades(): Promise<{ nombre: string; valor: stri
     }
 
     const data = await res.json();
-    
+
     if (data.status_code === 200 && data.data) {
       // Formatear las especialidades al formato que necesita el frontend
       return data.data.map((esp: any) => ({
@@ -953,7 +951,7 @@ export async function GetEspecialidades(): Promise<{ nombre: string; valor: stri
         valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
       }));
     }
-    
+
     throw new Error("Formato de respuesta inesperado");
   } catch (error) {
     console.error("Error al obtener especialidades:", error);
