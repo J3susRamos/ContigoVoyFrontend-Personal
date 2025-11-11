@@ -1,4 +1,4 @@
-import { CreatePersonal } from "@/app/apiRoutes";
+import { CreatePersonal, GetIdiomas } from "@/app/apiRoutes";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons/iconsvg";
 import { FormData, SelectItemI, Roles, Personal } from "@/interface";
 import { GetEspecialidades } from "@/app/apiRoutes";
@@ -85,11 +85,16 @@ const titles: SelectItemI[] = [
   },
 ];
 
-interface Especialidad {
+export interface Especialidad {
   idEspecialidad: number;
   nombre: string;
+  valo: string;
 }
-
+export interface Idiomas {
+  idIdioma: number;
+  nombre: string;
+  valor: string;
+}
 export const PersonalForm = ({
   onNext,
   initialFormData,
@@ -102,12 +107,12 @@ export const PersonalForm = ({
   const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] = useState<number[]>([]);
 
   useEffect(() => {
-    GetEspecialidades().then((res) => {
-      const data = Array.isArray(res.result) ? res.result : [];
-      setEspecialidadesList(data as Especialidad[]);
-    }).catch((err) =>
-      console.error("Error cargando especialidades:", err)
-    );
+    const fetchEspecialidades = async () => {
+      const especialidades = await GetEspecialidades();
+      setEspecialidadesList(especialidades);
+    }
+
+    fetchEspecialidades();
   }, []);
 
   useEffect(() => {
@@ -152,50 +157,40 @@ export const PersonalForm = ({
   });
   const [rol, setRol] = React.useState("PSICOLOGO");
   const [permissions, setPermissions] = React.useState<number[]>([]);
-  
+
   // AGREGADO: Estado para idiomas dinámicos
   const [idiomasList, setIdiomasList] = useState<SelectItemI[]>([]);
   const [selectedIdiomas, setSelectedIdiomas] = React.useState<string[]>([]);
+  // --- NUEVO: estados para "Otros" 
+  const [otroIdioma, setOtroIdioma] = useState<boolean>(false);
+  const [nuevoIdioma, setNuevoIdioma] = useState<string>("");
+  const [addIdiomaLoading, setAddIdiomaLoading] = useState<boolean>(false);
 
-  // AGREGADO: useEffect para cargar idiomas dinámicamente
+  // Normalizador 
+  const norm = (s: string) => {
+    const t = s.trim().toLowerCase();
+    return t.replace(/\b\p{L}/gu, c => c.toUpperCase());
+  };
+
+
+
   useEffect(() => {
     const fetchIdiomas = async () => {
-      if (rol !== "PSICOLOGO") return;
-      
-      try {
-        const cookies = parseCookies();
-        const token = cookies["session"];
+      const idiomas = await GetIdiomas();
+      const idiomasFormateados: SelectItemI[] = idiomas.map((idioma) => ({
+        textValue: idioma.valor,
+        showLabel: idioma.nombre,
+      }));
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/idiomas/disponibles`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Idiomas obtenidos del backend:", data);
-          
-          // Transformar la respuesta del backend al formato SelectItemI
-          const idiomasFormateados = data.result.map((idioma: any) => ({
-            textValue: idioma.codigo,
-            showLabel: idioma.nombre,
-          }));
-          
-          setIdiomasList(idiomasFormateados);
-        } else {
-          console.error("Error al obtener idiomas:", response.status);
-        }
-      } catch (error) {
-        console.error("Error al obtener idiomas:", error);
+      const otrosOpcion: SelectItemI = {
+        textValue: "otros",
+        showLabel: "Otros",
       }
-    };
+
+      idiomasFormateados.push(otrosOpcion);
+
+      setIdiomasList(idiomasFormateados);
+    }
 
     fetchIdiomas();
   }, [rol]);
@@ -233,6 +228,81 @@ export const PersonalForm = ({
       fecha.day
     ).padStart(2, "0")}`;
   };
+  const handleAddIdioma = async () => {
+    const nombreCrudo = nuevoIdioma;
+    const nombre = norm(nombreCrudo);
+
+    if (!nombre) {
+      showToast("error", "Escribe un idioma válido.");
+      return;
+    }
+
+    // Evitar duplicados (por showLabel o por textValue, según tu API)
+    const yaExiste =
+      idiomasList.some((i) => i.showLabel === nombre || i.textValue === nombre) ||
+      selectedIdiomas.some((s) => s === nombre);
+
+    if (yaExiste) {
+      showToast("error", "Ese idioma ya está en la lista.");
+      return;
+    }
+
+    try {
+      setAddIdiomaLoading(true);
+
+      // Obtén token (igual que en tus otros fetch)
+      const cookies = parseCookies();
+      const token = cookies["session"];
+
+
+      const resp = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/idiomas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ nombre }), // { nombre: "Quechua" }
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        // Muestra mensaje claro según tu API
+        showToast("error", data.message || "No se pudo crear el idioma.");
+        return;
+      }
+
+      // Si tu API devuelve el objeto creado:
+      //   data.result?.idIdioma, data.result?.nombre
+      const creadoNombre = data?.result?.nombre ?? nombre;
+
+      // Agrega opción al Select (usa el mismo criterio que usas en fetchIdiomas)
+      const nuevaOpcion = {
+        textValue: creadoNombre, // si tu CSV al backend va por nombre
+        showLabel: creadoNombre,
+      };
+
+      setIdiomasList((prev) => [...prev, nuevaOpcion]);
+
+      // Selección: mantiene "otros" y marca el nuevo idioma
+      setSelectedIdiomas((prev) => {
+        const next = Array.from(new Set([...prev, creadoNombre]));
+        // Actualiza formData.idioma sin "otros"
+        const soloIdiomas = next.filter((k) => k !== "otros");
+        setFormData((f) => ({ ...f, idioma: soloIdiomas.join(",") }));
+        return next;
+      });
+
+      setNuevoIdioma("");
+      showToast("success", "Idioma agregado y seleccionado.");
+    } catch (err) {
+      console.error(err);
+      showToast("error", "Error de conexión al crear el idioma.");
+    } finally {
+      setAddIdiomaLoading(false);
+    }
+  };
 
   const handleSubmitCreatePersonal = async () => {
     try {
@@ -265,6 +335,8 @@ export const PersonalForm = ({
       console.log("Personal creado exitosamente:", response);
 
       resetForm();
+      setOtroIdioma(false);
+      setNuevoIdioma("");
       setIsSend(false);
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null) {
@@ -775,9 +847,14 @@ export const PersonalForm = ({
                                 onSelectionChange={(keys) => {
                                   const selected = Array.from(keys) as string[];
                                   setSelectedIdiomas(selected);
+
+                                  const hasOtros = selected.includes("otros");
+                                  setOtroIdioma(hasOtros);
+
+                                  const soloIdiomas = selected.filter((k) => k !== "otros");
                                   setFormData((prev) => ({
                                     ...prev,
-                                    idioma: selected.join(","),
+                                    idioma: soloIdiomas.join(","),
                                   }));
                                 }}
                               >
@@ -791,6 +868,49 @@ export const PersonalForm = ({
                                   </SelectItem>
                                 ))}
                               </Select>
+
+                              {otroIdioma && (
+                                <div className="mt-4">
+                                  <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                                    <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
+                                      Agregar nuevo idioma
+                                    </label>
+                                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                                      <Input
+                                        radius="lg"
+                                        variant="bordered"
+                                        value={nuevoIdioma}
+                                        placeholder="Ej. Quechua"
+                                        classNames={{
+                                          inputWrapper:
+                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                                          input:
+                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                                        }}
+                                        onChange={(e) => setNuevoIdioma(e.target.value)}
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            handleAddIdioma();
+                                          }
+                                        }}
+                                      />
+                                      <Button
+                                        radius="lg"
+                                        className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                                        isDisabled={addIdiomaLoading}
+                                        onPress={handleAddIdioma}
+                                      >
+                                        {addIdiomaLoading ? "Agregando..." : "Agregar"}
+                                      </Button>
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                                      Escribe el idioma y presiona “Agregar”.
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+
                             </div>
 
                             {/* Especialidades */}
@@ -821,7 +941,7 @@ export const PersonalForm = ({
                                 }}
                               >
                                 {especialidadesList.map((esp) => (
-                                  <SelectItem key={String(esp.idEspecialidad)} textValue={esp.nombre}>
+                                  <SelectItem key={esp.idEspecialidad} textValue={esp.nombre}>
                                     {esp.nombre}
                                   </SelectItem>
                                 ))}

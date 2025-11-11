@@ -1,3 +1,4 @@
+import { Especialidad, Idiomas } from "@/components/CrearUsuario/DataFormularios";
 import {
   ApiResponse,
   AuthorsApi,
@@ -928,7 +929,7 @@ export async function ToggleWorkerStatus(workerId: number, newStatus: boolean) {
 
 
 // Agregar esta función para obtener especialidades
-export async function GetEspecialidades(): Promise<{ nombre: string; valor: string }[]> {
+export async function GetEspecialidades(): Promise<Especialidad[]> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades`, {
       method: "GET",
@@ -938,15 +939,16 @@ export async function GetEspecialidades(): Promise<{ nombre: string; valor: stri
       },
     });
 
-    if (!res.ok) {
+    /* if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
-    }
+    } */
 
     const data = await res.json();
 
-    if (data.status_code === 200 && data.data) {
+    if (data.status_code === 200 && data.result) {
       // Formatear las especialidades al formato que necesita el frontend
-      return data.data.map((esp: any) => ({
+      return data.result.map((esp: any) => ({
+        idEspecialidad: esp.idEspecialidad,
         nombre: esp.nombre,
         valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
       }));
@@ -958,3 +960,34 @@ export async function GetEspecialidades(): Promise<{ nombre: string; valor: stri
     throw error;
   }
 }
+
+//crear funcion para idiomas disponibles
+export async function GetIdiomas(): Promise<Idiomas[]> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/idiomas`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    const data = await res.json();
+
+    if (data.status_code === 200 && data.result) {
+      // Formatear las idiomas al formato que necesita el frontend
+      return data.result.map((esp: any) => ({
+        idIdioma: esp.idIdioma,
+        nombre: esp.nombre,
+        valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
+      }));
+    }
+
+    throw new Error("Formato de respuesta inesperado");
+  } catch (error) {
+    console.error("Error al obtener idiomas:", error);
+    throw error;
+  }
+}
+
+//interfaz para la respuesta
