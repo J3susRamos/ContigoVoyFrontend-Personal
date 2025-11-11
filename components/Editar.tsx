@@ -6,13 +6,14 @@ import {
 import { UsuarioLocalStorageUpdate } from "@/interface";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import { Button, Modal, ModalBody, ModalContent, Input, Textarea, Select, SelectItem } from "@heroui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import showToast from "./ToastStyle";
 import Image from "next/image";
 import { Plus, X } from "lucide-react";
 import { Flags } from "@/utils/flagsPsicologos";
 
 type Especialidad = { idEspecialidad: number; nombre: string };
+type Idioma = { idIdioma: number; nombre: string };
 
 function Editar({
   isEditOpen,
@@ -31,86 +32,110 @@ function Editar({
   const [email, setEmail] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [imagen, setImagen] = useState<string>("");
-  
-  // Datos profesionales del psicólogo
+
+  // Datos profesionales
   const [titulo, setTitulo] = useState("");
   const [introduccion, setIntroduccion] = useState("");
   const [pais, setPais] = useState("");
   const [genero, setGenero] = useState("");
   const [experiencia, setExperiencia] = useState<number>(0);
+
+  // Especialidades
   const [especialidades, setEspecialidades] = useState<string[]>([]);
   const [allEspecialidades, setAllEspecialidades] = useState<Especialidad[]>([]);
-  
+
+  // Idiomas
+  const [allIdiomas, setAllIdiomas] = useState<Idioma[]>([]);
+  const [idiomasSeleccionados, setIdiomasSeleccionados] = useState<Set<string>>(new Set());
+  const [showOtroIdioma, setShowOtroIdioma] = useState(false);
+  const [nuevoIdioma, setNuevoIdioma] = useState("");
+
   const [loading, setLoading] = useState(false);
 
-  // --- INICIO: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
+  // Otras especialidades
   const [showOtrasEspecialidades, setShowOtrasEspecialidades] = useState(false);
   const [otrasEspecialidadesInput, setOtrasEspecialidadesInput] = useState("");
-  // --- FIN: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
+
+  const norm = (s: string) =>
+    s.trim().toLowerCase().replace(/\b\p{L}/gu, (c) => c.toUpperCase());
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        const parsed = JSON.parse(storedUser) as UsuarioLocalStorageUpdate;
-        setUser(parsed);
-        setNombre(parsed.nombre || "");
-        setApellido(parsed.apellido || "");
-        setEmail(parsed.email || "");
-        setImagen(parsed.imagen || "");
-        setEspecialidades(parsed.especialidades || []);
-        
-        // Fetch additional psicólogo data if it's a psychologist
-        if (parsed.rol === 'PSICOLOGO' && parsed.idpsicologo) {
-          fetchPsicologoData(parsed.idpsicologo);
-        }
+    if (typeof window === "undefined") return;
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) return;
+
+    const parsed = JSON.parse(storedUser) as UsuarioLocalStorageUpdate;
+    setUser(parsed);
+    setNombre(parsed.nombre || "");
+    setApellido(parsed.apellido || "");
+    setEmail(parsed.email || "");
+    setImagen(parsed.imagen || "");
+    setEspecialidades(parsed.especialidades || []);
+
+    // catálogo especialidades
+    (async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades`);
+        const data = await res.json();
+        if (Array.isArray(data.result)) setAllEspecialidades(data.result);
+      } catch {
+        setAllEspecialidades([]);
       }
+    })();
+
+    // catálogo idiomas (GET público)
+    (async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/idiomas`);
+        const data = await res.json();
+        if (Array.isArray(data.result)) setAllIdiomas(data.result as Idioma[]);
+      } catch {
+        setAllIdiomas([]);
+      }
+    })();
+
+    // si es psicólogo, prefill completo (incluye idiomas/especialidades)
+    if (parsed.rol === "PSICOLOGO" && parsed.idpsicologo) {
+      fetchPsicologoData(parsed.idpsicologo);
     }
   }, []);
 
   const fetchPsicologoData = async (idPsicologo: number) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/psicologos/show/${idPsicologo}`, {
-        headers: {
-          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('session') || '""')}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const psicologoData = data.result;
-        
-        setTitulo(psicologoData.titulo || "");
-        setIntroduccion(psicologoData.introduccion || "");
-        setPais(psicologoData.pais || "");
-        setGenero(psicologoData.genero || "");
-        setExperiencia(psicologoData.experiencia || 0);
-        setFechaNacimiento(psicologoData.fecha_nacimiento || "");
+      // Ruta correcta en tu back:
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${idPsicologo}`);
+      if (!response.ok) return;
+      const data = await response.json();
+      const ps = data.result;
+
+      setTitulo(ps.titulo || "");
+      setIntroduccion(ps.introduccion || "");
+      setPais(ps.pais || "");
+      setGenero(ps.genero || "");
+      setExperiencia(ps.experiencia || 0);
+      setFechaNacimiento(ps.fecha_nacimiento || "");
+
+      // Idiomas guardados (array de nombres)
+      if (Array.isArray(ps.idiomas)) {
+        // completar catálogo si faltan
+        const cat = new Set(allIdiomas.map((i) => i.nombre));
+        const faltantes = ps.idiomas.filter((n: string) => !cat.has(n));
+        if (faltantes.length) {
+          setAllIdiomas((prev) => [...prev, ...faltantes.map((n: any) => ({ idIdioma: 0, nombre: n }))]);
+        }
+        setIdiomasSeleccionados(new Set(ps.idiomas));
       }
-    } catch (error) {
-      console.error("Error fetching psicólogo data:", error);
+
+      // Especialidades guardadas
+      if (Array.isArray(ps.especialidades) && ps.especialidades.length) {
+        setEspecialidades(ps.especialidades);
+      }
+    } catch (e) {
+      console.error("Error fetching psicólogo data:", e);
     }
   };
 
-  // Cargar todas las especialidades
-  useEffect(() => {
-    const fetchAllEspecialidades = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`
-        );
-        const data = await res.json();
-        if (Array.isArray(data.result)) {
-          setAllEspecialidades(data.result);
-        }
-      } catch (e) {
-        console.log(e);
-        setAllEspecialidades([]);
-      }
-    };
-    fetchAllEspecialidades();
-  }, []);
-
+  // Al abrir modal, refrescar especialidades
   useEffect(() => {
     const fetchEspecialidadesPsicologo = async () => {
       try {
@@ -119,77 +144,84 @@ function Editar({
           const response = await GetEspecialidadesPsicologos(id as number);
           if (response && Array.isArray(response.result)) {
             setEspecialidades(response.result);
-          } else {
-            setEspecialidades([]);
           }
         }
-      } catch (e) {
-        console.log(e);
-        setEspecialidades([]);
+      } catch {
+        /* noop */
       }
     };
     fetchEspecialidadesPsicologo();
   }, [isEditOpen, user]);
 
-  // Manejo de imagen (WebP and base64)
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  // Imagen
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     try {
       const webpImage = await convertImageToWebP(file);
       const base64 = await convertToBase64(webpImage);
       setImagen(base64);
-    } catch (error) {
+    } catch {
       showToast("error", "Error al procesar la imagen");
-      console.log(error);
     }
   };
 
-  // --- INICIO: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
-  // Función simplificada para manejar especialidades personalizadas
+  // ===== Idiomas: "Otro" sin POST (se creará al guardar) =====
+  const handleAgregarIdiomaLocal = () => {
+    const nombre = norm(nuevoIdioma || "");
+    if (!nombre) {
+      showToast("error", "Escribe un idioma válido.");
+      return;
+    }
+    if (idiomasSeleccionados.has(nombre)) {
+      showToast("error", "Ese idioma ya está seleccionado.");
+      return;
+    }
+
+    // añadir al catálogo si no existe para que aparezca en el Select
+    if (!allIdiomas.some((i) => i.nombre === nombre)) {
+      setAllIdiomas((prev) => [...prev, { idIdioma: 0, nombre }]);
+    }
+    // preseleccionar
+    setIdiomasSeleccionados((prev) => new Set([...Array.from(prev), nombre]));
+    setNuevoIdioma("");
+    setShowOtroIdioma(false);
+    showToast("success", "Idioma agregado a la selección. Se creará al guardar.");
+  };
+
+  // Otras especialidades
   const handleOtrasEspecialidades = () => {
     if (!otrasEspecialidadesInput.trim()) {
       showToast("error", "Por favor ingresa al menos una especialidad");
       return;
     }
+    const nuevas = otrasEspecialidadesInput
+      .split(",")
+      .map((esp) => esp.trim())
+      .filter((esp) => esp.length > 0);
 
-    const nuevasEspecialidades = otrasEspecialidadesInput
-      .split(',')
-      .map(esp => esp.trim())
-      .filter(esp => esp.length > 0);
-
-    if (nuevasEspecialidades.length === 0) {
+    if (!nuevas.length) {
       showToast("error", "Por favor ingresa especialidades válidas");
       return;
     }
-
-    // Solo agregar al array local - el backend se encargará de crearlas automáticamente
-    setEspecialidades(prev => [
-      ...prev.filter(esp => esp !== "Otras"),
-      ...nuevasEspecialidades
-    ]);
-
+    setEspecialidades((prev) => [...prev.filter((e) => e !== "Otras"), ...nuevas]);
     setOtrasEspecialidadesInput("");
     setShowOtrasEspecialidades(false);
     showToast("success", "Especialidades agregadas correctamente");
   };
-  // --- FIN: AGREGADO PARA FUNCIONALIDAD "OTRAS" ESPECIALIDADES ---
 
-  // Enviar formulario
+  // Guardar
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       const id = user?.idpsicologo || user?.id;
-      
-      if (user?.rol === 'PSICOLOGO') {
-        // For psychologists, use the comprehensive update
+
+      if (user?.rol === "PSICOLOGO") {
         const dataCompleta = {
           nombre,
           apellido,
-          email: user.email, // Mantener el email original, no permitir cambios
+          email: user.email, // no editable
           fecha_nacimiento: fechaNacimiento,
           imagen,
           titulo,
@@ -198,30 +230,29 @@ function Editar({
           genero,
           experiencia,
           especialidades,
+          idiomas: Array.from(idiomasSeleccionados), // <- el back hace firstOrCreate + sync por nombre
         };
-
         await actualizarPerfilCompletoPsicologo(id as number, dataCompleta);
-        showToast("success", "Perfil actualizado correctamente");
       } else {
-        // For other roles, use the existing simple update
         const body = {
-          nombre: nombre,
-          apellido: apellido,
-          imagen: imagen,
-          especialidades: especialidades,
+          nombre,
+          apellido,
+          imagen,
+          especialidades,
+          idiomas: Array.from(idiomasSeleccionados),
         };
         await actualizarPsicologo(id as number, body);
-        showToast("success", "Perfil actualizado correctamente");
       }
-      
+
+      showToast("success", "Perfil actualizado correctamente");
       setIsEditOpen(false);
 
-      // Actualiza el estado user y el localStorage en el componente padre
+      // Actualiza storage
       const updatedUser: UsuarioLocalStorageUpdate = {
         ...user,
         nombre,
         apellido,
-        email: user?.email || email, // Mantener el email original
+        email: user?.email || email,
         imagen,
         especialidades,
         id: user?.id ?? 0,
@@ -233,16 +264,14 @@ function Editar({
       localStorage.setItem("user", JSON.stringify(updatedUser));
       onUpdateUser(updatedUser);
 
-      // Recarga especialidades del psicólogo desde el backend
+      // refrescar especialidades
       if (id) {
-        const especialidadesPsicologo = await GetEspecialidadesPsicologos(id as number);
-        if (especialidadesPsicologo && Array.isArray(especialidadesPsicologo.result)) {
-          setEspecialidades(especialidadesPsicologo.result);
-        }
+        const espRes = await GetEspecialidadesPsicologos(id as number);
+        if (espRes && Array.isArray(espRes.result)) setEspecialidades(espRes.result);
       }
     } catch (err) {
       showToast("error", "Error al actualizar el perfil");
-      console.error("Error al actualizar el perfil:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -256,17 +285,11 @@ function Editar({
     >
       <ModalContent className="bg-[#E7E7FF] dark:bg-[#19191a] rounded-xl border border-white/20">
         <ModalBody className="p-6">
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-4 grid xl:grid-cols-2 max-xl:grid-cols-1 gap-6"
-          >
-            {/* Primera columna - Datos personales e imagen */}
+          <form onSubmit={handleSubmit} className="space-y-4 grid xl:grid-cols-2 max-xl:grid-cols-1 gap-6">
+            {/* Columna 1: Datos personales */}
             <div>
-              {/* Datos personales básicos */}
               <div>
-                <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] py-2 mt-2">
-                  Nombre
-                </label>
+                <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] py-2 mt-2">Nombre</label>
                 <Input
                   type="text"
                   value={nombre}
@@ -274,16 +297,15 @@ function Editar({
                   className="w-full rounded-full"
                   classNames={{
                     input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                    inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
+                    inputWrapper:
+                      "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                   }}
                   required
                 />
               </div>
-              
+
               <div>
-                <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                  Apellido
-                </label>
+                <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Apellido</label>
                 <Input
                   type="text"
                   value={apellido}
@@ -291,18 +313,17 @@ function Editar({
                   className="w-full rounded-full"
                   classNames={{
                     input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                    inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
+                    inputWrapper:
+                      "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                   }}
                   required
                 />
               </div>
 
-              {user?.rol === 'PSICOLOGO' && (
+              {user?.rol === "PSICOLOGO" && (
                 <>
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                      Email
-                    </label>
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Email</label>
                     <Input
                       type="email"
                       value={email}
@@ -310,7 +331,8 @@ function Editar({
                       className="w-full rounded-full"
                       classNames={{
                         input: "focus:outline-none dark:bg-[#232324] dark:text-gray-300",
-                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20"
+                        inputWrapper:
+                          "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20",
                       }}
                       isDisabled
                       description="El email no puede ser modificado por seguridad"
@@ -328,7 +350,8 @@ function Editar({
                       className="w-full rounded-full"
                       classNames={{
                         input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
+                        inputWrapper:
+                          "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                       }}
                     />
                   </div>
@@ -342,31 +365,14 @@ function Editar({
               <div className="w-full flex flex-col gap-2 m-auto items-center">
                 <div className="relative border-2 border-[#634AE2] dark:border-[#634AE2] rounded-lg h-[220px] w-[220px] bg-[#F3F3F3] dark:bg-[#232324] flex justify-center items-center cursor-pointer overflow-hidden">
                   {imagen ? (
-                    <Image
-                      src={imagen}
-                      alt="Imagen seleccionada"
-                      width={220}
-                      height={220}
-                      className="w-full h-full object-cover object-center"
-                    />
+                    <Image src={imagen} alt="Imagen seleccionada" width={220} height={220} className="w-full h-full object-cover object-center" />
                   ) : (
                     <div className="flex flex-col items-center text-gray-500 dark:text-gray-400">
-                      <Plus
-                        width={40}
-                        height={40}
-                        strokeWidth={2}
-                      />
-                      <span className="text-sm mt-2">
-                        Subir foto de perfil
-                      </span>
+                      <Plus width={40} height={40} strokeWidth={2} />
+                      <span className="text-sm mt-2">Subir foto de perfil</span>
                     </div>
                   )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  />
+                  <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <button
                     type="button"
                     className="absolute top-2 right-2 bg-white/80 dark:bg-[#2e2e2f]/80 rounded-full p-1 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
@@ -379,15 +385,13 @@ function Editar({
               </div>
             </div>
 
-            {/* Segunda columna - Datos profesionales */}
+            {/* Columna 2: Datos profesionales */}
             <div className="min-w-[400px] pt-1 flex flex-col justify-between">
-              {user?.rol === 'PSICOLOGO' ? (
+              {user?.rol === "PSICOLOGO" ? (
                 <>
-                  {/* Título profesional */}
+                  {/* Título */}
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                      Título Profesional
-                    </label>
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Título Profesional</label>
                     <Input
                       type="text"
                       value={titulo}
@@ -396,16 +400,15 @@ function Editar({
                       className="w-full rounded-full"
                       classNames={{
                         input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
+                        inputWrapper:
+                          "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                       }}
                     />
                   </div>
 
                   {/* Introducción */}
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                      Introducción Profesional
-                    </label>
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Introducción Profesional</label>
                     <Textarea
                       value={introduccion}
                       onChange={(e) => setIntroduccion(e.target.value)}
@@ -414,34 +417,29 @@ function Editar({
                       className="w-full"
                       classNames={{
                         input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                        inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
+                        inputWrapper:
+                          "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                       }}
                     />
                   </div>
 
                   {/* País */}
                   <div>
-                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                      País
-                    </label>
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">País</label>
                     <Select
                       selectedKeys={pais ? [pais] : []}
                       onSelectionChange={(keys) => setPais(Array.from(keys)[0] as string)}
                       placeholder="Selecciona tu país"
                       className="w-full"
                       classNames={{
-                        trigger: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
+                        trigger:
+                          "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
                         popoverContent: "dark:bg-[#232324] dark:border-white/20",
                         listbox: "dark:bg-[#232324]",
                       }}
                     >
                       {Flags.map((flag) => (
-                        <SelectItem 
-                          key={flag.value} 
-                          classNames={{
-                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
-                          }}
-                        >
+                        <SelectItem key={flag.value} classNames={{ base: "dark:hover:bg-[#2a2a2b] dark:text-white" }}>
                           {flag.label}
                         </SelectItem>
                       ))}
@@ -451,42 +449,26 @@ function Editar({
                   <div className="grid grid-cols-2 gap-4">
                     {/* Género */}
                     <div>
-                      <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                        Género
-                      </label>
+                      <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Género</label>
                       <Select
                         selectedKeys={genero ? [genero] : []}
                         onSelectionChange={(keys) => setGenero(Array.from(keys)[0] as string)}
                         placeholder="Selecciona"
                         className="w-full"
                         classNames={{
-                          trigger: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
+                          trigger:
+                            "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
                           popoverContent: "dark:bg-[#232324] dark:border-white/20",
                           listbox: "dark:bg-[#232324]",
                         }}
                       >
-                        <SelectItem 
-                          key="Masculino"
-                          classNames={{
-                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
-                          }}
-                        >
+                        <SelectItem key="Masculino" classNames={{ base: "dark:hover:bg-[#2a2a2b] dark:text-white" }}>
                           Masculino
                         </SelectItem>
-                        <SelectItem 
-                          key="Femenino"
-                          classNames={{
-                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
-                          }}
-                        >
+                        <SelectItem key="Femenino" classNames={{ base: "dark:hover:bg-[#2a2a2b] dark:text-white" }}>
                           Femenino
                         </SelectItem>
-                        <SelectItem 
-                          key="Otro"
-                          classNames={{
-                            base: "dark:hover:bg-[#2a2a2b] dark:focus:bg-[#2a2a2b] dark:text-white",
-                          }}
-                        >
+                        <SelectItem key="Otro" classNames={{ base: "dark:hover:bg-[#2a2a2b] dark:text-white" }}>
                           Otro
                         </SelectItem>
                       </Select>
@@ -494,9 +476,7 @@ function Editar({
 
                     {/* Experiencia */}
                     <div>
-                      <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                        Experiencia (años)
-                      </label>
+                      <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Experiencia (años)</label>
                       <Input
                         type="number"
                         min="0"
@@ -506,37 +486,102 @@ function Editar({
                         className="w-full rounded-full"
                         classNames={{
                           input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                          inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]"
+                          inputWrapper:
+                            "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                         }}
                       />
                     </div>
                   </div>
 
+                  {/* ===== Idiomas ===== */}
+                  <div className="mt-2">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Idiomas que domina</label>
+
+                    <Select
+                      selectionMode="multiple"
+                      selectedKeys={idiomasSeleccionados}
+                      onSelectionChange={(keys) => {
+                        if (keys === "all") return;
+                        setIdiomasSeleccionados(new Set(keys as Set<string>));
+                      }}
+                      placeholder="Selecciona uno o más idiomas"
+                      className="w-full"
+                      classNames={{
+                        trigger:
+                          "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
+                        popoverContent: "dark:bg-[#232324] dark:border-white/20",
+                        listbox: "dark:bg-[#232324]",
+                      }}
+                      items={allIdiomas}
+                    >
+                      {(idi) => (
+                        <SelectItem key={idi.nombre} classNames={{ base: "dark:hover:bg-[#2a2a2b] dark:text-white" }}>
+                          {idi.nombre}
+                        </SelectItem>
+                      )}
+                    </Select>
+
+                    <div className="mt-3">
+                      <Button
+                        type="button"
+                        onPress={() => setShowOtroIdioma((s) => !s)}
+                        className="text-sm bg-[#634AE2] text-white rounded-full px-3 py-1"
+                        size="sm"
+                      >
+                        {showOtroIdioma ? "Cancelar" : "Otro"}
+                      </Button>
+                    </div>
+
+                    {showOtroIdioma && (
+                      <div className="mt-4 p-4 bg-white/50 dark:bg-[#232324]/50 rounded-lg border border-[#634AE2]/30">
+                        <label className="block text-sm font-medium text-[#634AE2] dark:text-gray-300 mb-2">
+                          Agregar nuevo idioma
+                        </label>
+                        <div className="flex gap-2">
+                          <Input
+                            value={nuevoIdioma}
+                            onChange={(e) => setNuevoIdioma(e.target.value)}
+                            placeholder="Ej: Quechua"
+                            className="flex-1"
+                            classNames={{
+                              input: "focus:outline-none dark:bg-[#232324] dark:text-white",
+                              inputWrapper:
+                                "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20",
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleAgregarIdiomaLocal();
+                              }
+                            }}
+                          />
+                          <Button type="button" onPress={handleAgregarIdiomaLocal} className="bg-[#634AE2] text-white rounded-full" size="sm">
+                            Agregar
+                          </Button>
+                        </div>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
+                          Se creará al guardar tu perfil (no requiere autenticación extra).
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  {/* ===== Fin Idiomas ===== */}
+
                   {/* Especialidades */}
-                  <div>
-                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                      Especialidades
-                    </label>
+                  <div className="mt-4">
+                    <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Especialidades</label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {allEspecialidades.map((esp) => (
-                        <label
-                          key={esp.idEspecialidad}
-                          className="flex items-center gap-2 dark:text-gray-300"
-                        >
+                        <label key={esp.idEspecialidad} className="flex items-center gap-2 dark:text-gray-300">
                           <input
                             type="checkbox"
                             value={esp.nombre}
-                            checked={
-                              Array.isArray(especialidades) &&
-                              especialidades.includes(esp.nombre)
-                            }
+                            checked={Array.isArray(especialidades) && especialidades.includes(esp.nombre)}
                             onChange={(e) => {
                               if (e.target.checked) {
                                 setEspecialidades((prev) => [...prev, esp.nombre]);
                               } else {
-                                setEspecialidades((prev) =>
-                                  prev.filter((item) => item !== esp.nombre)
-                                );
+                                setEspecialidades((prev) => prev.filter((item) => item !== esp.nombre));
                               }
                             }}
                             className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
@@ -544,26 +589,21 @@ function Editar({
                           <span className="text-sm text-[#634AE2] dark:text-gray-300">{esp.nombre}</span>
                         </label>
                       ))}
-                      
-                      {/* --- INICIO: AGREGADO CHECKBOX "OTRAS" --- */}
+
                       <label className="flex items-center gap-2 dark:text-gray-300">
                         <input
                           type="checkbox"
                           checked={showOtrasEspecialidades}
                           onChange={(e) => {
                             setShowOtrasEspecialidades(e.target.checked);
-                            if (!e.target.checked) {
-                              setOtrasEspecialidadesInput("");
-                            }
+                            if (!e.target.checked) setOtrasEspecialidadesInput("");
                           }}
                           className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
                         />
                         <span className="text-sm text-[#634AE2] dark:text-gray-300">Otras</span>
                       </label>
-                      {/* --- FIN: AGREGADO CHECKBOX "OTRAS" --- */}
                     </div>
-                    
-                    {/* --- INICIO: AGREGADO INPUT PARA OTRAS ESPECIALIDADES --- */}
+
                     {showOtrasEspecialidades && (
                       <div className="mt-4 p-4 bg-white/50 dark:bg-[#232324]/50 rounded-lg border border-[#634AE2]/30">
                         <label className="block text-sm font-medium text-[#634AE2] dark:text-gray-300 mb-2">
@@ -577,28 +617,20 @@ function Editar({
                             className="flex-1"
                             classNames={{
                               input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                              inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20"
+                              inputWrapper:
+                                "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20",
                             }}
                           />
-                          <Button
-                            type="button"
-                            onPress={handleOtrasEspecialidades}
-                            className="bg-[#634AE2] text-white rounded-full"
-                            size="sm"
-                          >
+                          <Button type="button" onPress={handleOtrasEspecialidades} className="bg-[#634AE2] text-white rounded-full" size="sm">
                             Agregar
                           </Button>
                         </div>
                       </div>
                     )}
-                    {/* --- FIN: AGREGADO INPUT PARA OTRAS ESPECIALIDADES --- */}
 
                     <div className="mt-2 flex flex-wrap gap-2">
                       {especialidades.map((esp) => (
-                        <span
-                          key={esp}
-                          className="bg-[#634AE2] dark:bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs"
-                        >
+                        <span key={esp} className="bg-[#634AE2] dark:bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs">
                           {esp}
                         </span>
                       ))}
@@ -606,58 +638,40 @@ function Editar({
                   </div>
                 </>
               ) : (
-                /* Para otros roles, mostrar solo especialidades */
+                // Otros roles: solo especialidades
                 <div>
-                  <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
-                    Especialidades
-                  </label>
+                  <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">Especialidades</label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {allEspecialidades.map((esp) => (
-                      <label
-                        key={esp.idEspecialidad}
-                        className="flex items-center gap-2 dark:text-gray-300"
-                      >
+                      <label key={esp.idEspecialidad} className="flex items-center gap-2 dark:text-gray-300">
                         <input
                           type="checkbox"
                           value={esp.nombre}
-                          checked={
-                            Array.isArray(especialidades) &&
-                            especialidades.includes(esp.nombre)
-                          }
+                          checked={Array.isArray(especialidades) && especialidades.includes(esp.nombre)}
                           onChange={(e) => {
-                            if (e.target.checked) {
-                              setEspecialidades((prev) => [...prev, esp.nombre]);
-                            } else {
-                              setEspecialidades((prev) =>
-                                prev.filter((item) => item !== esp.nombre)
-                              );
-                            }
+                            if (e.target.checked) setEspecialidades((prev) => [...prev, esp.nombre]);
+                            else setEspecialidades((prev) => prev.filter((item) => item !== esp.nombre));
                           }}
                           className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
                         />
                         <span className="text-[#634AE2] dark:text-gray-300">{esp.nombre}</span>
                       </label>
                     ))}
-                    
-                    {/* --- INICIO: AGREGADO CHECKBOX "OTRAS" PARA OTROS ROLES --- */}
+
                     <label className="flex items-center gap-2 dark:text-gray-300">
                       <input
                         type="checkbox"
                         checked={showOtrasEspecialidades}
                         onChange={(e) => {
                           setShowOtrasEspecialidades(e.target.checked);
-                          if (!e.target.checked) {
-                            setOtrasEspecialidadesInput("");
-                          }
+                          if (!e.target.checked) setOtrasEspecialidadesInput("");
                         }}
                         className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
                       />
                       <span className="text-[#634AE2] dark:text-gray-300">Otras</span>
                     </label>
-                    {/* --- FIN: AGREGADO CHECKBOX "OTRAS" PARA OTROS ROLES --- */}
                   </div>
-                  
-                  {/* --- INICIO: AGREGADO INPUT PARA OTRAS ESPECIALIDADES PARA OTROS ROLES --- */}
+
                   {showOtrasEspecialidades && (
                     <div className="mt-4 p-4 bg-white/50 dark:bg-[#232324]/50 rounded-lg border border-[#634AE2]/30">
                       <label className="block text-sm font-medium text-[#634AE2] dark:text-gray-300 mb-2">
@@ -671,28 +685,20 @@ function Editar({
                           className="flex-1"
                           classNames={{
                             input: "focus:outline-none dark:bg-[#232324] dark:text-white",
-                            inputWrapper: "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20"
+                            inputWrapper:
+                              "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20",
                           }}
                         />
-                        <Button
-                          type="button"
-                          onPress={handleOtrasEspecialidades}
-                          className="bg-[#634AE2] text-white rounded-full"
-                          size="sm"
-                        >
+                        <Button type="button" onPress={handleOtrasEspecialidades} className="bg-[#634AE2] text-white rounded-full" size="sm">
                           Agregar
                         </Button>
                       </div>
                     </div>
                   )}
-                  {/* --- FIN: AGREGADO INPUT PARA OTRAS ESPECIALIDADES PARA OTROS ROLES --- */}
 
                   <div className="mt-2 flex flex-wrap gap-2">
                     {especialidades.map((esp) => (
-                      <span
-                        key={esp}
-                        className="bg-[#634AE2] dark:bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs"
-                      >
+                      <span key={esp} className="bg-[#634AE2] dark:bg-[#634AE2] text-white px-3 py-1 rounded-full text-xs">
                         {esp}
                       </span>
                     ))}

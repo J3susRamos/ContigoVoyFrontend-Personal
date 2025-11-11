@@ -990,4 +990,80 @@ export async function GetIdiomas(): Promise<Idiomas[]> {
   }
 }
 
-//interfaz para la respuesta
+export async function AddIdioma(nombre: string): Promise<{ idIdioma?: number; nombre: string; valor: string }> {
+  // Normalizaciones mínimas
+  const toTitle = (s: string) =>
+    s
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+
+  const slugify = (s: string) =>
+    s
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-");
+
+  const nombreNorm = toTitle((nombre || "").trim());
+  if (!nombreNorm) {
+    throw new Error("El nombre del idioma es requerido.");
+  }
+
+  // Asegura token en entorno cliente/SSR
+  let authToken = token;
+  try {
+    if (!authToken && typeof window !== "undefined") {
+      authToken =
+        localStorage.getItem("session") ||
+        sessionStorage.getItem("session") ||
+        (document.cookie.match(/session=([^;]+)/)?.[1] ?? "");
+    }
+  } catch {
+    // no-op
+  }
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/idiomas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ nombre: nombreNorm }),
+  });
+
+  // Intenta parsear JSON; si no hay, queda en null
+  let data: any = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
+    // Mensaje específico si tu backend manda "message" o "errors"
+    const backendMsg =
+      data?.message ||
+      data?.errors?.nombre?.[0] ||
+      (res.status === 409 || res.status === 422
+        ? "El idioma ya existe."
+        : `Error ${res.status}: ${res.statusText}`);
+    const err: any = new Error(backendMsg);
+    err.status = res.status;
+    err.payload = data;
+    throw err;
+  }
+
+  // Algunos backends devuelven {result: {...}} y otros el objeto directo
+  const raw = data?.result ?? data ?? {};
+  const nombreResp: string = raw?.nombre ?? nombreNorm;
+  const idResp: number | undefined = raw?.idIdioma ?? raw?.id ?? undefined;
+  const valorResp: string =
+    raw?.valor ??
+    slugify(nombreResp);
+
+  return { idIdioma: idResp, nombre: nombreResp, valor: valorResp };
+}
