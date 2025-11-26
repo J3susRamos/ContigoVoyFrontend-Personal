@@ -1,4 +1,4 @@
-                                                     "use client";
+"use client";
 
 import { Autocomplete, AutocompleteItem, Button, Input, Textarea } from "@heroui/react";
 import React, { useCallback, useEffect, useState } from "react";
@@ -266,7 +266,7 @@ export default function BlogUsuarioCrear() {
   const validateForm = (): boolean => {
     // Sanitize title for validation (convert line breaks to spaces)
     const sanitizedTema = tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
-    
+
     // Validate title - server requires at least 20 characters
     if (!sanitizedTema) {
       showToast("error", "El título es requerido.");
@@ -460,11 +460,11 @@ export default function BlogUsuarioCrear() {
             .replace(/\s+style="[^"]*z-index:[^"]*"/g, '') // Remove z-index
             .replace(/\s+style="[^"]*will-change:[^"]*"/g, '') // Remove will-change
             .replace(/\s+style="[^"]*backface-visibility:[^"]*"/g, ''); // Remove backface-visibility
-          
+
           // Clean empty style attributes
           cleaned = cleaned.replace(/\s+style=""\s*/g, ' ');
           cleaned = cleaned.replace(/\s+style="\s*"\s*/g, ' ');
-          
+
           return cleaned;
         } catch (error) {
           console.error("Error cleaning content:", error);
@@ -478,28 +478,28 @@ export default function BlogUsuarioCrear() {
           const base64ImageRegex = /data:image\/([^;]+);base64,([A-Za-z0-9+/=]+)/g;
           let compressedContent = htmlContent;
           const matches = Array.from(htmlContent.matchAll(base64ImageRegex));
-          
+
           if (matches.length === 0) {
             resolve(htmlContent);
             return;
           }
 
           let processedCount = 0;
-          
+
           matches.forEach((match) => {
             const [fullMatch] = match;
-            
+
             try {
               // Create image element for compression
               const img = document.createElement('img') as HTMLImageElement;
               const canvas = document.createElement('canvas');
               const ctx = canvas.getContext('2d');
-              
+
               img.onload = () => {
                 // Calculate new dimensions (max 400px width/height for content images)
                 const maxSize = 400; // Reducido aún más para minimizar tamaño
                 let { width, height } = img;
-                
+
                 if (width > maxSize || height > maxSize) {
                   if (width > height) {
                     height = (height * maxSize) / width;
@@ -509,32 +509,32 @@ export default function BlogUsuarioCrear() {
                     height = maxSize;
                   }
                 }
-                
+
                 canvas.width = width;
                 canvas.height = height;
-                
+
                 // Draw and compress with very low quality for content images
                 ctx?.drawImage(img, 0, 0, width, height);
                 const compressedBase64 = canvas.toDataURL('image/jpeg', 0.3); // Reducido a 30% quality
-                
-                console.log(`Compressed content image: ${Math.round(fullMatch.length/1000)}KB -> ${Math.round(compressedBase64.length/1000)}KB`);
-                
+
+                console.log(`Compressed content image: ${Math.round(fullMatch.length / 1000)}KB -> ${Math.round(compressedBase64.length / 1000)}KB`);
+
                 // Replace in content
                 compressedContent = compressedContent.replace(fullMatch, compressedBase64);
-                
+
                 processedCount++;
                 if (processedCount === matches.length) {
                   resolve(compressedContent);
                 }
               };
-              
+
               img.onerror = () => {
                 processedCount++;
                 if (processedCount === matches.length) {
                   resolve(compressedContent);
                 }
               };
-              
+
               img.src = fullMatch;
             } catch (error) {
               console.error('Error compressing image:', error);
@@ -552,40 +552,40 @@ export default function BlogUsuarioCrear() {
 
       console.log("Original content length:", contenido.length);
       console.log("Cleaned content length:", cleanedContenido.length);
-      
+
       // Show compression progress
       showToast("info", "Optimizando imágenes...");
-      
+
       // Debug: Count and analyze images before compression
       const originalBase64Images = cleanedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
       console.log(`Found ${originalBase64Images.length} base64 images in content`);
-      
+
       if (originalBase64Images.length > 0) {
         console.log("Sample image preview:", originalBase64Images[0]?.substring(0, 100) + "...");
         console.log("Average image size:", Math.round(originalBase64Images.reduce((sum, img) => sum + img.length, 0) / originalBase64Images.length / 1000) + "KB");
       }
-      
+
       // IMPORTANTE: Las imágenes en el contenido HTML deben quedarse como parte del contenido
       // NO las extraemos como imágenes separadas del carrusel
       // Solo comprimimos las imágenes dentro del contenido si es necesario
-      
+
       // Solo usar las imágenes del carrusel (base64Images y validUrls), NO las del contenido
       const imagesToSend = [...base64Images, ...validUrls];
-      
+
       console.log("Using compressed content approach - keeping images inline");
       // Compress images in content if we're keeping them inline
       const compressedContenido = await compressImagesInContent(cleanedContenido);
       const finalContenido = compressedContenido;
-      
+
       console.log("Final content length:", finalContenido.length);
       console.log("Final content preview:", finalContenido.substring(0, 200) + "...");
-      
+
       // Combine only carousel images (NOT content images)
       const allImages = imagesToSend;
-      
+
       console.log("Total carousel images:", allImages.length);
       console.log("Content images remain inline in HTML");
-      
+
       // Check if final processing was successful
       if (!finalContenido || finalContenido.trim().length === 0) {
         console.error("Content processing resulted in empty content");
@@ -597,31 +597,31 @@ export default function BlogUsuarioCrear() {
       const sanitizedContenido = finalContenido
         .replace(/'/g, "''") // Escape single quotes
         .replace(/\\/g, "\\\\"); // Escape backslashes
-        
+
       // Validate sanitized content
       if (!sanitizedContenido || sanitizedContenido.trim().length === 0) {
         console.error("Content sanitization resulted in empty content");
         showToast("error", "Error al procesar el contenido. Intenta nuevamente.");
         return;
       }
-      
+
       // Check content size limits - very strict due to PHP post_max_size = 8MB
       const maxContentSize = 1500000; // 1.5MB máximo total para evitar límite PHP de 8MB (incluyendo otros datos)
-      
+
       // Check if most of the content is images (base64)
       const base64ImageMatches = sanitizedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
       const imageContentSize = base64ImageMatches.join('').length;
       const textContentSize = sanitizedContenido.length - imageContentSize;
-      
-      console.log(`Content analysis: Total: ${Math.round(sanitizedContenido.length/1000)}KB, Images: ${Math.round(imageContentSize/1000)}KB, Text: ${Math.round(textContentSize/1000)}KB`);
-      console.log(`Max allowed: ${Math.round(maxContentSize/1000)}KB (due to PHP post_max_size limit)`);
-      
+
+      console.log(`Content analysis: Total: ${Math.round(sanitizedContenido.length / 1000)}KB, Images: ${Math.round(imageContentSize / 1000)}KB, Text: ${Math.round(textContentSize / 1000)}KB`);
+      console.log(`Max allowed: ${Math.round(maxContentSize / 1000)}KB (due to PHP post_max_size limit)`);
+
       if (sanitizedContenido.length > maxContentSize) {
         console.error(`Content too large: ${sanitizedContenido.length} characters (max: ${maxContentSize})`);
         if (imageContentSize > 0) {
-          showToast("error", `El contenido con imágenes es muy pesado (${Math.round(sanitizedContenido.length/1000)}KB). Máximo: ${Math.round(maxContentSize/1000)}KB. Usa imágenes más pequeñas o menos imágenes en el contenido.`);
+          showToast("error", `El contenido con imágenes es muy pesado (${Math.round(sanitizedContenido.length / 1000)}KB). Máximo: ${Math.round(maxContentSize / 1000)}KB. Usa imágenes más pequeñas o menos imágenes en el contenido.`);
         } else {
-          showToast("error", `El contenido es demasiado largo (${Math.round(sanitizedContenido.length/1000)}KB). Límite máximo: ${Math.round(maxContentSize/1000)}KB.`);
+          showToast("error", `El contenido es demasiado largo (${Math.round(sanitizedContenido.length / 1000)}KB). Límite máximo: ${Math.round(maxContentSize / 1000)}KB.`);
         }
         return;
       }
@@ -648,7 +648,7 @@ export default function BlogUsuarioCrear() {
           altText: "",   // puedes agregar inputs para esto si quieres
           title: "",
         })),
-        
+
       };
 
       console.log("Final data to send:", {
@@ -661,7 +661,7 @@ export default function BlogUsuarioCrear() {
       const contentImages = sanitizedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
       const totalRequestSize = JSON.stringify(dataToSend).length;
       const phpPostLimit = 8000000; // 8MB en bytes (PHP post_max_size)
-      
+
       console.log("Content debugging:", {
         totalContentSize: sanitizedContenido.length,
         contentImagesCount: contentImages.length,
@@ -674,8 +674,8 @@ export default function BlogUsuarioCrear() {
 
       // Check if total request will exceed PHP limits
       if (totalRequestSize > phpPostLimit * 0.9) { // 90% del límite para margen de seguridad
-        console.error(`Total request too large: ${Math.round(totalRequestSize/1000)}KB (PHP limit: ${Math.round(phpPostLimit/1000)}KB)`);
-        showToast("error", `La solicitud total es demasiado grande (${Math.round(totalRequestSize/1000)}KB). Límite del servidor: ${Math.round(phpPostLimit * 0.9/1000)}KB. Reduce las imágenes en el contenido o usa menos imágenes.`);
+        console.error(`Total request too large: ${Math.round(totalRequestSize / 1000)}KB (PHP limit: ${Math.round(phpPostLimit / 1000)}KB)`);
+        showToast("error", `La solicitud total es demasiado grande (${Math.round(totalRequestSize / 1000)}KB). Límite del servidor: ${Math.round(phpPostLimit * 0.9 / 1000)}KB. Reduce las imágenes en el contenido o usa menos imágenes.`);
         return;
       }
 
@@ -709,12 +709,12 @@ export default function BlogUsuarioCrear() {
         Accept: "application/json",
         Authorization: `Bearer ${token ? 'TOKEN_EXISTS' : 'NO_TOKEN'}`,
       });
-      
+
       // Log sanitized content details (with safety checks)
       if (sanitizedContenido) {
         console.log("Sanitized content length:", sanitizedContenido.length);
         console.log("Has images in content:", sanitizedContenido.includes('<img'));
-        
+
         // Check for potential problematic characters
         const problematicChars = sanitizedContenido.match(/[^\x00-\x7F]/g);
         if (problematicChars) {
@@ -769,13 +769,8 @@ export default function BlogUsuarioCrear() {
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         if (!editingBlogId) {
-          setTema("");
-          setContenido("");
-          setBase64Images([]);
-          setUrls([]);
-          setSelectedKey(null);
+          resetForm();
         }
-
         setView(" blogs");
       } else {
         // Enhanced error handling
@@ -888,6 +883,20 @@ export default function BlogUsuarioCrear() {
       setEditingBlogId(blog.id);
       setOriginalIdPsicologo(blog.idPsicologo);
       console.log("Set originalIdPsicologo to:", blog.idPsicologo);
+      // 👇 rellenar campos SEO
+      setMetaTitle(blog.metaTitle || "");
+      setMetaDescription(blog.metaDescription || "");
+      setKeywords(blog.keywords || "");
+
+      // (Opcional) si quieres recuperar metadatos por imagen:
+      if (Array.isArray(blog.imagenesMeta)) {
+        setMetadata(
+          blog.imagenesMeta.map((imgMeta: any) => ({
+            title: imgMeta.title || "",
+            alt: imgMeta.altText || "",
+          }))
+        );
+      }
       setView("crear");
     }
   };
@@ -901,12 +910,18 @@ export default function BlogUsuarioCrear() {
     setUrls([]);
     setEditingBlogId(null);
     setOriginalIdPsicologo(null);
+    setMetaTitle("");
+    setKeywords("");
+    setMetaDescription("");
+    setMetadata([]);
+
   }, []);
 
 
-const [metaTitle, setMetaTitle] = useState<string>(""); // Título Meta
-const [keywords, setKeywords] = useState<string>("");   // Keywords
-const [metaDescription, setMetaDescription] = useState<string>(""); // Descripción Meta
+  const [metaTitle, setMetaTitle] = useState<string>(""); // Título Meta
+  const [keywords, setKeywords] = useState<string>("");   // Keywords
+  const [metaDescription, setMetaDescription] = useState<string>(""); // Descripción Meta
+  const [metadata, setMetadata] = useState<{ title: string; alt: string }[]>([]); // Metadatos por imagen
 
   return (
     <div className="dark:bg-[#020202] min-h-screen">
@@ -921,13 +936,8 @@ const [metaDescription, setMetaDescription] = useState<string>(""); // Descripci
                 : "bg-[rgba(186,76,216,0.59)] text-[#ecd5ee] text-[16px] leading-[20px] rounded-[5px]"
             }
             onPress={() => {
-              setView("crear");
               resetForm();
-              setTema("");
-              setContenido("");
-              setBase64Images([]);
-              setUrls([]);
-              setSelectedKey(null);
+              setView("crear");
             }}
           >
             Crear Blog
@@ -1113,7 +1123,7 @@ const [metaDescription, setMetaDescription] = useState<string>(""); // Descripci
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     disabled={
                       base64Images.length +
-                        urls.filter((url) => url.trim() !== "").length >=
+                      urls.filter((url) => url.trim() !== "").length >=
                       6
                     }
                   />
@@ -1177,47 +1187,46 @@ const [metaDescription, setMetaDescription] = useState<string>(""); // Descripci
                   </div>
                 ))}
 
-                
+
 
                 {/* Mostrar preview de URLs válidas */}
                 {urls.filter(
                   (url) => url.trim() !== "" && url.startsWith("http"),
                 ).length > 0 && (
-                  <div className="grid grid-cols-2 gap-2">
-                    {urls
-                      .filter(
-                        (url) => url.trim() !== "" && url.startsWith("http"),
-                      )
-                      .map((url, index) => (
-                        <div key={index} className="relative">
-                          <Image
-                            src={url}
-                            alt={`URL Imagen ${index + 1}`}
-                            width={150}
-                            height={100}
-                            className="w-full h-24 object-cover rounded-lg"
-                            onError={() =>
-                              showToast(
-                                "error",
-                                `Error cargando imagen ${index + 1} desde URL`,
-                              )
-                            }
-                          />
-                        </div>
-                      ))}
-                  </div>
-                )}
+                    <div className="grid grid-cols-2 gap-2">
+                      {urls
+                        .filter(
+                          (url) => url.trim() !== "" && url.startsWith("http"),
+                        )
+                        .map((url, index) => (
+                          <div key={index} className="relative">
+                            <Image
+                              src={url}
+                              alt={`URL Imagen ${index + 1}`}
+                              width={150}
+                              height={100}
+                              className="w-full h-24 object-cover rounded-lg"
+                              onError={() =>
+                                showToast(
+                                  "error",
+                                  `Error cargando imagen ${index + 1} desde URL`,
+                                )
+                              }
+                            />
+                          </div>
+                        ))}
+                    </div>
+                  )}
 
                 {/* Contador de imágenes */}
                 <div className="w-full">
                   <span
-                    className={`text-sm font-medium ${
-                      base64Images.length +
-                        urls.filter((url) => url.trim() !== "").length >=
+                    className={`text-sm font-medium ${base64Images.length +
+                      urls.filter((url) => url.trim() !== "").length >=
                       1
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-red-800 dark:text-red-400"
-                    }`}
+                      ? "text-green-600 dark:text-green-400"
+                      : "text-red-800 dark:text-red-400"
+                      }`}
                   >
                     Imágenes agregadas:{" "}
                     {base64Images.length +
@@ -1260,6 +1269,6 @@ const [metaDescription, setMetaDescription] = useState<string>(""); // Descripci
         </div>
       )}
     </div>
-    
+
   );
 }
