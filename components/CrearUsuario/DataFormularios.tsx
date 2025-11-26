@@ -310,6 +310,7 @@ export const PersonalForm = ({
         fecha_nacimiento: fechaNacimiento,
         especialidades: especialidadesSeleccionadas,
         idioma: formData.idioma, // Incluir el campo idioma
+        meet_link: formData.meet_link, // Incluir el campo meet_link
       };
 
       console.log("📤 Datos enviados al backend (Psicólogo):", payload);
@@ -520,6 +521,36 @@ export const PersonalForm = ({
                               setFormData({
                                 ...formData,
                                 email: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
+                          <div className="text-center">
+                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
+                              Link - Google Meet
+                            </label>
+                          </div>
+                          <Input
+                            labelPlacement="outside"
+                            isRequired
+                            radius="lg"
+                            value={formData.meet_link}
+                            classNames={{
+                              inputWrapper:
+                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                              input:
+                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                            }}
+                            placeholder="https://meet.google.com/aaa-bbbb-ccc"
+                            type="text"
+                            autoComplete="off"
+                            variant="bordered"
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                meet_link: e.target.value,
                               })
                             }
                           />

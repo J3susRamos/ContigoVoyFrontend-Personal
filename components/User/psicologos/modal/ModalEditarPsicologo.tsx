@@ -51,7 +51,7 @@ const ModalEditarPsicologo: React.FC<ModalEditarPsicologoProps> = ({
     if (isOpen && selectedId) {
       handleEdit(selectedId);
     }
-  }, [isOpen, selectedId, handleEdit]);
+  }, [isOpen, selectedId]);
 
   // Resetear formulario cuando se cierra el modal
   useEffect(() => {
@@ -174,6 +174,25 @@ const ModalEditarPsicologo: React.FC<ModalEditarPsicologoProps> = ({
                 onChange={handleChanges}
                 name="correo"
               />
+
+              <Input
+                label="Google Meet Link"
+                labelPlacement="outside"
+                radius="full"
+                classNames={{
+                  base: "!text-[#634AE2]",
+                  label: "!text-[#634AE2]",
+                  inputWrapper: "border-2 border-[#634AE2]",
+                  input: "placeholder:!text-[#634AE2] w-full",
+                }}
+                placeholder="Ingresar Link de Google Meet"
+                isRequired
+                value={formData?.meet_link}
+                variant="faded"
+                onChange={handleChanges}
+                name="meet_link"
+              />
+
               <Input
                 label="Contraseña"
                 labelPlacement="outside"

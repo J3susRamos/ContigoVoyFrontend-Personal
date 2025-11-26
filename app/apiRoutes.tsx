@@ -14,7 +14,7 @@ import {
   actulizarPsicologo,
   ActualizarPerfilCompletoPsicologo,
   EspecialidadesPsicologoResponse,
-  EspecialidadesResponse,	 
+  EspecialidadesResponse,
   PacienteDisabled,
   Personal,
 } from "@/interface";
@@ -34,13 +34,13 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
   console.log("🔍 [BlogsWebSite] Environment:", process.env.NODE_ENV);
   console.log(
     "🔍 [BlogsWebSite] NEXT_PUBLIC_API_URL:",
-    process.env.NEXT_PUBLIC_API_URL,
+    process.env.NEXT_PUBLIC_API_URL
   );
   console.log("🔍 [BlogsWebSite] API URL:", apiUrl);
   console.log("🔍 [BlogsWebSite] Cache Config:", cacheConfig);
   console.log(
     "🔍 [BlogsWebSite] Window location (si existe):",
-    typeof window !== "undefined" ? window.location.href : "Server side",
+    typeof window !== "undefined" ? window.location.href : "Server side"
   );
 
   const res = await fetch(apiUrl, cacheConfig);
@@ -49,7 +49,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
   console.log("🔍 [BlogsWebSite] Response OK:", res.ok);
   console.log(
     "🔍 [BlogsWebSite] Response Headers:",
-    Object.fromEntries(res.headers.entries()),
+    Object.fromEntries(res.headers.entries())
   );
   console.log("🔍 [BlogsWebSite] Response URL:", res.url);
 
@@ -58,7 +58,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
     console.error("❌ [BlogsWebSite] Error Response Text:", errorText);
     console.error("❌ [BlogsWebSite] Response status text:", res.statusText);
     throw new Error(
-      `Error al obtener los datos: ${res.status} ${res.statusText} - ${errorText}`,
+      `Error al obtener los datos: ${res.status} ${res.statusText} - ${errorText}`
     );
   }
 
@@ -66,7 +66,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
   console.log("✅ [BlogsWebSite] Success! Data received:", jsonData);
   console.log(
     "✅ [BlogsWebSite] Data result length:",
-    jsonData?.result?.length,
+    jsonData?.result?.length
   );
   return jsonData;
 }
@@ -83,7 +83,7 @@ export async function GetCagetories(): Promise<CategoriaApi> {
   console.log("🔍 [GetCagetories] Environment:", process.env.NODE_ENV);
   console.log(
     "🔍 [GetCagetories] NEXT_PUBLIC_API_URL:",
-    process.env.NEXT_PUBLIC_API_URL,
+    process.env.NEXT_PUBLIC_API_URL
   );
   console.log("🔍 [GetCagetories] API URL:", apiUrl);
 
@@ -98,7 +98,7 @@ export async function GetCagetories(): Promise<CategoriaApi> {
     console.error("❌ [GetCagetories] Error Response Text:", errorText);
     console.error("❌ [GetCagetories] Response status text:", res.statusText);
     throw new Error(
-      `Error al obtener categorías: ${res.status} ${res.statusText} - ${errorText}`,
+      `Error al obtener categorías: ${res.status} ${res.statusText} - ${errorText}`
     );
   }
 
@@ -106,7 +106,7 @@ export async function GetCagetories(): Promise<CategoriaApi> {
   console.log("✅ [GetCagetories] Success! Data received:", jsonData);
   console.log(
     "✅ [GetCagetories] Data result length:",
-    jsonData?.result?.length,
+    jsonData?.result?.length
   );
   return jsonData;
 }
@@ -123,7 +123,7 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   console.log("🔍 [GetBlogsPreviewApi] Environment:", process.env.NODE_ENV);
   console.log(
     "🔍 [GetBlogsPreviewApi] NEXT_PUBLIC_API_URL:",
-    process.env.NEXT_PUBLIC_API_URL,
+    process.env.NEXT_PUBLIC_API_URL
   );
   console.log("🔍 [GetBlogsPreviewApi] API URL:", apiUrl);
 
@@ -138,10 +138,10 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
     console.error("❌ [GetBlogsPreviewApi] Error Response Text:", errorText);
     console.error(
       "❌ [GetBlogsPreviewApi] Response status text:",
-      res.statusText,
+      res.statusText
     );
     throw new Error(
-      `Error al obtener autores: ${res.status} ${res.statusText} - ${errorText}`,
+      `Error al obtener autores: ${res.status} ${res.statusText} - ${errorText}`
     );
   }
 
@@ -149,7 +149,7 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
   console.log("✅ [GetBlogsPreviewApi] Success! Data received:", jsonData);
   console.log(
     "✅ [GetBlogsPreviewApi] Data result length:",
-    jsonData?.result?.length,
+    jsonData?.result?.length
   );
   return jsonData;
 }
@@ -163,7 +163,7 @@ export const GetPsicologos = async (
   },
   search?: string,
   page?: number,
-  perPage?: number,
+  perPage?: number
 ): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
   if (filters) {
@@ -221,7 +221,7 @@ export const GetPsicologosInactivos = async (
   },
   search?: string,
   page?: number,
-  perPage?: number,
+  perPage?: number
 ): Promise<PsicologoApiResponse> => {
   const params = new URLSearchParams();
   if (filters) {
@@ -282,7 +282,7 @@ export async function GetPacientesDisabled(): Promise<PacienteDisabled[]> {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -329,13 +329,13 @@ export async function GetPacientesEnabled(): Promise<PacienteDisabled[]> {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw new Error(
-        errorData.message || `Error ${res.status}: ${res.statusText}`,
+        errorData.message || `Error ${res.status}: ${res.statusText}`
       );
     }
 
@@ -357,7 +357,7 @@ export async function GetPacientesEnabled(): Promise<PacienteDisabled[]> {
 
 export async function ActivarPaciente(
   id: number | null,
-  idPsicologo: number | null,
+  idPsicologo: number | null
 ) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/pacientes/activar/${id}`,
@@ -369,7 +369,7 @@ export async function ActivarPaciente(
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ idPsicologo }),
-    },
+    }
   );
 
   if (!res.ok) {
@@ -387,7 +387,7 @@ export async function DeletePsicologo(id: number | null): Promise<void> {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
   if (!res.ok) {
     throw new Error("Error al eliminar el psicologo");
@@ -395,7 +395,7 @@ export async function DeletePsicologo(id: number | null): Promise<void> {
 }
 
 export async function GetPsicologosById(
-  id: number | null,
+  id: number | null
 ): Promise<PsicologoApiResponseAlone> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${id}`,
@@ -405,7 +405,7 @@ export async function GetPsicologosById(
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -416,7 +416,7 @@ export async function GetPsicologosById(
 
 export async function UpdatePsicologo(
   id: number | null,
-  data: PsicologoPreviewData,
+  data: PsicologoPreviewData
 ): Promise<void> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${id}`,
@@ -428,7 +428,7 @@ export async function UpdatePsicologo(
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
-    },
+    }
   );
 
   if (!res.ok) {
@@ -437,7 +437,7 @@ export async function UpdatePsicologo(
 }
 
 export async function GetCitasPendientes(
-  id: number | null,
+  id: number | null
 ): Promise<CitasPendientesApiResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/pendientes/${id}`,
@@ -447,7 +447,7 @@ export async function GetCitasPendientes(
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -468,7 +468,7 @@ export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -526,7 +526,7 @@ export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]> {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -538,7 +538,7 @@ export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]> {
 
 //Crear citas en el perfil del paciente
 export async function CreateCitaParaPaciente(
-  values: FormCita,
+  values: FormCita
 ): Promise<FormCita> {
   const formatHora = (hora: string) => {
     // Si ya tiene segundos, la dejamos igual
@@ -578,7 +578,7 @@ export async function CreateCitaParaPaciente(
 //Para que los mismos psicologos actualicen su perfil, solo el nombre apellido, foto y especialidades
 export async function actualizarPsicologo(
   id: number | null,
-  data: actulizarPsicologo,
+  data: actulizarPsicologo
 ): Promise<void> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/update/${id}`,
@@ -590,7 +590,7 @@ export async function actualizarPsicologo(
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
-    },
+    }
   );
 
   if (!res.ok) {
@@ -601,7 +601,7 @@ export async function actualizarPsicologo(
 //Para que los psicologos actualicen su perfil completo con todos los datos profesionales
 export async function actualizarPerfilCompletoPsicologo(
   id: number | null,
-  data: ActualizarPerfilCompletoPsicologo,
+  data: ActualizarPerfilCompletoPsicologo
 ): Promise<void> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/update/${id}`,
@@ -613,7 +613,7 @@ export async function actualizarPerfilCompletoPsicologo(
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
-    },
+    }
   );
 
   if (!res.ok) {
@@ -632,7 +632,7 @@ export async function estadoPsicologo(id: number | null) {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     if (!response.ok) {
@@ -648,7 +648,7 @@ export async function estadoPsicologo(id: number | null) {
 
 //Obtener las especialidades de los psicologos
 export async function GetEspecialidadesPsicologos(
-  id: number,
+  id: number
 ): Promise<EspecialidadesPsicologoResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades/${id}`,
@@ -659,7 +659,7 @@ export async function GetEspecialidadesPsicologos(
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -680,7 +680,7 @@ export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -702,7 +702,7 @@ export async function addEspecialidad(nombre: string) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ nombre }),
-    },
+    }
   );
 
   if (!res.ok) {
@@ -721,7 +721,7 @@ export async function removeEspecialidad(id: number) {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
@@ -779,7 +779,7 @@ export async function GetCitasEstadisticas() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/estadisticas`,
     {
-      method: "GET", 
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -802,7 +802,7 @@ export async function GetCitasSinPagarDashboard() {
     {
       method: "GET",
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
@@ -824,7 +824,7 @@ export async function GetCitasPagadasDashboard() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json", 
+        Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
     }
@@ -845,22 +845,24 @@ export async function GetAllWorkers(filters?: {
   perPage?: number;
 }) {
   const params = new URLSearchParams();
-  
-  if (filters?.rol && filters.rol !== 'all') {
-    params.append('rol', filters.rol);
+
+  if (filters?.rol && filters.rol !== "all") {
+    params.append("rol", filters.rol);
   }
-  if (filters?.estado && filters.estado !== 'all') {
-    params.append('estado', filters.estado);
+  if (filters?.estado && filters.estado !== "all") {
+    params.append("estado", filters.estado);
   }
   if (filters?.page) {
-    params.append('page', filters.page.toString());
+    params.append("page", filters.page.toString());
   }
   if (filters?.perPage) {
-    params.append('per_page', filters.perPage.toString());
+    params.append("per_page", filters.perPage.toString());
   }
 
   const queryString = params.toString();
-  const url = `${process.env.NEXT_PUBLIC_API_URL}api/users/workers${queryString ? `?${queryString}` : ''}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}api/users/workers${
+    queryString ? `?${queryString}` : ""
+  }`;
 
   const res = await fetch(url, {
     method: "GET",
