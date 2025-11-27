@@ -413,28 +413,44 @@ export async function GetPsicologosById(
   }
   return await res.json();
 }
-
 export async function UpdatePsicologo(
   id: number | null,
   data: PsicologoPreviewData
 ): Promise<void> {
+
+  const formData = new FormData();
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+
+    if (Array.isArray(value)) {
+      value.forEach((v) => formData.append(`${key}[]`, String(v)));
+    } else {
+      formData.append(key, String(value));
+    }
+  });
+
+  formData.append("_method", "PUT");
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${id}`,
     {
-      method: "PUT",
+      method: "POST", 
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: formData,
     }
   );
 
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Error ", errorText);
     throw new Error("Error al actualizar el psicologo");
   }
 }
+
 
 export async function GetCitasPendientes(
   id: number | null

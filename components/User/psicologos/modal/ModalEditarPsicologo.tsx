@@ -297,7 +297,7 @@ const ModalEditarPsicologo: React.FC<ModalEditarPsicologoProps> = ({
           <div className="mt-6">
             <Textarea
               isRequired
-              value={formData?.introduccion}
+              value={formData?.introduccion || ""}
               minLength={100}
               name="introduccion"
               maxLength={350}
