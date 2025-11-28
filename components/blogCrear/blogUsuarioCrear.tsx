@@ -11,6 +11,7 @@ import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
 import { Plus, X } from "lucide-react";
 import Image from "next/image";
 
+// === Helpers para obtener categorías y blog por id ===
 export const CategoriaGet = async () => {
   try {
     const response = await fetch(
@@ -35,7 +36,8 @@ export const CategoriaGet = async () => {
 export const BlogById = async (id: number) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${id}`,
+      //`${process.env.NEXT_PUBLIC_API_URL}api/blogs/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}api/blogs/id/${id}`,
       {
         method: "GET",
         headers: {
@@ -53,10 +55,12 @@ export const BlogById = async (id: number) => {
 };
 
 export default function BlogUsuarioCrear() {
+  // vistas: crear | listar | editar
+  const [view, setView] = useState<"crear" | "listar" | "editar">("crear");
+
   const [categoria, setCategoria] = useState<Categoria[]>([]);
   const [tema, setTema] = useState("");
   const [urls, setUrls] = useState<string[]>([]); // Array de URL
-  const [view, setView] = useState("crear");
   const [contenido, setContenido] = useState("");
   const [user, setUser] = useState<UsuarioLocalStorage | null>(null);
   const [value, setValue] = useState("");
@@ -67,6 +71,11 @@ export default function BlogUsuarioCrear() {
   );
   const [base64Images, setBase64Images] = useState<string[]>([]); // Array de imágenes base64
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // SEO
+  const [metaTitle, setMetaTitle] = useState<string>("");
+  const [keywords, setKeywords] = useState<string>("");
+  const [metaDescription, setMetaDescription] = useState<string>("");
 
   useEffect(() => {
     let isMounted = true;
@@ -110,12 +119,12 @@ export default function BlogUsuarioCrear() {
     fetchUser();
   }, []);
 
+  // ========= SUBIR IMÁGENES =========
   const handleImageUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
       if (!files || files.length === 0) return;
 
-      // Verificar que no exceda el límite de 6 imágenes
       const currentImageCount =
         base64Images.length + urls.filter((url) => url.trim() !== "").length;
       const currentFullLinksCount = base64Images.length + urls.length;
@@ -151,13 +160,9 @@ export default function BlogUsuarioCrear() {
 
         try {
           showToast("info", `Procesando imagen ${i + 1}/${files.length}...`);
-          // Convertir la imagen a WebP con compresión
           const webpImage = await convertImageToWebP(file);
-
-          // Convertir la imagen WebP a Base64
           const base64 = await convertToBase64(webpImage);
 
-          // Check the final base64 size
           if (base64.length > 400000) {
             showToast(
               "error",
@@ -223,6 +228,7 @@ export default function BlogUsuarioCrear() {
     setUrls((prev) => prev.map((url, i) => (i === index ? value : url)));
   };
 
+  // ========= CREAR CATEGORÍA =========
   const postNewCategoria = async () => {
     const cookies = parseCookies();
     const token = cookies["session"];
@@ -263,11 +269,10 @@ export default function BlogUsuarioCrear() {
     }
   };
 
+  // ========= VALIDACIÓN BÁSICA =========
   const validateForm = (): boolean => {
-    // Sanitize title for validation (convert line breaks to spaces)
     const sanitizedTema = tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
 
-    // Validate title - server requires at least 20 characters
     if (!sanitizedTema) {
       showToast("error", "El título es requerido.");
       return false;
@@ -278,25 +283,21 @@ export default function BlogUsuarioCrear() {
       return false;
     }
 
-    // Check for SVG/XML content in tema
     if (sanitizedTema.includes('<svg') || sanitizedTema.includes('<?xml') || sanitizedTema.includes('viewBox')) {
       showToast("error", "El título contiene código SVG o XML. Por favor usa un título simple.");
       return false;
     }
 
-    // Validate title length
     if (sanitizedTema.length > 200) {
       showToast("error", "El título es demasiado largo. Máximo 200 caracteres.");
       return false;
     }
 
-    // Validate content - server requires at least 10 characters
     if (!contenido.trim()) {
       showToast("error", "El contenido es requerido.");
       return false;
     }
 
-    // Get actual text content without HTML tags
     const getTextContent = (html: string) => {
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = html;
@@ -309,13 +310,11 @@ export default function BlogUsuarioCrear() {
       return false;
     }
 
-    // Validate category
     if (!selectedKey && !value.trim()) {
       showToast("error", "La categoría es requerida.");
       return false;
     }
 
-    // Validate image - check if we have at least one image
     const validUrls = urls.filter(
       (url) => url.trim() !== "" && url.startsWith("http"),
     );
@@ -333,14 +332,32 @@ export default function BlogUsuarioCrear() {
     return user.idpsicologo || user.id;
   };
 
+  // ========= RESET FORM =========
+  const resetForm = useCallback(() => {
+    setTema("");
+    setContenido("");
+    setSelectedKey(null);
+    setValue("");
+    setBase64Images([]);
+    setUrls([]);
+    setEditingBlogId(null);
+    setOriginalIdPsicologo(null);
+    setMetaTitle("");
+    setKeywords("");
+    setMetaDescription("");
+  }, []);
+
+  // ========= SUBMIT (CREAR / EDITAR) =========
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
+    const isEditing = view === "editar" && editingBlogId !== null;
+
     try {
-      setIsSubmitting(true); // Add loading state
+      setIsSubmitting(true);
 
       const userId = getUserId();
-      if (!userId) {
+      if (!userId || !user?.id) {
         showToast(
           "error",
           "Usuario no identificado. Por favor inicia sesión nuevamente.",
@@ -348,16 +365,6 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
-      // Validate required fields
-      if (!user?.id) {
-        showToast(
-          "error",
-          "Usuario no identificado. Por favor inicia sesión nuevamente.",
-        );
-        return;
-      }
-
-      // Validate tema length (sanitize first)
       const sanitizedTemaCheck = tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
       if (!sanitizedTemaCheck || sanitizedTemaCheck.length < 5) {
         showToast("error", "El título debe tener al menos 5 caracteres.");
@@ -369,7 +376,6 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
-      // Validate images - minimum 1, maximum 6
       const validUrls = urls.filter(
         (url) => url.trim() !== "" && url.startsWith("http"),
       );
@@ -387,12 +393,11 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
-      // Validate base64 images size
       for (let i = 0; i < base64Images.length; i++) {
         if (base64Images[i].length > 500000) {
           showToast(
             "error",
-            `La imagen ${i + 1} es demasiado grande. Por favor selecciona una imagen más pequeña (máx. 500KB).`,
+            `La imagen ${i + 1} es demasiado grande. Máx. 500KB.`,
           );
           return;
         }
@@ -400,13 +405,12 @@ export default function BlogUsuarioCrear() {
         if (!base64Images[i].startsWith("data:image/")) {
           showToast(
             "error",
-            `Formato de imagen ${i + 1} inválido. Por favor selecciona una imagen válida.`,
+            `Formato de imagen ${i + 1} inválido.`,
           );
           return;
         }
       }
 
-      // Validate URL format if using URLs
       for (let i = 0; i < validUrls.length; i++) {
         if (!validUrls[i].startsWith("http")) {
           showToast(
@@ -416,13 +420,6 @@ export default function BlogUsuarioCrear() {
           return;
         }
       }
-
-      // Debug logging (will be updated after image processing)
-      console.log("Current user:", user);
-      console.log("User ID:", user.id);
-      console.log("User idpsicologo:", user.idpsicologo);
-      console.log("Original ID Psicologo from blog:", originalIdPsicologo);
-      console.log("Editing blog ID:", editingBlogId);
 
       let categoriaId: number | null;
       if (selectedKey !== null) {
@@ -439,40 +436,33 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
-      // Use id psicologo instead of user id for blog operations
       const finalIdPsicologo = user.idpsicologo || user.id;
 
-      console.log("Final ID Psicologo to use:", finalIdPsicologo);
-
-      // Function to clean image attributes for backend compatibility
       const cleanContentForBackend = (htmlContent: string): string => {
         try {
-          // Remove custom image attributes that are only used in the editor
           let cleaned = htmlContent
             .replace(/\s+data-position-x="[^"]*"/g, '')
             .replace(/\s+data-position-y="[^"]*"/g, '')
             .replace(/\s+data-mode="[^"]*"/g, '')
             .replace(/\s+data-align="[^"]*"/g, '')
             .replace(/\s+data-float="[^"]*"/g, '')
-            .replace(/\s+positionx="[^"]*"/gi, '') // Case insensitive
-            .replace(/\s+positiony="[^"]*"/gi, '') // Case insensitive
-            .replace(/\s+style="[^"]*transform:[^"]*translate[^"]*"/g, '') // Remove transform styles
-            .replace(/\s+style="[^"]*z-index:[^"]*"/g, '') // Remove z-index
-            .replace(/\s+style="[^"]*will-change:[^"]*"/g, '') // Remove will-change
-            .replace(/\s+style="[^"]*backface-visibility:[^"]*"/g, ''); // Remove backface-visibility
+            .replace(/\s+positionx="[^"]*"/gi, '')
+            .replace(/\s+positiony="[^"]*"/gi, '')
+            .replace(/\s+style="[^"]*transform:[^"]*translate[^"]*"/g, '')
+            .replace(/\s+style="[^"]*z-index:[^"]*"/g, '')
+            .replace(/\s+style="[^"]*will-change:[^"]*"/g, '')
+            .replace(/\s+style="[^"]*backface-visibility:[^"]*"/g, '');
 
-          // Clean empty style attributes
           cleaned = cleaned.replace(/\s+style=""\s*/g, ' ');
           cleaned = cleaned.replace(/\s+style="\s*"\s*/g, ' ');
 
           return cleaned;
         } catch (error) {
           console.error("Error cleaning content:", error);
-          return htmlContent; // Return original if cleaning fails
+          return htmlContent;
         }
       };
 
-      // Function to compress base64 images in content
       const compressImagesInContent = (htmlContent: string): Promise<string> => {
         return new Promise((resolve) => {
           const base64ImageRegex = /data:image\/([^;]+);base64,([A-Za-z0-9+/=]+)/g;
@@ -490,14 +480,12 @@ export default function BlogUsuarioCrear() {
             const [fullMatch] = match;
 
             try {
-              // Create image element for compression
               const img = document.createElement('img') as HTMLImageElement;
               const canvas = document.createElement('canvas');
               const ctx = canvas.getContext('2d');
 
               img.onload = () => {
-                // Calculate new dimensions (max 400px width/height for content images)
-                const maxSize = 400; // Reducido aún más para minimizar tamaño
+                const maxSize = 400;
                 let { width, height } = img;
 
                 if (width > maxSize || height > maxSize) {
@@ -513,13 +501,9 @@ export default function BlogUsuarioCrear() {
                 canvas.width = width;
                 canvas.height = height;
 
-                // Draw and compress with very low quality for content images
                 ctx?.drawImage(img, 0, 0, width, height);
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.3); // Reducido a 30% quality
+                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.3);
 
-                console.log(`Compressed content image: ${Math.round(fullMatch.length / 1000)}KB -> ${Math.round(compressedBase64.length / 1000)}KB`);
-
-                // Replace in content
                 compressedContent = compressedContent.replace(fullMatch, compressedBase64);
 
                 processedCount++;
@@ -547,139 +531,65 @@ export default function BlogUsuarioCrear() {
         });
       };
 
-      // Clean the content before sanitizing
       const cleanedContenido = cleanContentForBackend(contenido);
-
-      console.log("Original content length:", contenido.length);
-      console.log("Cleaned content length:", cleanedContenido.length);
-
-      // Show compression progress
       showToast("info", "Optimizando imágenes...");
 
-      // Debug: Count and analyze images before compression
-      const originalBase64Images = cleanedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
-      console.log(`Found ${originalBase64Images.length} base64 images in content`);
-
-      if (originalBase64Images.length > 0) {
-        console.log("Sample image preview:", originalBase64Images[0]?.substring(0, 100) + "...");
-        console.log("Average image size:", Math.round(originalBase64Images.reduce((sum, img) => sum + img.length, 0) / originalBase64Images.length / 1000) + "KB");
-      }
-
-      // IMPORTANTE: Las imágenes en el contenido HTML deben quedarse como parte del contenido
-      // NO las extraemos como imágenes separadas del carrusel
-      // Solo comprimimos las imágenes dentro del contenido si es necesario
-
-      // Solo usar las imágenes del carrusel (base64Images y validUrls), NO las del contenido
       const imagesToSend = [...base64Images, ...validUrls];
-
-      console.log("Using compressed content approach - keeping images inline");
-      // Compress images in content if we're keeping them inline
       const compressedContenido = await compressImagesInContent(cleanedContenido);
       const finalContenido = compressedContenido;
 
-      console.log("Final content length:", finalContenido.length);
-      console.log("Final content preview:", finalContenido.substring(0, 200) + "...");
-
-      // Combine only carousel images (NOT content images)
-      const allImages = imagesToSend;
-
-      console.log("Total carousel images:", allImages.length);
-      console.log("Content images remain inline in HTML");
-
-      // Check if final processing was successful
       if (!finalContenido || finalContenido.trim().length === 0) {
         console.error("Content processing resulted in empty content");
         showToast("error", "Error al procesar el contenido. Intenta nuevamente.");
         return;
       }
 
-      // Sanitize contenido to prevent SQL injection
       const sanitizedContenido = finalContenido
-        .replace(/'/g, "''") // Escape single quotes
-        .replace(/\\/g, "\\\\"); // Escape backslashes
+        .replace(/'/g, "''")
+        .replace(/\\/g, "\\\\");
 
-      // Validate sanitized content
       if (!sanitizedContenido || sanitizedContenido.trim().length === 0) {
         console.error("Content sanitization resulted in empty content");
         showToast("error", "Error al procesar el contenido. Intenta nuevamente.");
         return;
       }
 
-      // Check content size limits - very strict due to PHP post_max_size = 8MB
-      const maxContentSize = 1500000; // 1.5MB máximo total para evitar límite PHP de 8MB (incluyendo otros datos)
+      const maxContentSize = 1500000;
 
-      // Check if most of the content is images (base64)
       const base64ImageMatches = sanitizedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
       const imageContentSize = base64ImageMatches.join('').length;
-      const textContentSize = sanitizedContenido.length - imageContentSize;
-
-      console.log(`Content analysis: Total: ${Math.round(sanitizedContenido.length / 1000)}KB, Images: ${Math.round(imageContentSize / 1000)}KB, Text: ${Math.round(textContentSize / 1000)}KB`);
-      console.log(`Max allowed: ${Math.round(maxContentSize / 1000)}KB (due to PHP post_max_size limit)`);
 
       if (sanitizedContenido.length > maxContentSize) {
-        console.error(`Content too large: ${sanitizedContenido.length} characters (max: ${maxContentSize})`);
         if (imageContentSize > 0) {
-          showToast("error", `El contenido con imágenes es muy pesado (${Math.round(sanitizedContenido.length / 1000)}KB). Máximo: ${Math.round(maxContentSize / 1000)}KB. Usa imágenes más pequeñas o menos imágenes en el contenido.`);
+          showToast("error", "El contenido con imágenes es muy pesado. Usa imágenes más pequeñas o menos imágenes en el contenido.");
         } else {
-          showToast("error", `El contenido es demasiado largo (${Math.round(sanitizedContenido.length / 1000)}KB). Límite máximo: ${Math.round(maxContentSize / 1000)}KB.`);
+          showToast("error", "El contenido es demasiado largo.");
         }
         return;
       }
 
-      // Check for SVG content that shouldn't be in blog text
       if (sanitizedContenido.includes('<svg') || sanitizedContenido.includes('<?xml')) {
         console.error("SVG or XML content detected in blog content");
-        showToast("error", "El contenido contiene código SVG o XML que no es válido para un blog. Por favor usa solo texto e imágenes.");
+        showToast("error", "El contenido contiene código SVG o XML que no es válido.");
         return;
       }
 
-      // Create a dataApi object here, after all variables are declared
       const dataToSend: BlogApi = {
         idCategoria: categoriaId,
-        tema: tema.trim().replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim(), // Sanitizar título: convertir saltos de línea a espacios y normalizar espacios
-        contenido: sanitizedContenido, // Contiene HTML con imágenes inline
-        imagenes: allImages, // Solo imágenes del carrusel, NO las del contenido
+        tema: sanitizedTemaCheck,
+        contenido: sanitizedContenido,
+        imagenes: imagesToSend,
         idPsicologo: finalIdPsicologo,
         metaTitle: metaTitle.trim(),
         keywords: keywords.trim(),
         metaDescription: metaDescription.trim(),
-        imagenesMeta: allImages.map((img) => ({
+        imagenesMeta: imagesToSend.map((img) => ({
           url: img,
-          altText: "",   // puedes agregar inputs para esto si quieres
+          altText: "",
           title: "",
         })),
-
       };
 
-      console.log("Final data to send:", {
-        ...dataToSend,
-        contenido: `Content length: ${dataToSend.contenido.length} chars`,
-        imagenes: `Array of ${allImages.length} images`, // Log only counts for brevity
-      });
-
-      // Additional debugging for content with images
-      const contentImages = sanitizedContenido.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g) || [];
-      const totalRequestSize = JSON.stringify(dataToSend).length;
-      const phpPostLimit = 8000000; // 8MB en bytes (PHP post_max_size)
-
-      console.log("Content debugging:", {
-        totalContentSize: sanitizedContenido.length,
-        contentImagesCount: contentImages.length,
-        carouselImagesCount: allImages.length,
-        contentImagesSizeKB: contentImages.length > 0 ? Math.round(contentImages.join('').length / 1000) : 0,
-        totalRequestSizeKB: Math.round(totalRequestSize / 1000),
-        phpPostLimitKB: Math.round(phpPostLimit / 1000),
-        willExceedPHPLimit: totalRequestSize > phpPostLimit * 0.9 // 90% del límite
-      });
-
-      // Check if total request will exceed PHP limits
-      if (totalRequestSize > phpPostLimit * 0.9) { // 90% del límite para margen de seguridad
-        console.error(`Total request too large: ${Math.round(totalRequestSize / 1000)}KB (PHP limit: ${Math.round(phpPostLimit / 1000)}KB)`);
-        showToast("error", `La solicitud total es demasiado grande (${Math.round(totalRequestSize / 1000)}KB). Límite del servidor: ${Math.round(phpPostLimit * 0.9 / 1000)}KB. Reduce las imágenes en el contenido o usa menos imágenes.`);
-        return;
-      }
-
-      // Add validation for required fields
       if (!dataToSend.idPsicologo) {
         showToast("error", "Error: ID de psicólogo no válido.");
         return;
@@ -695,39 +605,16 @@ export default function BlogUsuarioCrear() {
         );
         return;
       }
-      const apiUrl = editingBlogId
+
+      const apiUrl = isEditing
         ? `${process.env.NEXT_PUBLIC_API_URL}api/blogs/${editingBlogId}`
         : `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
 
-      const method = editingBlogId ? "PUT" : "POST";
+      const method = isEditing ? "PUT" : "POST";
 
-      console.log("Sending request to:", apiUrl);
-      console.log("Method:", method);
-      console.log("Data size:", JSON.stringify(dataToSend).length, "characters");
-      console.log("Headers:", {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token ? 'TOKEN_EXISTS' : 'NO_TOKEN'}`,
-      });
-
-      // Log sanitized content details (with safety checks)
-      if (sanitizedContenido) {
-        console.log("Sanitized content length:", sanitizedContenido.length);
-        console.log("Has images in content:", sanitizedContenido.includes('<img'));
-
-        // Check for potential problematic characters
-        const problematicChars = sanitizedContenido.match(/[^\x00-\x7F]/g);
-        if (problematicChars) {
-          console.log("Non-ASCII characters found:", problematicChars.length);
-        }
-      } else {
-        console.warn("sanitizedContenido is undefined or null");
-      }
-
-      // Show loading toast
       showToast("info", "Enviando datos...");
 
-      let response;
+      let response: Response;
       try {
         response = await fetch(apiUrl, {
           method,
@@ -744,36 +631,27 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
-      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
-
       let data;
       try {
         data = await response.json();
-        console.log("Response data:", data);
       } catch (parseError) {
         console.error("Error parsing response JSON:", parseError);
-        console.log("Raw response text:", await response.text().catch(() => "Unable to get text"));
         showToast("error", "Error al procesar la respuesta del servidor");
-        return; // Exit the function early
+        return;
       }
 
       if (response.ok) {
         showToast(
           "success",
-          editingBlogId
-            ? "Publicación actualizada correctamente"
-            : "Publicación creada correctamente",
+          isEditing
+            ? "Blog actualizado correctamente"
+            : "Blog creado correctamente",
         );
-        await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        if (!editingBlogId) {
-          resetForm();
-        }
-        setView(" blogs");
+        // Limpio y me voy a "Ver Blogs"
+        resetForm();
+        setView("listar");
       } else {
-        // Enhanced error handling
         let errorMessage = "Error desconocido";
 
         if (data?.status_message) {
@@ -784,7 +662,6 @@ export default function BlogUsuarioCrear() {
           errorMessage = data.description;
         }
 
-        // Specific error cases
         if (response.status === 413) {
           errorMessage =
             "El archivo es demasiado grande. Reduce el tamaño de la imagen.";
@@ -796,17 +673,6 @@ export default function BlogUsuarioCrear() {
             "Error interno del servidor. Intenta con una imagen más pequeña o verifica el contenido.";
         }
 
-        // Safe logging for server error details (using console.log to avoid Next.js dev tools issues)
-        console.log("Server error details:", {
-          status: response.status,
-          statusText: response.statusText,
-          data: data,
-          requestUrl: apiUrl,
-          requestMethod: method,
-          contentLength: JSON.stringify(dataToSend).length,
-        });
-
-        // Handle specific server validation messages
         if (data.message) {
           showToast("error", data.message);
         } else {
@@ -814,9 +680,7 @@ export default function BlogUsuarioCrear() {
         }
       }
     } catch (error) {
-      // Safe logging for submission error (using console.log to avoid Next.js dev tools issues)
       console.log("Submission error:", error);
-
       let errorMessage = "Error inesperado. Por favor intenta nuevamente.";
 
       if (error instanceof TypeError && error.message.includes("fetch")) {
@@ -832,11 +696,10 @@ export default function BlogUsuarioCrear() {
     }
   };
 
+  // ========= EDITAR: CARGAR DATOS AL FORM =========
   const handleEdit = async (id: number) => {
     const blog = await BlogById(id);
-    console.log("Blog data for editing:", blog);
     if (blog) {
-      // VALIDACIÓN DE PROPIEDAD: Solo el psicólogo propietario puede editar
       const currentPsicologoId = user?.idpsicologo || user?.id;
 
       if (blog.idPsicologo !== currentPsicologoId) {
@@ -846,16 +709,10 @@ export default function BlogUsuarioCrear() {
         );
         return;
       }
-      console.log("Blog idPsicologo:", blog.idPsicologo);
-      console.log(
-        "Current user can edit?",
-        blog.idPsicologo === currentPsicologoId,
-      );
 
       setTema(blog.tema);
-      // Handle multiple images
+
       if (blog.imagenes && Array.isArray(blog.imagenes)) {
-        // Separate base64 images from URLs
         const base64Imgs = blog.imagenes.filter((img: string) =>
           img.startsWith("data:image/"),
         );
@@ -866,7 +723,6 @@ export default function BlogUsuarioCrear() {
         setBase64Images(base64Imgs);
         setUrls(urlImgs);
       } else if (blog.imagen) {
-        // Backward compatibility for a single image
         if (blog.imagen.startsWith("data:image/")) {
           setBase64Images([blog.imagen]);
           setUrls([]);
@@ -878,66 +734,41 @@ export default function BlogUsuarioCrear() {
         setBase64Images([]);
         setUrls([]);
       }
+
       setContenido(blog.contenido);
       setSelectedKey(blog.idCategoria.toString());
-      setEditingBlogId(blog.id);
+      setEditingBlogId(blog.idBlog);      // ⭐ IMPORTANTE: usar idBlog, no id
       setOriginalIdPsicologo(blog.idPsicologo);
-      console.log("Set originalIdPsicologo to:", blog.idPsicologo);
-      // 👇 rellenar campos SEO
-      setMetaTitle(blog.metaTitle || "");
-      setMetaDescription(blog.metaDescription || "");
-      setKeywords(blog.keywords || "");
 
-      // (Opcional) si quieres recuperar metadatos por imagen:
-      if (Array.isArray(blog.imagenesMeta)) {
-        setMetadata(
-          blog.imagenesMeta.map((imgMeta: any) => ({
-            title: imgMeta.title || "",
-            alt: imgMeta.altText || "",
-          }))
-        );
-      }
-      setView("crear");
+      // si ya estás guardando meta en el back y lo devuelves, aquí los podrías setear
+      setMetaTitle(blog.metaTitle || "");
+      setKeywords(blog.keywords || "");
+      setMetaDescription(blog.metaDescription || "");
+
+      // cambio de vista a modo edición
+      setView("editar");
     }
   };
 
-  const resetForm = useCallback(() => {
-    setTema("");
-    setContenido("");
-    setSelectedKey(null);
-    setValue("");
-    setBase64Images([]);
-    setUrls([]);
-    setEditingBlogId(null);
-    setOriginalIdPsicologo(null);
-    setMetaTitle("");
-    setKeywords("");
-    setMetaDescription("");
-    setMetadata([]);
-
-  }, []);
-
-
-  const [metaTitle, setMetaTitle] = useState<string>(""); // Título Meta
-  const [keywords, setKeywords] = useState<string>("");   // Keywords
-  const [metaDescription, setMetaDescription] = useState<string>(""); // Descripción Meta
-  const [metadata, setMetadata] = useState<{ title: string; alt: string }[]>([]); // Metadatos por imagen
+  // ========= RENDER =========
+  const isEditing = view === "editar" && editingBlogId !== null;
 
   return (
     <div className="dark:bg-[#020202] min-h-screen">
+      {/* Barra superior con tabs */}
       <div className="w-full h-16 bg-[#4d0b73] items-center justify-start flex">
         <div className="ml-10 flex justify-between items-center w-full max-w-[230px] gap-x-3">
           {/* Boton Crear Blog */}
           <Button
             radius="full"
             className={
-              view === "crear"
+              view === "crear" || view === "editar"
                 ? "bg-white text-[16px] leading-[20px] text-[#6364F4] font-bold shadow rounded-[5px]"
                 : "bg-[rgba(186,76,216,0.59)] text-[#ecd5ee] text-[16px] leading-[20px] rounded-[5px]"
             }
             onPress={() => {
-              resetForm();
               setView("crear");
+              resetForm();
             }}
           >
             Crear Blog
@@ -945,9 +776,9 @@ export default function BlogUsuarioCrear() {
 
           {/* Boton Ver Blogs */}
           <Button
-            onPress={() => setView(" blogs")}
+            onPress={() => setView("listar")}
             className={
-              view === " blogs"
+              view === "listar"
                 ? "bg-white text-[16px] leading-[20px] text-[#6364F4] font-bold shadow rounded-[5px]"
                 : "bg-[rgba(186,76,216,0.59)] text-[#ecd5ee] text-[16px] leading-[20px] rounded-[5px]"
             }
@@ -957,11 +788,15 @@ export default function BlogUsuarioCrear() {
         </div>
       </div>
 
-      {view === "crear" ? (
+      {/* LISTAR BLOGS */}
+      {view === "listar" ? (
+        <div className="mx-10 mt-14 dark:text-white">
+          <Listarblog onEdit={handleEdit} />
+        </div>
+      ) : (
+        // FORMULARIO (se usa para crear y editar)
         <div className="flex flex-col md:flex-row gap-10 mx-auto px-10 mt-8 mb-8 max-w-scv18 h-full">
           <div className="flex-1 flex flex-col justify-between gap-y-scv8 items-center w-full mx-auto bg-slate-200 dark:bg-[#121212] border border-[#f0f0f0] dark:border dark:border-white/20 rounded-lg p-scv4">
-
-
             {/* Metadatos SEO */}
             <div className="w-full">
               <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
@@ -1004,7 +839,6 @@ export default function BlogUsuarioCrear() {
                 />
               </div>
 
-
               {/* Descripción Meta */}
               <div className="mb-scv4">
                 <label className="block mb-1 text-gray-700 dark:text-gray-200 font-medium">
@@ -1029,7 +863,7 @@ export default function BlogUsuarioCrear() {
             {/* Titulo */}
             <div className="w-full">
               <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
-                Titulo
+                Título
               </h1>
               <Textarea
                 aria-label="Titulo"
@@ -1060,7 +894,7 @@ export default function BlogUsuarioCrear() {
             {/* Categoria */}
             <div className="w-full">
               <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
-                Categoria
+                Categoría
               </h1>
               <div className="flex w-full flex-col">
                 <Autocomplete
@@ -1095,9 +929,8 @@ export default function BlogUsuarioCrear() {
                 Imágenes (Mínimo 1, Máximo 6)
               </h1>
 
-              {/* Sección de subida de múltiples imágenes */}
               <div className="w-full flex flex-col gap-2">
-                {/* Boton de subir múltiples imágenes */}
+                {/* Subir imágenes */}
                 <div className="relative border-2 border-[#634AE2] bg-white dark:bg-[#19191a] rounded-lg h-32 w-full flex justify-center items-center cursor-pointer overflow-hidden">
                   <div className="flex flex-col items-center">
                     <Plus
@@ -1129,7 +962,7 @@ export default function BlogUsuarioCrear() {
                   />
                 </div>
 
-                {/* Mostrar imágenes base64 cargadas */}
+                {/* base64 */}
                 {base64Images.length > 0 && (
                   <div className="grid grid-cols-2 gap-2">
                     {base64Images.map((img, index) => (
@@ -1152,7 +985,7 @@ export default function BlogUsuarioCrear() {
                   </div>
                 )}
 
-                {/* Botón para agregar URL */}
+                {/* Agregar URL */}
                 {base64Images.length + urls.length < 6 && (
                   <Button
                     onPress={addUrlImage}
@@ -1163,7 +996,7 @@ export default function BlogUsuarioCrear() {
                   </Button>
                 )}
 
-                {/* Inputs de URL */}
+                {/* Inputs URL */}
                 {urls.map((url, index) => (
                   <div key={index} className="flex gap-2 items-center">
                     <button
@@ -1187,9 +1020,7 @@ export default function BlogUsuarioCrear() {
                   </div>
                 ))}
 
-
-
-                {/* Mostrar preview de URLs válidas */}
+                {/* Preview URLs */}
                 {urls.filter(
                   (url) => url.trim() !== "" && url.startsWith("http"),
                 ).length > 0 && (
@@ -1218,7 +1049,7 @@ export default function BlogUsuarioCrear() {
                     </div>
                   )}
 
-                {/* Contador de imágenes */}
+                {/* Contador */}
                 <div className="w-full">
                   <span
                     className={`text-sm font-medium ${base64Images.length +
@@ -1237,6 +1068,7 @@ export default function BlogUsuarioCrear() {
               </div>
             </div>
 
+            {/* Botón submit */}
             <div className="w-full flex justify-center">
               <Button
                 onPress={handleSubmit}
@@ -1247,13 +1079,14 @@ export default function BlogUsuarioCrear() {
               >
                 {isSubmitting
                   ? "Procesando..."
-                  : editingBlogId
-                    ? "Actualizar"
+                  : isEditing
+                    ? "Guardar"
                     : "Enviar"}
               </Button>
             </div>
           </div>
 
+          {/* Editor de descripción */}
           <div className="flex-[2] flex flex-col w-full max-w-full bg-slate-200 dark:bg-[#19191a] border border-[#f0f0f0] dark:border dark:border-white/20 rounded-lg p-scv4">
             <h1 className="mb-scv3 py-scv2 bg-[#634AE2] -ml-scv4 w-[calc(100% + 16px)] font-semibold text-white text-xl rounded-r-[10px] flex items-center justify-start pl-[28px]">
               Descripción
@@ -1263,12 +1096,7 @@ export default function BlogUsuarioCrear() {
             </div>
           </div>
         </div>
-      ) : (
-        <div className="mx-10 mt-14 dark:text-white">
-          <Listarblog onEdit={handleEdit} />
-        </div>
       )}
     </div>
-
   );
 }
