@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "r
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icons } from "@/icons";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { Flags } from "@/utils/flagsPsicologos";
 
 type FKey = "pais" | "genero" | "idioma" | "enfoque" | "especialidad";
 
@@ -25,14 +26,13 @@ const API_BASE =
     .replace(/\/?$/, "/");
 
 // Pretty labels (no alteran el valor enviado al back)
-const countryPrettyName: Record<string, string> = {
-  MX: "México",
-  CO: "Colombia",
-  AR: "Argentina",
-  PE: "Perú",
-  CL: "Chile",
-  EC: "Ecuador",
-};
+const countryPrettyName: Record<string, string> = Flags.reduce(
+  (acc, { value, label }) => {
+    acc[value] = label;
+    return acc;
+  },
+  {} as Record<string, string>
+);
 const languagePrettyName: Record<string, string> = {
   es: "Español",
   en: "Inglés",
