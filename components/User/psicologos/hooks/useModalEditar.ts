@@ -7,7 +7,6 @@ import { ChangeEvent, useState } from "react";
 export const useModalEditar = (refreshData: () => void) => {
   const [formData, setFormData] = useState<PsicologoPreviewData | null>(null);
 
-
   const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -20,7 +19,7 @@ export const useModalEditar = (refreshData: () => void) => {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => (prev ? { ...prev, [name]: value } : null ));
+    setFormData((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
   const handlePaisChange = (pais: string) => {

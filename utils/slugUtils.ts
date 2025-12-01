@@ -10,7 +10,7 @@ export function createSlug(title: string): string {
   
   // Para evitar problemas de búsqueda, simplemente retornar el título URL-encoded
   // Esto preserva los caracteres especiales y permite una búsqueda más precisa
-  return encodeURIComponent(title.trim());
+  return (title.trim());
 }
 
 /**

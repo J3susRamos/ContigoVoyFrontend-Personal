@@ -124,7 +124,6 @@ export interface FormData {
   };
   // AGREGAR ESTA PROPIEDAD
   idioma?: string; // o string si es requerido
-  meet_link: string;
 }
 
 export interface Especialidad {
@@ -147,6 +146,17 @@ export interface BlogApi {
   contenido: string;
   imagenes: string[]; // Array de imágenes
   idPsicologo: number | null;
+
+  metaTitle?: string;         // Título SEO
+  keywords?: string;          // Palabras clave
+  metaDescription?: string;   // Descripción SEO
+
+  // ✅ Metadatos de las imágenes (opcional)
+  imagenesMeta?: {
+    url: string;              // URL o base64 de la imagen
+    altText?: string;         // Texto alternativo
+    title?: string;           // Título de la imagen
+  }[];
 }
 
 export interface BlogApiGEt {
@@ -199,8 +209,7 @@ export interface PsicologoPreviewData {
   horario: {
     [key: string]: [string, string][];
   };
-    meet_link: string;
-};
+}
 
 export interface actulizarPsicologo {
   nombre: string;
@@ -272,6 +281,7 @@ export interface PsicologoFilters {
   genero?: string[];
   idioma?: string[];
   enfoque?: string[];
+  especialidad?: string[]; // ✅ NUEVA PROPIEDAD AGREGADA
   search?: string;
   page?: number;
   size?: number;

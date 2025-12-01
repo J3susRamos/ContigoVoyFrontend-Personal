@@ -70,7 +70,7 @@ export default function BlogPreview({
           )}
 
           {/* Title - Now as a Link */}
-          <Link href={`/blog/ver?blog=${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
+          <Link href={`/blog/${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white leading-tight group-hover:text-[#634AE2] dark:group-hover:text-[#8b7cf6] transition-colors duration-300 cursor-pointer break-words">
               {Data.tema}
             </h2>
@@ -100,7 +100,7 @@ export default function BlogPreview({
 
           {/* Read More Button - Now as a Link */}
           <div className="flex items-center justify-between pt-4">
-            <Link href={`/blog/ver?blog=${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
+<Link href={`/blog/${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
               <button className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-[#634AE2]/25 transition-all duration-300 group/btn">
                 Leer artículo completo
                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
@@ -111,7 +111,8 @@ export default function BlogPreview({
         
         {/* Image Section - SOLUCIÓN AL PROBLEMA */}
         <div className="lg:col-span-1 flex justify-center">
-          <Link href={`/blog/ver?blog=${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
+<Link href={`/blog/${encodeURIComponent(createSlug(Data.tema))}`} prefetch={false}>
+
             <div className="relative w-full h-80 lg:h-96 overflow-hidden rounded-2xl group-hover:shadow-2xl transition-all duration-500 border border-[#634AE2]/10 cursor-pointer">
               <Image
                 src={Data.imagenes?.[0] || Data.imagen}
