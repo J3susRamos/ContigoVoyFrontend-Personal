@@ -1,4 +1,12 @@
-import { CreatePersonal, GetIdiomas, GetEspecialidades, AddIdioma } from "@/app/apiRoutes";
+"use client";
+
+import {
+  CreatePersonal,
+  GetIdiomas,
+  GetEspecialidades,
+  AddIdioma,
+  addEspecialidad,
+} from "@/app/apiRoutes";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons/iconsvg";
 import { FormData, SelectItemI, Roles, Personal } from "@/interface";
 import { Flags } from "@/utils/flagsPsicologos";
@@ -28,7 +36,8 @@ const titleCase = (s: string) =>
 
 const slugify = (s: string) =>
   s
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "-");
@@ -47,7 +56,7 @@ const roles: Roles[] = [
   { textValue: "MARKETING", showLabel: "MARKETING" },
 ];
 
-type Permission = { id: number; name: string; };
+type Permission = { id: number; name: string };
 
 const titles: SelectItemI[] = [
   { textValue: "Pedagogo", showLabel: "Pedagogo" },
@@ -60,7 +69,7 @@ const titles: SelectItemI[] = [
 export interface Especialidad {
   idEspecialidad: number;
   nombre: string;
-  valo: string;
+  valor: string;
 }
 export interface Idiomas {
   idIdioma: number;
@@ -77,8 +86,13 @@ export const PersonalForm = ({
 }) => {
   // ======================= Estado general =======================
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]);
+
   const [especialidadesList, setEspecialidadesList] = useState<Especialidad[]>([]);
   const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] = useState<number[]>([]);
+  const [showOtrasEspecialidades, setShowOtrasEspecialidades] = useState(false);
+  const [nuevaEspecialidad, setNuevaEspecialidad] = useState("");
+  const [addEspLoading, setAddEspLoading] = useState(false);
+
   const [isSend, setIsSend] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [rol, setRol] = useState("PSICOLOGO");
@@ -89,6 +103,9 @@ export const PersonalForm = ({
   const [formData, setFormData] = useState<FormData>({
     ...initialFormData,
     idioma: initialFormData.idioma || "", // CSV de slugs
+    especialidades: Array.isArray(initialFormData.especialidades)
+      ? (initialFormData.especialidades as number[])
+      : [],
   });
 
   // ======================= Idiomas dinámicos =======================
@@ -101,10 +118,30 @@ export const PersonalForm = ({
   // ======================= Cargas iniciales =======================
   useEffect(() => {
     const fetchEspecialidades = async () => {
-      const especialidades = await GetEspecialidades();
-      setEspecialidadesList(especialidades);
+      try {
+        const especialidades = await GetEspecialidades(); // viene del back
+
+        // añadimos opción "Otras" al final para mostrar el input
+        const otrasOpcion: Especialidad = {
+          idEspecialidad: 0,
+          nombre: "Otras",
+          valor: "otras",
+        };
+
+        setEspecialidadesList([...especialidades, otrasOpcion]);
+
+        // si initialFormData ya traía especialidades -> preseleccionamos
+        if (Array.isArray(initialFormData.especialidades)) {
+          const ids = initialFormData.especialidades as number[];
+          setEspecialidadesSeleccionadas(ids);
+        }
+      } catch (err) {
+        console.error("Error al cargar especialidades:", err);
+        setEspecialidadesList([]);
+      }
     };
     fetchEspecialidades();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -138,19 +175,24 @@ export const PersonalForm = ({
 
   useEffect(() => {
     const fetchIdiomas = async () => {
-      const idiomas = await GetIdiomas();
-      const idiomasFormateados: SelectItemI[] = idiomas.map((idioma) => ({
-        textValue: idioma.valor,   // <- SLUG como key
-        showLabel: idioma.nombre,  // <- visible
-      }));
+      try {
+        const idiomas = await GetIdiomas();
+        const idiomasFormateados: SelectItemI[] = idiomas.map((idioma) => ({
+          textValue: idioma.valor, // <- SLUG como key
+          showLabel: idioma.nombre, // <- visible
+        }));
 
-      const otrosOpcion: SelectItemI = {
-        textValue: "otros",
-        showLabel: "Otros",
-      };
+        const otrosOpcion: SelectItemI = {
+          textValue: "otros",
+          showLabel: "Otros",
+        };
 
-      idiomasFormateados.push(otrosOpcion);
-      setIdiomasList(idiomasFormateados);
+        idiomasFormateados.push(otrosOpcion);
+        setIdiomasList(idiomasFormateados);
+      } catch (err) {
+        console.error("Error al obtener idiomas:", err);
+        setIdiomasList([]);
+      }
     };
 
     fetchIdiomas();
@@ -161,12 +203,16 @@ export const PersonalForm = ({
     setFormData({
       ...initialFormData,
       idioma: "",
+      especialidades: [],
     });
     setRol("PSICOLOGO");
     setPermissions([]);
     setSelectedIdiomas([]);
+    setEspecialidadesSeleccionadas([]);
     setOtroIdioma(false);
     setNuevoIdioma("");
+    setShowOtrasEspecialidades(false);
+    setNuevaEspecialidad("");
   };
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -193,8 +239,8 @@ export const PersonalForm = ({
       return;
     }
 
-    const nombre = titleCase(nombreCrudo);   // p.ej. "Quechua"
-    const valor = slugify(nombreCrudo);      // p.ej. "quechua"
+    const nombre = titleCase(nombreCrudo); // p.ej. "Quechua"
+    const valor = slugify(nombreCrudo); // p.ej. "quechua"
 
     // Evitar duplicados por slug o por nombre visible
     const existePorSlug = idiomasList.some((i) => i.textValue === valor);
@@ -246,6 +292,71 @@ export const PersonalForm = ({
     }
   };
 
+  // ======================= Agregar nueva especialidad (Otras) =======================
+  const handleAgregarNuevaEspecialidad = async () => {
+    const texto = nuevaEspecialidad.trim();
+    if (!texto) {
+      showToast("error", "Por favor ingresa una especialidad.");
+      return;
+    }
+
+    const nombre = titleCase(texto);
+
+    // evitar duplicados por nombre
+    const yaExiste = especialidadesList.some(
+      (e) => e.nombre.toLowerCase() === nombre.toLowerCase()
+    );
+    if (yaExiste) {
+      showToast("error", "Esa especialidad ya existe.");
+      return;
+    }
+
+    try {
+      setAddEspLoading(true);
+
+      // Llamamos al backend para CREAR realmente la especialidad
+      const creada = await addEspecialidad(nombre);
+
+      const idCreado: number =
+        (creada as any)?.idEspecialidad ?? (creada as any)?.id ?? -Date.now();
+
+      const nueva: Especialidad = {
+        idEspecialidad: idCreado,
+        nombre: (creada as any)?.nombre ?? nombre,
+        valor:
+          (creada as any)?.valor ??
+          nombre.toLowerCase().replace(/\s+/g, "-"),
+      };
+
+      // Agregamos al catálogo, siempre dejando "Otras" al final
+      setEspecialidadesList((prev) => {
+        const sinOtras = prev.filter((e) => e.idEspecialidad !== 0);
+        const otras = prev.find((e) => e.idEspecialidad === 0);
+        return otras ? [...sinOtras, nueva, otras] : [...sinOtras, nueva];
+      });
+
+      // Actualizamos la selección (sin el id 0)
+      setEspecialidadesSeleccionadas((prev) => {
+        const sinOtras = prev.filter((id) => id !== 0);
+        const next = Array.from(new Set([...sinOtras, idCreado]));
+        setFormData((f) => ({
+          ...f,
+          especialidades: next,
+        }));
+        return next;
+      });
+
+      setNuevaEspecialidad("");
+      setShowOtrasEspecialidades(false);
+      showToast("success", "Especialidad agregada correctamente.");
+    } catch (err: any) {
+      console.error(err);
+      showToast("error", err?.message || "No se pudo crear la especialidad.");
+    } finally {
+      setAddEspLoading(false);
+    }
+  };
+
   // ======================= Crear Personal / Psicólogo =======================
   const handleSubmitCreatePersonal = async () => {
     try {
@@ -259,7 +370,9 @@ export const PersonalForm = ({
       const personalData: Personal = {
         apellido: updatedFormData.apellido,
         email: updatedFormData.email,
-        fecha_nacimiento: formatFechaNacimiento(updatedFormData.fecha_nacimiento),
+        fecha_nacimiento: formatFechaNacimiento(
+          updatedFormData.fecha_nacimiento
+        ),
         name: updatedFormData.name,
         password: updatedFormData.password,
         permissions: updatedFormData.permissions,
@@ -302,8 +415,8 @@ export const PersonalForm = ({
       const payload = {
         ...formData,
         fecha_nacimiento: fechaNacimiento,
-        especialidades: especialidadesSeleccionadas,
-        idiomas: selectedIdiomas.filter(k => k !== 'otros'),
+        especialidades: especialidadesSeleccionadas.filter((id) => id !== 0), // solo ids reales
+        idiomas: selectedIdiomas.filter((k) => k !== "otros"),
       };
 
       const response = await fetch(
@@ -615,7 +728,7 @@ export const PersonalForm = ({
                                   }
                                   classNames={{
                                     trigger:
-                                      "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w/full",
+                                      "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
                                     value:
                                       "text-gray-900 dark:text-white text-center",
                                     listboxWrapper: "dark:bg-gray-800",
@@ -728,7 +841,7 @@ export const PersonalForm = ({
                               selectedKeys={[formData.titulo]}
                               classNames={{
                                 trigger:
-                                  "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w/full",
+                                  "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
                                 value:
                                   "text-gray-900 dark:text-white text-center",
                                 listboxWrapper: "dark:bg-gray-800",
@@ -770,20 +883,25 @@ export const PersonalForm = ({
                                 selectedKeys={new Set(selectedIdiomas)}
                                 classNames={{
                                   trigger:
-                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w/full",
-                                  value: "text-gray-900 dark:text-white text-center",
+                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                                  value:
+                                    "text-gray-900 dark:text-white text-center",
                                   listboxWrapper: "dark:bg-gray-800",
                                   popoverContent:
                                     "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
                                 }}
                                 onSelectionChange={(keys) => {
-                                  const selected = Array.from(keys) as string[];
+                                  const selected = Array.from(
+                                    keys
+                                  ) as string[];
                                   setSelectedIdiomas(selected);
 
                                   const hasOtros = selected.includes("otros");
                                   setOtroIdioma(hasOtros);
 
-                                  const soloIdiomas = selected.filter((k) => k !== "otros");
+                                  const soloIdiomas = selected.filter(
+                                    (k) => k !== "otros"
+                                  );
                                   setFormData((prev) => ({
                                     ...prev,
                                     idioma: soloIdiomas.join(","), // CSV de slugs
@@ -815,11 +933,13 @@ export const PersonalForm = ({
                                         placeholder="Ej. Quechua"
                                         classNames={{
                                           inputWrapper:
-                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w/full",
+                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
                                           input:
-                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w/full",
+                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
                                         }}
-                                        onChange={(e) => setNuevoIdioma(e.target.value)}
+                                        onChange={(e) =>
+                                          setNuevoIdioma(e.target.value)
+                                        }
                                         onKeyDown={(e) => {
                                           if (e.key === "Enter") {
                                             e.preventDefault();
@@ -833,7 +953,9 @@ export const PersonalForm = ({
                                         isDisabled={addIdiomaLoading}
                                         onPress={handleAddIdioma}
                                       >
-                                        {addIdiomaLoading ? "Agregando..." : "Agregar"}
+                                        {addIdiomaLoading
+                                          ? "Agregando..."
+                                          : "Agregar"}
                                       </Button>
                                     </div>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
@@ -856,27 +978,94 @@ export const PersonalForm = ({
                                 radius="lg"
                                 variant="bordered"
                                 placeholder="Seleccione una o varias especialidades"
-                                selectedKeys={new Set(especialidadesSeleccionadas.map(String))}
+                                selectedKeys={new Set(
+                                  especialidadesSeleccionadas.map(String)
+                                )}
                                 onSelectionChange={(keys) => {
-                                  const selected = Array.from(keys).map((k) => Number(k));
-                                  setEspecialidadesSeleccionadas(selected);
-                                  setFormData((prev) => ({ ...prev, especialidades: selected }));
+                                  const selectedKeys = Array.from(
+                                    keys
+                                  ) as string[];
+                                  const ids = selectedKeys.map((k) =>
+                                    Number(k)
+                                  );
+
+                                  setEspecialidadesSeleccionadas(ids);
+
+                                  const hasOtras = ids.includes(0);
+                                  setShowOtrasEspecialidades(hasOtras);
+
+                                  const soloIds = ids.filter((id) => id !== 0);
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    especialidades: soloIds,
+                                  }));
                                 }}
                                 classNames={{
                                   trigger:
-                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w/full",
-                                  value: "text-gray-900 dark:text-white text-center",
+                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                                  value:
+                                    "text-gray-900 dark:text-white text-center",
                                   listboxWrapper: "dark:bg-gray-800",
                                   popoverContent:
                                     "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
                                 }}
                               >
                                 {especialidadesList.map((esp) => (
-                                  <SelectItem key={esp.idEspecialidad} textValue={esp.nombre}>
+                                  <SelectItem
+                                    key={String(esp.idEspecialidad)}
+                                    textValue={esp.nombre}
+                                  >
                                     {esp.nombre}
                                   </SelectItem>
                                 ))}
                               </Select>
+
+                              {showOtrasEspecialidades && (
+                                <div className="mt-4">
+                                  <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                                    <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
+                                      Agregar nueva especialidad
+                                    </label>
+                                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                                      <Input
+                                        radius="lg"
+                                        variant="bordered"
+                                        value={nuevaEspecialidad}
+                                        placeholder="Ej. Psicología deportiva"
+                                        classNames={{
+                                          inputWrapper:
+                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                                          input:
+                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                                        }}
+                                        onChange={(e) =>
+                                          setNuevaEspecialidad(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            handleAgregarNuevaEspecialidad();
+                                          }
+                                        }}
+                                      />
+                                      <Button
+                                        radius="lg"
+                                        className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                                        isDisabled={addEspLoading}
+                                        onPress={handleAgregarNuevaEspecialidad}
+                                      >
+                                        {addEspLoading
+                                          ? "Agregando..."
+                                          : "Agregar"}
+                                      </Button>
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                                      Se registrará en la base de datos y se
+                                      agregará a la lista.
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </>
                         ) : null}
@@ -898,9 +1087,13 @@ export const PersonalForm = ({
                               aria-label="Seleccionar permisos"
                               placeholder="Seleccione el permiso del personal."
                               variant="bordered"
-                              selectedKeys={new Set(permissions.map((p) => String(p)))}
+                              selectedKeys={new Set(
+                                permissions.map((p) => String(p))
+                              )}
                               onSelectionChange={(keys) => {
-                                const selected = Array.from(keys).map((k) => Number(k));
+                                const selected = Array.from(keys).map((k) =>
+                                  Number(k)
+                                );
                                 setPermissions(selected);
                                 setFormData((prev) => ({
                                   ...prev,
@@ -909,9 +1102,15 @@ export const PersonalForm = ({
                               }}
                             >
                               {permissionsList
-                                .filter((perm) => perm.id !== undefined && perm.id !== null)
+                                .filter(
+                                  (perm) =>
+                                    perm.id !== undefined && perm.id !== null
+                                )
                                 .map((perm) => (
-                                  <SelectItem key={String(perm.id)} textValue={perm.name}>
+                                  <SelectItem
+                                    key={String(perm.id)}
+                                    textValue={perm.name}
+                                  >
                                     {perm.name}
                                   </SelectItem>
                                 ))}
@@ -925,7 +1124,8 @@ export const PersonalForm = ({
                           <div className="mt-4 flex flex-wrap gap-2 justify-center">
                             {permissions.map((permId, idx) => {
                               const permName =
-                                permissionsList.find((p) => p.id === permId)?.name || permId;
+                                permissionsList.find((p) => p.id === permId)
+                                  ?.name || permId;
                               return (
                                 <span
                                   key={idx}
