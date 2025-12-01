@@ -746,8 +746,8 @@ export const PersonalForm = ({
                                   {Flags.map((item) => (
                                     <SelectItem
                                       className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                      textValue={item.label}   // <- ahora el texto es "Bahamas"
-                                      key={item.value}         // <- la key sigue siendo el código "BS"
+                                      textValue={item.value}
+                                      key={item.value}
                                     >
                                       {item.label}
                                     </SelectItem>
