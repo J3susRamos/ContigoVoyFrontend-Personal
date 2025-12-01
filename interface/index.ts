@@ -124,7 +124,6 @@ export interface FormData {
   };
   // AGREGAR ESTA PROPIEDAD
   idioma?: string; // o string si es requerido
-  meet_link: string;
 }
 
 export interface Especialidad {
@@ -199,8 +198,7 @@ export interface PsicologoPreviewData {
   horario: {
     [key: string]: [string, string][];
   };
-    meet_link: string;
-};
+}
 
 export interface actulizarPsicologo {
   nombre: string;
