@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from "r
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icons } from "@/icons";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import { Flags } from "@/utils/flagsPsicologos";
 
 type FKey = "pais" | "genero" | "idioma" | "enfoque" | "especialidad";
 
@@ -20,19 +21,21 @@ interface ReservarComponentSearchProps {
 
 // === Config base ===
 const API_BASE =
-  (process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000")
+  (process.env.NEXT_PUBLIC_API_URL ??
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
+    "http://127.0.0.1:8000")
     // asegura barra final única
     .replace(/\/?$/, "/");
 
 // Pretty labels (no alteran el valor enviado al back)
-const countryPrettyName: Record<string, string> = {
-  MX: "México",
-  CO: "Colombia",
-  AR: "Argentina",
-  PE: "Perú",
-  CL: "Chile",
-  EC: "Ecuador",
-};
+const countryPrettyName: Record<string, string> = Flags.reduce(
+  (acc, { value, label }) => {
+    acc[value] = label;
+    return acc;
+  },
+  {} as Record<string, string>
+);
+
 const languagePrettyName: Record<string, string> = {
   es: "Español",
   en: "Inglés",
@@ -46,6 +49,7 @@ type Option = { nombre: string; valor: string };
 type FilterOptions = Record<FKey, Option[]>;
 
 const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
+
 const normalize = (arr?: string[]) =>
   Array.from(
     new Set(
@@ -61,12 +65,13 @@ const toPairs = (arr: string[], pretty?: (v: string) => string): Option[] =>
     .filter((o) => o.valor && o.nombre)
     .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
 
-// --- Fetch filtros base (pais/genero/idioma/enfoque) ---
+// --- Fetch filtros base (pais/genero/idioma/enfoque/especialidad) ---
 async function fetchFilterOptionsBase(): Promise<{
   paises: string[];
   generos: string[];
   idiomas: string[];
   enfoques: string[];
+  especialidades: string[];
 }> {
   const candidates = [
     `${API_BASE}api/psicologos/filter-options`,
@@ -107,10 +112,18 @@ async function fetchFilterOptionsBase(): Promise<{
       const generos = pick(payload, "generos");
       const idiomas = pick(payload, "idiomas");
       const enfoques = pick(payload, "enfoques");
+      const especialidades = pick(payload, "especialidades");
 
       // Si al menos una key trae algo, damos por válido
-      if (paises.length + generos.length + idiomas.length + enfoques.length > 0) {
-        return { paises, generos, idiomas, enfoques };
+      if (
+        paises.length +
+        generos.length +
+        idiomas.length +
+        enfoques.length +
+        especialidades.length >
+        0
+      ) {
+        return { paises, generos, idiomas, enfoques, especialidades };
       }
 
       // Otra forma: payload podría ser {paises:[...], ...} directamente
@@ -118,13 +131,15 @@ async function fetchFilterOptionsBase(): Promise<{
         Array.isArray(payload?.paises) ||
         Array.isArray(payload?.generos) ||
         Array.isArray(payload?.idiomas) ||
-        Array.isArray(payload?.enfoques)
+        Array.isArray(payload?.enfoques) ||
+        Array.isArray(payload?.especialidades)
       ) {
         return {
           paises: payload?.paises ?? [],
           generos: payload?.generos ?? [],
           idiomas: payload?.idiomas ?? [],
           enfoques: payload?.enfoques ?? [],
+          especialidades: payload?.especialidades ?? [],
         };
       }
 
@@ -135,27 +150,6 @@ async function fetchFilterOptionsBase(): Promise<{
     }
   }
   throw lastErr ?? new Error("No se pudo obtener filter-options");
-}
-
-// --- Fetch especialidades (endpoint separado) ---
-async function fetchEspecialidades(): Promise<string[]> {
-  const url = `${API_BASE}api/especialidades`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: { Accept: "application/json", "Content-Type": "application/json" },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} al obtener especialidades`);
-  const data = await res.json();
-
-  // intenta reconocer varios formatos comunes
-  const arraysInBody = Object.values(data).filter(Array.isArray) as any[][];
-  if (Array.isArray(data?.data)) return data.data.map((x: any) => x?.nombre ?? x?.name ?? x);
-  if (Array.isArray(data?.result)) return data.result.map((x: any) => x?.nombre ?? x?.name ?? x);
-  if (Array.isArray(data?.especialidades)) return data.especialidades.map((x: any) => x?.nombre ?? x?.name ?? x);
-  if (Array.isArray(data)) return data.map((x: any) => x?.nombre ?? x?.name ?? x);
-  if (arraysInBody.length > 0) return arraysInBody[0].map((x: any) => x?.nombre ?? x?.name ?? x);
-
-  return [];
 }
 
 export default function ReservarComponentSearch({
@@ -182,27 +176,38 @@ export default function ReservarComponentSearch({
   });
 
   const [loadingBase, setLoadingBase] = useState(true);
-  const [loadingEsp, setLoadingEsp] = useState(true);
   const [errBase, setErrBase] = useState<string | null>(null);
-  const [errEsp, setErrEsp] = useState<string | null>(null);
 
-  // 1) Cargar filtros base (pais/genero/idioma/enfoque)
+  // 1) Cargar filtros base (pais/genero/idioma/enfoque/especialidad)
   useEffect(() => {
     const ac = new AbortController();
     (async () => {
       try {
         setLoadingBase(true);
         setErrBase(null);
-        const { paises, generos, idiomas, enfoques } = await fetchFilterOptionsBase();
+        const {
+          paises,
+          generos,
+          idiomas,
+          enfoques,
+          especialidades,
+        } = await fetchFilterOptionsBase();
+
         setFilterOptions((prev) => ({
           ...prev,
           pais: toPairs(normalize(paises), (v) => countryPrettyName[v] ?? v),
           genero: toPairs(normalize(generos), (v) => cap(v)),
-          idioma: toPairs(normalize(idiomas), (v) => languagePrettyName[v] ?? v),
+          idioma: toPairs(
+            normalize(idiomas),
+            (v) => languagePrettyName[v] ?? v
+          ),
           enfoque: toPairs(normalize(enfoques), (v) => cap(v)),
+          especialidad: toPairs(normalize(especialidades)), // viene del mismo endpoint
         }));
       } catch (e: any) {
-        if (e?.name !== "AbortError") setErrBase("No se pudieron cargar los filtros base.");
+        if (e?.name !== "AbortError") {
+          setErrBase("No se pudieron cargar los filtros.");
+        }
       } finally {
         setLoadingBase(false);
       }
@@ -210,28 +215,7 @@ export default function ReservarComponentSearch({
     return () => ac.abort();
   }, []);
 
-  // 2) Cargar especialidades (endpoint separado)
-  useEffect(() => {
-    const ac = new AbortController();
-    (async () => {
-      try {
-        setLoadingEsp(true);
-        setErrEsp(null);
-        const especialidades = await fetchEspecialidades();
-        setFilterOptions((prev) => ({
-          ...prev,
-          especialidad: toPairs(normalize(especialidades)),
-        }));
-      } catch (e: any) {
-        if (e?.name !== "AbortError") setErrEsp("No se pudieron cargar las especialidades.");
-      } finally {
-        setLoadingEsp(false);
-      }
-    })();
-    return () => ac.abort();
-  }, []);
-
-  // 3) Propagar cambios al padre
+  // 2) Propagar cambios al padre
   useEffect(() => {
     setFilters({
       pais: localFilters.pais,
@@ -242,7 +226,7 @@ export default function ReservarComponentSearch({
     });
   }, [localFilters, setFilters]);
 
-  // 4) Handlers
+  // 3) Handlers
   const toggleFilters = () => setIsFiltersOpen((v) => !v);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -261,7 +245,7 @@ export default function ReservarComponentSearch({
     });
   };
 
-  // 5) Render sección (con loaders independientes)
+  // 4) Render sección (usa loadingBase / errBase para todas)
   const renderFilterSection = (
     title: string,
     filterKey: FKey,
@@ -290,7 +274,9 @@ export default function ReservarComponentSearch({
     if (err) {
       return (
         <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-100 dark:border-gray-600">
-          <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">{title}</h4>
+          <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+            {title}
+          </h4>
           <p className="text-sm text-red-600">{err}</p>
         </div>
       );
@@ -313,7 +299,9 @@ export default function ReservarComponentSearch({
               <Checkbox
                 id={`${filterKey}-${idx}`}
                 checked={(localFilters[filterKey] || []).includes(item.valor)}
-                onCheckedChange={() => handleCheckboxChange(filterKey, item.valor)}
+                onCheckedChange={() =>
+                  handleCheckboxChange(filterKey, item.valor)
+                }
                 className="text-lg rounded-md border-2 border-gray-300 dark:border-gray-500 data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-purple-500 data-[state=checked]:to-indigo-500 data-[state=checked]:border-transparent"
               />
               <label
@@ -329,7 +317,7 @@ export default function ReservarComponentSearch({
     );
   };
 
-  // 6) UI
+  // 5) UI
   const filtersContent = useMemo(() => {
     return (
       <>
@@ -337,10 +325,15 @@ export default function ReservarComponentSearch({
         {renderFilterSection("Género", "genero", loadingBase, errBase)}
         {renderFilterSection("Idioma", "idioma", loadingBase, errBase)}
         {renderFilterSection("Enfoque", "enfoque", loadingBase, errBase)}
-        {renderFilterSection("Especialidad", "especialidad", loadingEsp, errEsp)}
+        {renderFilterSection(
+          "Especialidad",
+          "especialidad",
+          loadingBase,
+          errBase
+        )}
       </>
     );
-  }, [filterOptions, localFilters, loadingBase, loadingEsp, errBase, errEsp]);
+  }, [filterOptions, localFilters, loadingBase, errBase]);
 
   return (
     <div className="w-full p-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-2xl">
@@ -348,7 +341,9 @@ export default function ReservarComponentSearch({
         <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
           Encuentra tu psicólogo ideal
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">Filtra por tus preferencias</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Filtra por tus preferencias
+        </p>
       </div>
 
       {/* Mobile: Search + Toggle */}
@@ -365,7 +360,10 @@ export default function ReservarComponentSearch({
           <span
             className="text-gray-400 dark:text-gray-500 absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors"
             dangerouslySetInnerHTML={{
-              __html: Icons.loup.replace(/<svg /, '<svg fill="currentColor" '),
+              __html: Icons.loup.replace(
+                /<svg /,
+                '<svg fill="currentColor" '
+              ),
             }}
             style={{ width: "1.2em", height: "1.2em" }}
           />
@@ -394,7 +392,10 @@ export default function ReservarComponentSearch({
           <span
             className="text-gray-400 dark:text-gray-500 absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors"
             dangerouslySetInnerHTML={{
-              __html: Icons.loup.replace(/<svg /, '<svg fill="currentColor" '),
+              __html: Icons.loup.replace(
+                /<svg /,
+                '<svg fill="currentColor" '
+              ),
             }}
             style={{ width: "1.2em", height: "1.2em" }}
           />
