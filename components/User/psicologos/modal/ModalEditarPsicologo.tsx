@@ -174,7 +174,6 @@ const ModalEditarPsicologo: React.FC<ModalEditarPsicologoProps> = ({
                 onChange={handleChanges}
                 name="correo"
               />
-
               <Input
                 label="Google Meet Link"
                 labelPlacement="outside"
@@ -192,7 +191,6 @@ const ModalEditarPsicologo: React.FC<ModalEditarPsicologoProps> = ({
                 onChange={handleChanges}
                 name="meet_link"
               />
-
               <Input
                 label="Contraseña"
                 labelPlacement="outside"
@@ -297,7 +295,7 @@ const ModalEditarPsicologo: React.FC<ModalEditarPsicologoProps> = ({
           <div className="mt-6">
             <Textarea
               isRequired
-              value={formData?.introduccion || ""}
+              value={formData?.introduccion}
               minLength={100}
               name="introduccion"
               maxLength={350}

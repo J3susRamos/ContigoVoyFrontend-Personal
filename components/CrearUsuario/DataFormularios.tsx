@@ -1,7 +1,14 @@
-import { CreatePersonal } from "@/app/apiRoutes";
+"use client";
+
+import {
+  CreatePersonal,
+  GetIdiomas,
+  GetEspecialidades,
+  AddIdioma,
+  addEspecialidad,
+} from "@/app/apiRoutes";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons/iconsvg";
 import { FormData, SelectItemI, Roles, Personal } from "@/interface";
-import { GetEspecialidades } from "@/app/apiRoutes";
 import { Flags } from "@/utils/flagsPsicologos";
 import {
   Button,
@@ -11,7 +18,6 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import { getLocalTimeZone, today } from "@internationalized/date";
 import React, { useEffect, useState } from "react";
 import showToast from "../ToastStyle";
 import { parseCookies } from "nookies";
@@ -19,75 +25,56 @@ import { toast } from "react-toastify";
 import { Suceesfully } from "./SuccesFull";
 import DatePickerCustom from "./DatePickerCustom";
 
-// Obtener estos datos de manera dinamica
+// ======================= Helpers =======================
+const titleCase = (s: string) =>
+  s
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+const slugify = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-");
+
+// ======================= Datos estáticos =======================
 const genders: SelectItemI[] = [
-  {
-    textValue: "femenino",
-    showLabel: "Femenino",
-  },
-  {
-    textValue: "masculino",
-    showLabel: "Masculino",
-  },
-  {
-    textValue: "otro",
-    showLabel: "Otro",
-  },
+  { textValue: "femenino", showLabel: "Femenino" },
+  { textValue: "masculino", showLabel: "Masculino" },
+  { textValue: "otro", showLabel: "Otro" },
 ];
 
-//Roles
 const roles: Roles[] = [
-  {
-    textValue: "ADMINISTRADOR",
-    showLabel: "ADMINISTRADOR",
-  },
-  {
-    textValue: "PSICOLOGO",
-    showLabel: "PSICOLOGO",
-  },
-  {
-    textValue: "COMUNICACION",
-    showLabel: "COMUNICACION",
-  },
-  {
-    textValue: "MARKETING",
-    showLabel: "MARKETING",
-  },
+  { textValue: "ADMINISTRADOR", showLabel: "ADMINISTRADOR" },
+  { textValue: "PSICOLOGO", showLabel: "PSICOLOGO" },
+  { textValue: "COMUNICACION", showLabel: "COMUNICACION" },
+  { textValue: "MARKETING", showLabel: "MARKETING" },
 ];
 
-// Permisos para ver secciones del sidebar
-type Permission = {
-  id: number;
-  name: string;
-};
+type Permission = { id: number; name: string };
 
-// Obtener estos datos de manera dinamica
 const titles: SelectItemI[] = [
-  {
-    textValue: "Pedagogo",
-    showLabel: "Pedagogo",
-  },
-  {
-    textValue: "Psicoanalista",
-    showLabel: "Psicoanalista",
-  },
-  {
-    textValue: "Terapeuta",
-    showLabel: "Terapeuta",
-  },
-  {
-    textValue: "Pediatra",
-    showLabel: "Pediatra",
-  },
-  {
-    textValue: "Conductual",
-    showLabel: "Conductual",
-  },
+  { textValue: "Pedagogo", showLabel: "Pedagogo" },
+  { textValue: "Psicoanalista", showLabel: "Psicoanalista" },
+  { textValue: "Terapeuta", showLabel: "Terapeuta" },
+  { textValue: "Pediatra", showLabel: "Pediatra" },
+  { textValue: "Conductual", showLabel: "Conductual" },
 ];
 
-interface Especialidad {
+export interface Especialidad {
   idEspecialidad: number;
   nombre: string;
+  valor: string;
+}
+export interface Idiomas {
+  idIdioma: number;
+  nombre: string;
+  valor: string;
 }
 
 export const PersonalForm = ({
@@ -97,17 +84,64 @@ export const PersonalForm = ({
   onNext: (data: FormData) => void;
   initialFormData: FormData;
 }) => {
+  // ======================= Estado general =======================
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]);
+
   const [especialidadesList, setEspecialidadesList] = useState<Especialidad[]>([]);
   const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] = useState<number[]>([]);
+  const [showOtrasEspecialidades, setShowOtrasEspecialidades] = useState(false);
+  const [nuevaEspecialidad, setNuevaEspecialidad] = useState("");
+  const [addEspLoading, setAddEspLoading] = useState(false);
 
+  const [isSend, setIsSend] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [rol, setRol] = useState("PSICOLOGO");
+  const [permissions, setPermissions] = useState<number[]>([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // ======================= Form Data =======================
+  const [formData, setFormData] = useState<FormData>({
+    ...initialFormData,
+    idioma: initialFormData.idioma || "", // CSV de slugs
+    especialidades: Array.isArray(initialFormData.especialidades)
+      ? (initialFormData.especialidades as number[])
+      : [],
+  });
+
+  // ======================= Idiomas dinámicos =======================
+  const [idiomasList, setIdiomasList] = useState<SelectItemI[]>([]);
+  const [selectedIdiomas, setSelectedIdiomas] = useState<string[]>([]);
+  const [otroIdioma, setOtroIdioma] = useState<boolean>(false);
+  const [nuevoIdioma, setNuevoIdioma] = useState<string>("");
+  const [addIdiomaLoading, setAddIdiomaLoading] = useState<boolean>(false);
+
+  // ======================= Cargas iniciales =======================
   useEffect(() => {
-    GetEspecialidades().then((res) => {
-      const data = Array.isArray(res.result) ? res.result : [];
-      setEspecialidadesList(data as Especialidad[]);
-    }).catch((err) =>
-      console.error("Error cargando especialidades:", err)
-    );
+    const fetchEspecialidades = async () => {
+      try {
+        const especialidades = await GetEspecialidades(); // viene del back
+
+        // añadimos opción "Otras" al final para mostrar el input
+        const otrasOpcion: Especialidad = {
+          idEspecialidad: 0,
+          nombre: "Otras",
+          valor: "otras",
+        };
+
+        setEspecialidadesList([...especialidades, otrasOpcion]);
+
+        // si initialFormData ya traía especialidades -> preseleccionamos
+        if (Array.isArray(initialFormData.especialidades)) {
+          const ids = initialFormData.especialidades as number[];
+          setEspecialidadesSeleccionadas(ids);
+        }
+      } catch (err) {
+        console.error("Error al cargar especialidades:", err);
+        setEspecialidadesList([]);
+      }
+    };
+    fetchEspecialidades();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -115,7 +149,6 @@ export const PersonalForm = ({
       try {
         const cookies = parseCookies();
         const token = cookies["session"];
-
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}api/urls/enlaces`,
           {
@@ -127,11 +160,8 @@ export const PersonalForm = ({
             },
           }
         );
-
         const data = await response.json();
-
         if (response.ok) {
-          console.log("Permisos obtenidos:", data.result);
           setPermissionsList(data.result);
         } else {
           console.error("Error en la solicitud:", data);
@@ -143,97 +173,191 @@ export const PersonalForm = ({
     fetchPermissions();
   }, []);
 
-  const [isSend, setIsSend] = useState(false);
-  const [isVisible, setIsVisible] = React.useState(false);
-  // AGREGADO: Asegurar que initialFormData incluya idioma
-  const [formData, setFormData] = React.useState<FormData>({
-    ...initialFormData,
-    idioma: initialFormData.idioma || "" // Inicializar idioma
-  });
-  const [rol, setRol] = React.useState("PSICOLOGO");
-  const [permissions, setPermissions] = React.useState<number[]>([]);
-  
-  // AGREGADO: Estado para idiomas dinámicos
-  const [idiomasList, setIdiomasList] = useState<SelectItemI[]>([]);
-  const [selectedIdiomas, setSelectedIdiomas] = React.useState<string[]>([]);
-
-  // AGREGADO: useEffect para cargar idiomas dinámicamente
   useEffect(() => {
     const fetchIdiomas = async () => {
-      if (rol !== "PSICOLOGO") return;
-      
       try {
-        const cookies = parseCookies();
-        const token = cookies["session"];
+        const idiomas = await GetIdiomas();
+        const idiomasFormateados: SelectItemI[] = idiomas.map((idioma) => ({
+          textValue: idioma.valor, // <- SLUG como key
+          showLabel: idioma.nombre, // <- visible
+        }));
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/idiomas/disponibles`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const otrosOpcion: SelectItemI = {
+          textValue: "otros",
+          showLabel: "Otros",
+        };
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Idiomas obtenidos del backend:", data);
-          
-          // Transformar la respuesta del backend al formato SelectItemI
-          const idiomasFormateados = data.result.map((idioma: any) => ({
-            textValue: idioma.codigo,
-            showLabel: idioma.nombre,
-          }));
-          
-          setIdiomasList(idiomasFormateados);
-        } else {
-          console.error("Error al obtener idiomas:", response.status);
-        }
-      } catch (error) {
-        console.error("Error al obtener idiomas:", error);
+        idiomasFormateados.push(otrosOpcion);
+        setIdiomasList(idiomasFormateados);
+      } catch (err) {
+        console.error("Error al obtener idiomas:", err);
+        setIdiomasList([]);
       }
     };
 
     fetchIdiomas();
   }, [rol]);
 
+  // ======================= Utils =======================
   const resetForm = () => {
     setFormData({
       ...initialFormData,
-      idioma: "" // Resetear idioma también
+      idioma: "",
+      especialidades: [],
     });
     setRol("PSICOLOGO");
     setPermissions([]);
-    setSelectedIdiomas([]); // Resetear idiomas seleccionados
+    setSelectedIdiomas([]);
+    setEspecialidadesSeleccionadas([]);
+    setOtroIdioma(false);
+    setNuevoIdioma("");
+    setShowOtrasEspecialidades(false);
+    setNuevaEspecialidad("");
   };
 
   const toggleVisibility = () => setIsVisible(!isVisible);
+
   const handleSubmit = (e: React.FormEvent) => {
-    console.log(formData);
     e.preventDefault();
     onNext(formData);
   };
 
-  // Función de utilidad para transformar fecha
   const formatFechaNacimiento = (fecha: string | DateValue | Date): string => {
     if (!fecha) return "";
-
-    if (typeof fecha === "string") {
-      return fecha;
-    }
-
-    if (fecha instanceof Date) {
-      return fecha.toISOString().split("T")[0];
-    }
-
+    if (typeof fecha === "string") return fecha;
+    if (fecha instanceof Date) return fecha.toISOString().split("T")[0];
     return `${fecha.year}-${String(fecha.month).padStart(2, "0")}-${String(
       fecha.day
     ).padStart(2, "0")}`;
   };
 
+  // ======================= Add Idioma (Otros) =======================
+  const handleAddIdioma = async () => {
+    const nombreCrudo = nuevoIdioma.trim();
+    if (!nombreCrudo) {
+      showToast("error", "Escribe un idioma válido.");
+      return;
+    }
+
+    const nombre = titleCase(nombreCrudo); // p.ej. "Quechua"
+    const valor = slugify(nombreCrudo); // p.ej. "quechua"
+
+    // Evitar duplicados por slug o por nombre visible
+    const existePorSlug = idiomasList.some((i) => i.textValue === valor);
+    const existePorNombre = idiomasList.some(
+      (i) => i.showLabel.toLowerCase() === nombre.toLowerCase()
+    );
+    if (existePorSlug || existePorNombre) {
+      showToast("error", "Ese idioma ya está en la lista.");
+      return;
+    }
+
+    try {
+      setAddIdiomaLoading(true);
+
+      // Crear en backend (apiRoutes)
+      const creado = await AddIdioma(nombre);
+      const creadoNombre = creado?.nombre ?? nombre;
+      const creadoValor = creado?.valor ?? valor;
+
+      // Nueva opción consistente (key=slug)
+      const nuevaOpcion: SelectItemI = {
+        textValue: creadoValor,
+        showLabel: creadoNombre,
+      };
+
+      // Insertar antes de "otros"
+      setIdiomasList((prev) => {
+        const sinOtros = prev.filter((x) => x.textValue !== "otros");
+        const otros = prev.find((x) => x.textValue === "otros");
+        return otros ? [...sinOtros, nuevaOpcion, otros] : [...sinOtros, nuevaOpcion];
+      });
+
+      // Seleccionar el nuevo idioma y quitar "otros" del CSV
+      setSelectedIdiomas((prev) => {
+        const sinOtros = prev.filter((k) => k !== "otros");
+        const next = Array.from(new Set([...sinOtros, nuevaOpcion.textValue]));
+        setFormData((f) => ({ ...f, idioma: next.join(",") })); // CSV de slugs
+        setOtroIdioma(false); // Ocultar input por UX
+        return next;
+      });
+
+      setNuevoIdioma("");
+      showToast("success", "Idioma agregado y seleccionado.");
+    } catch (err: any) {
+      console.error(err);
+      showToast("error", err?.message || "No se pudo crear el idioma.");
+    } finally {
+      setAddIdiomaLoading(false);
+    }
+  };
+
+  // ======================= Agregar nueva especialidad (Otras) =======================
+  const handleAgregarNuevaEspecialidad = async () => {
+    const texto = nuevaEspecialidad.trim();
+    if (!texto) {
+      showToast("error", "Por favor ingresa una especialidad.");
+      return;
+    }
+
+    const nombre = titleCase(texto);
+
+    // evitar duplicados por nombre
+    const yaExiste = especialidadesList.some(
+      (e) => e.nombre.toLowerCase() === nombre.toLowerCase()
+    );
+    if (yaExiste) {
+      showToast("error", "Esa especialidad ya existe.");
+      return;
+    }
+
+    try {
+      setAddEspLoading(true);
+
+      // Llamamos al backend para CREAR realmente la especialidad
+      const creada = await addEspecialidad(nombre);
+
+      const idCreado: number =
+        (creada as any)?.idEspecialidad ?? (creada as any)?.id ?? -Date.now();
+
+      const nueva: Especialidad = {
+        idEspecialidad: idCreado,
+        nombre: (creada as any)?.nombre ?? nombre,
+        valor:
+          (creada as any)?.valor ??
+          nombre.toLowerCase().replace(/\s+/g, "-"),
+      };
+
+      // Agregamos al catálogo, siempre dejando "Otras" al final
+      setEspecialidadesList((prev) => {
+        const sinOtras = prev.filter((e) => e.idEspecialidad !== 0);
+        const otras = prev.find((e) => e.idEspecialidad === 0);
+        return otras ? [...sinOtras, nueva, otras] : [...sinOtras, nueva];
+      });
+
+      // Actualizamos la selección (sin el id 0)
+      setEspecialidadesSeleccionadas((prev) => {
+        const sinOtras = prev.filter((id) => id !== 0);
+        const next = Array.from(new Set([...sinOtras, idCreado]));
+        setFormData((f) => ({
+          ...f,
+          especialidades: next,
+        }));
+        return next;
+      });
+
+      setNuevaEspecialidad("");
+      setShowOtrasEspecialidades(false);
+      showToast("success", "Especialidad agregada correctamente.");
+    } catch (err: any) {
+      console.error(err);
+      showToast("error", err?.message || "No se pudo crear la especialidad.");
+    } finally {
+      setAddEspLoading(false);
+    }
+  };
+
+  // ======================= Crear Personal / Psicólogo =======================
   const handleSubmitCreatePersonal = async () => {
     try {
       setIsSend(true);
@@ -242,6 +366,7 @@ export const PersonalForm = ({
         permissions: permissions,
         imagen: null,
       };
+
       const personalData: Personal = {
         apellido: updatedFormData.apellido,
         email: updatedFormData.email,
@@ -255,10 +380,6 @@ export const PersonalForm = ({
         imagen: null,
         especialidades: null,
       };
-      console.log(
-        "📤 Datos que se envían al backend:",
-        JSON.stringify(personalData, null, 2)
-      );
 
       const response = await CreatePersonal(personalData);
       showToast("success", "Personal creado exitosamente");
@@ -266,21 +387,12 @@ export const PersonalForm = ({
 
       resetForm();
       setIsSend(false);
-    } catch (error: unknown) {
-      if (typeof error === "object" && error !== null) {
-        const err = error as {
-          message?: string;
-          errors?: { email?: string[] };
-        };
-        showToast(
-          "error",
-          err.errors?.email?.[0] || err.message || "Error desconocido"
-        );
-        console.error("Error al crear personal:", err);
-      } else {
-        showToast("error", "Error inesperado");
-        console.error("Error desconocido:", error);
-      }
+    } catch (error: any) {
+      showToast(
+        "error",
+        error?.errors?.email?.[0] || error?.message || "Error desconocido"
+      );
+      console.error("Error al crear personal:", error);
       setIsSend(false);
     }
   };
@@ -290,30 +402,23 @@ export const PersonalForm = ({
     setFormData((prev) => ({ ...prev, rol: value }));
   };
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
   const handleSubmitCreatePsicologo = async () => {
     try {
       setIsSend(true);
-
       const cookies = parseCookies();
       const token = cookies["session"];
 
-      // Asegurar que la fecha vaya como YYYY-MM-DD
       const fechaNacimiento = formData.fecha_nacimiento
         ? formatFechaNacimiento(formData.fecha_nacimiento)
         : null;
 
-      // CORREGIDO: Incluir idioma en el payload
       const payload = {
         ...formData,
         fecha_nacimiento: fechaNacimiento,
-        especialidades: especialidadesSeleccionadas,
-        idioma: formData.idioma, // Incluir el campo idioma
+        especialidades: especialidadesSeleccionadas.filter((id) => id !== 0), // solo ids reales
+        idiomas: selectedIdiomas.filter((k) => k !== "otros"),
         meet_link: formData.meet_link, // Incluir el campo meet_link
       };
-
-      console.log("📤 Datos enviados al backend (Psicólogo):", payload);
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}api/psicologos`,
@@ -351,6 +456,7 @@ export const PersonalForm = ({
     }
   };
 
+  // ======================= Fecha Nacimiento =======================
   const [errorFecha, setErrorFecha] = useState<string | null>(null);
 
   const handleDateChange = (date: DateValue | null) => {
@@ -381,6 +487,7 @@ export const PersonalForm = ({
     }
   };
 
+  // ======================= UI =======================
   return (
     <div className="w-full flex justify-center px-4">
       <div className="w-full max-w-6xl">
@@ -404,7 +511,9 @@ export const PersonalForm = ({
                 <div className="w-full max-w-4xl flex justify-center">
                   <div className="w-full">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 place-items-center justify-items-center">
+                      {/* Columna izquierda */}
                       <div className="w-full max-w-sm flex flex-col space-y-8 mx-auto">
+                        {/* Nombre */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -432,6 +541,7 @@ export const PersonalForm = ({
                           />
                         </div>
 
+                        {/* Fecha de nacimiento */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="space-y-3">
                             <div className="flex items-center justify-center gap-2">
@@ -442,9 +552,7 @@ export const PersonalForm = ({
                             </div>
                             <div className="w-full flex justify-center">
                               <div className="w-full">
-                                <DatePickerCustom
-                                  onChange={handleDateChange}
-                                />
+                                <DatePickerCustom onChange={handleDateChange} />
                                 {errorFecha && (
                                   <p className="text-red-500 text-sm mt-2">
                                     {errorFecha}
@@ -455,6 +563,7 @@ export const PersonalForm = ({
                           </div>
                         </div>
 
+                        {/* Género */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -496,6 +605,7 @@ export const PersonalForm = ({
                           </Select>
                         </div>
 
+                        {/* Email */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -525,7 +635,6 @@ export const PersonalForm = ({
                             }
                           />
                         </div>
-
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -556,6 +665,7 @@ export const PersonalForm = ({
                           />
                         </div>
 
+                        {/* Rol */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -594,7 +704,9 @@ export const PersonalForm = ({
                         </div>
                       </div>
 
+                      {/* Columna derecha */}
                       <div className="w-full max-w-sm flex flex-col space-y-8 mx-auto">
+                        {/* Apellido */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -625,6 +737,7 @@ export const PersonalForm = ({
                           />
                         </div>
 
+                        {/* País */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="space-y-3">
                             <div className="flex items-center justify-center gap-2">
@@ -663,8 +776,8 @@ export const PersonalForm = ({
                                   {Flags.map((item) => (
                                     <SelectItem
                                       className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                      textValue={item.value}
-                                      key={item.value}
+                                      textValue={item.label}   // <- ahora el texto es "Bahamas"
+                                      key={item.value}         // <- la key sigue siendo el código "BS"
                                     >
                                       {item.label}
                                     </SelectItem>
@@ -675,6 +788,7 @@ export const PersonalForm = ({
                           </div>
                         </div>
 
+                        {/* Contraseña */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -730,6 +844,8 @@ export const PersonalForm = ({
                             }
                           />
                         </div>
+
+                        {/* Título profesional (solo psicólogo) */}
                         {rol === "PSICOLOGO" ? (
                           <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                             <div className="text-center">
@@ -776,7 +892,7 @@ export const PersonalForm = ({
                           </div>
                         ) : null}
 
-                        {/* AGREGADO: Campo de idiomas dinámicos para psicólogos */}
+                        {/* Idiomas (solo psicólogo) */}
                         {rol === "PSICOLOGO" ? (
                           <>
                             <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
@@ -798,17 +914,27 @@ export const PersonalForm = ({
                                 classNames={{
                                   trigger:
                                     "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                                  value: "text-gray-900 dark:text-white text-center",
+                                  value:
+                                    "text-gray-900 dark:text-white text-center",
                                   listboxWrapper: "dark:bg-gray-800",
                                   popoverContent:
                                     "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
                                 }}
                                 onSelectionChange={(keys) => {
-                                  const selected = Array.from(keys) as string[];
+                                  const selected = Array.from(
+                                    keys
+                                  ) as string[];
                                   setSelectedIdiomas(selected);
+
+                                  const hasOtros = selected.includes("otros");
+                                  setOtroIdioma(hasOtros);
+
+                                  const soloIdiomas = selected.filter(
+                                    (k) => k !== "otros"
+                                  );
                                   setFormData((prev) => ({
                                     ...prev,
-                                    idioma: selected.join(","),
+                                    idioma: soloIdiomas.join(","), // CSV de slugs
                                   }));
                                 }}
                               >
@@ -822,6 +948,52 @@ export const PersonalForm = ({
                                   </SelectItem>
                                 ))}
                               </Select>
+
+                              {otroIdioma && (
+                                <div className="mt-4">
+                                  <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                                    <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
+                                      Agregar nuevo idioma
+                                    </label>
+                                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                                      <Input
+                                        radius="lg"
+                                        variant="bordered"
+                                        value={nuevoIdioma}
+                                        placeholder="Ej. Quechua"
+                                        classNames={{
+                                          inputWrapper:
+                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                                          input:
+                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                                        }}
+                                        onChange={(e) =>
+                                          setNuevoIdioma(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            handleAddIdioma();
+                                          }
+                                        }}
+                                      />
+                                      <Button
+                                        radius="lg"
+                                        className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                                        isDisabled={addIdiomaLoading}
+                                        onPress={handleAddIdioma}
+                                      >
+                                        {addIdiomaLoading
+                                          ? "Agregando..."
+                                          : "Agregar"}
+                                      </Button>
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                                      Escribe el idioma y presiona “Agregar”.
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                             </div>
 
                             {/* Especialidades */}
@@ -836,31 +1008,99 @@ export const PersonalForm = ({
                                 radius="lg"
                                 variant="bordered"
                                 placeholder="Seleccione una o varias especialidades"
-                                selectedKeys={new Set(especialidadesSeleccionadas.map(String))}
+                                selectedKeys={new Set(
+                                  especialidadesSeleccionadas.map(String)
+                                )}
                                 onSelectionChange={(keys) => {
-                                  const selected = Array.from(keys).map((k) => Number(k));
-                                  setEspecialidadesSeleccionadas(selected);
-                                  setFormData((prev) => ({ ...prev, especialidades: selected }));
+                                  const selectedKeys = Array.from(
+                                    keys
+                                  ) as string[];
+                                  const ids = selectedKeys.map((k) =>
+                                    Number(k)
+                                  );
+
+                                  setEspecialidadesSeleccionadas(ids);
+
+                                  const hasOtras = ids.includes(0);
+                                  setShowOtrasEspecialidades(hasOtras);
+
+                                  const soloIds = ids.filter((id) => id !== 0);
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    especialidades: soloIds,
+                                  }));
                                 }}
                                 classNames={{
                                   trigger:
                                     "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                                  value: "text-gray-900 dark:text-white text-center",
+                                  value:
+                                    "text-gray-900 dark:text-white text-center",
                                   listboxWrapper: "dark:bg-gray-800",
                                   popoverContent:
                                     "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
                                 }}
                               >
                                 {especialidadesList.map((esp) => (
-                                  <SelectItem key={String(esp.idEspecialidad)} textValue={esp.nombre}>
+                                  <SelectItem
+                                    key={String(esp.idEspecialidad)}
+                                    textValue={esp.nombre}
+                                  >
                                     {esp.nombre}
                                   </SelectItem>
                                 ))}
                               </Select>
+
+                              {showOtrasEspecialidades && (
+                                <div className="mt-4">
+                                  <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                                    <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
+                                      Agregar nueva especialidad
+                                    </label>
+                                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                                      <Input
+                                        radius="lg"
+                                        variant="bordered"
+                                        value={nuevaEspecialidad}
+                                        placeholder="Ej. Psicología deportiva"
+                                        classNames={{
+                                          inputWrapper:
+                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                                          input:
+                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                                        }}
+                                        onChange={(e) =>
+                                          setNuevaEspecialidad(e.target.value)
+                                        }
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            handleAgregarNuevaEspecialidad();
+                                          }
+                                        }}
+                                      />
+                                      <Button
+                                        radius="lg"
+                                        className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                                        isDisabled={addEspLoading}
+                                        onPress={handleAgregarNuevaEspecialidad}
+                                      >
+                                        {addEspLoading
+                                          ? "Agregando..."
+                                          : "Agregar"}
+                                      </Button>
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                                      Se registrará en la base de datos y se
+                                      agregará a la lista.
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </>
                         ) : null}
 
+                        {/* Permisos (no psicólogo) */}
                         {rol !== "PSICOLOGO" ? (
                           <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                             <div className="text-center">
@@ -877,9 +1117,9 @@ export const PersonalForm = ({
                               aria-label="Seleccionar permisos"
                               placeholder="Seleccione el permiso del personal."
                               variant="bordered"
-                              selectedKeys={
-                                new Set(permissions.map((p) => String(p)))
-                              }
+                              selectedKeys={new Set(
+                                permissions.map((p) => String(p))
+                              )}
                               onSelectionChange={(keys) => {
                                 const selected = Array.from(keys).map((k) =>
                                   Number(k)
@@ -907,8 +1147,9 @@ export const PersonalForm = ({
                             </Select>
                           </div>
                         ) : (
-                          <div></div>
+                          <div />
                         )}
+
                         {permissions.length > 0 && rol !== "PSICOLOGO" && (
                           <div className="mt-4 flex flex-wrap gap-2 justify-center">
                             {permissions.map((permId, idx) => {
@@ -931,6 +1172,7 @@ export const PersonalForm = ({
                   </div>
                 </div>
 
+                {/* Footer */}
                 {rol === "PSICOLOGO" ? (
                   <div className="flex justify-center mt-12 pt-8 border-t border-gray-100 dark:border-gray-700 w-full">
                     <Button
@@ -959,6 +1201,7 @@ export const PersonalForm = ({
                   </div>
                 )}
               </Form>
+
               {showSuccessModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                   <Suceesfully

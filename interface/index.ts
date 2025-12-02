@@ -115,10 +115,10 @@ export interface FormData {
   pais: string;
   email: string;
   password: string;
-  introduccion: string|null;
-  imagen: string|null;
-  experiencia: number|null;
-  especialidades: number[]|null;
+  introduccion: string | null;
+  imagen: string | null;
+  experiencia: number | null;
+  especialidades: number[] | null;
   horario: {
     [key: string]: string[][];
   };
@@ -147,6 +147,17 @@ export interface BlogApi {
   contenido: string;
   imagenes: string[]; // Array de imágenes
   idPsicologo: number | null;
+
+  metaTitle?: string;         // Título SEO
+  keywords?: string;          // Palabras clave
+  metaDescription?: string;   // Descripción SEO
+
+  // ✅ Metadatos de las imágenes (opcional)
+  imagenesMeta?: {
+    url: string;              // URL o base64 de la imagen
+    altText?: string;         // Texto alternativo
+    title?: string;           // Título de la imagen
+  }[];
 }
 
 export interface BlogApiGEt {
@@ -199,8 +210,8 @@ export interface PsicologoPreviewData {
   horario: {
     [key: string]: [string, string][];
   };
-    meet_link: string;
-};
+  meet_link: string;
+}
 
 export interface actulizarPsicologo {
   nombre: string;
@@ -272,11 +283,12 @@ export interface PsicologoFilters {
   genero?: string[];
   idioma?: string[];
   enfoque?: string[];
+  especialidad?: string[]; // ✅ NUEVA PROPIEDAD AGREGADA
   search?: string;
   page?: number;
   size?: number;
 }
-export interface Permisos{
+export interface Permisos {
   idUrls: number;
   name: string;
 }
@@ -299,7 +311,7 @@ export interface UsuarioLocalStorageUpdate {
   imagen: string;
   idpsicologo?: number;
   especialidades: string[];
-  permisos:Permisos[];
+  permisos: Permisos[];
 }
 
 //Usuario LocalStorage
@@ -501,7 +513,7 @@ export interface Citas {
   paciente: string;
   codigo: string;
   fecha_inicio: string;
-  fecha_limite:string;
+  fecha_limite: string;
   estado: string;
   edad: number;
   motivo: string;
@@ -726,19 +738,19 @@ export interface Roles {
   showLabel: string
 }
 
-export interface Permissions{
+export interface Permissions {
   textValue: string,
   showLabel: string
 }
 
 export interface FormCita {
-    idPaciente: string;
-    fecha_cita: string;
-    fecha_limite:string;
-    hora_cita: string;
-    duracion: string;
-    motivo_Consulta: string;
-    estado_Cita: string;
+  idPaciente: string;
+  fecha_cita: string;
+  fecha_limite: string;
+  hora_cita: string;
+  duracion: string;
+  motivo_Consulta: string;
+  estado_Cita: string;
 }
 export interface PacienteCita {
   idPaciente: number;
