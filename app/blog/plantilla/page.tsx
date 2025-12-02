@@ -10,35 +10,77 @@ import { BlogPreviewData } from '@/interface';
 async function getBlogByQuery(blogQuery: string): Promise<BlogPreviewData | null> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/';
-    
-    // Si es un número, usar la ruta optimizada para IDs
-    let endpoint = '';
+
+    // Estrategia 1: Si es un número, buscar por ID
     if (/^\d+$/.test(blogQuery)) {
-      endpoint = `${apiUrl}api/blogs/id/${blogQuery}`;
-    } else {
-      // Si no es un número, usar la ruta general que acepta slugs
-      endpoint = `${apiUrl}api/blogs/${blogQuery}`;
-    }
-    
-    const response = await fetch(
-      endpoint,
-      {
-        cache: 'force-cache', // Siempre obtener datos frescos
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      console.log('🔍 [getBlogByQuery Plantilla] Buscando por ID:', blogQuery);
+      const response = await fetch(`${apiUrl}api/blogs/${blogQuery}`, {
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.result || null;
       }
-    );
-    
-    if (!response.ok) {
-      console.warn(`Blog ${blogQuery} not found: ${response.status}`);
-      return null;
     }
-    
-    const data = await response.json();
-    return data.result || null;
+
+    // Estrategia 2: Buscar por slug
+    try {
+      console.log('🔍 [getBlogByQuery Plantilla] Buscando por slug:', blogQuery);
+      const slugResponse = await fetch(`${apiUrl}api/blogs/slug/${encodeURIComponent(blogQuery)}`, {
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (slugResponse.ok) {
+        const slugData = await slugResponse.json();
+        return slugData.result || null;
+      }
+    } catch (slugError) {
+      console.log('🔍 [getBlogByQuery Plantilla] Error en búsqueda por slug, continuando...');
+    }
+
+    // Estrategia 3: Buscar por tema exacto
+    try {
+      console.log('🔍 [getBlogByQuery Plantilla] Buscando por tema exacto:', blogQuery);
+      const temaResponse = await fetch(`${apiUrl}api/blogs/tema/${encodeURIComponent(blogQuery)}`, {
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (temaResponse.ok) {
+        const temaData = await temaResponse.json();
+        return temaData.result || null;
+      }
+    } catch (temaError) {
+      console.log('🔍 [getBlogByQuery Plantilla] Error en búsqueda por tema, continuando...');
+    }
+
+    // Estrategia 4: Buscar convirtiendo guiones a espacios
+    if (blogQuery.includes('-')) {
+      try {
+        const searchTerm = blogQuery.replace(/-/g, ' ');
+        console.log('🔍 [getBlogByQuery Plantilla] Buscando con espacios:', searchTerm);
+
+        const espaciosResponse = await fetch(`${apiUrl}api/blogs/tema/${encodeURIComponent(searchTerm)}`, {
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (espaciosResponse.ok) {
+          const espaciosData = await espaciosResponse.json();
+          return espaciosData.result || null;
+        }
+      } catch (espaciosError) {
+        console.log('🔍 [getBlogByQuery Plantilla] Error en búsqueda con espacios, continuando...');
+      }
+    }
+
+    console.warn(`❌ [getBlogByQuery Plantilla] Blog "${blogQuery}" not found después de todas las estrategias`);
+    return null;
   } catch (error) {
-    console.error('Error fetching blog:', error);
+    console.error('❌ [getBlogByQuery Plantilla] Error fetching blog:', error);
     return null;
   }
 }
@@ -54,37 +96,37 @@ function BlogContent({ blogQuery }: { blogQuery: string }) {
       try {
         setLoading(true);
         const blogData = await getBlogByQuery(blogQuery);
-        
+
         if (!blogData) {
           setError(true);
           return;
         }
-        
+
         setBlog(blogData);
-        
+
         // Actualizar metadata dinámicamente
         if (typeof window !== 'undefined') {
           document.title = `${blogData.tema} | Blog Contigo Voy`;
-          
+
           // Actualizar meta description
           const metaDescription = document.querySelector('meta[name="description"]');
           if (metaDescription) {
             const description = blogData.contenido.replace(/<[^>]*>/g, '').substring(0, 160).trim();
             metaDescription.setAttribute('content', description + (description.length >= 160 ? '...' : ''));
           }
-          
+
           // Actualizar Open Graph
           const ogTitle = document.querySelector('meta[property="og:title"]');
           if (ogTitle) {
             ogTitle.setAttribute('content', blogData.tema);
           }
-          
+
           const ogDescription = document.querySelector('meta[property="og:description"]');
           if (ogDescription) {
             const description = blogData.contenido.replace(/<[^>]*>/g, '').substring(0, 200).trim();
             ogDescription.setAttribute('content', description);
           }
-          
+
           if (blogData.imagenes?.[0] || blogData.imagen) {
             const ogImage = document.querySelector('meta[property="og:image"]');
             if (ogImage) {
@@ -129,7 +171,7 @@ function BlogContent({ blogQuery }: { blogQuery: string }) {
           <p className="text-gray-600 dark:text-gray-300">
             El artículo que buscas no existe o ha sido movido.
           </p>
-          <Link 
+          <Link
             href="/blog"
             className="inline-block px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
           >
@@ -147,7 +189,7 @@ function BlogContent({ blogQuery }: { blogQuery: string }) {
 function BlogParamsHandler() {
   const searchParams = useSearchParams();
   const blogQuery = searchParams.get('blog');
-  
+
   if (!blogQuery) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
@@ -159,7 +201,7 @@ function BlogParamsHandler() {
           <p className="text-gray-600 dark:text-gray-300">
             No se especificó qué artículo mostrar.
           </p>
-          <Link 
+          <Link
             href="/blog"
             className="inline-block px-6 py-3 bg-gradient-to-r from-[#634AE2] to-[#8b7cf6] text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300"
           >
@@ -169,7 +211,7 @@ function BlogParamsHandler() {
       </div>
     );
   }
-  
+
   return <BlogContent blogQuery={blogQuery} />;
 }
 
