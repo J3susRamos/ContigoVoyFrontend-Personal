@@ -1,0 +1,41 @@
+name: Deploy Next.js to Hostinger
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build and export
+      run: npm run build && npm run export
+      env:
+        # Public runtime variables (set these in GitHub Secrets)
+        NEXT_PUBLIC_LOCAL_API_URL: '${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}'
+        NEXT_PUBLIC_API_URL: '${{ secrets.NEXT_PUBLIC_API_URL }}'
+        NEXT_PUBLIC_WHATSAPP_API_URL: '${{ secrets.NEXT_PUBLIC_WHATSAPP_API_URL }}'
+        NEXT_PUBLIC_API_KEY: '${{ secrets.NEXT_PUBLIC_API_KEY }}'
+    
+    - name: Deploy to Hostinger via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: '${{ secrets.FTP_SERVER }}'
+        username: '${{ secrets.FTP_USERNAME }}'
+        password: '${{ secrets.FTP_PASSWORD }}'
+        local-dir: ./out/
+        # Adjust `server-dir` to your Hostinger public web root (commonly `/public_html`)
+        server-dir: '/public_html'

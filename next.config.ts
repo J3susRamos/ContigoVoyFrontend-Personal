@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  //output: "export",
+  output: "export", // ✅ Para generar HTML estático en Hostinger
 
   images: {
     unoptimized: true, // ✅ Obligatorio en Hostinger
