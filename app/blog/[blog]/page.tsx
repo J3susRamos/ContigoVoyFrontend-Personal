@@ -1,20 +1,18 @@
 export async function generateStaticParams() {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}api/blogs/slugs`,
-    );
-
-    if (!res.ok) throw new Error("Fallo al obtener slugs");
-
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) throw new Error("Fallo al obtener blogs");
     const data = await res.json();
-    if (!data.result || !Array.isArray(data.result)) throw new Error("Datos inválidos");
-
-    return data.result.map((b: { slug: string }) => ({ blog: b.slug.toString() }));
+    const items = Array.isArray(data?.result) ? data.result : [];
+    if (!items.length) throw new Error("Lista de blogs vacía");
+    return items.map((b: { slug?: string; tema: string }) => ({ blog: encodeURIComponent(b.slug ?? b.tema) }));
   } catch (err) {
     console.warn("⚠ No se pudo acceder a la API, usando rutas de fallback");
     return [
-      { blog: "bienestar-emocional" },
-      { blog: "autoestima-y-confianza" },
+      { blog: encodeURIComponent("bienestar-emocional") },
+      { blog: encodeURIComponent("autoestima-y-confianza") },
     ];
   }
 }
@@ -192,21 +190,8 @@ export async function generateMetadata({ params }: { params: { blog: string } })
     );
   }
 
-  const slug = blog.tema
-    .toLowerCase()
-    .replace(/[áéíóúñ]/g, (match) => {
-      const replacements: { [key: string]: string } = {
-        á: "a",
-        é: "e",
-        í: "i",
-        ó: "o",
-        ú: "u",
-        ñ: "n",
-      };
-      return replacements[match] || match;
-    })
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-");
+  const rawSlug = blog.slug ?? blog.tema;
+  const slug = encodeURIComponent(rawSlug);
 
   return {
     title: `${blog.tema} | Blog Contigo Voy`,
@@ -225,7 +210,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
       ...blog.tema.split(" ").filter((word) => word.length > 3),
     ],
     alternates: {
-      canonical: `https://centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
+      canonical: `https://centropsicologicocontigovoy.com/blog/${slug}`,
     },
     robots: {
       index: true,
@@ -236,7 +221,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
       siteName: "Centro Psicológico Contigo Voy",
       title: blog.tema,
       description: description,
-      url: `https://centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
+      url: `https://centropsicologicocontigovoy.com/blog/${slug}`,
       images:
         blog.imagenes?.[0] || blog.imagen
           ? [
