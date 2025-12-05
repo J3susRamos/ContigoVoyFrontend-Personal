@@ -1,55 +1,19 @@
 
 export async function generateStaticParams() {
   try {
-    // Intentar primero con el endpoint de slugs
-    let res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}api/blogs/slugs`,
-    );
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data.result && Array.isArray(data.result)) {
-        console.log("✅ Slugs obtenidos del endpoint específico:", data.result.length);
-        return data.result.map((b: { slug: string }) => ({ blog: b.slug.toString() }));
-      }
-    }
-
-    // Fallback: obtener todos los blogs y generar slugs
-    console.warn("⚠ Endpoint de slugs no disponible, generando desde todos los blogs");
-    res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`);
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data.result && Array.isArray(data.result)) {
-        console.log("✅ Blogs obtenidos para generar slugs:", data.result.length);
-        return data.result.map((blog: any) => {
-          // Usar el slug del blog si existe, sino generar desde el tema
-          const slug = blog.slug || blog.tema?.toLowerCase()
-            .replace(/[áéíóúñü]/g, (match: string) => {
-              const replacements: { [key: string]: string } = {
-                'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ñ': 'n', 'ü': 'u'
-              };
-              return replacements[match] || match;
-            })
-            .replace(/[^\w\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-+|-+$/g, '') || 'blog-sin-titulo';
-
-          return { blog: slug };
-        });
-      }
-    }
-
-    throw new Error("No se pudieron obtener los blogs");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) throw new Error("Fallo al obtener blogs");
+    const data = await res.json();
+    const items = Array.isArray(data?.result) ? data.result : [];
+    if (!items.length) throw new Error("Lista de blogs vacía");
+    return items.map((b: { slug?: string; tema: string }) => ({ blog: encodeURIComponent(b.slug ?? b.tema) }));
   } catch (err) {
     console.warn("⚠ No se pudo acceder a la API, usando rutas de fallback:", err);
     return [
-      { blog: "bienestar-emocional" },
-      { blog: "autoestima-y-confianza" },
-      { blog: "salud-mental" },
-      { blog: "terapia-psicologica" },
-      { blog: "manejo-del-estres" },
+      { blog: encodeURIComponent("bienestar-emocional") },
+      { blog: encodeURIComponent("autoestima-y-confianza") },
     ];
   }
 }
@@ -359,21 +323,8 @@ export async function generateMetadata({ params }: { params: { blog: string } })
     );
   }
 
-  const slug = blog.tema
-    .toLowerCase()
-    .replace(/[áéíóúñ]/g, (match) => {
-      const replacements: { [key: string]: string } = {
-        á: "a",
-        é: "e",
-        í: "i",
-        ó: "o",
-        ú: "u",
-        ñ: "n",
-      };
-      return replacements[match] || match;
-    })
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-");
+  const rawSlug = blog.slug ?? blog.tema;
+  const slug = encodeURIComponent(rawSlug);
 
   return {
     title: `${blog.tema} | Blog Contigo Voy`,
@@ -392,7 +343,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
       ...blog.tema.split(" ").filter((word) => word.length > 3),
     ],
     alternates: {
-      canonical: `https://www.centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
+      canonical: `https://centropsicologicocontigovoy.com/blog/${slug}`,
     },
     robots: {
       index: true,
@@ -403,7 +354,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
       siteName: "Centro Psicológico Contigo Voy",
       title: blog.tema,
       description: description,
-      url: `https://centropsicologicocontigovoy.com/blog/ver?blog=${encodeURIComponent(slug)}`,
+      url: `https://centropsicologicocontigovoy.com/blog/${slug}`,
       images:
         blog.imagenes?.[0] || blog.imagen
           ? [

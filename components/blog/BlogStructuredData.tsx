@@ -9,19 +9,11 @@ export default function BlogStructuredData({
   blog, 
   baseUrl = 'https://centropsicologicocontigovoy.com' 
 }: BlogStructuredDataProps) {
-  // Crear slug para la URL
-  const slug = blog.tema
-    .toLowerCase()
-    .replace(/[áéíóúñ]/g, (match) => {
-      const replacements: { [key: string]: string } = {
-        'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ñ': 'n'
-      };
-      return replacements[match] || match;
-    })
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-');
+  // Crear slug para la URL (preferir slug de API si existe)
+  const rawSlug = blog.slug ?? blog.tema;
+  const slug = encodeURIComponent(rawSlug);
 
-  const articleUrl = `${baseUrl}/blog/ver?blog=${encodeURIComponent(slug)}`;
+  const articleUrl = `${baseUrl}/blog/${slug}`;
   
   // Limpiar contenido para la descripción
   const cleanDescription = blog.contenido

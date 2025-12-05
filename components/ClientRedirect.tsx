@@ -1,33 +1,32 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-export default function ClientRedirect() {
+function ClientRedirectContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Redireccionar URLs antiguas del blog a la nueva estructura
-    if (pathname.startsWith('/blog/') && pathname !== '/blog' && pathname !== '/blog/ver') {
-      const slug = pathname.replace('/blog/', '');
-      
-      // Si es /blog/plantilla, mantener el parámetro y redirigir a /blog/ver
-      if (slug === 'plantilla') {
-        const blogParam = searchParams.get('blog');
-        if (blogParam) {
-          router.replace(`/blog/ver?blog=${blogParam}`);
-          return;
-        }
-      }
-      
-      // Para cualquier otra ruta de blog, redirigir a /blog/ver con el slug como parámetro
-      if (slug && slug !== 'ver') {
-        router.replace(`/blog/ver?blog=${slug}`);
+    // Redireccionar URLs antiguas del blog con query params a la nueva estructura de rutas dinámicas
+    if (pathname === '/blog/plantilla' || pathname === '/blog/ver') {
+      const blogParam = searchParams.get('blog');
+      if (blogParam) {
+        // Redirigir de /blog/plantilla?blog=xxx o /blog/ver?blog=xxx a /blog/xxx
+        router.replace(`/blog/${blogParam}`);
+        return;
       }
     }
   }, [pathname, searchParams, router]);
 
-  return null; // Este componente no renderiza nada
+  return null;
+}
+
+export default function ClientRedirect() {
+  return (
+    <Suspense fallback={null}>
+      <ClientRedirectContent />
+    </Suspense>
+  );
 }
