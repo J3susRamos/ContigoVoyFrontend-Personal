@@ -125,6 +125,7 @@ export interface FormData {
   // AGREGAR ESTA PROPIEDAD
   idioma?: string; // o string si es requerido
   meet_link: string;
+  celular?: string;
 }
 
 export interface Especialidad {
@@ -232,6 +233,7 @@ export interface ActualizarPerfilCompletoPsicologo {
   genero: string;
   experiencia: number;
   especialidades: string[];
+  celular: string;
 }
 export interface EspecialidadesPsicologoResponse {
   status_code: number;
@@ -312,6 +314,7 @@ export interface UsuarioLocalStorageUpdate {
   idpsicologo?: number;
   especialidades: string[];
   permisos: Permisos[];
+  celular?: string;
 }
 
 //Usuario LocalStorage
