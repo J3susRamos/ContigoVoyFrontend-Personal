@@ -106,6 +106,7 @@ export const PersonalForm = ({
     especialidades: Array.isArray(initialFormData.especialidades)
       ? (initialFormData.especialidades as number[])
       : [],
+    celular: initialFormData.celular || "",
   });
 
   // ======================= Idiomas dinámicos =======================
@@ -204,6 +205,7 @@ export const PersonalForm = ({
       ...initialFormData,
       idioma: "",
       especialidades: [],
+      celular: "", // 👈 reset teléfono
     });
     setRol("PSICOLOGO");
     setPermissions([]);
@@ -418,6 +420,7 @@ export const PersonalForm = ({
         especialidades: especialidadesSeleccionadas.filter((id) => id !== 0), // solo ids reales
         idiomas: selectedIdiomas.filter((k) => k !== "otros"),
         meet_link: formData.meet_link, // Incluir el campo meet_link
+        celular: (formData as any).celular, // 👈 enviar teléfono al back
       };
 
       const response = await fetch(
@@ -635,6 +638,8 @@ export const PersonalForm = ({
                             }
                           />
                         </div>
+
+                        {/* Link Meet */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -776,8 +781,8 @@ export const PersonalForm = ({
                                   {Flags.map((item) => (
                                     <SelectItem
                                       className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                      textValue={item.label}   // <- ahora el texto es "Bahamas"
-                                      key={item.value}         // <- la key sigue siendo el código "BS"
+                                      textValue={item.label}
+                                      key={item.value}
                                     >
                                       {item.label}
                                     </SelectItem>
@@ -786,6 +791,35 @@ export const PersonalForm = ({
                               </div>
                             </div>
                           </div>
+                        </div>
+
+                        {/* Teléfono 👈 NUEVO */}
+                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
+                          <div className="text-center">
+                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
+                              Teléfono
+                            </label>
+                          </div>
+                          <Input
+                            labelPlacement="outside"
+                            radius="lg"
+                            variant="bordered"
+                            type="text"
+                            value={(formData as any).celular}
+                            placeholder="+51 987 654 321"
+                            classNames={{
+                              inputWrapper:
+                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                              input:
+                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                            }}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                celular: e.target.value,
+                              } as any)
+                            }
+                          />
                         </div>
 
                         {/* Contraseña */}

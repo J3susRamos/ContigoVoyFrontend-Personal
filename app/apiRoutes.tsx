@@ -24,10 +24,8 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  const cacheConfig =
-    process.env.NODE_ENV === "development"
-      ? { cache: "no-store" as const }
-      : { next: { revalidate: 3600 } };
+  // Usar no-store para evitar problemas de cache con respuestas grandes (>2MB)
+  const cacheConfig = { cache: "no-store" as const };
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
@@ -73,10 +71,8 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const cacheConfig =
-    process.env.NODE_ENV === "development"
-      ? { cache: "no-store" as const }
-      : { next: { revalidate: 3600 } };
+  // Usar cache estático para categorías que cambian poco
+  const cacheConfig = { next: { revalidate: 7200 } }; // 2 horas
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/categorias`;
@@ -113,10 +109,8 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 }
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
-  const cacheConfig =
-    process.env.NODE_ENV === "development"
-      ? { cache: "no-store" as const }
-      : { next: { revalidate: 3600 } };
+  // Usar no-store para evitar problemas de cache con respuestas grandes
+  const cacheConfig = { cache: "no-store" as const };
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`;
