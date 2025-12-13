@@ -419,7 +419,7 @@ export const PersonalForm = ({
         fecha_nacimiento: fechaNacimiento,
         especialidades: especialidadesSeleccionadas.filter((id) => id !== 0), // solo ids reales
         idiomas: selectedIdiomas.filter((k) => k !== "otros"),
-        meet_link: formData.meet_link, // Incluir el campo meet_link
+        //meet_link: formData.meet_link, // Incluir el campo meet_link
         celular: (formData as any).celular, // 👈 enviar teléfono al back
       };
 
@@ -638,8 +638,7 @@ export const PersonalForm = ({
                             }
                           />
                         </div>
-
-                        {/* Link Meet */}
+                        {/* Link Google Meet  
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -669,6 +668,7 @@ export const PersonalForm = ({
                             }
                           />
                         </div>
+                        */}
 
                         {/* Rol */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
