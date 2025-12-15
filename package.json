@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "next build",
+    "export": "next export",
     "diagnose": "node scripts/diagnose-blogs.js",
     "fix-blogs": "node scripts/fix-blog-issues.js",
     "test-blog": "node scripts/test-specific-blog.js"

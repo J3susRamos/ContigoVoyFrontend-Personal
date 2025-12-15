@@ -2,7 +2,9 @@ name: Deploy Next.js to Hostinger
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ] # Cambia 'main' si tu rama de despliegue es otra
+  repository_dispatch:
+    types: [ blog_created, blog_updated, blog_deleted ] # Opcional: tipos de eventos que disparan el deploy
 
   workflow_dispatch:
 
@@ -25,17 +27,17 @@ jobs:
       run: npm run build && npm run export
       env:
         # Public runtime variables (set these in GitHub Secrets)
-        NEXT_PUBLIC_LOCAL_API_URL: '${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}'
-        NEXT_PUBLIC_API_URL: '${{ secrets.NEXT_PUBLIC_API_URL }}'
-        NEXT_PUBLIC_WHATSAPP_API_URL: '${{ secrets.NEXT_PUBLIC_WHATSAPP_API_URL }}'
-        NEXT_PUBLIC_API_KEY: '${{ secrets.NEXT_PUBLIC_API_KEY }}'
+        NEXT_PUBLIC_LOCAL_API_URL: '${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}' # Define este Secret con tu URL local (opcional)
+        NEXT_PUBLIC_API_URL: '${{ secrets.NEXT_PUBLIC_API_URL }}' # Define este Secret con la URL pública de tu API
+        NEXT_PUBLIC_WHATSAPP_API_URL: '${{ secrets.NEXT_PUBLIC_WHATSAPP_API_URL }}' # Define este Secret si usas WhatsApp API
+        NEXT_PUBLIC_API_KEY: '${{ secrets.NEXT_PUBLIC_API_KEY }}' # Define este Secret para claves públicas del frontend
     
     - name: Deploy to Hostinger via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: '${{ secrets.FTP_SERVER }}'
-        username: '${{ secrets.FTP_USERNAME }}'
-        password: '${{ secrets.FTP_PASSWORD }}'
-        local-dir: ./out/blog/
+        server: '${{ secrets.FTP_SERVER }}' # Define este Secret con tu host FTP (ej. ftp.tudominio.com)
+        username: '${{ secrets.FTP_USERNAME }}' # Define este Secret con tu usuario FTP
+        password: '${{ secrets.FTP_PASSWORD }}' # Define este Secret con tu contraseña FTP
+        local-dir: ./out/blog/ # Carpeta generada por 'next export'
         # Adjust `server-dir` to your Hostinger public web root (commonly `/public_html`)
-        server-dir: /public_html/blog/
+        server-dir: /public_html/blog/ # Cambia a tu ruta pública en Hostinger (ej. /public_html/miapp)
