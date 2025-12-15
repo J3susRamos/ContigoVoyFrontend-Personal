@@ -36,6 +36,6 @@ jobs:
         server: '${{ secrets.FTP_SERVER }}'
         username: '${{ secrets.FTP_USERNAME }}'
         password: '${{ secrets.FTP_PASSWORD }}'
-        local-dir: ./out/
+        local-dir: ./out/blog/
         # Adjust `server-dir` to your Hostinger public web root (commonly `/public_html`)
-        server-dir: '/public_html'
+        server-dir: /public_html/blog/
