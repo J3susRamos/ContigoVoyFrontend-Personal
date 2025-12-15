@@ -1,7 +1,19 @@
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/blogs`, {
+    const base =
+      ((process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_LOCAL_API_URL) ?? "").replace(/\/?$/, "/");
+    const slugsRes = await fetch(`${base}api/blogs/slugs`, {
+      headers: { Accept: "application/json" },
+    });
+    if (slugsRes.ok) {
+      const slugsData = await slugsRes.json();
+      const slugs = Array.isArray(slugsData?.result) ? slugsData.result : [];
+      if (slugs.length > 0) {
+        return slugs.map((s: string) => ({ blog: encodeURIComponent(s) }));
+      }
+    }
+    const res = await fetch(`${base}api/blogs`, {
       headers: { Accept: "application/json" },
     });
     if (!res.ok) throw new Error("Fallo al obtener blogs");
