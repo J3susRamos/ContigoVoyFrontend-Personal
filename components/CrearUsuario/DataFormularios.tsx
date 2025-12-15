@@ -18,7 +18,7 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import showToast from "../ToastStyle";
 import { parseCookies } from "nookies";
 import { toast } from "react-toastify";
@@ -31,7 +31,7 @@ const titleCase = (s: string) =>
     .toLowerCase()
     .split(/\s+/)
     .filter(Boolean)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 
 const slugify = (s: string) =>
@@ -42,7 +42,9 @@ const slugify = (s: string) =>
     .trim()
     .replace(/\s+/g, "-");
 
-// ======================= Datos estáticos =======================
+// Normaliza para comparar nombres en catálogo
+const normName = (s: string) => titleCase(s.trim());
+
 const genders: SelectItemI[] = [
   { textValue: "femenino", showLabel: "Femenino" },
   { textValue: "masculino", showLabel: "Masculino" },
@@ -87,8 +89,11 @@ export const PersonalForm = ({
   // ======================= Estado general =======================
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]);
 
-  const [especialidadesList, setEspecialidadesList] = useState<Especialidad[]>([]);
-  const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] = useState<number[]>([]);
+  const [especialidadesList, setEspecialidadesList] = useState<Especialidad[]>(
+    []
+  );
+  const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] =
+    useState<number[]>([]);
   const [showOtrasEspecialidades, setShowOtrasEspecialidades] = useState(false);
   const [nuevaEspecialidad, setNuevaEspecialidad] = useState("");
   const [addEspLoading, setAddEspLoading] = useState(false);
@@ -102,7 +107,7 @@ export const PersonalForm = ({
   // ======================= Form Data =======================
   const [formData, setFormData] = useState<FormData>({
     ...initialFormData,
-    idioma: initialFormData.idioma || "", // CSV de slugs
+    idioma: initialFormData.idioma || "", // CSV de slugs (solo para UI interna)
     especialidades: Array.isArray(initialFormData.especialidades)
       ? (initialFormData.especialidades as number[])
       : [],
@@ -116,29 +121,49 @@ export const PersonalForm = ({
   const [nuevoIdioma, setNuevoIdioma] = useState<string>("");
   const [addIdiomaLoading, setAddIdiomaLoading] = useState<boolean>(false);
 
+  // Index rápido de especialidades por ID (para validar envío)
+  const especialidadesIdSet = useMemo(() => {
+    return new Set(
+      especialidadesList
+        .map((e) => Number(e.idEspecialidad))
+        .filter((id) => Number.isFinite(id) && id > 0)
+    );
+  }, [especialidadesList]);
+
   // ======================= Cargas iniciales =======================
   useEffect(() => {
     const fetchEspecialidades = async () => {
       try {
         const especialidades = await GetEspecialidades(); // viene del back
 
-        // añadimos opción "Otras" al final para mostrar el input
+        const normalizadas: Especialidad[] = (especialidades || [])
+          .map((e: any) => ({
+            idEspecialidad: Number(e.idEspecialidad),
+            nombre: String(e.nombre),
+            valor: String(e.valor ?? slugify(e.nombre ?? "")),
+          }))
+          .filter((e) => Number.isFinite(e.idEspecialidad) && e.idEspecialidad > 0);
+
+        // opción "Otras" al final (sentinel id=0)
         const otrasOpcion: Especialidad = {
           idEspecialidad: 0,
           nombre: "Otras",
           valor: "otras",
         };
 
-        setEspecialidadesList([...especialidades, otrasOpcion]);
+        setEspecialidadesList([...normalizadas, otrasOpcion]);
 
-        // si initialFormData ya traía especialidades -> preseleccionamos
         if (Array.isArray(initialFormData.especialidades)) {
-          const ids = initialFormData.especialidades as number[];
+          const ids = (initialFormData.especialidades as number[]).filter(
+            (id) => Number.isFinite(id) && id > 0
+          );
           setEspecialidadesSeleccionadas(ids);
         }
       } catch (err) {
         console.error("Error al cargar especialidades:", err);
-        setEspecialidadesList([]);
+        setEspecialidadesList([
+          { idEspecialidad: 0, nombre: "Otras", valor: "otras" },
+        ]);
       }
     };
     fetchEspecialidades();
@@ -178,24 +203,18 @@ export const PersonalForm = ({
     const fetchIdiomas = async () => {
       try {
         const idiomas = await GetIdiomas();
-        const idiomasFormateados: SelectItemI[] = idiomas.map((idioma) => ({
-          textValue: idioma.valor, // <- SLUG como key
-          showLabel: idioma.nombre, // <- visible
+        const idiomasFormateados: SelectItemI[] = idiomas.map((idioma: any) => ({
+          textValue: idioma.valor, // slug como key
+          showLabel: idioma.nombre,
         }));
 
-        const otrosOpcion: SelectItemI = {
-          textValue: "otros",
-          showLabel: "Otros",
-        };
-
-        idiomasFormateados.push(otrosOpcion);
+        idiomasFormateados.push({ textValue: "otros", showLabel: "Otros" });
         setIdiomasList(idiomasFormateados);
       } catch (err) {
         console.error("Error al obtener idiomas:", err);
-        setIdiomasList([]);
+        setIdiomasList([{ textValue: "otros", showLabel: "Otros" }]);
       }
     };
-
     fetchIdiomas();
   }, [rol]);
 
@@ -205,7 +224,7 @@ export const PersonalForm = ({
       ...initialFormData,
       idioma: "",
       especialidades: [],
-      celular: "", // 👈 reset teléfono
+      celular: "",
     });
     setRol("PSICOLOGO");
     setPermissions([]);
@@ -241,10 +260,9 @@ export const PersonalForm = ({
       return;
     }
 
-    const nombre = titleCase(nombreCrudo); // p.ej. "Quechua"
-    const valor = slugify(nombreCrudo); // p.ej. "quechua"
+    const nombre = titleCase(nombreCrudo);
+    const valor = slugify(nombreCrudo);
 
-    // Evitar duplicados por slug o por nombre visible
     const existePorSlug = idiomasList.some((i) => i.textValue === valor);
     const existePorNombre = idiomasList.some(
       (i) => i.showLabel.toLowerCase() === nombre.toLowerCase()
@@ -257,30 +275,26 @@ export const PersonalForm = ({
     try {
       setAddIdiomaLoading(true);
 
-      // Crear en backend (apiRoutes)
       const creado = await AddIdioma(nombre);
-      const creadoNombre = creado?.nombre ?? nombre;
-      const creadoValor = creado?.valor ?? valor;
+      const creadoNombre = (creado as any)?.nombre ?? nombre;
+      const creadoValor = (creado as any)?.valor ?? valor;
 
-      // Nueva opción consistente (key=slug)
       const nuevaOpcion: SelectItemI = {
         textValue: creadoValor,
         showLabel: creadoNombre,
       };
 
-      // Insertar antes de "otros"
       setIdiomasList((prev) => {
         const sinOtros = prev.filter((x) => x.textValue !== "otros");
         const otros = prev.find((x) => x.textValue === "otros");
         return otros ? [...sinOtros, nuevaOpcion, otros] : [...sinOtros, nuevaOpcion];
       });
 
-      // Seleccionar el nuevo idioma y quitar "otros" del CSV
       setSelectedIdiomas((prev) => {
         const sinOtros = prev.filter((k) => k !== "otros");
         const next = Array.from(new Set([...sinOtros, nuevaOpcion.textValue]));
-        setFormData((f) => ({ ...f, idioma: next.join(",") })); // CSV de slugs
-        setOtroIdioma(false); // Ocultar input por UX
+        setFormData((f) => ({ ...f, idioma: next.join(",") }));
+        setOtroIdioma(false);
         return next;
       });
 
@@ -302,9 +316,8 @@ export const PersonalForm = ({
       return;
     }
 
-    const nombre = titleCase(texto);
+    const nombre = normName(texto);
 
-    // evitar duplicados por nombre
     const yaExiste = especialidadesList.some(
       (e) => e.nombre.toLowerCase() === nombre.toLowerCase()
     );
@@ -316,35 +329,58 @@ export const PersonalForm = ({
     try {
       setAddEspLoading(true);
 
-      // Llamamos al backend para CREAR realmente la especialidad
+      // 1) Intentar crear en backend
       const creada = await addEspecialidad(nombre);
 
-      const idCreado: number =
-        (creada as any)?.idEspecialidad ?? (creada as any)?.id ?? -Date.now();
+      // 2) Intentar extraer el ID de cualquier forma común
+      const idFromApi =
+        Number((creada as any)?.idEspecialidad) ||
+        Number((creada as any)?.result?.idEspecialidad) ||
+        Number((creada as any)?.result?.id) ||
+        Number((creada as any)?.id);
+
+      let idCreado = Number.isFinite(idFromApi) && idFromApi > 0 ? idFromApi : null;
+
+      // 3) Si NO vino ID, refrescamos catálogo y buscamos por nombre
+      if (!idCreado) {
+        const refetch = await GetEspecialidades();
+        const found = (refetch || []).find(
+          (e: any) => String(e.nombre).toLowerCase() === nombre.toLowerCase()
+        );
+        const idFound = Number(found?.idEspecialidad);
+        if (Number.isFinite(idFound) && idFound > 0) {
+          idCreado = idFound;
+        }
+      }
+
+      // 4) Si aún no hay ID real, NO inventamos IDs (evita tu error 1264)
+      if (!idCreado) {
+        throw new Error(
+          "El backend no devolvió un idEspecialidad válido. No se seleccionará para evitar error."
+        );
+      }
 
       const nueva: Especialidad = {
         idEspecialidad: idCreado,
-        nombre: (creada as any)?.nombre ?? nombre,
-        valor:
-          (creada as any)?.valor ??
-          nombre.toLowerCase().replace(/\s+/g, "-"),
+        nombre,
+        valor: slugify(nombre),
       };
 
-      // Agregamos al catálogo, siempre dejando "Otras" al final
+      // 5) Actualiza catálogo (dejando 'Otras' al final)
       setEspecialidadesList((prev) => {
         const sinOtras = prev.filter((e) => e.idEspecialidad !== 0);
         const otras = prev.find((e) => e.idEspecialidad === 0);
-        return otras ? [...sinOtras, nueva, otras] : [...sinOtras, nueva];
+        const sinDup = sinOtras.filter(
+          (e) => e.nombre.toLowerCase() !== nombre.toLowerCase()
+        );
+        return otras ? [...sinDup, nueva, otras] : [...sinDup, nueva];
       });
 
-      // Actualizamos la selección (sin el id 0)
+      // 6) Selecciona el ID real (sin 0)
       setEspecialidadesSeleccionadas((prev) => {
         const sinOtras = prev.filter((id) => id !== 0);
-        const next = Array.from(new Set([...sinOtras, idCreado]));
-        setFormData((f) => ({
-          ...f,
-          especialidades: next,
-        }));
+        const next = Array.from(new Set([...sinOtras, idCreado!]));
+        setFormData((f) => ({ ...f, especialidades: next }));
         return next;
       });
 
@@ -372,9 +408,7 @@ export const PersonalForm = ({
       const personalData: Personal = {
         apellido: updatedFormData.apellido,
         email: updatedFormData.email,
-        fecha_nacimiento: formatFechaNacimiento(
-          updatedFormData.fecha_nacimiento
-        ),
+        fecha_nacimiento: formatFechaNacimiento(updatedFormData.fecha_nacimiento),
         name: updatedFormData.name,
         password: updatedFormData.password,
         permissions: updatedFormData.permissions,
@@ -414,27 +448,35 @@ export const PersonalForm = ({
         ? formatFechaNacimiento(formData.fecha_nacimiento)
         : null;
 
+      // ✅ Solo IDs reales, existentes en catálogo, y > 0
+      const especialidadesIdsValidas = especialidadesSeleccionadas
+        .filter((id) => Number.isFinite(id) && id > 0)
+        .filter((id) => especialidadesIdSet.has(id));
+
+      if (especialidadesSeleccionadas.some((id) => id < 0)) {
+        // Por si quedó basura de antes en state (ya no debería pasar)
+        showToast("error", "Hay especialidades inválidas en selección. Reintenta.");
+        setIsSend(false);
+        return;
+      }
+
       const payload = {
         ...formData,
         fecha_nacimiento: fechaNacimiento,
-        especialidades: especialidadesSeleccionadas.filter((id) => id !== 0), // solo ids reales
+        especialidades: especialidadesIdsValidas,
         idiomas: selectedIdiomas.filter((k) => k !== "otros"),
-        //meet_link: formData.meet_link, // Incluir el campo meet_link
-        celular: (formData as any).celular, // 👈 enviar teléfono al back
+        celular: (formData as any).celular,
       };
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/psicologos`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/psicologos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       const data = await response.json();
 
@@ -473,19 +515,14 @@ export const PersonalForm = ({
     let edad = hoy.getFullYear() - nacimiento.getFullYear();
     const m = hoy.getMonth() - nacimiento.getMonth();
 
-    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) {
-      edad--;
-    }
+    if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
 
     if (edad < 18) {
       setErrorFecha("Debe ser mayor de 18 años.");
       return false;
     } else {
       setErrorFecha(null);
-      setFormData((prev) => ({
-        ...prev,
-        fecha_nacimiento: date,
-      }));
+      setFormData((prev) => ({ ...prev, fecha_nacimiento: date }));
       return true;
     }
   };
@@ -544,7 +581,7 @@ export const PersonalForm = ({
                           />
                         </div>
 
-                        {/* Fecha de nacimiento */}
+                        {/* Fecha nacimiento */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="space-y-3">
                             <div className="flex items-center justify-center gap-2">
@@ -582,18 +619,14 @@ export const PersonalForm = ({
                             classNames={{
                               trigger:
                                 "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                              value:
-                                "text-gray-900 dark:text-white text-center",
+                              value: "text-gray-900 dark:text-white text-center",
                               listboxWrapper: "dark:bg-gray-800",
                               popoverContent:
                                 "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
                             }}
                             placeholder="Seleccione el género"
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                genero: e.target.value,
-                              })
+                              setFormData({ ...formData, genero: e.target.value })
                             }
                           >
                             {genders.map((gender) => (
@@ -631,44 +664,10 @@ export const PersonalForm = ({
                             autoComplete="email"
                             variant="bordered"
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                email: e.target.value,
-                              })
+                              setFormData({ ...formData, email: e.target.value })
                             }
                           />
                         </div>
-                        {/* Link Google Meet  
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              Link - Google Meet
-                            </label>
-                          </div>
-                          <Input
-                            labelPlacement="outside"
-                            isRequired
-                            radius="lg"
-                            value={formData.meet_link}
-                            classNames={{
-                              inputWrapper:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                              input:
-                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                            }}
-                            placeholder="https://meet.google.com/aaa-bbbb-ccc"
-                            type="text"
-                            autoComplete="off"
-                            variant="bordered"
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                meet_link: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        */}
 
                         {/* Rol */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
@@ -687,8 +686,7 @@ export const PersonalForm = ({
                             classNames={{
                               trigger:
                                 "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                              value:
-                                "text-gray-900 dark:text-white text-center",
+                              value: "text-gray-900 dark:text-white text-center",
                               listboxWrapper: "dark:bg-gray-800",
                               popoverContent:
                                 "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
@@ -696,13 +694,13 @@ export const PersonalForm = ({
                             placeholder="Seleccione el rol"
                             onChange={(e) => handleChangeRol(e.target.value)}
                           >
-                            {roles.map((rol) => (
+                            {roles.map((r) => (
                               <SelectItem
                                 className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                textValue={rol.textValue}
-                                key={rol.textValue}
+                                textValue={r.textValue}
+                                key={r.textValue}
                               >
-                                {rol.showLabel}
+                                {r.showLabel}
                               </SelectItem>
                             ))}
                           </Select>
@@ -734,10 +732,7 @@ export const PersonalForm = ({
                             type="text"
                             autoComplete="username"
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                apellido: e.target.value,
-                              })
+                              setFormData({ ...formData, apellido: e.target.value })
                             }
                           />
                         </div>
@@ -758,9 +753,7 @@ export const PersonalForm = ({
                                   isRequired
                                   radius="lg"
                                   variant="bordered"
-                                  selectedKeys={
-                                    formData.pais ? [formData.pais] : []
-                                  }
+                                  selectedKeys={formData.pais ? [formData.pais] : []}
                                   classNames={{
                                     trigger:
                                       "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
@@ -772,10 +765,7 @@ export const PersonalForm = ({
                                   }}
                                   placeholder="Seleccione el país de residencia"
                                   onChange={(e) =>
-                                    setFormData({
-                                      ...formData,
-                                      pais: e.target.value,
-                                    })
+                                    setFormData({ ...formData, pais: e.target.value })
                                   }
                                 >
                                   {Flags.map((item) => (
@@ -793,7 +783,7 @@ export const PersonalForm = ({
                           </div>
                         </div>
 
-                        {/* Teléfono 👈 NUEVO */}
+                        {/* Teléfono */}
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
                           <div className="text-center">
                             <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
@@ -814,10 +804,7 @@ export const PersonalForm = ({
                                 "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
                             }}
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                celular: e.target.value,
-                              } as any)
+                              setFormData({ ...formData, celular: e.target.value } as any)
                             }
                           />
                         </div>
@@ -846,11 +833,7 @@ export const PersonalForm = ({
                             }}
                             endContent={
                               <button
-                                aria-label={
-                                  isVisible
-                                    ? "Ocultar contraseña"
-                                    : "Mostrar contraseña"
-                                }
+                                aria-label={isVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
                                 type="button"
                                 className="focus:outline-none mr-2"
                                 onClick={toggleVisibility}
@@ -871,10 +854,7 @@ export const PersonalForm = ({
                             type={isVisible ? "text" : "password"}
                             variant="bordered"
                             onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                password: e.target.value,
-                              })
+                              setFormData({ ...formData, password: e.target.value })
                             }
                           />
                         </div>
@@ -895,10 +875,7 @@ export const PersonalForm = ({
                               value={formData.titulo}
                               aria-label="Seleccionar título profesional"
                               onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  titulo: e.target.value,
-                                })
+                                setFormData({ ...formData, titulo: e.target.value })
                               }
                               placeholder="Seleccione el título profesional"
                               variant="bordered"
@@ -955,20 +932,16 @@ export const PersonalForm = ({
                                     "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
                                 }}
                                 onSelectionChange={(keys) => {
-                                  const selected = Array.from(
-                                    keys
-                                  ) as string[];
+                                  const selected = Array.from(keys) as string[];
                                   setSelectedIdiomas(selected);
 
                                   const hasOtros = selected.includes("otros");
                                   setOtroIdioma(hasOtros);
 
-                                  const soloIdiomas = selected.filter(
-                                    (k) => k !== "otros"
-                                  );
+                                  const soloIdiomas = selected.filter((k) => k !== "otros");
                                   setFormData((prev) => ({
                                     ...prev,
-                                    idioma: soloIdiomas.join(","), // CSV de slugs
+                                    idioma: soloIdiomas.join(","),
                                   }));
                                 }}
                               >
@@ -1001,9 +974,7 @@ export const PersonalForm = ({
                                           input:
                                             "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
                                         }}
-                                        onChange={(e) =>
-                                          setNuevoIdioma(e.target.value)
-                                        }
+                                        onChange={(e) => setNuevoIdioma(e.target.value)}
                                         onKeyDown={(e) => {
                                           if (e.key === "Enter") {
                                             e.preventDefault();
@@ -1017,9 +988,7 @@ export const PersonalForm = ({
                                         isDisabled={addIdiomaLoading}
                                         onPress={handleAddIdioma}
                                       >
-                                        {addIdiomaLoading
-                                          ? "Agregando..."
-                                          : "Agregar"}
+                                        {addIdiomaLoading ? "Agregando..." : "Agregar"}
                                       </Button>
                                     </div>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
@@ -1046,12 +1015,10 @@ export const PersonalForm = ({
                                   especialidadesSeleccionadas.map(String)
                                 )}
                                 onSelectionChange={(keys) => {
-                                  const selectedKeys = Array.from(
-                                    keys
-                                  ) as string[];
-                                  const ids = selectedKeys.map((k) =>
-                                    Number(k)
-                                  );
+                                  const selectedKeys = Array.from(keys) as string[];
+                                  const ids = selectedKeys
+                                    .map((k) => Number(k))
+                                    .filter((n) => Number.isFinite(n));
 
                                   setEspecialidadesSeleccionadas(ids);
 
@@ -1118,14 +1085,11 @@ export const PersonalForm = ({
                                         isDisabled={addEspLoading}
                                         onPress={handleAgregarNuevaEspecialidad}
                                       >
-                                        {addEspLoading
-                                          ? "Agregando..."
-                                          : "Agregar"}
+                                        {addEspLoading ? "Agregando..." : "Agregar"}
                                       </Button>
                                     </div>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                                      Se registrará en la base de datos y se
-                                      agregará a la lista.
+                                      Se registrará en la base de datos y se agregará a la lista.
                                     </p>
                                   </div>
                                 </div>
@@ -1151,30 +1115,17 @@ export const PersonalForm = ({
                               aria-label="Seleccionar permisos"
                               placeholder="Seleccione el permiso del personal."
                               variant="bordered"
-                              selectedKeys={new Set(
-                                permissions.map((p) => String(p))
-                              )}
+                              selectedKeys={new Set(permissions.map(String))}
                               onSelectionChange={(keys) => {
-                                const selected = Array.from(keys).map((k) =>
-                                  Number(k)
-                                );
+                                const selected = Array.from(keys).map((k) => Number(k));
                                 setPermissions(selected);
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  permissions: selected,
-                                }));
+                                setFormData((prev) => ({ ...prev, permissions: selected }));
                               }}
                             >
                               {permissionsList
-                                .filter(
-                                  (perm) =>
-                                    perm.id !== undefined && perm.id !== null
-                                )
+                                .filter((perm) => perm.id != null)
                                 .map((perm) => (
-                                  <SelectItem
-                                    key={String(perm.id)}
-                                    textValue={perm.name}
-                                  >
+                                  <SelectItem key={String(perm.id)} textValue={perm.name}>
                                     {perm.name}
                                   </SelectItem>
                                 ))}
@@ -1188,8 +1139,7 @@ export const PersonalForm = ({
                           <div className="mt-4 flex flex-wrap gap-2 justify-center">
                             {permissions.map((permId, idx) => {
                               const permName =
-                                permissionsList.find((p) => p.id === permId)
-                                  ?.name || permId;
+                                permissionsList.find((p) => p.id === permId)?.name || permId;
                               return (
                                 <span
                                   key={idx}
