@@ -212,6 +212,7 @@ export interface PsicologoPreviewData {
     [key: string]: [string, string][];
   };
   meet_link: string;
+  celular?: string | null;
 }
 
 export interface actulizarPsicologo {
