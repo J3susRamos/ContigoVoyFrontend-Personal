@@ -63,7 +63,7 @@ export default function Footer() {
               className="flex-shrink-0"
             >
               <ReactSVG
-                src="/logofooter.svg/"
+                src="/logofooter.svg"
                 className="w-[150px] h-[60px] text-[#634AE2] dark:text-white"
                 title="Contigo Voy - Terapia Psicológica"
                 role="img"

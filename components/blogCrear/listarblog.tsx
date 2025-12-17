@@ -32,17 +32,16 @@ export const BlogGet = async () => {
   }
 };
 
-
 export const BlogGetByPsicologo = async (idPsicologo: number) => {
   try {
     const cookies = parseCookies();
     const token = cookies["session"];
-    
+
     if (!token) {
       console.error("No hay token de sesión");
       return [];
     }
-    
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}api/blogs/psicologo/${idPsicologo}`,
       {
@@ -91,7 +90,6 @@ export const eliminarBlog = async (id: number | null) => {
     );
 
     if (!response.ok) {
-      // Handle error response without throwing
       const errorData = await response.json().catch(() => ({}));
       console.error("Delete failed:", errorData);
       return { success: false, error: errorData.message || "Error deleting blog" };
@@ -116,7 +114,6 @@ export function Listarblog({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Obtener usuario actual del localStorage
     const fetchUser = () => {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -125,35 +122,26 @@ export function Listarblog({
       }
     };
     fetchUser();
-  }, []);  useEffect(() => {
+  }, []);
+
+  useEffect(() => {
     const fetchBlogs = async () => {
       setLoading(true);
       try {
-        console.log("Current user:", currentUser);
         if (currentUser?.idpsicologo) {
-          console.log("Fetching blogs for psicologo:", currentUser.idpsicologo);
           const Data = await BlogGetByPsicologo(currentUser.idpsicologo);
-          console.log("Blogs received:", Data);
           setBlog(Data);
         } else if (currentUser?.id) {
-          console.log("Fetching blogs for user ID:", currentUser.id);
           const Data = await BlogGetByPsicologo(currentUser.id);
-          console.log("Blogs received:", Data);
           setBlog(Data);
         } else {
-          // FALLBACK TEMPORAL: Si no hay usuario específico, usar función original
-          console.log("No specific user, using original function as fallback");
           const Data = await BlogGet();
-          console.log("Fallback blogs received:", Data);
           setBlog(Data);
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);
-        // FALLBACK EN CASO DE ERROR: usar función original
-        console.log("Error occurred, using original function as fallback");
         try {
           const Data = await BlogGet();
-          console.log("Error fallback blogs received:", Data);
           setBlog(Data);
         } catch (fallbackError) {
           console.error("Fallback also failed:", fallbackError);
@@ -162,23 +150,26 @@ export function Listarblog({
         setLoading(false);
       }
     };
-    
+
     if (currentUser) {
       fetchBlogs();
     } else {
       setLoading(false);
     }
   }, [currentUser]);
+
   const handleEliminarBlog = async (id: number | null) => {
     const result = await eliminarBlog(id);
     if (result.success) {
-      // Actualizar lista con blogs del psicólogo actual
       if (currentUser?.idpsicologo) {
         const updatedBlogs = await BlogGetByPsicologo(currentUser.idpsicologo);
         setBlog(updatedBlogs);
       } else if (currentUser?.id) {
         const updatedBlogs = await BlogGetByPsicologo(currentUser.id);
         setBlog(updatedBlogs);
+      } else {
+        const Data = await BlogGet();
+        setBlog(Data);
       }
     } else {
       console.error("Error deleting blog:", result.error);
@@ -188,7 +179,7 @@ export function Listarblog({
   const handleEditarBlog = async (id: number | null) => {
     if (id !== null) {
       try {
-        await onEdit(id);
+        await onEdit(id); // abrirá el formulario en modo editar
       } catch (error) {
         console.error("Error editing blog:", error);
       }
@@ -199,6 +190,7 @@ export function Listarblog({
     await handleEliminarBlog(deleteId);
     setDeleteId(null);
   };
+
   return (
     <div className="w-full">
       {loading ? (
@@ -216,7 +208,7 @@ export function Listarblog({
         </div>
       ) : (
         <>
-          {/* Desktop: tabla como antes */}
+          {/* Desktop */}
           <div className="hidden lg:block">
             <table className="w-full border-separate border-spacing-y-4 rounded-t-lg rounded-2xl">
               <thead className="rounded-[36px]">
@@ -230,7 +222,7 @@ export function Listarblog({
               </thead>
               <tbody className="text-center text-[#634AE2] font-normal text-[16px] leading-[20px]">
                 {bloge.map((blog) => (
-                  <tr key={blog.idBlog} style={{clipPath: 'xywh(0 0 100% 100% round 24px)'}} className="border-b bg-white dark:bg-input dark:text-foreground rounded-[36px] ">
+                  <tr key={blog.idBlog} style={{ clipPath: 'xywh(0 0 100% 100% round 24px)' }} className="border-b bg-white dark:bg-input dark:text-foreground rounded-[36px] ">
                     <td className="px-4 py-2 border-b-4 border-[#634AE2]">{blog.idBlog}</td>
                     <td className="px-4 py-2 border-b-4 border-[#634AE2]">{blog.tema}</td>
                     <td className="px-4 py-2 border-b-4 border-[#634AE2]">{blog.categoria}</td>
@@ -295,7 +287,8 @@ export function Listarblog({
               </tbody>
             </table>
           </div>
-          {/* Mobile/Tablet: grid de cards */}
+
+          {/* Mobile / Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4 lg:hidden">
             {bloge.map((blog) => (
               <Card key={blog.idBlog} className="flex flex-col h-full">

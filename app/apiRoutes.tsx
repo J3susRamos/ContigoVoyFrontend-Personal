@@ -1,3 +1,4 @@
+import { Especialidad, Idiomas } from "@/components/CrearUsuario/DataFormularios";
 import {
   ApiResponse,
   AuthorsApi,
@@ -14,7 +15,7 @@ import {
   actulizarPsicologo,
   ActualizarPerfilCompletoPsicologo,
   EspecialidadesPsicologoResponse,
-  EspecialidadesResponse,	 
+  /*   EspecialidadesResponse,	  */
   PacienteDisabled,
   Personal,
 } from "@/interface";
@@ -23,10 +24,8 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  const cacheConfig =
-    process.env.NODE_ENV === "development"
-      ? { cache: "no-store" as const }
-      : { next: { revalidate: 3600 } };
+  // Usar revalidate para permitir generación estática
+  const cacheConfig = { next: { revalidate: 7200 } }; // 2 horas
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
@@ -72,10 +71,8 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 }
 
 export async function GetCagetories(): Promise<CategoriaApi> {
-  const cacheConfig =
-    process.env.NODE_ENV === "development"
-      ? { cache: "no-store" as const }
-      : { next: { revalidate: 3600 } };
+  // Usar cache estático para categorías que cambian poco
+  const cacheConfig = { next: { revalidate: 7200 } }; // 2 horas
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/categorias`;
@@ -112,10 +109,8 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 }
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
-  const cacheConfig =
-    process.env.NODE_ENV === "development"
-      ? { cache: "no-store" as const }
-      : { next: { revalidate: 3600 } };
+  // Usar revalidate para permitir generación estática
+  const cacheConfig = { next: { revalidate: 7200 } }; // 2 horas
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`;
@@ -160,6 +155,7 @@ export const GetPsicologos = async (
     genero: string[];
     idioma: string[];
     enfoque: string[];
+    especialidad: string[]; // 🔄 AGREGAR ESTO
   },
   search?: string,
   page?: number,
@@ -175,6 +171,8 @@ export const GetPsicologos = async (
       params.append("idioma", filters.idioma.join(","));
     if (filters.enfoque && filters.enfoque.length)
       params.append("enfoque", filters.enfoque.join(","));
+    if (filters.especialidad && filters.especialidad.length) // 🔄 AGREGAR ESTO
+      params.append("especialidad", filters.especialidad.join(","));
   }
 
   if (search) params.append("search", search);
@@ -184,9 +182,8 @@ export const GetPsicologos = async (
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
   }
-  const url = `${
-    process.env.NEXT_PUBLIC_API_URL
-  }api/psicologos?${params.toString()}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL
+    }api/psicologos?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -218,6 +215,7 @@ export const GetPsicologosInactivos = async (
     genero: string[];
     idioma: string[];
     enfoque: string[];
+    especialidad: string[]; // 🔄 AGREGAR ESTO
   },
   search?: string,
   page?: number,
@@ -233,6 +231,8 @@ export const GetPsicologosInactivos = async (
       params.append("idioma", filters.idioma.join(","));
     if (filters.enfoque && filters.enfoque.length)
       params.append("enfoque", filters.enfoque.join(","));
+    if (filters.especialidad && filters.especialidad.length) // 🔄 AGREGAR ESTO
+      params.append("especialidad", filters.especialidad.join(","));
   }
 
   if (search) params.append("search", search);
@@ -242,9 +242,8 @@ export const GetPsicologosInactivos = async (
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
   }
-  const url = `${
-    process.env.NEXT_PUBLIC_API_URL
-  }api/psicologos/inactivo?${params.toString()}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL
+    }api/psicologos/inactivo?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -418,20 +417,34 @@ export async function UpdatePsicologo(
   id: number | null,
   data: PsicologoPreviewData,
 ): Promise<void> {
+  const formData = new FormData();
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+
+    if (Array.isArray(value)) {
+      value.forEach((v) => formData.append(`${key}[]`, String(v)));
+    } else {
+      formData.append(key, String(value));
+    }
+  });
+
+  formData.append("_method", "PUT");
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${id}`,
     {
-      method: "PUT",
+      method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: formData,
     },
   );
 
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Error ", errorText);
     throw new Error("Error al actualizar el psicologo");
   }
 }
@@ -651,7 +664,7 @@ export async function GetEspecialidadesPsicologos(
   id: number,
 ): Promise<EspecialidadesPsicologoResponse> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades${id}`,
     {
       method: "GET",
       headers: {
@@ -670,7 +683,7 @@ export async function GetEspecialidadesPsicologos(
 }
 
 //Obtener las especialidades
-export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
+/* export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
     {
@@ -688,12 +701,12 @@ export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
   }
 
   return await res.json();
-}
+} */
 
 //Añadir especialidades nuevas
 export async function addEspecialidad(nombre: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`,
     {
       method: "POST",
       headers: {
@@ -779,7 +792,7 @@ export async function GetCitasEstadisticas() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/estadisticas`,
     {
-      method: "GET", 
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -802,7 +815,7 @@ export async function GetCitasSinPagarDashboard() {
     {
       method: "GET",
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
@@ -824,7 +837,7 @@ export async function GetCitasPagadasDashboard() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json", 
+        Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
     }
@@ -845,7 +858,7 @@ export async function GetAllWorkers(filters?: {
   perPage?: number;
 }) {
   const params = new URLSearchParams();
-  
+
   if (filters?.rol && filters.rol !== 'all') {
     params.append('rol', filters.rol);
   }
@@ -860,7 +873,8 @@ export async function GetAllWorkers(filters?: {
   }
 
   const queryString = params.toString();
-  const url = `${process.env.NEXT_PUBLIC_API_URL}api/users/workers${queryString ? `?${queryString}` : ''}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}api/users/workers${queryString ? `?${queryString}` : ""
+    }`;
 
   const res = await fetch(url, {
     method: "GET",
@@ -920,4 +934,145 @@ export async function ToggleWorkerStatus(workerId: number, newStatus: boolean) {
   }
 
   return await res.json();
+}
+
+
+// Agregar esta función para obtener especialidades
+export async function GetEspecialidades(): Promise<Especialidad[]> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    /* if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    } */
+
+    const data = await res.json();
+
+    if (data.status_code === 200 && data.result) {
+      // Formatear las especialidades al formato que necesita el frontend
+      return data.result.map((esp: any) => ({
+        idEspecialidad: esp.idEspecialidad,
+        nombre: esp.nombre,
+        valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
+      }));
+    }
+
+    throw new Error("Formato de respuesta inesperado");
+  } catch (error) {
+    console.error("Error al obtener especialidades:", error);
+    throw error;
+  }
+}
+
+//crear funcion para idiomas disponibles
+export async function GetIdiomas(): Promise<Idiomas[]> {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/idiomas`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+
+    const data = await res.json();
+
+    if (data.status_code === 200 && data.result) {
+      // Formatear las idiomas al formato que necesita el frontend
+      return data.result.map((esp: any) => ({
+        idIdioma: esp.idIdioma,
+        nombre: esp.nombre,
+        valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
+      }));
+    }
+
+    throw new Error("Formato de respuesta inesperado");
+  } catch (error) {
+    console.error("Error al obtener idiomas:", error);
+    throw error;
+  }
+}
+
+export async function AddIdioma(nombre: string): Promise<{ idIdioma?: number; nombre: string; valor: string }> {
+  // Normalizaciones mínimas
+  const toTitle = (s: string) =>
+    s
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+
+  const slugify = (s: string) =>
+    s
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-");
+
+  const nombreNorm = toTitle((nombre || "").trim());
+  if (!nombreNorm) {
+    throw new Error("El nombre del idioma es requerido.");
+  }
+
+  // Asegura token en entorno cliente/SSR
+  let authToken = token;
+  try {
+    if (!authToken && typeof window !== "undefined") {
+      authToken =
+        localStorage.getItem("session") ||
+        sessionStorage.getItem("session") ||
+        (document.cookie.match(/session=([^;]+)/)?.[1] ?? "");
+    }
+  } catch {
+    // no-op
+  }
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/idiomas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+    },
+    body: JSON.stringify({ nombre: nombreNorm }),
+  });
+
+  // Intenta parsear JSON; si no hay, queda en null
+  let data: any = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
+    // Mensaje específico si tu backend manda "message" o "errors"
+    const backendMsg =
+      data?.message ||
+      data?.errors?.nombre?.[0] ||
+      (res.status === 409 || res.status === 422
+        ? "El idioma ya existe."
+        : `Error ${res.status}: ${res.statusText}`);
+    const err: any = new Error(backendMsg);
+    err.status = res.status;
+    err.payload = data;
+    throw err;
+  }
+
+  // Algunos backends devuelven {result: {...}} y otros el objeto directo
+  const raw = data?.result ?? data ?? {};
+  const nombreResp: string = raw?.nombre ?? nombreNorm;
+  const idResp: number | undefined = raw?.idIdioma ?? raw?.id ?? undefined;
+  const valorResp: string =
+    raw?.valor ??
+    slugify(nombreResp);
+
+  return { idIdioma: idResp, nombre: nombreResp, valor: valorResp };
 }

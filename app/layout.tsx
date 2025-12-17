@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import React from "react";
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
-// import ClientRedirect from "@/components/ClientRedirect"; // Temporalmente deshabilitado
+import ClientRedirect from "@/components/ClientRedirect";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
@@ -25,7 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* <ClientRedirect /> Temporalmente deshabilitado para debugging */}
+          <ClientRedirect />
           <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </ThemeProvider>
         <ToastContainer />

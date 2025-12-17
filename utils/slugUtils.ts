@@ -7,10 +7,27 @@
  */
 export function createSlug(title: string): string {
   if (!title) return '';
-  
-  // Para evitar problemas de búsqueda, simplemente retornar el título URL-encoded
-  // Esto preserva los caracteres especiales y permite una búsqueda más precisa
-  return encodeURIComponent(title.trim());
+
+  return title
+    .toLowerCase()
+    .trim()
+    // Reemplazar caracteres acentuados
+    .replace(/[áéíóúñü]/g, (match) => {
+      const replacements: { [key: string]: string } = {
+        'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ñ': 'n', 'ü': 'u'
+      };
+      return replacements[match] || match;
+    })
+    // Remover caracteres especiales excepto espacios y guiones
+    .replace(/[^\w\s-]/g, '')
+    // Reemplazar espacios múltiples con uno solo
+    .replace(/\s+/g, ' ')
+    // Reemplazar espacios con guiones
+    .replace(/\s/g, '-')
+    // Remover guiones múltiples
+    .replace(/-+/g, '-')
+    // Remover guiones al inicio y final
+    .replace(/^-+|-+$/g, '');
 }
 
 /**
@@ -18,16 +35,16 @@ export function createSlug(title: string): string {
  */
 export function isValidSlug(slug: string): boolean {
   if (!slug) return false;
-  
+
   // Solo letras minúsculas, números y guiones
   const slugRegex = /^[a-z0-9-]+$/;
-  
+
   // No debe empezar o terminar con guión
   const validStartEnd = !slug.startsWith('-') && !slug.endsWith('-');
-  
+
   // No debe tener guiones múltiples
   const noMultipleHyphens = !slug.includes('--');
-  
+
   return slugRegex.test(slug) && validStartEnd && noMultipleHyphens;
 }
 
