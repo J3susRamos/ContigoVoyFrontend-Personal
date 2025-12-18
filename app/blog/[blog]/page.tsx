@@ -3,7 +3,7 @@ export async function generateStaticParams() {
   try {
     const base =
       ((process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_LOCAL_API_URL) ?? "").replace(/\/?$/, "/");
-    const slugsRes = await fetch(`${base}api/blogs/slugs`, {
+    const slugsRes = await fetch(`${base}api/blogs`, {
       headers: { Accept: "application/json" },
     });
     if (slugsRes.ok) {
@@ -59,7 +59,7 @@ async function getBlogByQuery(
     // Estrategia 1: Intentar buscar por slug usando el endpoint específico
     try {
       console.log("🔍 [getBlogByQuery] Estrategia 1: Buscando por slug...");
-      const slugEndpoint = `${apiUrl}api/blogs/slug/${encodeURIComponent(blogQuery)}`;
+      const slugEndpoint = `${apiUrl}api/blogs/${encodeURIComponent(blogQuery)}`;
       console.log("🔍 [getBlogByQuery] Slug endpoint:", slugEndpoint);
 
       const slugResponse = await fetch(slugEndpoint, {
