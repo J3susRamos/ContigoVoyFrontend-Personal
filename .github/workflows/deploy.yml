@@ -40,6 +40,6 @@ jobs:
         server: '${{ secrets.FTP_SERVER }}' # Define este Secret con tu host FTP (ej. ftp.tudominio.com)
         username: '${{ secrets.FTP_USERNAME }}' # Define este Secret con tu usuario FTP
         password: '${{ secrets.FTP_PASSWORD }}' # Define este Secret con tu contraseña FTP
-        local-dir: ./out/blog/ # Carpeta generada por 'next export'
+        local-dir: ./out # Carpeta generada por 'next export'
         # Adjust `server-dir` to your Hostinger public web root (commonly `/public_html`)
-        server-dir: /public_html/blog/ # Cambia a tu ruta pública en Hostinger (ej. /public_html/miapp)
+        server-dir: / # Cambia a tu ruta pública en Hostinger (ej. /public_html/miapp)
