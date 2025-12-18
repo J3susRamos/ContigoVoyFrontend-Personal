@@ -24,8 +24,8 @@ import { parseCookies } from "nookies";
 export const token = parseCookies()["session"];
 
 export async function BlogsWebSite(): Promise<ApiResponse> {
-  // Usar no-store para evitar problemas de cache con respuestas grandes (>2MB)
-  const cacheConfig = { cache: "no-store" as const };
+  // Usar revalidate para permitir generación estática
+  const cacheConfig = { next: { revalidate: 7200 } }; // 2 horas
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs`;
@@ -109,8 +109,8 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 }
 
 export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
-  // Usar no-store para evitar problemas de cache con respuestas grandes
-  const cacheConfig = { cache: "no-store" as const };
+  // Usar revalidate para permitir generación estática
+  const cacheConfig = { next: { revalidate: 7200 } }; // 2 horas
 
   // Siempre usar la variable de entorno para la URL del API
   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}api/blogs/authors`;
@@ -672,10 +672,12 @@ export async function GetEspecialidadesPsicologos(
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
+    const errorText = await res.text().catch(() => "");
+    console.error("Error GetEspecialidadesPsicologos:", res.status, errorText);
     throw new Error("Error al obtener las especialidades de los psicologos");
   }
 
@@ -706,7 +708,7 @@ export async function GetEspecialidadesPsicologos(
 //Añadir especialidades nuevas
 export async function addEspecialidad(nombre: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`,
     {
       method: "POST",
       headers: {

@@ -15,7 +15,7 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import showToast from "./ToastStyle";
 import Image from "next/image";
 import { Plus, X } from "lucide-react";
@@ -23,6 +23,27 @@ import { Flags } from "@/utils/flagsPsicologos";
 
 type Especialidad = { idEspecialidad: number; nombre: string };
 type Idioma = { idIdioma: number; nombre: string };
+
+const toYMD = (value: string) => {
+  if (!value) return "";
+
+  // Ya viene correcto
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+  // DD/MM/YYYY → YYYY-MM-DD
+  const m = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) {
+    const [, dd, mm, yyyy] = m;
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  // ISO con hora → YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}T/.test(value)) {
+    return value.slice(0, 10);
+  }
+
+  return value;
+};
 
 function Editar({
   isEditOpen,
@@ -41,7 +62,7 @@ function Editar({
   const [email, setEmail] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [imagen, setImagen] = useState<string>("");
-  const [celular, setCelular] = useState<string>(""); // NUEVO
+  const [celular, setCelular] = useState<string>("");
 
   // Datos profesionales
   const [titulo, setTitulo] = useState("");
@@ -52,13 +73,15 @@ function Editar({
 
   // Especialidades
   const [especialidades, setEspecialidades] = useState<string[]>([]);
-  const [allEspecialidades, setAllEspecialidades] = useState<Especialidad[]>([]);
+  const [allEspecialidades, setAllEspecialidades] = useState<Especialidad[]>(
+    []
+  );
 
   // Idiomas
   const [allIdiomas, setAllIdiomas] = useState<Idioma[]>([]);
-  const [idiomasSeleccionados, setIdiomasSeleccionados] = useState<
-    Set<string>
-  >(new Set());
+  const [idiomasSeleccionados, setIdiomasSeleccionados] = useState<Set<string>>(
+    new Set()
+  );
   const [showOtroIdioma, setShowOtroIdioma] = useState(false);
   const [nuevoIdioma, setNuevoIdioma] = useState("");
 
@@ -73,6 +96,18 @@ function Editar({
   const norm = (s: string) =>
     s.trim().toLowerCase().replace(/\b\p{L}/gu, (c) => c.toUpperCase());
 
+  // ✅ Dedup de idiomas para evitar keys repetidas (React warning/error)
+  const uniqueIdiomas = useMemo(() => {
+    const seen = new Set<string>();
+    return (allIdiomas || []).filter((i) => {
+      const k = (i?.nombre || "").trim().toLowerCase();
+      if (!k) return false;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }, [allIdiomas]);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const storedUser = localStorage.getItem("user");
@@ -85,7 +120,7 @@ function Editar({
     setEmail(parsed.email || "");
     setImagen(parsed.imagen || "");
     setEspecialidades(parsed.especialidades || []);
-    setCelular(parsed.celular || ""); // 👈 si en LS viene el celular
+    setCelular(parsed.celular || "");
 
     // catálogo especialidades
     (async () => {
@@ -103,12 +138,9 @@ function Editar({
     // catálogo idiomas (GET público)
     (async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/idiomas`
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/idiomas`);
         const data = await res.json();
-        if (Array.isArray(data.result))
-          setAllIdiomas(data.result as Idioma[]);
+        if (Array.isArray(data.result)) setAllIdiomas(data.result as Idioma[]);
       } catch {
         setAllIdiomas([]);
       }
@@ -118,11 +150,11 @@ function Editar({
     if (parsed.rol === "PSICOLOGO" && parsed.idpsicologo) {
       fetchPsicologoData(parsed.idpsicologo);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPsicologoData = async (idPsicologo: number) => {
     try {
-      // Ruta correcta en tu back:
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/${idPsicologo}`
       );
@@ -135,20 +167,28 @@ function Editar({
       setPais(ps.pais || "");
       setGenero(ps.genero || "");
       setExperiencia(ps.experiencia || 0);
-      setFechaNacimiento(ps.fecha_nacimiento || "");
-      setCelular(ps.celular || ""); //  viene del back
+      setFechaNacimiento(toYMD(ps.fecha_nacimiento || ""));
+      setCelular(ps.celular || "");
 
       // Idiomas guardados (array de nombres)
       if (Array.isArray(ps.idiomas)) {
-        // completar catálogo si faltan
-        const cat = new Set(allIdiomas.map((i) => i.nombre));
-        const faltantes = ps.idiomas.filter((n: string) => !cat.has(n));
+        // ✅ case-insensitive para no agregar duplicados tipo "Español" vs "español"
+        const cat = new Set(
+          (allIdiomas || []).map((i) => (i.nombre || "").trim().toLowerCase())
+        );
+
+        const faltantes = ps.idiomas.filter(
+          (n: string) => !cat.has((n || "").trim().toLowerCase())
+        );
+
         if (faltantes.length) {
           setAllIdiomas((prev) => [
             ...prev,
             ...faltantes.map((n: any) => ({ idIdioma: 0, nombre: n })),
           ]);
         }
+
+        // Mantener nombres tal como vienen (para que calce con SelectItem key)
         setIdiomasSeleccionados(new Set(ps.idiomas));
       }
 
@@ -180,9 +220,7 @@ function Editar({
   }, [isEditOpen, user]);
 
   // Imagen
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     try {
@@ -206,18 +244,18 @@ function Editar({
       return;
     }
 
-    // añadir al catálogo si no existe para que aparezca en el Select
-    if (!allIdiomas.some((i) => i.nombre === nombre)) {
+    // añadir al catálogo si no existe (case-insensitive)
+    const exists = allIdiomas.some(
+      (i) => (i.nombre || "").trim().toLowerCase() === nombre.trim().toLowerCase()
+    );
+    if (!exists) {
       setAllIdiomas((prev) => [...prev, { idIdioma: 0, nombre }]);
     }
-    // preseleccionar
+
     setIdiomasSeleccionados((prev) => new Set([...Array.from(prev), nombre]));
     setNuevoIdioma("");
     setShowOtroIdioma(false);
-    showToast(
-      "success",
-      "Idioma agregado a la selección. Se creará al guardar."
-    );
+    showToast("success", "Idioma agregado a la selección. Se creará al guardar.");
   };
 
   // Otras especialidades
@@ -235,10 +273,7 @@ function Editar({
       showToast("error", "Por favor ingresa especialidades válidas");
       return;
     }
-    setEspecialidades((prev) => [
-      ...prev.filter((e) => e !== "Otras"),
-      ...nuevas,
-    ]);
+    setEspecialidades((prev) => [...prev.filter((e) => e !== "Otras"), ...nuevas]);
     setOtrasEspecialidadesInput("");
     setShowOtrasEspecialidades(false);
     showToast("success", "Especialidades agregadas correctamente");
@@ -255,8 +290,8 @@ function Editar({
         const dataCompleta = {
           nombre,
           apellido,
-          email: user.email, // no editable
-          fecha_nacimiento: fechaNacimiento,
+          email: user.email,
+          fecha_nacimiento: toYMD(fechaNacimiento),
           imagen,
           titulo,
           introduccion,
@@ -265,7 +300,7 @@ function Editar({
           experiencia,
           especialidades,
           idiomas: Array.from(idiomasSeleccionados),
-          celular, //  enviar celular al back
+          celular,
         };
         await actualizarPerfilCompletoPsicologo(id as number, dataCompleta);
       } else {
@@ -275,7 +310,7 @@ function Editar({
           imagen,
           especialidades,
           idiomas: Array.from(idiomasSeleccionados),
-          celular, // por si luego lo usas también para otros roles
+          celular,
         };
         await actualizarPsicologo(id as number, body);
       }
@@ -304,8 +339,7 @@ function Editar({
       // refrescar especialidades
       if (id) {
         const espRes = await GetEspecialidadesPsicologos(id as number);
-        if (espRes && Array.isArray(espRes.result))
-          setEspecialidades(espRes.result);
+        if (espRes && Array.isArray(espRes.result)) setEspecialidades(espRes.result);
       }
     } catch (err) {
       showToast("error", "Error al actualizar el perfil");
@@ -339,8 +373,7 @@ function Editar({
                   onChange={(e) => setNombre(e.target.value)}
                   className="w-full rounded-full"
                   classNames={{
-                    input:
-                      "focus:outline-none dark:bg-[#232324] dark:text-white",
+                    input: "focus:outline-none dark:bg-[#232324] dark:text-white",
                     inputWrapper:
                       "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                   }}
@@ -358,8 +391,7 @@ function Editar({
                   onChange={(e) => setApellido(e.target.value)}
                   className="w-full rounded-full"
                   classNames={{
-                    input:
-                      "focus:outline-none dark:bg-[#232324] dark:text-white",
+                    input: "focus:outline-none dark:bg-[#232324] dark:text-white",
                     inputWrapper:
                       "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                   }}
@@ -401,8 +433,7 @@ function Editar({
                       placeholder="Ej: +51 999 999 999"
                       className="w-full rounded-full"
                       classNames={{
-                        input:
-                          "focus:outline-none dark:bg-[#232324] dark:text-white",
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-white",
                         inputWrapper:
                           "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                       }}
@@ -419,8 +450,7 @@ function Editar({
                       onChange={(e) => setFechaNacimiento(e.target.value)}
                       className="w-full rounded-full"
                       classNames={{
-                        input:
-                          "focus:outline-none dark:bg-[#232324] dark:text-white",
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-white",
                         inputWrapper:
                           "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                       }}
@@ -483,8 +513,7 @@ function Editar({
                       placeholder="Ej: Psicólogo Clínico"
                       className="w-full rounded-full"
                       classNames={{
-                        input:
-                          "focus:outline-none dark:bg-[#232324] dark:text-white",
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-white",
                         inputWrapper:
                           "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                       }}
@@ -503,8 +532,7 @@ function Editar({
                       maxRows={4}
                       className="w-full"
                       classNames={{
-                        input:
-                          "focus:outline-none dark:bg-[#232324] dark:text-white",
+                        input: "focus:outline-none dark:bg-[#232324] dark:text-white",
                         inputWrapper:
                           "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                       }}
@@ -526,8 +554,7 @@ function Editar({
                       classNames={{
                         trigger:
                           "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:text-white",
-                        popoverContent:
-                          "dark:bg-[#232324] dark:border-white/20",
+                        popoverContent: "dark:bg-[#232324] dark:border-white/20",
                         listbox: "dark:bg-[#232324]",
                       }}
                     >
@@ -607,8 +634,7 @@ function Editar({
                         }
                         className="w-full rounded-full"
                         classNames={{
-                          input:
-                            "focus:outline-none dark:bg-[#232324] dark:text-white",
+                          input: "focus:outline-none dark:bg-[#232324] dark:text-white",
                           inputWrapper:
                             "border border-[#634AE2]/30 focus:border-[#634AE2] focus:ring-2 focus:ring-[#634AE2] dark:bg-[#232324] dark:border-white/20 dark:hover:bg-[#2a2a2b]",
                         }}
@@ -638,7 +664,7 @@ function Editar({
                           "dark:bg-[#232324] dark:border-white/20",
                         listbox: "dark:bg-[#232324]",
                       }}
-                      items={allIdiomas}
+                      items={uniqueIdiomas} //  usar lista deduplicada
                     >
                       {(idi) => (
                         <SelectItem
@@ -697,8 +723,7 @@ function Editar({
                           </Button>
                         </div>
                         <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
-                          Se creará al guardar tu perfil (no requiere
-                          autenticación extra).
+                          Se creará al guardar tu perfil (no requiere autenticación extra).
                         </p>
                       </div>
                     )}
@@ -725,15 +750,10 @@ function Editar({
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setEspecialidades((prev) => [
-                                  ...prev,
-                                  esp.nombre,
-                                ]);
+                                setEspecialidades((prev) => [...prev, esp.nombre]);
                               } else {
                                 setEspecialidades((prev) =>
-                                  prev.filter(
-                                    (item) => item !== esp.nombre
-                                  )
+                                  prev.filter((item) => item !== esp.nombre)
                                 );
                               }
                             }}
@@ -751,8 +771,7 @@ function Editar({
                           checked={showOtrasEspecialidades}
                           onChange={(e) => {
                             setShowOtrasEspecialidades(e.target.checked);
-                            if (!e.target.checked)
-                              setOtrasEspecialidadesInput("");
+                            if (!e.target.checked) setOtrasEspecialidadesInput("");
                           }}
                           className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
                         />
@@ -765,8 +784,7 @@ function Editar({
                     {showOtrasEspecialidades && (
                       <div className="mt-4 p-4 bg-white/50 dark:bg-[#232324]/50 rounded-lg border border-[#634AE2]/30">
                         <label className="block text-sm font-medium text-[#634AE2] dark:text-gray-300 mb-2">
-                          Especifica otras especialidades (separadas por
-                          coma)
+                          Especifica otras especialidades (separadas por coma)
                         </label>
                         <div className="flex gap-2">
                           <Input
@@ -808,7 +826,6 @@ function Editar({
                   </div>
                 </>
               ) : (
-                // Otros roles: solo especialidades (puedes también mostrar celular si quieres)
                 <div>
                   <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
                     Especialidades
@@ -828,15 +845,10 @@ function Editar({
                           }
                           onChange={(e) => {
                             if (e.target.checked)
-                              setEspecialidades((prev) => [
-                                ...prev,
-                                esp.nombre,
-                              ]);
+                              setEspecialidades((prev) => [...prev, esp.nombre]);
                             else
                               setEspecialidades((prev) =>
-                                prev.filter(
-                                  (item) => item !== esp.nombre
-                                )
+                                prev.filter((item) => item !== esp.nombre)
                               );
                           }}
                           className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
@@ -853,8 +865,7 @@ function Editar({
                         checked={showOtrasEspecialidades}
                         onChange={(e) => {
                           setShowOtrasEspecialidades(e.target.checked);
-                          if (!e.target.checked)
-                            setOtrasEspecialidadesInput("");
+                          if (!e.target.checked) setOtrasEspecialidadesInput("");
                         }}
                         className="accent-[#634AE2] dark:accent-[#634AE2] min-w-4 min-h-4"
                       />
@@ -867,8 +878,7 @@ function Editar({
                   {showOtrasEspecialidades && (
                     <div className="mt-4 p-4 bg-white/50 dark:bg-[#232324]/50 rounded-lg border border-[#634AE2]/30">
                       <label className="block text-sm font-medium text-[#634AE2] dark:text-gray-300 mb-2">
-                        Especifica otras especialidades (separadas por
-                        coma)
+                        Especifica otras especialidades (separadas por coma)
                       </label>
                       <div className="flex gap-2">
                         <Input
