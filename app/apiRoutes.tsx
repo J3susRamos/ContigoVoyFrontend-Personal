@@ -664,7 +664,7 @@ export async function GetEspecialidadesPsicologos(
   id: number,
 ): Promise<EspecialidadesPsicologoResponse> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades${id}`,
     {
       method: "GET",
       headers: {
@@ -706,7 +706,7 @@ export async function GetEspecialidadesPsicologos(
 //Añadir especialidades nuevas
 export async function addEspecialidad(nombre: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`,
     {
       method: "POST",
       headers: {

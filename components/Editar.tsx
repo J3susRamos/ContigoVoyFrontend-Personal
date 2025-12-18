@@ -24,6 +24,27 @@ import { Flags } from "@/utils/flagsPsicologos";
 type Especialidad = { idEspecialidad: number; nombre: string };
 type Idioma = { idIdioma: number; nombre: string };
 
+const toYMD = (value: string) => {
+  if (!value) return "";
+
+  // Ya viene correcto
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+  // DD/MM/YYYY → YYYY-MM-DD
+  const m = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) {
+    const [, dd, mm, yyyy] = m;
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  // ISO con hora → YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}T/.test(value)) {
+    return value.slice(0, 10);
+  }
+
+  return value;
+};
+
 function Editar({
   isEditOpen,
   setIsEditOpen,
@@ -135,7 +156,7 @@ function Editar({
       setPais(ps.pais || "");
       setGenero(ps.genero || "");
       setExperiencia(ps.experiencia || 0);
-      setFechaNacimiento(ps.fecha_nacimiento || "");
+      setFechaNacimiento(toYMD(ps.fecha_nacimiento || ""));
       setCelular(ps.celular || ""); //  viene del back
 
       // Idiomas guardados (array de nombres)
@@ -256,7 +277,7 @@ function Editar({
           nombre,
           apellido,
           email: user.email, // no editable
-          fecha_nacimiento: fechaNacimiento,
+          fecha_nacimiento: toYMD(fechaNacimiento),
           imagen,
           titulo,
           introduccion,

@@ -10,14 +10,7 @@ import {
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/icons/iconsvg";
 import { FormData, SelectItemI, Roles, Personal } from "@/interface";
 import { Flags } from "@/utils/flagsPsicologos";
-import {
-  Button,
-  DateValue,
-  Form,
-  Input,
-  Select,
-  SelectItem,
-} from "@heroui/react";
+import { Button, DateValue, Form, Input, Select, SelectItem } from "@heroui/react";
 import React, { useEffect, useMemo, useState } from "react";
 import showToast from "../ToastStyle";
 import { parseCookies } from "nookies";
@@ -79,6 +72,31 @@ export interface Idiomas {
   valor: string;
 }
 
+// ======================= UI Helper =======================
+const FieldCard = ({
+  label,
+  required,
+  children,
+}: {
+  label: React.ReactNode;
+  required?: boolean;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
+      <div className="mb-3">
+        <div className="flex items-center justify-center gap-2">
+          <span className="text-gray-800 dark:text-gray-200 font-semibold text-base text-center">
+            {label}
+          </span>
+          {required && <span className="text-danger">*</span>}
+        </div>
+      </div>
+      {children}
+    </div>
+  );
+};
+
 export const PersonalForm = ({
   onNext,
   initialFormData,
@@ -89,11 +107,8 @@ export const PersonalForm = ({
   // ======================= Estado general =======================
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]);
 
-  const [especialidadesList, setEspecialidadesList] = useState<Especialidad[]>(
-    []
-  );
-  const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] =
-    useState<number[]>([]);
+  const [especialidadesList, setEspecialidadesList] = useState<Especialidad[]>([]);
+  const [especialidadesSeleccionadas, setEspecialidadesSeleccionadas] = useState<number[]>([]);
   const [showOtrasEspecialidades, setShowOtrasEspecialidades] = useState(false);
   const [nuevaEspecialidad, setNuevaEspecialidad] = useState("");
   const [addEspLoading, setAddEspLoading] = useState(false);
@@ -107,7 +122,7 @@ export const PersonalForm = ({
   // ======================= Form Data =======================
   const [formData, setFormData] = useState<FormData>({
     ...initialFormData,
-    idioma: initialFormData.idioma || "", // CSV de slugs (solo para UI interna)
+    idioma: initialFormData.idioma || "",
     especialidades: Array.isArray(initialFormData.especialidades)
       ? (initialFormData.especialidades as number[])
       : [],
@@ -134,7 +149,7 @@ export const PersonalForm = ({
   useEffect(() => {
     const fetchEspecialidades = async () => {
       try {
-        const especialidades = await GetEspecialidades(); // viene del back
+        const especialidades = await GetEspecialidades();
 
         const normalizadas: Especialidad[] = (especialidades || [])
           .map((e: any) => ({
@@ -144,7 +159,6 @@ export const PersonalForm = ({
           }))
           .filter((e) => Number.isFinite(e.idEspecialidad) && e.idEspecialidad > 0);
 
-        // opción "Otras" al final (sentinel id=0)
         const otrasOpcion: Especialidad = {
           idEspecialidad: 0,
           nombre: "Otras",
@@ -161,9 +175,7 @@ export const PersonalForm = ({
         }
       } catch (err) {
         console.error("Error al cargar especialidades:", err);
-        setEspecialidadesList([
-          { idEspecialidad: 0, nombre: "Otras", valor: "otras" },
-        ]);
+        setEspecialidadesList([{ idEspecialidad: 0, nombre: "Otras", valor: "otras" }]);
       }
     };
     fetchEspecialidades();
@@ -204,7 +216,7 @@ export const PersonalForm = ({
       try {
         const idiomas = await GetIdiomas();
         const idiomasFormateados: SelectItemI[] = idiomas.map((idioma: any) => ({
-          textValue: idioma.valor, // slug como key
+          textValue: idioma.valor,
           showLabel: idioma.nombre,
         }));
 
@@ -329,10 +341,8 @@ export const PersonalForm = ({
     try {
       setAddEspLoading(true);
 
-      // 1) Intentar crear en backend
       const creada = await addEspecialidad(nombre);
 
-      // 2) Intentar extraer el ID de cualquier forma común
       const idFromApi =
         Number((creada as any)?.idEspecialidad) ||
         Number((creada as any)?.result?.idEspecialidad) ||
@@ -341,19 +351,15 @@ export const PersonalForm = ({
 
       let idCreado = Number.isFinite(idFromApi) && idFromApi > 0 ? idFromApi : null;
 
-      // 3) Si NO vino ID, refrescamos catálogo y buscamos por nombre
       if (!idCreado) {
         const refetch = await GetEspecialidades();
         const found = (refetch || []).find(
           (e: any) => String(e.nombre).toLowerCase() === nombre.toLowerCase()
         );
         const idFound = Number(found?.idEspecialidad);
-        if (Number.isFinite(idFound) && idFound > 0) {
-          idCreado = idFound;
-        }
+        if (Number.isFinite(idFound) && idFound > 0) idCreado = idFound;
       }
 
-      // 4) Si aún no hay ID real, NO inventamos IDs (evita tu error 1264)
       if (!idCreado) {
         throw new Error(
           "El backend no devolvió un idEspecialidad válido. No se seleccionará para evitar error."
@@ -366,7 +372,6 @@ export const PersonalForm = ({
         valor: slugify(nombre),
       };
 
-      // 5) Actualiza catálogo (dejando 'Otras' al final)
       setEspecialidadesList((prev) => {
         const sinOtras = prev.filter((e) => e.idEspecialidad !== 0);
         const otras = prev.find((e) => e.idEspecialidad === 0);
@@ -376,7 +381,6 @@ export const PersonalForm = ({
         return otras ? [...sinDup, nueva, otras] : [...sinDup, nueva];
       });
 
-      // 6) Selecciona el ID real (sin 0)
       setEspecialidadesSeleccionadas((prev) => {
         const sinOtras = prev.filter((id) => id !== 0);
         const next = Array.from(new Set([...sinOtras, idCreado!]));
@@ -448,13 +452,11 @@ export const PersonalForm = ({
         ? formatFechaNacimiento(formData.fecha_nacimiento)
         : null;
 
-      // ✅ Solo IDs reales, existentes en catálogo, y > 0
       const especialidadesIdsValidas = especialidadesSeleccionadas
         .filter((id) => Number.isFinite(id) && id > 0)
         .filter((id) => especialidadesIdSet.has(id));
 
       if (especialidadesSeleccionadas.some((id) => id < 0)) {
-        // Por si quedó basura de antes en state (ya no debería pasar)
         showToast("error", "Hay especialidades inválidas en selección. Reintenta.");
         setIsSend(false);
         return;
@@ -542,600 +544,507 @@ export const PersonalForm = ({
           </div>
 
           <div className="w-full flex justify-center">
-            <div className="w-full max-w-5xl flex justify-center">
+            <div className="w-full max-w-5xl">
               <Form
                 validationBehavior="native"
                 onSubmit={handleSubmit}
                 className="w-full flex flex-col items-center"
               >
-                <div className="w-full max-w-4xl flex justify-center">
-                  <div className="w-full">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 place-items-center justify-items-center">
-                      {/* Columna izquierda */}
-                      <div className="w-full max-w-sm flex flex-col space-y-8 mx-auto">
-                        {/* Nombre */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              Nombre
-                            </label>
-                          </div>
-                          <Input
-                            labelPlacement="outside"
-                            radius="lg"
-                            classNames={{
-                              inputWrapper:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                              input:
-                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                            }}
-                            placeholder="Ingrese el nombre completo"
-                            type="text"
-                            isRequired
-                            value={formData.name}
-                            variant="bordered"
-                            autoComplete="username"
-                            onChange={(e) =>
-                              setFormData({ ...formData, name: e.target.value })
-                            }
-                          />
-                        </div>
+                {/* ✅ Layout por FILAS: responsive perfecto (mobile: se apila sin mezclar) */}
+                <div className="w-full max-w-4xl">
+                  {/* FILA 1 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                    <FieldCard label="Nombre" required>
+                      <Input
+                        labelPlacement="outside"
+                        radius="lg"
+                        classNames={{
+                          inputWrapper:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                          input:
+                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                        }}
+                        placeholder="Ingrese el nombre completo"
+                        type="text"
+                        isRequired
+                        value={formData.name}
+                        variant="bordered"
+                        autoComplete="username"
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                      />
+                    </FieldCard>
 
-                        {/* Fecha nacimiento */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-center gap-2">
-                              <span className="text-gray-800 dark:text-gray-200 font-semibold text-base">
-                                Fecha de nacimiento
-                              </span>
-                              <span className="text-danger">*</span>
-                            </div>
-                            <div className="w-full flex justify-center">
-                              <div className="w-full">
-                                <DatePickerCustom onChange={handleDateChange} />
-                                {errorFecha && (
-                                  <p className="text-red-500 text-sm mt-2">
-                                    {errorFecha}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                    <FieldCard label="Fecha de nacimiento" required>
+                      <DatePickerCustom onChange={handleDateChange} />
+                      {errorFecha && (
+                        <p className="text-red-500 text-sm mt-2">{errorFecha}</p>
+                      )}
+                    </FieldCard>
+                  </div>
 
-                        {/* Género */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              Género
-                            </label>
-                          </div>
-                          <Select
-                            labelPlacement="outside"
-                            isRequired
-                            radius="lg"
-                            variant="bordered"
-                            selectedKeys={[formData.genero]}
-                            classNames={{
-                              trigger:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                              value: "text-gray-900 dark:text-white text-center",
-                              listboxWrapper: "dark:bg-gray-800",
-                              popoverContent:
-                                "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
-                            }}
-                            placeholder="Seleccione el género"
-                            onChange={(e) =>
-                              setFormData({ ...formData, genero: e.target.value })
-                            }
+                  {/* FILA 2 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mt-8">
+                    <FieldCard label="Apellido" required>
+                      <Input
+                        labelPlacement="outside"
+                        radius="lg"
+                        variant="bordered"
+                        value={formData.apellido}
+                        classNames={{
+                          inputWrapper:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                          input:
+                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                        }}
+                        isRequired
+                        placeholder="Ingrese el apellido completo"
+                        type="text"
+                        autoComplete="username"
+                        onChange={(e) =>
+                          setFormData({ ...formData, apellido: e.target.value })
+                        }
+                      />
+                    </FieldCard>
+
+                    <FieldCard label="País" required>
+                      <Select
+                        labelPlacement="outside"
+                        isRequired
+                        radius="lg"
+                        variant="bordered"
+                        selectedKeys={formData.pais ? [formData.pais] : []}
+                        classNames={{
+                          trigger:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                          value: "text-gray-900 dark:text-white text-center",
+                          listboxWrapper: "dark:bg-gray-800",
+                          popoverContent:
+                            "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                        }}
+                        placeholder="Seleccione el país de residencia"
+                        onChange={(e) =>
+                          setFormData({ ...formData, pais: e.target.value })
+                        }
+                      >
+                        {Flags.map((item) => (
+                          <SelectItem
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            textValue={item.label}
+                            key={item.value}
                           >
-                            {genders.map((gender) => (
-                              <SelectItem
-                                className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                textValue={gender.textValue}
-                                key={gender.textValue}
-                              >
-                                {gender.showLabel}
-                              </SelectItem>
-                            ))}
-                          </Select>
-                        </div>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </FieldCard>
+                  </div>
 
-                        {/* Email */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              E-mail
-                            </label>
-                          </div>
-                          <Input
-                            labelPlacement="outside"
-                            isRequired
-                            radius="lg"
-                            value={formData.email}
-                            classNames={{
-                              inputWrapper:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                              input:
-                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                            }}
-                            placeholder="ejemplo@correo.com"
-                            type="email"
-                            autoComplete="email"
-                            variant="bordered"
-                            onChange={(e) =>
-                              setFormData({ ...formData, email: e.target.value })
-                            }
-                          />
-                        </div>
-
-                        {/* Rol */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              Rol
-                            </label>
-                          </div>
-                          <Select
-                            labelPlacement="outside"
-                            isRequired
-                            radius="lg"
-                            variant="bordered"
-                            selectedKeys={[rol]}
-                            aria-label="Seleccionar rol"
-                            classNames={{
-                              trigger:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                              value: "text-gray-900 dark:text-white text-center",
-                              listboxWrapper: "dark:bg-gray-800",
-                              popoverContent:
-                                "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
-                            }}
-                            placeholder="Seleccione el rol"
-                            onChange={(e) => handleChangeRol(e.target.value)}
+                  {/* FILA 3 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mt-8">
+                    <FieldCard label="Género" required>
+                      <Select
+                        labelPlacement="outside"
+                        isRequired
+                        radius="lg"
+                        variant="bordered"
+                        selectedKeys={[formData.genero]}
+                        classNames={{
+                          trigger:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                          value: "text-gray-900 dark:text-white text-center",
+                          listboxWrapper: "dark:bg-gray-800",
+                          popoverContent:
+                            "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                        }}
+                        placeholder="Seleccione el género"
+                        onChange={(e) =>
+                          setFormData({ ...formData, genero: e.target.value })
+                        }
+                      >
+                        {genders.map((gender) => (
+                          <SelectItem
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            textValue={gender.textValue}
+                            key={gender.textValue}
                           >
-                            {roles.map((r) => (
-                              <SelectItem
-                                className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                textValue={r.textValue}
-                                key={r.textValue}
-                              >
-                                {r.showLabel}
-                              </SelectItem>
-                            ))}
-                          </Select>
-                        </div>
-                      </div>
+                            {gender.showLabel}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </FieldCard>
 
-                      {/* Columna derecha */}
-                      <div className="w-full max-w-sm flex flex-col space-y-8 mx-auto">
-                        {/* Apellido */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              Apellido
-                            </label>
-                          </div>
-                          <Input
-                            labelPlacement="outside"
-                            radius="lg"
-                            variant="bordered"
-                            value={formData.apellido}
-                            classNames={{
-                              inputWrapper:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                              input:
-                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                            }}
-                            isRequired
-                            placeholder="Ingrese el apellido completo"
-                            type="text"
-                            autoComplete="username"
-                            onChange={(e) =>
-                              setFormData({ ...formData, apellido: e.target.value })
-                            }
-                          />
-                        </div>
+                    <FieldCard label="Teléfono">
+                      <Input
+                        labelPlacement="outside"
+                        radius="lg"
+                        variant="bordered"
+                        type="text"
+                        value={(formData as any).celular}
+                        placeholder="+51 987 654 321"
+                        classNames={{
+                          inputWrapper:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                          input:
+                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                        }}
+                        onChange={(e) =>
+                          setFormData({ ...formData, celular: e.target.value } as any)
+                        }
+                      />
+                    </FieldCard>
+                  </div>
 
-                        {/* País */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-center gap-2">
-                              <span className="text-gray-800 dark:text-gray-200 font-semibold text-base">
-                                País
-                              </span>
-                              <span className="text-danger">*</span>
-                            </div>
-                            <div className="w-full flex justify-center">
-                              <div className="w-full">
-                                <Select
-                                  labelPlacement="outside"
-                                  isRequired
+                  {/* FILA 4 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mt-8">
+                    <FieldCard label="E-mail" required>
+                      <Input
+                        labelPlacement="outside"
+                        isRequired
+                        radius="lg"
+                        value={formData.email}
+                        classNames={{
+                          inputWrapper:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                          input:
+                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                        }}
+                        placeholder="ejemplo@correo.com"
+                        type="email"
+                        autoComplete="email"
+                        variant="bordered"
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
+                      />
+                    </FieldCard>
+
+                    <FieldCard label="Contraseña" required>
+                      <Input
+                        name="password"
+                        isRequired
+                        radius="lg"
+                        minLength={8}
+                        labelPlacement="outside"
+                        autoComplete="current-password"
+                        value={formData.password}
+                        placeholder="Mínimo 8 caracteres"
+                        classNames={{
+                          inputWrapper:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                          input:
+                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                        }}
+                        endContent={
+                          <button
+                            aria-label={isVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            type="button"
+                            className="focus:outline-none mr-2"
+                            onClick={toggleVisibility}
+                          >
+                            {isVisible ? (
+                              <EyeSlashFilledIcon
+                                className="text-2xl text-gray-400 dark:text-gray-500 pointer-events-none"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <EyeFilledIcon
+                                className="text-2xl text-gray-400 dark:text-gray-500 pointer-events-none"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </button>
+                        }
+                        type={isVisible ? "text" : "password"}
+                        variant="bordered"
+                        onChange={(e) =>
+                          setFormData({ ...formData, password: e.target.value })
+                        }
+                      />
+                    </FieldCard>
+                  </div>
+
+                  {/* FILA 5 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mt-8">
+                    <FieldCard label="Rol" required>
+                      <Select
+                        labelPlacement="outside"
+                        isRequired
+                        radius="lg"
+                        variant="bordered"
+                        selectedKeys={[rol]}
+                        aria-label="Seleccionar rol"
+                        classNames={{
+                          trigger:
+                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                          value: "text-gray-900 dark:text-white text-center",
+                          listboxWrapper: "dark:bg-gray-800",
+                          popoverContent:
+                            "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                        }}
+                        placeholder="Seleccione el rol"
+                        onChange={(e) => handleChangeRol(e.target.value)}
+                      >
+                        {roles.map((r) => (
+                          <SelectItem
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            textValue={r.textValue}
+                            key={r.textValue}
+                          >
+                            {r.showLabel}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </FieldCard>
+
+                    {rol === "PSICOLOGO" ? (
+                      <FieldCard label="Título Profesional" required>
+                        <Select
+                          name="titulo"
+                          isRequired
+                          radius="lg"
+                          labelPlacement="outside"
+                          value={formData.titulo}
+                          aria-label="Seleccionar título profesional"
+                          onChange={(e) =>
+                            setFormData({ ...formData, titulo: e.target.value })
+                          }
+                          placeholder="Seleccione el título profesional"
+                          variant="bordered"
+                          selectedKeys={[formData.titulo]}
+                          classNames={{
+                            trigger:
+                              "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                            value: "text-gray-900 dark:text-white text-center",
+                            listboxWrapper: "dark:bg-gray-800",
+                            popoverContent:
+                              "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                          }}
+                        >
+                          {titles.map((title) => (
+                            <SelectItem
+                              key={title.textValue}
+                              textValue={title.textValue}
+                              className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                              {title.showLabel}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      </FieldCard>
+                    ) : (
+                      <div className="hidden lg:block" />
+                    )}
+                  </div>
+
+                  {/* FILA 6 */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mt-8">
+                    {rol === "PSICOLOGO" ? (
+                      <FieldCard label="Idiomas que domina" required>
+                        <Select
+                          name="idiomas"
+                          isRequired
+                          radius="lg"
+                          labelPlacement="outside"
+                          selectionMode="multiple"
+                          aria-label="Seleccionar idiomas"
+                          placeholder="Seleccione los idiomas que domina"
+                          variant="bordered"
+                          selectedKeys={new Set(selectedIdiomas)}
+                          classNames={{
+                            trigger:
+                              "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                            value: "text-gray-900 dark:text-white text-center",
+                            listboxWrapper: "dark:bg-gray-800",
+                            popoverContent:
+                              "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                          }}
+                          onSelectionChange={(keys) => {
+                            const selected = Array.from(keys) as string[];
+                            setSelectedIdiomas(selected);
+
+                            const hasOtros = selected.includes("otros");
+                            setOtroIdioma(hasOtros);
+
+                            const soloIdiomas = selected.filter((k) => k !== "otros");
+                            setFormData((prev) => ({
+                              ...prev,
+                              idioma: soloIdiomas.join(","),
+                            }));
+                          }}
+                        >
+                          {idiomasList.map((idioma) => (
+                            <SelectItem
+                              key={idioma.textValue}
+                              textValue={idioma.textValue}
+                              className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                              {idioma.showLabel}
+                            </SelectItem>
+                          ))}
+                        </Select>
+
+                        {otroIdioma && (
+                          <div className="mt-4">
+                            <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                              <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
+                                Agregar nuevo idioma
+                              </label>
+                              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                                <Input
                                   radius="lg"
                                   variant="bordered"
-                                  selectedKeys={formData.pais ? [formData.pais] : []}
+                                  value={nuevoIdioma}
+                                  placeholder="Ej. Quechua"
                                   classNames={{
-                                    trigger:
-                                      "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                                    value:
-                                      "text-gray-900 dark:text-white text-center",
-                                    listboxWrapper: "dark:bg-gray-800",
-                                    popoverContent:
-                                      "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                                    inputWrapper:
+                                      "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                                    input:
+                                      "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
                                   }}
-                                  placeholder="Seleccione el país de residencia"
-                                  onChange={(e) =>
-                                    setFormData({ ...formData, pais: e.target.value })
-                                  }
+                                  onChange={(e) => setNuevoIdioma(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.preventDefault();
+                                      handleAddIdioma();
+                                    }
+                                  }}
+                                />
+                                <Button
+                                  radius="lg"
+                                  className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                                  isDisabled={addIdiomaLoading}
+                                  onPress={handleAddIdioma}
                                 >
-                                  {Flags.map((item) => (
-                                    <SelectItem
-                                      className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                      textValue={item.label}
-                                      key={item.value}
-                                    >
-                                      {item.label}
-                                    </SelectItem>
-                                  ))}
-                                </Select>
+                                  {addIdiomaLoading ? "Agregando..." : "Agregar"}
+                                </Button>
                               </div>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                                Escribe el idioma y presiona “Agregar”.
+                              </p>
                             </div>
                           </div>
-                        </div>
-
-                        {/* Teléfono */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              Teléfono
-                            </label>
-                          </div>
-                          <Input
-                            labelPlacement="outside"
-                            radius="lg"
-                            variant="bordered"
-                            type="text"
-                            value={(formData as any).celular}
-                            placeholder="+51 987 654 321"
-                            classNames={{
-                              inputWrapper:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                              input:
-                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                            }}
-                            onChange={(e) =>
-                              setFormData({ ...formData, celular: e.target.value } as any)
-                            }
-                          />
-                        </div>
-
-                        {/* Contraseña */}
-                        <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                          <div className="text-center">
-                            <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                              Contraseña
-                            </label>
-                          </div>
-                          <Input
-                            name="password"
-                            isRequired
-                            radius="lg"
-                            minLength={8}
-                            labelPlacement="outside"
-                            autoComplete="current-password"
-                            value={formData.password}
-                            placeholder="Mínimo 8 caracteres"
-                            classNames={{
-                              inputWrapper:
-                                "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                              input:
-                                "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                            }}
-                            endContent={
-                              <button
-                                aria-label={isVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
-                                type="button"
-                                className="focus:outline-none mr-2"
-                                onClick={toggleVisibility}
-                              >
-                                {isVisible ? (
-                                  <EyeSlashFilledIcon
-                                    className="text-2xl text-gray-400 dark:text-gray-500 pointer-events-none"
-                                    aria-hidden="true"
-                                  />
-                                ) : (
-                                  <EyeFilledIcon
-                                    className="text-2xl text-gray-400 dark:text-gray-500 pointer-events-none"
-                                    aria-hidden="true"
-                                  />
-                                )}
-                              </button>
-                            }
-                            type={isVisible ? "text" : "password"}
-                            variant="bordered"
-                            onChange={(e) =>
-                              setFormData({ ...formData, password: e.target.value })
-                            }
-                          />
-                        </div>
-
-                        {/* Título profesional (solo psicólogo) */}
-                        {rol === "PSICOLOGO" ? (
-                          <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                            <div className="text-center">
-                              <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                                Título Profesional
-                              </label>
-                            </div>
-                            <Select
-                              name="titulo"
-                              isRequired
-                              radius="lg"
-                              labelPlacement="outside"
-                              value={formData.titulo}
-                              aria-label="Seleccionar título profesional"
-                              onChange={(e) =>
-                                setFormData({ ...formData, titulo: e.target.value })
-                              }
-                              placeholder="Seleccione el título profesional"
-                              variant="bordered"
-                              selectedKeys={[formData.titulo]}
-                              classNames={{
-                                trigger:
-                                  "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                                value:
-                                  "text-gray-900 dark:text-white text-center",
-                                listboxWrapper: "dark:bg-gray-800",
-                                popoverContent:
-                                  "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
-                              }}
-                            >
-                              {titles.map((title) => (
-                                <SelectItem
-                                  key={title.textValue}
-                                  textValue={title.textValue}
-                                  className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                >
-                                  {title.showLabel}
-                                </SelectItem>
-                              ))}
-                            </Select>
-                          </div>
-                        ) : null}
-
-                        {/* Idiomas (solo psicólogo) */}
-                        {rol === "PSICOLOGO" ? (
-                          <>
-                            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                              <div className="text-center">
-                                <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                                  Idiomas que domina
-                                </label>
-                              </div>
-                              <Select
-                                name="idiomas"
-                                isRequired
-                                radius="lg"
-                                labelPlacement="outside"
-                                selectionMode="multiple"
-                                aria-label="Seleccionar idiomas"
-                                placeholder="Seleccione los idiomas que domina"
-                                variant="bordered"
-                                selectedKeys={new Set(selectedIdiomas)}
-                                classNames={{
-                                  trigger:
-                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                                  value:
-                                    "text-gray-900 dark:text-white text-center",
-                                  listboxWrapper: "dark:bg-gray-800",
-                                  popoverContent:
-                                    "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
-                                }}
-                                onSelectionChange={(keys) => {
-                                  const selected = Array.from(keys) as string[];
-                                  setSelectedIdiomas(selected);
-
-                                  const hasOtros = selected.includes("otros");
-                                  setOtroIdioma(hasOtros);
-
-                                  const soloIdiomas = selected.filter((k) => k !== "otros");
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    idioma: soloIdiomas.join(","),
-                                  }));
-                                }}
-                              >
-                                {idiomasList.map((idioma) => (
-                                  <SelectItem
-                                    key={idioma.textValue}
-                                    textValue={idioma.textValue}
-                                    className="flex items-center justify-between px-3 py-2 rounded-md cursor-pointer text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                  >
-                                    {idioma.showLabel}
-                                  </SelectItem>
-                                ))}
-                              </Select>
-
-                              {otroIdioma && (
-                                <div className="mt-4">
-                                  <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
-                                    <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
-                                      Agregar nuevo idioma
-                                    </label>
-                                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                                      <Input
-                                        radius="lg"
-                                        variant="bordered"
-                                        value={nuevoIdioma}
-                                        placeholder="Ej. Quechua"
-                                        classNames={{
-                                          inputWrapper:
-                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                                          input:
-                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                                        }}
-                                        onChange={(e) => setNuevoIdioma(e.target.value)}
-                                        onKeyDown={(e) => {
-                                          if (e.key === "Enter") {
-                                            e.preventDefault();
-                                            handleAddIdioma();
-                                          }
-                                        }}
-                                      />
-                                      <Button
-                                        radius="lg"
-                                        className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
-                                        isDisabled={addIdiomaLoading}
-                                        onPress={handleAddIdioma}
-                                      >
-                                        {addIdiomaLoading ? "Agregando..." : "Agregar"}
-                                      </Button>
-                                    </div>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                                      Escribe el idioma y presiona “Agregar”.
-                                    </p>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Especialidades */}
-                            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full mt-6">
-                              <div className="text-center">
-                                <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                                  Especialidades
-                                </label>
-                              </div>
-                              <Select
-                                selectionMode="multiple"
-                                radius="lg"
-                                variant="bordered"
-                                placeholder="Seleccione una o varias especialidades"
-                                selectedKeys={new Set(
-                                  especialidadesSeleccionadas.map(String)
-                                )}
-                                onSelectionChange={(keys) => {
-                                  const selectedKeys = Array.from(keys) as string[];
-                                  const ids = selectedKeys
-                                    .map((k) => Number(k))
-                                    .filter((n) => Number.isFinite(n));
-
-                                  setEspecialidadesSeleccionadas(ids);
-
-                                  const hasOtras = ids.includes(0);
-                                  setShowOtrasEspecialidades(hasOtras);
-
-                                  const soloIds = ids.filter((id) => id !== 0);
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    especialidades: soloIds,
-                                  }));
-                                }}
-                                classNames={{
-                                  trigger:
-                                    "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
-                                  value:
-                                    "text-gray-900 dark:text-white text-center",
-                                  listboxWrapper: "dark:bg-gray-800",
-                                  popoverContent:
-                                    "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
-                                }}
-                              >
-                                {especialidadesList.map((esp) => (
-                                  <SelectItem
-                                    key={String(esp.idEspecialidad)}
-                                    textValue={esp.nombre}
-                                  >
-                                    {esp.nombre}
-                                  </SelectItem>
-                                ))}
-                              </Select>
-
-                              {showOtrasEspecialidades && (
-                                <div className="mt-4">
-                                  <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
-                                    <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
-                                      Agregar nueva especialidad
-                                    </label>
-                                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                                      <Input
-                                        radius="lg"
-                                        variant="bordered"
-                                        value={nuevaEspecialidad}
-                                        placeholder="Ej. Psicología deportiva"
-                                        classNames={{
-                                          inputWrapper:
-                                            "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
-                                          input:
-                                            "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
-                                        }}
-                                        onChange={(e) =>
-                                          setNuevaEspecialidad(e.target.value)
-                                        }
-                                        onKeyDown={(e) => {
-                                          if (e.key === "Enter") {
-                                            e.preventDefault();
-                                            handleAgregarNuevaEspecialidad();
-                                          }
-                                        }}
-                                      />
-                                      <Button
-                                        radius="lg"
-                                        className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
-                                        isDisabled={addEspLoading}
-                                        onPress={handleAgregarNuevaEspecialidad}
-                                      >
-                                        {addEspLoading ? "Agregando..." : "Agregar"}
-                                      </Button>
-                                    </div>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                                      Se registrará en la base de datos y se agregará a la lista.
-                                    </p>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </>
-                        ) : null}
-
-                        {/* Permisos (no psicólogo) */}
-                        {rol !== "PSICOLOGO" ? (
-                          <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-700 w-full">
-                            <div className="text-center">
-                              <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block">
-                                Asignar permiso
-                              </label>
-                            </div>
-                            <Select
-                              name="permissions"
-                              isRequired
-                              radius="lg"
-                              labelPlacement="outside"
-                              selectionMode="multiple"
-                              aria-label="Seleccionar permisos"
-                              placeholder="Seleccione el permiso del personal."
-                              variant="bordered"
-                              selectedKeys={new Set(permissions.map(String))}
-                              onSelectionChange={(keys) => {
-                                const selected = Array.from(keys).map((k) => Number(k));
-                                setPermissions(selected);
-                                setFormData((prev) => ({ ...prev, permissions: selected }));
-                              }}
-                            >
-                              {permissionsList
-                                .filter((perm) => perm.id != null)
-                                .map((perm) => (
-                                  <SelectItem key={String(perm.id)} textValue={perm.name}>
-                                    {perm.name}
-                                  </SelectItem>
-                                ))}
-                            </Select>
-                          </div>
-                        ) : (
-                          <div />
                         )}
+                      </FieldCard>
+                    ) : (
+                      <div className="hidden lg:block" />
+                    )}
 
-                        {permissions.length > 0 && rol !== "PSICOLOGO" && (
+                    {rol === "PSICOLOGO" ? (
+                      <FieldCard label="Especialidades">
+                        <Select
+                          selectionMode="multiple"
+                          radius="lg"
+                          variant="bordered"
+                          placeholder="Seleccione una o varias especialidades"
+                          selectedKeys={new Set(especialidadesSeleccionadas.map(String))}
+                          onSelectionChange={(keys) => {
+                            const selectedKeys = Array.from(keys) as string[];
+                            const ids = selectedKeys
+                              .map((k) => Number(k))
+                              .filter((n) => Number.isFinite(n));
+
+                            setEspecialidadesSeleccionadas(ids);
+
+                            const hasOtras = ids.includes(0);
+                            setShowOtrasEspecialidades(hasOtras);
+
+                            const soloIds = ids.filter((id) => id !== 0);
+                            setFormData((prev) => ({
+                              ...prev,
+                              especialidades: soloIds,
+                            }));
+                          }}
+                          classNames={{
+                            trigger:
+                              "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary data-[open=true]:border-primary transition-all duration-200 shadow-sm px-4 py-3 w-full",
+                            value: "text-gray-900 dark:text-white text-center",
+                            listboxWrapper: "dark:bg-gray-800",
+                            popoverContent:
+                              "dark:bg-gray-800 border-gray-300 dark:border-gray-600 shadow-xl",
+                          }}
+                        >
+                          {especialidadesList.map((esp) => (
+                            <SelectItem
+                              key={String(esp.idEspecialidad)}
+                              textValue={esp.nombre}
+                            >
+                              {esp.nombre}
+                            </SelectItem>
+                          ))}
+                        </Select>
+
+                        {showOtrasEspecialidades && (
+                          <div className="mt-4">
+                            <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                              <label className="text-gray-800 dark:text-gray-200 font-semibold mb-2 text-base block text-center">
+                                Agregar nueva especialidad
+                              </label>
+                              <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                                <Input
+                                  radius="lg"
+                                  variant="bordered"
+                                  value={nuevaEspecialidad}
+                                  placeholder="Ej. Psicología deportiva"
+                                  classNames={{
+                                    inputWrapper:
+                                      "border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:border-primary focus-within:!border-primary transition-all duration-200 shadow-sm w-full",
+                                    input:
+                                      "text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3 text-center w-full",
+                                  }}
+                                  onChange={(e) => setNuevaEspecialidad(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.preventDefault();
+                                      handleAgregarNuevaEspecialidad();
+                                    }
+                                  }}
+                                />
+                                <Button
+                                  radius="lg"
+                                  className="px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+                                  isDisabled={addEspLoading}
+                                  onPress={handleAgregarNuevaEspecialidad}
+                                >
+                                  {addEspLoading ? "Agregando..." : "Agregar"}
+                                </Button>
+                              </div>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                                Se registrará en la base de datos y se agregará a la lista.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </FieldCard>
+                    ) : (
+                      <FieldCard label="Asignar permiso" required>
+                        <Select
+                          name="permissions"
+                          isRequired
+                          radius="lg"
+                          labelPlacement="outside"
+                          selectionMode="multiple"
+                          aria-label="Seleccionar permisos"
+                          placeholder="Seleccione el permiso del personal."
+                          variant="bordered"
+                          selectedKeys={new Set(permissions.map(String))}
+                          onSelectionChange={(keys) => {
+                            const selected = Array.from(keys).map((k) => Number(k));
+                            setPermissions(selected);
+                            setFormData((prev) => ({ ...prev, permissions: selected }));
+                          }}
+                        >
+                          {permissionsList
+                            .filter((perm) => perm.id != null)
+                            .map((perm) => (
+                              <SelectItem key={String(perm.id)} textValue={perm.name}>
+                                {perm.name}
+                              </SelectItem>
+                            ))}
+                        </Select>
+
+                        {permissions.length > 0 && (
                           <div className="mt-4 flex flex-wrap gap-2 justify-center">
                             {permissions.map((permId, idx) => {
                               const permName =
@@ -1151,8 +1060,8 @@ export const PersonalForm = ({
                             })}
                           </div>
                         )}
-                      </div>
-                    </div>
+                      </FieldCard>
+                    )}
                   </div>
                 </div>
 
