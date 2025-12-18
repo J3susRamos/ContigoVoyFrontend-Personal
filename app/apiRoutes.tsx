@@ -672,10 +672,12 @@ export async function GetEspecialidadesPsicologos(
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {
+    const errorText = await res.text().catch(() => "");
+    console.error("Error GetEspecialidadesPsicologos:", res.status, errorText);
     throw new Error("Error al obtener las especialidades de los psicologos");
   }
 
@@ -706,7 +708,7 @@ export async function GetEspecialidadesPsicologos(
 //Añadir especialidades nuevas
 export async function addEspecialidad(nombre: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`,
     {
       method: "POST",
       headers: {
