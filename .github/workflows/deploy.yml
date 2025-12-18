@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ] # Cambia 'main' si tu rama de despliegue es otra
   repository_dispatch:
-    types: [ blog_created, blog_updated, blog_deleted ] # Opcional: tipos de eventos que disparan el deploy
+    types: [ createBlog, blog_updated, blog_deleted ] # Opcional: tipos de eventos que disparan el deploy
 
   workflow_dispatch:
 
