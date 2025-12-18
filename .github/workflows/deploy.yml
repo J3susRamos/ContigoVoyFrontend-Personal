@@ -24,7 +24,7 @@ jobs:
       run: npm ci
     
     - name: Build and export
-      run: npm run build && npm run export
+      run: npm run build
       env:
         # Public runtime variables (set these in GitHub Secrets)
         NEXT_PUBLIC_API_URL: '${{ secrets.NEXT_PUBLIC_API_URL }}' # Define este Secret con la URL pública de tu API
