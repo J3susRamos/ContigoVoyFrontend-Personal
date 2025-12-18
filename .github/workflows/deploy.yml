@@ -8,8 +8,6 @@ on:
 
   workflow_dispatch:
 
-
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,10 +27,7 @@ jobs:
       run: npm run build && npm run export
       env:
         # Public runtime variables (set these in GitHub Secrets)
-        NEXT_PUBLIC_LOCAL_API_URL: '${{ secrets.NEXT_PUBLIC_LOCAL_API_URL }}' # Define este Secret con tu URL local (opcional)
         NEXT_PUBLIC_API_URL: '${{ secrets.NEXT_PUBLIC_API_URL }}' # Define este Secret con la URL pública de tu API
-        NEXT_PUBLIC_WHATSAPP_API_URL: '${{ secrets.NEXT_PUBLIC_WHATSAPP_API_URL }}' # Define este Secret si usas WhatsApp API
-        NEXT_PUBLIC_API_KEY: '${{ secrets.NEXT_PUBLIC_API_KEY }}' # Define este Secret para claves públicas del frontend
     
     - name: Deploy to Hostinger via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
