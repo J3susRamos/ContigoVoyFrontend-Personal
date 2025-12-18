@@ -3,6 +3,7 @@ import OnlinePsychology from "@/components/mainPage/onlinePsychology";
 import TherapyServices from "@/components/mainPage/therapyServices";
 import MainSlider from "@/components/mainPage/mainslider";
 import RealiableCompanies from "@/components/mainPage/ReliableCompanies";
+import HomeDescription from "@/components/mainPage/HomeDescription";
 
 import { Metadata } from "next";
 
@@ -43,6 +44,7 @@ export default function Home() {
         Terapia Psicológica Online
       </h1>
       <MainSlider />
+      <HomeDescription />
       <TherapyServices />
       <ChooseUs />
       <RealiableCompanies />

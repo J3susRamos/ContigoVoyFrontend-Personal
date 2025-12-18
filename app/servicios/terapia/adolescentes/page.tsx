@@ -54,7 +54,7 @@ const TeenTerapias: ServicesStructureProps = {
   bgdownTitle:
     "Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos.",
   description:
-    "Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos",
+    "Terapia para adolescentes online con psicólogos expertos. Mejora autoestima, manejo emocional, habilidades sociales y orientación vocacional segura.",
   tittleIcon:
     "Prioriza su bienestar emocional. A través de la terapia para adolescentes, ayudamos a jóvenes a enfrentar desafíos.",
   iconos: [

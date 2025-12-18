@@ -88,6 +88,7 @@ export interface PromotionCardProps {
 //Quienes Somos
 export interface QuienesSomos {
   quienesSomos: string;
+  descripcion: string;
   mision: string;
   vision: string;
   valor1: string;

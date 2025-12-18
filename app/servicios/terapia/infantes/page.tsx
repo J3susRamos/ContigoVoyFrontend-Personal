@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title:
     "Terapia para niños – Crecer felices y seguros | Contigo Voy",
   description:
-    "Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea.",
+    "Ayuda a tu hijo a superar sus desafíos emocionales con nuestra terapia infantil. Apoyamos a los niños a comprender y manejar sus emociones, mejorando su bienestar de manera accesible y con la participación activa de los padres en cada sesión online. Terapia psicológica infantil online. Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea.",
   authors: [{ name: "Contigo Voy" }],
   verification: {
     google: "E00tvOVfRX6v6wc1XmzuZ3gmrwWyisgcyp4c2uNt7CY",
@@ -35,7 +35,7 @@ const NinosTerapias: ServicesStructureProps = {
   edadMobil: "3 - 12",
   
   motto: (
-    <p>
+     <p>
       ¿Por qué no darle a 
       <span className="text-yellow-300" /*className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent" */> tu pequeño </span>
       la oportunidad de crecer emocionalmente con la ayuda de un profesional?
@@ -51,7 +51,7 @@ const NinosTerapias: ServicesStructureProps = {
   bgup: "/Services/ninos/bgupinfante.webp",
 
   description:
-    "Ayuda a tu hijo a superar sus desafíos emocionales con nuestra terapia infantil. Apoyamos a los niños a comprender y manejar sus emociones, mejorando su bienestar de manera accesible y con la participación activa de los padres en cada sesión online.  ",
+   "Terapia psicológica infantil online. Ayudamos a tu hijo a manejar emociones y crecer feliz. Psicólogos expertos en desarrollo emocional. Terapia en línea",
   tittleIcon:
     "En Contigo Voy, puedes encontrar a un psicólogo infantil online para ayudar a tu hijo a enfrentar una variedad de temas.",
 

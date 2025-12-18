@@ -46,7 +46,7 @@ const terapiaEmpresarial: ServicesStructureProps = {
   bgdownTitle: "Terapia Empresarial | Contigo Voy Psicología Online",
   bgup: "/Services/business/bgtiny.webp",
   description:
-    "Ayudamos a equipos y líderes a gestionar el estrés, mejorar la comunicación y fortalecer un ambiente laboral saludable. A través de sesiones económicas y personalizadas, promovemos un entorno más equilibrado y productivo para todos.",
+    "Reduce el estrés y mejora el clima laboral. Terapia empresarial online para líderes y equipos. Más productividad y bienestar emocional. Basta de burnout.",
   tittleIcon:
     "En Contigo Voy, puedes encontrar especialistas en psicología organizacional para abordar una gran variedad de temas.",
   iconos: [

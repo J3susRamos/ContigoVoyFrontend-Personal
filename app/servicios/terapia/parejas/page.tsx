@@ -52,7 +52,7 @@ const ParejaTerapias: ServicesStructureProps = {
   bgdownAlt: "",
   bgdownTitle: "",
   description:
-    "Todas las parejas enfrentan desafíos y buscar ayuda es un paso hacia una relación más satisfactoria. En Contigo Voy, pueden iniciar una terapia de pareja online diseñada para cuidar su bienestar de forma accesible y práctica.",
+    "Fortalece tu relación con terapia de pareja online. Mejora la comunicación, resuelve conflictos y recupera la conexión con apoyo profesional.",
   tittleIcon:
     "En Contigo Voy puedes encontrar un psicólogo de parejas online para abordar una gran variedad de temas.",
   iconos: [

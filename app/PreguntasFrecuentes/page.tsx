@@ -81,6 +81,16 @@ export default function App() {
             >
               Respuestas claras y cercanas para acompañarte en cada paso de tu camino emocional.
             </motion.p>
+            
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="text-md text-white/90 max-w-1xl mx-auto sm:text-lg"
+            >
+              ¿Tienes dudas sobre nuestros servicios de atención psicológica en línea? En nuestra sección de preguntas frecuentes, resuelve tus inquietudes y se parte de nosotros.
+              </motion.p>
+
           </div>
         </div>
       </section>

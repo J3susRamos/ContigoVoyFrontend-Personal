@@ -53,7 +53,7 @@ const AdultoTerapias: ServicesStructureProps = {
     " ¡Recupera tu bienestar emocional! A través de la terapia para adultos,te ayudamos a enfrentar desafíos",
   bgdownTitle: "Contigo Voy Psicología Online",
   description:
-    "Estamos aquí para ayudarte a recuperar el equilibrio. A través de la terapia para adultos, encontrarás un espacio para comprenderte mejor, gestionar las situaciones difíciles y fortalecer tu bienestar emocional. ¡Es el momento de dar el primer paso hacia una vida más equilibrada y plena!",
+    "Terapia psicológica para adultos online. Manejo de estrés, ansiedad y duelo con psicólogos certificados. Mejora tu bienestar emocional hoy.",
   tittleIcon:
     "¡Recupera tu bienestar emocional! A través de la terapia para adultos,te ayudamos a enfrentar desafíos.",
   iconos: [

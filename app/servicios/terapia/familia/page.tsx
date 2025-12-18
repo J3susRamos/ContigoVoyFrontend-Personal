@@ -51,7 +51,7 @@ const FamilyTerapias: ServicesStructureProps = {
   bgdownTitle: "",
   bgup: "/Services/family/bgupfamily.webp",
   description:
-    "Estamos aquí para ayudarte a sanar y fortalecer los lazos entre ustedes. En la terapia familiar, encontrarás un espacio para comunicarse, comprenderse mejor y resolver las dificultades que afectan a tu familia. Juntos podemos restaurar el equilibrio y la armonía.",
+    "Recupera la armonía con terapia familiar online. Mejora la comunicación, resuelve conflictos y fortalece los vínculos entre los miembros de tu familia",
   tittleIcon:
     "¡Recupera la armonía en tu hogar! A través de la terapia familiar, te ayudamos a enfrentar juntos los desafíos.",
   iconos: [
