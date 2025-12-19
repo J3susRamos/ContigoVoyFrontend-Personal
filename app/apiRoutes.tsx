@@ -63,10 +63,7 @@ export async function BlogsWebSite(): Promise<ApiResponse> {
 
   const jsonData = await res.json();
   console.log("✅ [BlogsWebSite] Success! Data received:", jsonData);
-  console.log(
-    "✅ [BlogsWebSite] Data result length:",
-    jsonData?.result?.length,
-  );
+  console.log("✅ [BlogsWebSite] Data result length:", jsonData?.result?.length);
   return jsonData;
 }
 
@@ -101,10 +98,7 @@ export async function GetCagetories(): Promise<CategoriaApi> {
 
   const jsonData = await res.json();
   console.log("✅ [GetCagetories] Success! Data received:", jsonData);
-  console.log(
-    "✅ [GetCagetories] Data result length:",
-    jsonData?.result?.length,
-  );
+  console.log("✅ [GetCagetories] Data result length:", jsonData?.result?.length);
   return jsonData;
 }
 
@@ -142,10 +136,7 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
 
   const jsonData = await res.json();
   console.log("✅ [GetBlogsPreviewApi] Success! Data received:", jsonData);
-  console.log(
-    "✅ [GetBlogsPreviewApi] Data result length:",
-    jsonData?.result?.length,
-  );
+  console.log("✅ [GetBlogsPreviewApi] Data result length:", jsonData?.result?.length);
   return jsonData;
 }
 
@@ -155,7 +146,7 @@ export const GetPsicologos = async (
     genero: string[];
     idioma: string[];
     enfoque: string[];
-    especialidad: string[]; // 🔄 AGREGAR ESTO
+    especialidad: string[]; //  AGREGAR ESTO
   },
   search?: string,
   page?: number,
@@ -171,7 +162,7 @@ export const GetPsicologos = async (
       params.append("idioma", filters.idioma.join(","));
     if (filters.enfoque && filters.enfoque.length)
       params.append("enfoque", filters.enfoque.join(","));
-    if (filters.especialidad && filters.especialidad.length) // 🔄 AGREGAR ESTO
+    if (filters.especialidad && filters.especialidad.length)
       params.append("especialidad", filters.especialidad.join(","));
   }
 
@@ -182,8 +173,8 @@ export const GetPsicologos = async (
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
   }
-  const url = `${process.env.NEXT_PUBLIC_API_URL
-    }api/psicologos?${params.toString()}`;
+
+  const url = `${process.env.NEXT_PUBLIC_API_URL}api/psicologos?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -192,17 +183,12 @@ export const GetPsicologos = async (
       },
     });
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
     const data = await res.json();
 
-    if (data.status_message === "OK") {
-      return data;
-    } else {
-      throw new Error(data.message || "Error al obtener psicólogos");
-    }
+    if (data.status_message === "OK") return data;
+    throw new Error(data.message || "Error al obtener psicólogos");
   } catch (error) {
     console.error("Error al obtener psicólogos:", error);
     throw error;
@@ -215,7 +201,7 @@ export const GetPsicologosInactivos = async (
     genero: string[];
     idioma: string[];
     enfoque: string[];
-    especialidad: string[]; // 🔄 AGREGAR ESTO
+    especialidad: string[];
   },
   search?: string,
   page?: number,
@@ -231,7 +217,7 @@ export const GetPsicologosInactivos = async (
       params.append("idioma", filters.idioma.join(","));
     if (filters.enfoque && filters.enfoque.length)
       params.append("enfoque", filters.enfoque.join(","));
-    if (filters.especialidad && filters.especialidad.length) // 🔄 AGREGAR ESTO
+    if (filters.especialidad && filters.especialidad.length)
       params.append("especialidad", filters.especialidad.join(","));
   }
 
@@ -242,8 +228,8 @@ export const GetPsicologosInactivos = async (
     params.append("per_page", perPage.toString());
     params.append("page", page.toString());
   }
-  const url = `${process.env.NEXT_PUBLIC_API_URL
-    }api/psicologos/inactivo?${params.toString()}`;
+
+  const url = `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/inactivo?${params.toString()}`;
 
   try {
     const res = await fetch(url, {
@@ -254,17 +240,12 @@ export const GetPsicologosInactivos = async (
       },
     });
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
     const data = await res.json();
 
-    if (data.status_message === "OK") {
-      return data;
-    } else {
-      throw new Error(data.message || "Error al obtener psicólogos");
-    }
+    if (data.status_message === "OK") return data;
+    throw new Error(data.message || "Error al obtener psicólogos");
   } catch (error) {
     console.error("Error al obtener psicólogos:", error);
     throw error;
@@ -284,13 +265,10 @@ export async function GetPacientesDisabled(): Promise<PacienteDisabled[]> {
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al obtener los pacientes deshabilitados");
-  }
+  if (!res.ok) throw new Error("Error al obtener los pacientes deshabilitados");
+
   return await res.json().then((data) => {
-    if (data.status_message === "OK") {
-      return data.result;
-    }
+    if (data.status_message === "OK") return data.result;
   });
 }
 
@@ -340,19 +318,14 @@ export async function GetPacientesEnabled(): Promise<PacienteDisabled[]> {
 
     const data = await res.json();
 
-    if (data.status_message === "OK") {
-      return data.result;
-    }
+    if (data.status_message === "OK") return data.result;
 
     throw new Error(data.message || "Formato de respuesta inesperado");
   } catch (error) {
-    if (error instanceof Error) {
-      throw error;
-    }
+    if (error instanceof Error) throw error;
     throw new Error("Error desconocido al obtener pacientes habilitados");
   }
 }
-//hasta aqui llega lo agregado
 
 export async function ActivarPaciente(
   id: number | null,
@@ -371,9 +344,7 @@ export async function ActivarPaciente(
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al activar el paciente");
-  }
+  if (!res.ok) throw new Error("Error al activar el paciente");
 }
 
 export async function DeletePsicologo(id: number | null): Promise<void> {
@@ -388,9 +359,7 @@ export async function DeletePsicologo(id: number | null): Promise<void> {
       },
     },
   );
-  if (!res.ok) {
-    throw new Error("Error al eliminar el psicologo");
-  }
+  if (!res.ok) throw new Error("Error al eliminar el psicologo");
 }
 
 export async function GetPsicologosById(
@@ -407,9 +376,7 @@ export async function GetPsicologosById(
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al obtener el psicologo");
-  }
+  if (!res.ok) throw new Error("Error al obtener el psicologo");
   return await res.json();
 }
 
@@ -463,14 +430,11 @@ export async function GetCitasPendientes(
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al obtener el psicologo");
-  }
+  if (!res.ok) throw new Error("Error al obtener el psicologo");
   return await res.json();
 }
 
-/* Información de citas totales, citas completadas, citas pendientes, citas canceladas,
-total de minutos reservados, total de pacientes y nuevos pacientes */
+/* Dashboard psicólogo */
 export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}api/citas/dashboard/psicologo`,
@@ -484,9 +448,7 @@ export async function GetPsicologoDashboard(): Promise<DashboardApiResponse> {
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al obtener los datos del dashboard");
-  }
+  if (!res.ok) throw new Error("Error al obtener los datos del dashboard");
 
   return await res.json();
 }
@@ -502,9 +464,7 @@ export async function GetCitasPsicologoPorMes(): Promise<CitasApiResponse> {
     },
   });
 
-  if (!res.ok) {
-    throw new Error("Error al obtener las citas del psicologo");
-  }
+  if (!res.ok) throw new Error("Error al obtener las citas del psicologo");
 
   return await res.json();
 }
@@ -542,9 +502,7 @@ export async function GetCitasTotalesConFecha(): Promise<CitaMensual[]> {
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al obtener las citas del psicologo");
-  }
+  if (!res.ok) throw new Error("Error al obtener las citas del psicologo");
 
   return await res.json();
 }
@@ -554,9 +512,7 @@ export async function CreateCitaParaPaciente(
   values: FormCita,
 ): Promise<FormCita> {
   const formatHora = (hora: string) => {
-    // Si ya tiene segundos, la dejamos igual
     if (hora.match(/^\d{2}:\d{2}:\d{2}$/)) return hora;
-    // Si no, le agregamos ":00"
     return `${hora}:00`;
   };
 
@@ -588,7 +544,7 @@ export async function CreateCitaParaPaciente(
   return await res.json();
 }
 
-//Para que los mismos psicologos actualicen su perfil, solo el nombre apellido, foto y especialidades
+//Para que los mismos psicologos actualicen su perfil
 export async function actualizarPsicologo(
   id: number | null,
   data: actulizarPsicologo,
@@ -606,12 +562,10 @@ export async function actualizarPsicologo(
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al actualizar el psicologo");
-  }
+  if (!res.ok) throw new Error("Error al actualizar el psicologo");
 }
 
-//Para que los psicologos actualicen su perfil completo con todos los datos profesionales
+//Para que los psicologos actualicen su perfil completo
 export async function actualizarPerfilCompletoPsicologo(
   id: number | null,
   data: ActualizarPerfilCompletoPsicologo,
@@ -629,9 +583,7 @@ export async function actualizarPerfilCompletoPsicologo(
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al actualizar el perfil del psicólogo");
-  }
+  if (!res.ok) throw new Error("Error al actualizar el perfil del psicólogo");
 }
 
 export async function estadoPsicologo(id: number | null) {
@@ -648,9 +600,7 @@ export async function estadoPsicologo(id: number | null) {
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Error al actualizar el estado del psicólogo");
-    }
+    if (!response.ok) throw new Error("Error al actualizar el estado del psicólogo");
 
     return await response.json();
   } catch (error) {
@@ -659,35 +609,12 @@ export async function estadoPsicologo(id: number | null) {
   }
 }
 
-//Obtener las especialidades de los psicologos
+//Traer especialidades de los psicologos
 export async function GetEspecialidadesPsicologos(
   id: number,
 ): Promise<EspecialidadesPsicologoResponse> {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades${id}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    const errorText = await res.text().catch(() => "");
-    console.error("Error GetEspecialidadesPsicologos:", res.status, errorText);
-    throw new Error("Error al obtener las especialidades de los psicologos");
-  }
-
-  return await res.json();
-}
-
-//Obtener las especialidades
-/* export async function GetEspecialidades(): Promise<EspecialidadesResponse> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}api/especialidades/`,
+    `${process.env.NEXT_PUBLIC_API_URL}api/psicologos/especialidades/${id}`,
     {
       method: "GET",
       headers: {
@@ -699,11 +626,13 @@ export async function GetEspecialidadesPsicologos(
   );
 
   if (!res.ok) {
-    throw new Error("Error al obtener las especialidades");
+    const errorText = await res.text().catch(() => "");
+    console.error("Error GetEspecialidadesPsicologos:", res.status, errorText);
+    throw new Error("Error al obtener las especialidades de los psicologos");
   }
 
   return await res.json();
-} */
+}
 
 //Añadir especialidades nuevas
 export async function addEspecialidad(nombre: string) {
@@ -720,9 +649,7 @@ export async function addEspecialidad(nombre: string) {
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al agregar la especialidad");
-  }
+  if (!res.ok) throw new Error("Error al agregar la especialidad");
 }
 
 //Remover especialidad
@@ -739,15 +666,12 @@ export async function removeEspecialidad(id: number) {
     },
   );
 
-  if (!res.ok) {
-    throw new Error("Error al remover la especialidad");
-  }
+  if (!res.ok) throw new Error("Error al remover la especialidad");
 }
-//Crear citas en el perfil del paciente
+
+//Crear personal
 export async function CreatePersonal(values: Personal) {
-  const payload = {
-    ...values,
-  };
+  const payload = { ...values };
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/personal`, {
     method: "POST",
@@ -779,13 +703,10 @@ export async function GetWorkersStats() {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();
 }
 
@@ -800,13 +721,10 @@ export async function GetCitasEstadisticas() {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();
 }
 
@@ -821,13 +739,10 @@ export async function GetCitasSinPagarDashboard() {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();
 }
 
@@ -842,13 +757,10 @@ export async function GetCitasPagadasDashboard() {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();
 }
 
@@ -861,18 +773,11 @@ export async function GetAllWorkers(filters?: {
 }) {
   const params = new URLSearchParams();
 
-  if (filters?.rol && filters.rol !== 'all') {
-    params.append('rol', filters.rol);
-  }
-  if (filters?.estado && filters.estado !== 'all') {
-    params.append('estado', filters.estado);
-  }
-  if (filters?.page) {
-    params.append('page', filters.page.toString());
-  }
-  if (filters?.perPage) {
-    params.append('per_page', filters.perPage.toString());
-  }
+  if (filters?.rol && filters.rol !== "all") params.append("rol", filters.rol);
+  if (filters?.estado && filters.estado !== "all")
+    params.append("estado", filters.estado);
+  if (filters?.page) params.append("page", filters.page.toString());
+  if (filters?.perPage) params.append("per_page", filters.perPage.toString());
 
   const queryString = params.toString();
   const url = `${process.env.NEXT_PUBLIC_API_URL}api/users/workers${queryString ? `?${queryString}` : ""
@@ -887,10 +792,7 @@ export async function GetAllWorkers(filters?: {
     },
   });
 
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();
 }
 
@@ -906,13 +808,10 @@ export async function ChangeWorkerRole(workerId: number, newRole: string) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ user_id: workerId, rol: newRole }),
-    }
+    },
   );
 
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();
 }
 
@@ -928,40 +827,34 @@ export async function ToggleWorkerStatus(workerId: number, newStatus: boolean) {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ user_id: workerId, estado: newStatus }),
-    }
+    },
   );
 
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
+  if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
   return await res.json();
 }
-
 
 // Agregar esta función para obtener especialidades
 export async function GetEspecialidades(): Promise<Especialidad[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/especialidades`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}api/especialidades`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       },
-    });
-
-    /* if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    } */
+    );
 
     const data = await res.json();
 
     if (data.status_code === 200 && data.result) {
-      // Formatear las especialidades al formato que necesita el frontend
       return data.result.map((esp: any) => ({
         idEspecialidad: esp.idEspecialidad,
         nombre: esp.nombre,
-        valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
+        valor: esp.nombre.toLowerCase().replace(/\s+/g, "-"),
       }));
     }
 
@@ -986,11 +879,10 @@ export async function GetIdiomas(): Promise<Idiomas[]> {
     const data = await res.json();
 
     if (data.status_code === 200 && data.result) {
-      // Formatear las idiomas al formato que necesita el frontend
       return data.result.map((esp: any) => ({
         idIdioma: esp.idIdioma,
         nombre: esp.nombre,
-        valor: esp.nombre.toLowerCase().replace(/\s+/g, '-')
+        valor: esp.nombre.toLowerCase().replace(/\s+/g, "-"),
       }));
     }
 
@@ -1001,29 +893,28 @@ export async function GetIdiomas(): Promise<Idiomas[]> {
   }
 }
 
-export async function AddIdioma(nombre: string): Promise<{ idIdioma?: number; nombre: string; valor: string }> {
-  // Normalizaciones mínimas
+export async function AddIdioma(
+  nombre: string,
+): Promise<{ idIdioma?: number; nombre: string; valor: string }> {
   const toTitle = (s: string) =>
     s
       .toLowerCase()
       .split(/\s+/)
       .filter(Boolean)
-      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(" ");
 
   const slugify = (s: string) =>
     s
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
       .trim()
       .replace(/\s+/g, "-");
 
   const nombreNorm = toTitle((nombre || "").trim());
-  if (!nombreNorm) {
-    throw new Error("El nombre del idioma es requerido.");
-  }
+  if (!nombreNorm) throw new Error("El nombre del idioma es requerido.");
 
-  // Asegura token en entorno cliente/SSR
   let authToken = token;
   try {
     if (!authToken && typeof window !== "undefined") {
@@ -1046,7 +937,6 @@ export async function AddIdioma(nombre: string): Promise<{ idIdioma?: number; no
     body: JSON.stringify({ nombre: nombreNorm }),
   });
 
-  // Intenta parsear JSON; si no hay, queda en null
   let data: any = null;
   try {
     data = await res.json();
@@ -1055,7 +945,6 @@ export async function AddIdioma(nombre: string): Promise<{ idIdioma?: number; no
   }
 
   if (!res.ok) {
-    // Mensaje específico si tu backend manda "message" o "errors"
     const backendMsg =
       data?.message ||
       data?.errors?.nombre?.[0] ||
@@ -1068,13 +957,10 @@ export async function AddIdioma(nombre: string): Promise<{ idIdioma?: number; no
     throw err;
   }
 
-  // Algunos backends devuelven {result: {...}} y otros el objeto directo
   const raw = data?.result ?? data ?? {};
   const nombreResp: string = raw?.nombre ?? nombreNorm;
   const idResp: number | undefined = raw?.idIdioma ?? raw?.id ?? undefined;
-  const valorResp: string =
-    raw?.valor ??
-    slugify(nombreResp);
+  const valorResp: string = raw?.valor ?? slugify(nombreResp);
 
   return { idIdioma: idResp, nombre: nombreResp, valor: valorResp };
 }

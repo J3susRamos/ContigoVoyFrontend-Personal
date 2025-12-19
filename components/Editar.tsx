@@ -1,4 +1,3 @@
-//EDITAR
 import {
   actualizarPsicologo,
   actualizarPerfilCompletoPsicologo,
@@ -665,7 +664,7 @@ function Editar({
                           "dark:bg-[#232324] dark:border-white/20",
                         listbox: "dark:bg-[#232324]",
                       }}
-                      items={uniqueIdiomas} //  usar lista deduplicada
+                      items={uniqueIdiomas} // FIX: usar lista deduplicada
                     >
                       {(idi) => (
                         <SelectItem
@@ -731,6 +730,7 @@ function Editar({
                   </div>
                   {/* ===== Fin Idiomas ===== */}
 
+                  {/* --- El resto de tu componente sigue igual --- */}
                   {/* Especialidades */}
                   <div className="mt-4">
                     <label className="block font-bold text-base text-[#634AE2] dark:text-[#634AE2] mb-2">
