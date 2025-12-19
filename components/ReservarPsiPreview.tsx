@@ -214,9 +214,9 @@ export default function ReservarPsiPreview({
                     {psicologo.titulo}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">
+                <span className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">
                   Dr. {psicologo.nombre} {psicologo.apellido}
-                </h3>
+                </span>
               </div>
             </div>
             {/* Línea divisoria con gradiente */}
