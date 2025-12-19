@@ -372,7 +372,8 @@ export async function generateMetadata({ params }: { params: { blog: string } })
           ? [
             {
               url: blog.imagenes?.[0] || blog.imagen,
-              alt: `Imagen del artículo: ${blog.tema}`,
+              title: blog.imagenesMeta?.[0]?.title,
+              alt: blog.imagenesMeta?.[0]?.altText,
               width: 1200,
               height: 630,
             },

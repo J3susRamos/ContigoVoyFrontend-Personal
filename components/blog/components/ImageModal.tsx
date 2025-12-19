@@ -35,6 +35,7 @@ export default function ImageModal({
   const imagesToShow = validImages.length > 0 ? validImages : [fallbackImage].filter(Boolean) as string[];
   const safeModalIndex = Math.min(modalImageIndex, imagesToShow.length - 1);
   const currentImageUrl = imagesToShow[safeModalIndex];
+  const currentMeta = blog.imagenesMeta?.[safeModalIndex];
 
   if (!currentImageUrl) return null;
 
@@ -44,7 +45,8 @@ export default function ImageModal({
         <div className="relative w-full h-full flex items-center justify-center">
           <Image
             src={currentImageUrl}
-            alt={`Imagen ${safeModalIndex + 1} de ${blog.tema}`}
+            alt={currentMeta?.altText || `${blog.tema} - imagen ${safeModalIndex + 1}`}
+            title={currentMeta?.title || blog.tema}
             fill
             className="object-contain"
             sizes="100vw"

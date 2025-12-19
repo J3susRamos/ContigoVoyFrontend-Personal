@@ -179,6 +179,11 @@ export interface BlogPreviewData {
   contenido: string;
   imagen: string; // Mantener para compatibilidad
   imagenes?: string[]; // Nuevo campo opcional
+  imagenesMeta?: {
+    url: string;
+    altText?: string; 
+    title?: string;
+  }[];
   psicologo: string;
   psicologApellido: string;
   psicologoImagenId: string;
