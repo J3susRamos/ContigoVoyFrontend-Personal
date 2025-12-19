@@ -2,7 +2,16 @@
 import { PsicologoFilters, PsicologoPreviewData } from "@/interface";
 import ReservarComponentSearch from "./ReservarComponentSearch";
 import ReservarPsiPreview from "./ReservarPsiPreview";
-import { Dispatch, SetStateAction, useEffect, useState, useRef, useCallback, useMemo, memo } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+  memo,
+} from "react";
 import Pagination from "./ui/Pagination";
 
 interface Props {
@@ -25,8 +34,8 @@ const HeroHeader = memo(() => {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   return (
@@ -53,22 +62,33 @@ const HeroHeader = memo(() => {
             ¡Comienza tu proceso hoy!
           </h2>
 
-          <p className="text-lg md:text-2xl text-white/80 mb-6 md:mb-8 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-2xl text-white/80 mb-6 md:mb-8 max-w-1xl mx-auto leading-relaxed">
+            Agenda tu terapia psicológica en minutos. Psicólogos online
+            disponibles para ti. Conecta desde donde estés. Tu primera sesión es
+            gratuita.
+          </p>
+          <p className="text-lg md:text-1xl text-white/80 mb-6 md:mb-8 max-w-3xl mx-auto">
             Agenda tu sesión con un psicólogo en línea, fácil, seguro y privado
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 md:gap-6 text-white/80">
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-3 md:px-4 py-1.5 md:py-2">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-xs md:text-sm font-medium">Profesionales certificados</span>
+              <span className="text-xs md:text-sm font-medium">
+                Profesionales certificados
+              </span>
             </div>
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-3 md:px-4 py-1.5 md:py-2">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-xs md:text-sm font-medium">100% confidencial</span>
+              <span className="text-xs md:text-sm font-medium">
+                100% confidencial
+              </span>
             </div>
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-3 md:px-4 py-1.5 md:py-2">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-xs md:text-sm font-medium">Primera sesión gratuita</span>
+              <span className="text-xs md:text-sm font-medium">
+                Primera sesión gratuita
+              </span>
             </div>
           </div>
         </div>
@@ -80,72 +100,87 @@ const HeroHeader = memo(() => {
 HeroHeader.displayName = "HeroHeader";
 
 // Componente memoizado para el mensaje de "no results"
-const NoResultsMessage = memo(({ onClearFilters }: { onClearFilters: () => void }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 text-center">
-    <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
-      <svg className="w-10 h-10 md:w-12 md:h-12 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.463.898-6.05 2.373a4 4 0 014.33-4.33 7.957 7.957 0 013.44 0 4 4 0 014.33 4.33A7.962 7.962 0 0118 13.291z" />
-      </svg>
+const NoResultsMessage = memo(
+  ({ onClearFilters }: { onClearFilters: () => void }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 p-8 md:p-12 text-center">
+      <div className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+        <svg
+          className="w-10 h-10 md:w-12 md:h-12 text-purple-500 dark:text-purple-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.463.898-6.05 2.373a4 4 0 014.33-4.33 7.957 7.957 0 013.44 0 4 4 0 014.33 4.33A7.962 7.962 0 0118 13.291z"
+          />
+        </svg>
+      </div>
+      <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">
+        No se encontraron psicólogos
+      </h3>
+      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 md:mb-6 max-w-md mx-auto">
+        Intenta ajustar tus filtros de búsqueda para encontrar el profesional
+        ideal para ti.
+      </p>
+      <button
+        onClick={onClearFilters}
+        className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold hover:from-purple-700 hover:to-indigo-700 transition-colors duration-300 shadow-lg active:scale-95"
+      >
+        Limpiar filtros
+      </button>
     </div>
-    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 md:mb-3">
-      No se encontraron psicólogos
-    </h3>
-    <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 md:mb-6 max-w-md mx-auto">
-      Intenta ajustar tus filtros de búsqueda para encontrar el profesional ideal para ti.
-    </p>
-    <button
-      onClick={onClearFilters}
-      className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 md:px-8 py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold hover:from-purple-700 hover:to-indigo-700 transition-colors duration-300 shadow-lg active:scale-95"
-    >
-      Limpiar filtros
-    </button>
-  </div>
-));
+  )
+);
 
 NoResultsMessage.displayName = "NoResultsMessage";
 
 // Componente wrapper para el preview con lazy loading - CORREGIDO
-const LazyPsicologoCard = memo(({ item }: { item: PsicologoPreviewData; index: number }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
+const LazyPsicologoCard = memo(
+  ({ item }: { item: PsicologoPreviewData; index: number }) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Guardar la referencia actual en una variable local
-    const currentCardRef = cardRef.current;
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { rootMargin: '50px' }
-    );
+    useEffect(() => {
+      // Guardar la referencia actual en una variable local
+      const currentCardRef = cardRef.current;
 
-    if (currentCardRef) {
-      observer.observe(currentCardRef);
-    }
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setIsVisible(true);
+          }
+        },
+        { rootMargin: "50px" }
+      );
 
-    return () => {
       if (currentCardRef) {
-        observer.unobserve(currentCardRef);
+        observer.observe(currentCardRef);
       }
-    };
-  }, []);
 
-  return (
-    <div
-      ref={cardRef}
-      className="transform transition-transform duration-300 md:hover:scale-[1.02] active:scale-[0.98]"
-    >
-      {isVisible ? (
-        <ReservarPsiPreview psicologo={item} />
-      ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg h-64 animate-pulse" />
-      )}
-    </div>
-  );
-});
+      return () => {
+        if (currentCardRef) {
+          observer.unobserve(currentCardRef);
+        }
+      };
+    }, []);
+
+    return (
+      <div
+        ref={cardRef}
+        className="transform transition-transform duration-300 md:hover:scale-[1.02] active:scale-[0.98]"
+      >
+        {isVisible ? (
+          <ReservarPsiPreview psicologo={item} />
+        ) : (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg h-64 animate-pulse" />
+        )}
+      </div>
+    );
+  }
+);
 
 LazyPsicologoCard.displayName = "LazyPsicologoCard";
 
@@ -162,7 +197,7 @@ export default function ReservarComponents({
     genero: [] as string[],
     idioma: [] as string[],
     enfoque: [] as string[],
-    especialidad:[] as string[],
+    especialidad: [] as string[],
   });
 
   const sectionTopRef = useRef<HTMLDivElement>(null);
@@ -187,8 +222,8 @@ export default function ReservarComponents({
       }
     };
 
-    window.addEventListener('resize', resizeHandler, { passive: true });
-    return () => window.removeEventListener('resize', resizeHandler);
+    window.addEventListener("resize", resizeHandler, { passive: true });
+    return () => window.removeEventListener("resize", resizeHandler);
   }, []);
 
   // Debounce más largo en móvil para ahorrar recursos
@@ -196,7 +231,16 @@ export default function ReservarComponents({
 
   // Debounced filter change para evitar múltiples llamadas
   const debouncedFilterChange = useCallback(
-    (newFilters: { pais: string[]; genero: string[]; idioma: string[]; enfoque: string[];especialidad:string[] }, searchTerm?: string) => {
+    (
+      newFilters: {
+        pais: string[];
+        genero: string[];
+        idioma: string[];
+        enfoque: string[];
+        especialidad: string[];
+      },
+      searchTerm?: string
+    ) => {
       if (filterTimeoutRef.current) {
         clearTimeout(filterTimeoutRef.current);
       }
@@ -227,17 +271,23 @@ export default function ReservarComponents({
       } else {
         // Scroll suave en desktop
         requestAnimationFrame(() => {
-          sectionTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          sectionTopRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
         });
       }
     }
   }, [isMobile]);
 
   // Handlers memoizados
-  const handleSearchChange = useCallback((term: string) => {
-    setSearchTerm(term);
-    debouncedFilterChange(filters, term);
-  }, [setSearchTerm, debouncedFilterChange, filters]);
+  const handleSearchChange = useCallback(
+    (term: string) => {
+      setSearchTerm(term);
+      debouncedFilterChange(filters, term);
+    },
+    [setSearchTerm, debouncedFilterChange, filters]
+  );
 
   const handlePrevious = useCallback(() => {
     setPage((prev) => Math.max(prev - 1, 1));
@@ -268,7 +318,11 @@ export default function ReservarComponents({
       <>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 md:gap-8">
           {data.map((item, index) => (
-            <LazyPsicologoCard key={`psicologo-${index}`} item={item} index={index} />
+            <LazyPsicologoCard
+              key={`psicologo-${index}`}
+              item={item}
+              index={index}
+            />
           ))}
         </div>
         <Pagination
@@ -285,7 +339,10 @@ export default function ReservarComponents({
     <div className="w-full bg-gray-50 dark:bg-gray-900">
       <HeroHeader />
 
-      <div ref={sectionTopRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-gray-50 dark:bg-gray-900">
+      <div
+        ref={sectionTopRef}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-gray-50 dark:bg-gray-900"
+      >
         <div className="flex flex-col lg:flex-row gap-4 md:gap-8">
           <div className="lg:w-80 flex-shrink-0">
             <ReservarComponentSearch

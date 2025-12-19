@@ -33,6 +33,8 @@ const dataQS: QuienesSomos[] = [
   {
     quienesSomos:
       "Contigo Voy es un centro psicológico online dedicado al bienestar emocional en todas las etapas de la vida. Contamos con un equipo de especialistas nacionales e internacionales que ofrecen terapia individual, de pareja y familiar, proporcionando un apoyo profesional personalizado para cada persona.",
+    descripcion:
+    "Somos un centro psicológico que brinda apoyo emocional y terapia efectiva. Descubre nuestros valores y compromiso basada en respeto, escucha y conexión.",
     mision:
       "Nuestra misión es contribuir al bienestar emocional y mental de las personas mediante servicios de terapia psicológica online accesibles y de calidad.",
     vision:

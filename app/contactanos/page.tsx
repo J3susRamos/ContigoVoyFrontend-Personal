@@ -47,9 +47,16 @@ const ContactUs = () => {
                 style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}} 
                 className="text-cv6 sm:text-cv9 sm:leading-[60px] font-bold w-full"
               >
+                Da el primer paso hacia tu bienestar emocional
                 ¡La solución que buscas, empieza aquí!
               </h1>
-              
+             <p
+             className="max-w text-cv4 sm:text-cv5 text-white/90 leading-relaxed">
+              En <strong>Contigo Voy</strong> te escuchamos.
+              <br />
+              Completa el formulario y da el primer paso hacia tu bienestar con un equipo psicológico que te acompaña de forma cercana,
+              confidencial y profesional.
+            </p>              
               <section aria-labelledby="beneficios-heading" className="w-full">
                 <h2 
                   id="beneficios-heading"

@@ -190,7 +190,12 @@ export default function Login() {
                     transition={{ delay: 1.0, duration: 0.6 }}
                     className="text-sm text-gray-600 dark:text-gray-400 mt-3 font-normal"
                   >
-                    Accede a tu panel profesional
+                    
+                    Ingresa con tu usuario para acceder a tus terapias online, horarios y seguimiento. Una plataforma segura creada para continuar tu proceso con Contigo Voy.
+                    <br />
+                    <br />
+                    Accede a tu panel profesional.
+                    
                   </motion.p>
                 </CardTitle>
               </CardHeader>
