@@ -130,6 +130,16 @@ export default function App() {
               ¿Listo para comenzar tu camino hacia el bienestar?
             </motion.h2>
             
+            <h2 className="sr-only">Preguntas más solicitadas</h2>
+            <h3 className="sr-only">¿Cuánto va a costar mi terapia?</h3>
+            <h3 className="sr-only">¿Cuánto dura una consulta?</h3>
+            <h2 className="sr-only">Métodos de pago y reservas</h2>
+            <h3 className="sr-only">¿Cuáles son los métodos de pago?</h3>
+            <h3 className="sr-only">¿Cómo reservo o cambio una cita?</h3>
+            <h2 className="sr-only">Tratamiento y tipos de terapia</h2>
+            <h3 className="sr-only">¿Qué tipos de terapia manejan los psicólogos?</h3>
+            <h3 className="sr-only">¿Qué hago si necesito atención urgente?</h3>
+                        
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

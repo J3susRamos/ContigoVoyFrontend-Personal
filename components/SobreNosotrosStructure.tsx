@@ -275,6 +275,7 @@ export default function AboutUsPage({ qs }: AboutUsPageProps) {
                 />
               </motion.div>
             ))}
+            <h3 className="sr-only">psicólogo virtual</h3>
           </div>
         </div>
       </section>

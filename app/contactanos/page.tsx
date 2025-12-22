@@ -43,6 +43,7 @@ const ContactUs = () => {
           <div className="px-scv7 pt-scv7 sm:pt-scv8 sm:px-scv9">
             {/* Header semánticamente correcto - CENTRADO según max-w-scv18 */}
             <header className="text-white space-y-6 flex flex-col items-center justify-center w-full text-center">
+              <h1 className="sr-only">Da el primer paso hacia tu bienestar emocional</h1>
               <h1 
                 style={{textShadow: "2px 3px 8px rgba(0,0,0,0.25), 1px 2px 3px rgba(0,0,0,0.32)"}} 
                 className="text-cv6 sm:text-cv9 sm:leading-[60px] font-bold w-full"
