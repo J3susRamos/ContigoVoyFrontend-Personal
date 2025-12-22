@@ -179,6 +179,9 @@ export interface BlogPreviewData {
   contenido: string;
   imagen: string; // Mantener para compatibilidad
   imagenes?: string[]; // Nuevo campo opcional
+  metaTitle?: string;
+  keywords?: string;
+  metaDescription?: string;
   imagenesMeta?: {
     url: string;
     altText?: string; 
