@@ -159,5 +159,13 @@ const TeenTerapias: ServicesStructureProps = {
 };
 
 export default function Home() {
-  return <ServicesStructure service={TeenTerapias} />;
+  return (
+    <>
+      <h3 className="sr-only">terapia para adolescentes</h3>
+      <h3 className="sr-only">psicólogo para adolescentes</h3>
+      <h3 className="sr-only">terapia psicologica adolescente</h3>
+      <h3 className="sr-only">terapia emocional para jóvenes</h3>
+      <ServicesStructure service={TeenTerapias} />
+    </>
+  );
 }

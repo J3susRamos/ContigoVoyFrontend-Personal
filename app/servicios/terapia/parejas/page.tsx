@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     "comunicación en la relación",
     "crisis de pareja",
     "vinculo emocional",
+    "Terapia psicológica",
+    "bienestar significado",
+    "parejas",
+    "psicólogo virtual para parejas a distancias",
+    "tipos de relaciones de pareja",
   ],
   alternates: {
     canonical:

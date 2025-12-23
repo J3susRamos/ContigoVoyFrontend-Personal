@@ -17,6 +17,10 @@ export const metadata: Metadata = {
     "comunicación familiar",
     "vínculos familiares",
     "terapia sistemática",
+    "Bienestar familiar",
+    "familia",
+    "que importancia tiene la familia",
+    "sesiones virtuales para mejorar comunicación familiar",
   ],
   alternates: {
     canonical:
@@ -145,5 +149,9 @@ const FamilyTerapias: ServicesStructureProps = {
 };
 
 export default function Home() {
-  return <ServicesStructure service={FamilyTerapias} />;
+  return (
+    <>
+      <ServicesStructure service={FamilyTerapias} />
+    </>
+  );
 }
