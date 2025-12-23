@@ -153,5 +153,12 @@ const NinosTerapias: ServicesStructureProps = {
 };
 
 export default function Ninos() {
-  return <ServicesStructure service={NinosTerapias} />;
+  return (  
+  <>
+    <h3 className="sr-only">Acompañamiento psicológico infantil en línea</h3>
+    <h3 className="sr-only">Señales de que tu hijo necesita apoyo psicológico</h3>
+    <ServicesStructure service={NinosTerapias} />
+  </>
+);
+
 }

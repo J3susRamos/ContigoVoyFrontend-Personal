@@ -257,10 +257,10 @@ export default function ReservarComponentSearch({
     if (loading) {
       return (
         <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-100 dark:border-gray-600">
-          <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+          <span className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
             <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"></div>
             {title}
-          </h4>
+          </span>
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex items-center space-x-3 p-2">
               <div className="w-5 h-5 bg-gray-300 dark:bg-gray-600 rounded-md animate-pulse"></div>
@@ -274,9 +274,9 @@ export default function ReservarComponentSearch({
     if (err) {
       return (
         <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-100 dark:border-gray-600">
-          <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          <span className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
             {title}
-          </h4>
+          </span>
           <p className="text-sm text-red-600">{err}</p>
         </div>
       );
@@ -286,10 +286,10 @@ export default function ReservarComponentSearch({
 
     return (
       <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 border border-gray-100 dark:border-gray-600 hover:border-gray-200 dark:hover:border-gray-500 transition-colors duration-300">
-        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
+        <span className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
           <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"></div>
           {title}
-        </h4>
+        </span>
         <div className="space-y-3">
           {list.map((item, idx) => (
             <div

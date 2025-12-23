@@ -622,7 +622,7 @@ export async function GetEspecialidadesPsicologos(
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    },
+    }
   );
 
   if (!res.ok) {

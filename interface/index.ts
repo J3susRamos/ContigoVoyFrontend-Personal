@@ -180,6 +180,14 @@ export interface BlogPreviewData {
   contenido: string;
   imagen: string; // Mantener para compatibilidad
   imagenes?: string[]; // Nuevo campo opcional
+  metaTitle?: string;
+  keywords?: string;
+  metaDescription?: string;
+  imagenesMeta?: {
+    url: string;
+    altText?: string; 
+    title?: string;
+  }[];
   psicologo: string;
   psicologApellido: string;
   psicologoImagenId: string;
@@ -395,6 +403,7 @@ export interface PrePaciente {
   fecha_cita: string;
   hora_cita: string;
   idPsicologo: number;
+  enfoque: string;
 }
 
 export interface Paciente {

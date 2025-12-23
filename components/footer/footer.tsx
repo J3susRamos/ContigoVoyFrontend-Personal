@@ -80,7 +80,7 @@ export default function Footer() {
 
           {/* Enlaces */}
           <div className="flex flex-col text-start w-full md:w-auto">
-            <h2 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</h2>
+            <span className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Enlaces</span>
 
 
 
@@ -130,7 +130,7 @@ export default function Footer() {
           {/* Redes sociales y contacto */}
           <div className="flex flex-col space-y-6">
             <div className="flex flex-col text-start w-full md:w-auto">
-              <h2 className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</h2>
+              <span className="text-2xl font-semibold mb-4 text-[#634AE2] dark:text-white">Contacto</span>
 
 
               <div className="flex flex-col space-y-3 items-start">

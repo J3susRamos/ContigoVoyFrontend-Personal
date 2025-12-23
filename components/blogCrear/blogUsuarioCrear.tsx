@@ -1,6 +1,6 @@
 "use client";
 
-import { Autocomplete, AutocompleteItem, Button, Input, Textarea } from "@heroui/react";
+import { Autocomplete, AutocompleteItem, Button, Input, Textarea, Popover, PopoverTrigger, PopoverContent } from "@heroui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { Listarblog } from "./listarblog";
 import Tiptap from "./textEdit";
@@ -8,7 +8,7 @@ import { BlogApi, Categoria, UsuarioLocalStorage } from "@/interface";
 import { parseCookies } from "nookies";
 import showToast from "../ToastStyle";
 import { convertImageToWebP, convertToBase64 } from "@/utils/convertir64";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Settings2 } from "lucide-react";
 import Image from "next/image";
 
 // === Helpers para obtener categorías y blog por id ===
@@ -76,6 +76,20 @@ export default function BlogUsuarioCrear() {
   const [metaTitle, setMetaTitle] = useState<string>("");
   const [keywords, setKeywords] = useState<string>("");
   const [metaDescription, setMetaDescription] = useState<string>("");
+
+  // Estado para metadata de imágenes
+  const [imageMeta, setImageMeta] = useState<Record<string, { alt: string; title: string }>>({});
+
+  // Función para actualizar metadata
+  const updateImageMeta = (type: 'base64' | 'url', index: number, field: 'alt' | 'title', value: string) => {
+    setImageMeta(prev => ({
+      ...prev,
+      [`${type}-${index}`]: {
+        ...prev[`${type}-${index}`] || { alt: "", title: "" },
+        [field]: value
+      }
+    }));
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -211,6 +225,10 @@ export default function BlogUsuarioCrear() {
     } else {
       setUrls((prev) => prev.filter((_, i) => i !== index));
     }
+    // Limpiar el meta
+    const newMeta = { ...imageMeta };
+    delete newMeta[`${type}-${index}`];
+    setImageMeta(newMeta);
   };
 
   const addUrlImage = () => {
@@ -345,6 +363,7 @@ export default function BlogUsuarioCrear() {
     setMetaTitle("");
     setKeywords("");
     setMetaDescription("");
+    setImageMeta({}); // Resetear metadata
   }, []);
 
   // ========= SUBMIT (CREAR / EDITAR) =========
@@ -574,6 +593,20 @@ export default function BlogUsuarioCrear() {
         return;
       }
 
+      // Construir imagenesMeta dinámicamente
+      const imagenesMetaData = [
+        ...base64Images.map((img, i) => ({
+          url: img,
+          altText: imageMeta[`base64-${i}`]?.alt || "",
+          title: imageMeta[`base64-${i}`]?.title || "",
+        })),
+        ...validUrls.map((url, i) => ({
+          url: url,
+          altText: imageMeta[`url-${i}`]?.alt || "",
+          title: imageMeta[`url-${i}`]?.title || "",
+        }))
+      ];
+
       const dataToSend: BlogApi = {
         idCategoria: categoriaId,
         tema: sanitizedTemaCheck,
@@ -583,11 +616,7 @@ export default function BlogUsuarioCrear() {
         metaTitle: metaTitle.trim(),
         keywords: keywords.trim(),
         metaDescription: metaDescription.trim(),
-        imagenesMeta: imagesToSend.map((img) => ({
-          url: img,
-          altText: "",
-          title: "",
-        })),
+        imagenesMeta: imagenesMetaData, // envía los datos
       };
 
       if (!dataToSend.idPsicologo) {
@@ -712,28 +741,35 @@ export default function BlogUsuarioCrear() {
 
       setTema(blog.tema);
 
-      if (blog.imagenes && Array.isArray(blog.imagenes)) {
-        const base64Imgs = blog.imagenes.filter((img: string) =>
-          img.startsWith("data:image/"),
-        );
-        const urlImgs = blog.imagenes.filter((img: string) =>
-          img.startsWith("http"),
-        );
+      // Cargar imágenes y su metadata
+      const newBase64: string[] = [];
+      const newUrls: string[] = [];
+      const newMeta: Record<string, { alt: string; title: string }> = {};
 
-        setBase64Images(base64Imgs);
-        setUrls(urlImgs);
-      } else if (blog.imagen) {
-        if (blog.imagen.startsWith("data:image/")) {
-          setBase64Images([blog.imagen]);
-          setUrls([]);
-        } else {
-          setBase64Images([]);
-          setUrls([blog.imagen]);
-        }
-      } else {
-        setBase64Images([]);
-        setUrls([]);
+      if (blog.imagenesMeta && Array.isArray(blog.imagenesMeta)) {
+        blog.imagenesMeta.forEach((img: any) => {
+          const src = img.url || img.src || "";
+          if (src.startsWith("data:image/")) {
+            const idx = newBase64.length;
+            newBase64.push(src);
+            newMeta[`base64-${idx}`] = { alt: img.altText || "", title: img.title || "" };
+          } else if (src.startsWith("http")) {
+            const idx = newUrls.length;
+            newUrls.push(src);
+            newMeta[`url-${idx}`] = { alt: img.altText || "", title: img.title || "" };
+          }
+        });
+      } else if (blog.imagenes) {
+         // Fallback por si no hay imagenesMeta
+         blog.imagenes.forEach((src: string) => {
+            if (src.startsWith("data:image/")) newBase64.push(src);
+            else newUrls.push(src);
+         });
       }
+
+      setBase64Images(newBase64);
+      setUrls(newUrls);
+      setImageMeta(newMeta); // llena los inputs de Alt y Title
 
       setContenido(blog.contenido);
       setSelectedKey(blog.idCategoria.toString());
@@ -966,7 +1002,7 @@ export default function BlogUsuarioCrear() {
                 {base64Images.length > 0 && (
                   <div className="grid grid-cols-2 gap-2">
                     {base64Images.map((img, index) => (
-                      <div key={index} className="relative">
+                      <div key={index} className="relative group">
                         <Image
                           src={img}
                           alt={`Imagen ${index + 1}`}
@@ -976,10 +1012,23 @@ export default function BlogUsuarioCrear() {
                         />
                         <button
                           onClick={() => removeImage(index, "base64")}
-                          className="absolute top-1 left-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                          className="absolute top-1 left-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center z-10"
                         >
                           <X size={16} strokeWidth={3} />
                         </button>
+
+                        <Popover placement="top">
+                          <PopoverTrigger>
+                            <Button size="sm" isIconOnly className="absolute bottom-1 right-1 bg-black/60 text-white min-w-0 w-8 h-8 rounded-full"><Settings2 size={16}/></Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <div className="p-3 flex flex-col gap-2 w-48 bg-white dark:bg-[#19191a]">
+                              <p className="text-xs font-bold">Metadata Imagen {index + 1}</p>
+                              <Input label="Alt" size="sm" variant="bordered" value={imageMeta[`base64-${index}`]?.alt || ""} onChange={(e) => updateImageMeta('base64', index, 'alt', e.target.value)} />
+                              <Input label="Title" size="sm" variant="bordered" value={imageMeta[`base64-${index}`]?.title || ""} onChange={(e) => updateImageMeta('base64', index, 'title', e.target.value)} />
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       </div>
                     ))}
                   </div>
@@ -996,27 +1045,40 @@ export default function BlogUsuarioCrear() {
                   </Button>
                 )}
 
-                {/* Inputs URL */}
+                {/* Inputs URL con Popover para Metadata */}
                 {urls.map((url, index) => (
                   <div key={index} className="flex gap-2 items-center">
                     <button
                       onClick={() => removeImage(index, "url")}
-                      className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                      className="bg-red-500 text-white rounded-full w-8 h-8 shrink-0 flex items-center justify-center"
                     >
                       <X size={20} strokeWidth={3} />
                     </button>
-                    <Input
-                      placeholder={`URL de imagen ${index + 1}`}
-                      classNames={{
-                        input: "dark:!text-gray-100 ",
-                        inputWrapper:
-                          "!bg-white dark:!bg-[#19191a] border-2 border-[#634AE2] rounded-lg",
-                      }}
-                      radius="full"
-                      height={43}
-                      value={url}
-                      onChange={(e) => updateUrlImage(index, e.target.value)}
-                    />
+                    <div className="flex-1 flex gap-1 items-center">
+                      <Input
+                        placeholder={`URL de imagen ${index + 1}`}
+                        classNames={{
+                          input: "dark:!text-gray-100 ",
+                          inputWrapper: "!bg-white dark:!bg-[#19191a] border-2 border-[#634AE2] rounded-lg",
+                        }}
+                        radius="full"
+                        height={43}
+                        value={url}
+                        onChange={(e) => updateUrlImage(index, e.target.value)}
+                      />
+                      <Popover placement="left">
+                        <PopoverTrigger>
+                          <Button size="sm" isIconOnly className="bg-[#634AE2] text-white rounded-full min-w-0 w-10 h-10"><Settings2 size={18}/></Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <div className="p-3 flex flex-col gap-2 w-48 bg-white dark:bg-[#19191a]">
+                            <p className="text-xs font-bold">Metadata URL {index + 1}</p>
+                            <Input label="Alt" size="sm" variant="bordered" value={imageMeta[`url-${index}`]?.alt || ""} onChange={(e) => updateImageMeta('url', index, 'alt', e.target.value)} />
+                            <Input label="Title" size="sm" variant="bordered" value={imageMeta[`url-${index}`]?.title || ""} onChange={(e) => updateImageMeta('url', index, 'title', e.target.value)} />
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   </div>
                 ))}
 

@@ -10,6 +10,16 @@ import Image from "next/image";
 import { User } from "lucide-react";
 import { countryPrefixes } from "@/utils/CountryPrefixes";
 
+// Mapeo de título visible -> valor backend
+const tituloToBackendMap: Record<string, string> = {
+  "Pediatra": "niños",
+  "Pedagogo": "adolescentes",
+  "Psicoanalista": "familiar",
+  "Terapeuta": "pareja",
+  "Conductual": "adulto",
+};
+
+
 // Función para obtener el nombre del país a partir del código
 const getNombrePais = (codigoPais: string): string => {
   const paises: Record<string, string> = {
@@ -46,6 +56,7 @@ export default function ReservarPsiPreview({
     fecha_cita: "",
     hora_cita: "",
     idPsicologo: psicologo.idPsicologo,
+    enfoque: psicologo.titulo
   });
 
   const handleSelectHorario = (hora: string, fecha: string) => {
@@ -80,6 +91,7 @@ export default function ReservarPsiPreview({
     data.fecha_cita = fechaSeleccionada;
     data.hora_cita = horaSeleccionada;
     data.idPsicologo = psicologo.idPsicologo;
+    data.enfoque = tituloToBackendMap[psicologo.titulo] || psicologo.titulo;
 
     if (!data.nombre || !data.celular || !data.correo) {
       setError("Por favor, completa todos los campos del formulario.");
@@ -127,6 +139,7 @@ export default function ReservarPsiPreview({
         fecha_cita: "",
         hora_cita: "",
         idPsicologo: psicologo.idPsicologo,
+        enfoque: psicologo.titulo
       });
       setIsConfirmOpen(false);
       setIsSuccessOpen(true);
@@ -214,9 +227,9 @@ export default function ReservarPsiPreview({
                     {psicologo.titulo}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">
+                <span className="text-xl font-bold text-gray-900 dark:text-white mb-1 line-clamp-2">
                   Dr. {psicologo.nombre} {psicologo.apellido}
-                </h3>
+                </span>
               </div>
             </div>
             {/* Línea divisoria con gradiente */}

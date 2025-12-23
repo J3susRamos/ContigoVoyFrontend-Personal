@@ -312,48 +312,34 @@ export async function generateMetadata({ params }: { params: { blog: string } })
     .replace(/\s+/g, " ")
     .trim();
 
-  let description = "";
 
-  if (cleanContent.length < 50 || isRepetitive(cleanContent)) {
-    description = `Descubre todo sobre ${blog.tema.toLowerCase()} en nuestro blog especializado en ${blog.categoria.toLowerCase()}. Artículo escrito por ${blog.psicologo} ${blog.psicologApellido}, especialista en psicología y bienestar mental.`;
-  } else {
-    description = cleanContent.substring(0, 160).trim();
-    if (cleanContent.length > 160) {
-      description += "...";
-    }
-  }
 
-  function isRepetitive(text: string): boolean {
-    const words = text.split(" ");
-    if (words.length < 10) return true;
 
-    const firstHalf = words.slice(0, Math.floor(words.length / 2)).join(" ");
-    const secondHalf = words.slice(Math.floor(words.length / 2)).join(" ");
-
-    return (
-      firstHalf === secondHalf || text.includes(text.substring(0, 30).repeat(2))
-    );
-  }
-
-  const rawSlug = blog.slug ?? blog.tema;
-  const slug = encodeURIComponent(rawSlug);
-
-  return {
-    title: `${blog.tema} | Blog Contigo Voy`,
-    description: description,
-    authors: [
-      {
-        name: `${blog.psicologo} ${blog.psicologApellido}`,
-      },
-    ],
-    keywords: [
+  let title = blog.metaTitle ?? blog.tema;
+  let description = blog.metaDescription ?? `Descubre todo sobre ${blog.tema.toLowerCase()} en nuestro blog especializado en ${blog.categoria.toLowerCase()}. Artículo escrito por ${blog.psicologo} ${blog.psicologApellido}, especialista en psicología y bienestar mental.`;
+  let keywords: string[] = (blog.keywords && blog.keywords.trim().length > 0)
+    ? blog.keywords.split(",").map((kw) => kw.trim())
+    : [
       blog.categoria,
       "psicología",
       "salud mental",
       "bienestar",
       "terapia",
       ...blog.tema.split(" ").filter((word) => word.length > 3),
+    ];
+
+  const rawSlug = blog.slug ?? blog.tema;
+  const slug = encodeURIComponent(rawSlug);
+
+  return {
+    title: title,
+    description: description,
+    authors: [
+      {
+        name: `${blog.psicologo} ${blog.psicologApellido}`,
+      },
     ],
+    keywords: keywords,
     alternates: {
       canonical: `https://centropsicologicocontigovoy.com/blog/${slug}`,
     },
@@ -372,7 +358,8 @@ export async function generateMetadata({ params }: { params: { blog: string } })
           ? [
             {
               url: blog.imagenes?.[0] || blog.imagen,
-              alt: `Imagen del artículo: ${blog.tema}`,
+              title: blog.imagenesMeta?.[0]?.title,
+              alt: blog.imagenesMeta?.[0]?.altText,
               width: 1200,
               height: 630,
             },

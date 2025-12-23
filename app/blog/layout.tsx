@@ -33,7 +33,6 @@ export const metadata: Metadata = {
     creator: '@contigovoy',
   },
 };
-
 export default function BlogLayout({
   children,
 }: {

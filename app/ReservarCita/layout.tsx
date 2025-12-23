@@ -12,6 +12,9 @@ export const metadata = {
     "nueva cita",
     "primera cita",
     "reservar consulta psicológica",
+    "Psicólogo", 
+    "enfoque", 
+    "Contacto"
   ],
   alternates: {
     canonical: "https://www.centropsicologicocontigovoy.com/ReservarCita/",

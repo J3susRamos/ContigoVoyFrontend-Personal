@@ -27,9 +27,9 @@ export default function SliderPrice({
     <>
       {promotions.length > 0 && (
         <div className="h-[680px] w-full items-center bg-large-gradient">
-          <h1 className="text-center p-10 text-4xl text-white font-semibold  ">
+          <span className="block text-center p-10 text-4xl text-white font-semibold  ">
             Promocion
-          </h1>
+          </span>
           <div className="flex justify-center">
             <div className="block max-w-scv17 lg:max-w-scv18 w-full">
               <Carousel
@@ -56,14 +56,14 @@ export default function SliderPrice({
                         <Card className="h-[480px] w-[322px] mx-auto border-0 shadow-none bg-background rounded-3xl">
                           <CardContent className="px-0 py-6 h-full pr-scv2">
                             <div className="h-16 mr-scv8 rounded-r-[34px] bg-[#634AE2]">
-                              <h1 className="text-white w-32 ml-14 pt-1 text-cv4 font-bold">
+                              <span className="block text-white w-32 ml-14 pt-1 text-cv4 font-bold">
                                 {item.title}
-                              </h1>
+                              </span>
                             </div>
-                            <h1 className="text-center  text-cv10 font-semibold text-title">
+                            <span className="block text-center  text-cv10 font-semibold text-title">
                               {item.preciounit}
                               <small>{item.cents}</small>
-                            </h1>
+                            </span>
                             <p className="text-center text-cv2 font-bold text-title">
                               {item.regularprice}
                             </p>
