@@ -284,8 +284,9 @@ async function getBlogByQuery(
 }
 
 
-export async function generateMetadata({ params }: { params: { blog: string } }) {
-  const blogQuery = params.blog;
+export async function generateMetadata({ params }: { params: Promise<{ blog: string }> }) {
+  const { blog: blogSlug } = await params;
+  const blogQuery = blogSlug;
 
   if (!blogQuery) {
     return {
@@ -390,7 +391,7 @@ export async function generateMetadata({ params }: { params: { blog: string } })
 export default async function BlogViewerPage({
   params,
 }: {
-  params: { blog: string };
+  params: Promise<{ blog: string }>;
 }) {
   console.log(
     "🔍 [BlogViewerPage] Iniciando renderizado de página de blog individual...",
@@ -399,7 +400,8 @@ export default async function BlogViewerPage({
   console.log("🔍 [BlogViewerPage] VERCEL_ENV:", process.env.VERCEL_ENV);
   console.log("🔍 [BlogViewerPage] VERCEL_URL:", process.env.VERCEL_URL);
 
-  const blogQuery = params.blog;
+  const { blog: blogSlug } = await params;
+  const blogQuery = blogSlug;
 
   console.log("🔍 [BlogViewerPage] Blog query extraído:", blogQuery);
 
