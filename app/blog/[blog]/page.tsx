@@ -3,29 +3,37 @@ export async function generateStaticParams() {
   try {
     const base =
       ((process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_LOCAL_API_URL) ?? "").replace(/\/?$/, "/");
-    const slugsRes = await fetch(`${base}api/blogs`, {
-      headers: { Accept: "application/json" },
-    });
-    if (slugsRes.ok) {
-      const slugsData = await slugsRes.json();
-      const slugs = Array.isArray(slugsData?.result) ? slugsData.result : [];
-      if (slugs.length > 0) {
-        return slugs.map((s: string) => ({ blog: encodeURIComponent(s) }));
-      }
-    }
     const res = await fetch(`${base}api/blogs`, {
       headers: { Accept: "application/json" },
     });
+
     if (!res.ok) throw new Error("Fallo al obtener blogs");
+
     const data = await res.json();
     const items = Array.isArray(data?.result) ? data.result : [];
-    if (!items.length) throw new Error("Lista de blogs vacía");
-    return items.map((b: { slug?: string; tema: string }) => ({ blog: encodeURIComponent(b.slug ?? b.tema) }));
+
+    if (!items.length) {
+      console.warn("⚠ No se encontraron blogs, usando rutas de fallback");
+      return [
+        { blog: "bienestar-emocional" },
+        { blog: "autoestima-y-confianza" },
+      ];
+    }
+
+    // Asegurarse de que cada item sea un objeto con slug o tema
+    return items.map((b: any) => {
+      const slug = b.slug ?? b.tema ?? "";
+      if (!slug) {
+        console.warn("⚠ Blog sin slug ni tema:", b);
+        return null;
+      }
+      return { blog: slug };
+    }).filter(Boolean);
   } catch (err) {
-    console.warn("⚠ No se pudo acceder a la API, usando rutas de fallback:", err);
+    console.warn("⚠ Error al obtener blogs, usando rutas de fallback:", err);
     return [
-      { blog: encodeURIComponent("bienestar-emocional") },
-      { blog: encodeURIComponent("autoestima-y-confianza") },
+      { blog: "bienestar-emocional" },
+      { blog: "autoestima-y-confianza" },
     ];
   }
 }
