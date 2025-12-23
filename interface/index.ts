@@ -395,6 +395,7 @@ export interface PrePaciente {
   fecha_cita: string;
   hora_cita: string;
   idPsicologo: number;
+  enfoque: string;
 }
 
 export interface Paciente {
