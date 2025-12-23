@@ -60,9 +60,14 @@ const ReservarCitaLoading = memo(() => {
             <h2 className="text-lg sm:text-xl md:text-3xl font-semibold text-white/90 mb-3 md:mb-4">
               ¡Comienza tu proceso hoy!
             </h2>
-            <p className="text-base sm:text-lg md:text-2xl text-white/80 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed">
-              Agenda tu sesión con un psicólogo en línea, fácil, seguro y privado
-            </p>
+             <p className="text-base sm:text-lg md:text-2xl text-white/80 mb-6 md:mb-8 max-w-1xl mx-auto leading-relaxed">
+            Agenda tu terapia psicológica en minutos. Psicólogos online
+            disponibles para ti. Conecta desde donde estés. Tu primera sesión es
+            gratuita.
+          </p>
+          <p className="text-lg md:text-1xl text-white/80 mb-6 md:mb-8 max-w-3xl mx-auto">
+            Agenda tu sesión con un psicólogo en línea, fácil, seguro y privado
+          </p>
 
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-6 text-white/80 text-sm sm:text-base">
               <div className="flex items-center gap-2 bg-white/10 rounded-full px-2 sm:px-3 md:px-4 py-2">

@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ] # Cambia 'main' si tu rama de despliegue es otra
   repository_dispatch:
-    types: [ blog_created, blog_updated, blog_deleted ] # Opcional: tipos de eventos que disparan el deploy
+    types: [ createBlog, blog_updated, blog_deleted ] # Opcional: tipos de eventos que disparan el deploy
 
   workflow_dispatch:
 
@@ -24,7 +24,7 @@ jobs:
       run: npm ci
     
     - name: Build and export
-      run: npm run build && npm run export
+      run: npm run build
       env:
         # Public runtime variables (set these in GitHub Secrets)
         NEXT_PUBLIC_API_URL: '${{ secrets.NEXT_PUBLIC_API_URL }}' # Define este Secret con la URL pública de tu API
@@ -35,6 +35,6 @@ jobs:
         server: '${{ secrets.FTP_SERVER }}' # Define este Secret con tu host FTP (ej. ftp.tudominio.com)
         username: '${{ secrets.FTP_USERNAME }}' # Define este Secret con tu usuario FTP
         password: '${{ secrets.FTP_PASSWORD }}' # Define este Secret con tu contraseña FTP
-        local-dir: ./out # Carpeta generada por 'next export'
+        local-dir: ./out/ # Carpeta generada por 'next export'
         # Adjust `server-dir` to your Hostinger public web root (commonly `/public_html`)
         server-dir: / # Cambia a tu ruta pública en Hostinger (ej. /public_html/miapp)
