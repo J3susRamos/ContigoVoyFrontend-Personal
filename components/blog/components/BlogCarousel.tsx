@@ -89,6 +89,7 @@ export default function BlogCarousel({
   // Validar currentImageIndex
   const safeCurrentIndex = Math.min(currentImageIndex, imagesToShow.length - 1);
   const currentImageUrl = imagesToShow[safeCurrentIndex];
+  const currentMeta = blog.imagenesMeta?.[safeCurrentIndex];
 
   if (!currentImageUrl) {
     return (
@@ -106,8 +107,8 @@ export default function BlogCarousel({
       <div className="relative h-full">
         <Image
           src={currentImageUrl}
-          alt={`Imagen ${safeCurrentIndex + 1} del artículo: ${blog.tema}`}
-          title={`${blog.tema} - Imagen ${safeCurrentIndex + 1} de ${imagesToShow.length}`}
+          alt={currentMeta?.altText || `Imagen ${safeCurrentIndex + 1} del artículo: ${blog.tema}`}
+          title={currentMeta?.title || `${blog.tema} - Imagen ${safeCurrentIndex + 1} de ${imagesToShow.length}`}
           fill
           className="object-contain bg-gray-100 dark:bg-gray-800 transition-opacity duration-500"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
