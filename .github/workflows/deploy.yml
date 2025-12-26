@@ -32,6 +32,9 @@ jobs:
     
     - name: Deploy to Hostinger via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+
+
+      
       with:
         server: '${{ secrets.FTP_SERVER }}' # Define este Secret con tu host FTP (ej. ftp.tudominio.com)
         username: '${{ secrets.FTP_USERNAME }}' # Define este Secret con tu usuario FTP
