@@ -136,7 +136,12 @@ export async function GetBlogsPreviewApi(): Promise<AuthorsApi> {
 
   const jsonData = await res.json();
   console.log("✅ [GetBlogsPreviewApi] Success! Data received:", jsonData);
-  console.log("✅ [GetBlogsPreviewApi] Data result length:", jsonData?.result?.length);
+  console.log('✅ [API] Psicólogos recibidos:', jsonData?.result?.length);
+    
+    // Debug: Mostrar enfoques de los psicólogos recibidos
+    if (jsonData?.result?.length > 0) {
+      console.log('🔍 [API] Enfoques de psicólogos:', jsonData.result.map((p: any) => p.enfoque));
+    }
   return jsonData;
 }
 
@@ -160,8 +165,10 @@ export const GetPsicologos = async (
       params.append("genero", filters.genero.join(","));
     if (filters.idioma && filters.idioma.length)
       params.append("idioma", filters.idioma.join(","));
-    if (filters.enfoque && filters.enfoque.length)
+    if (filters.enfoque && filters.enfoque.length) {
+      console.log('🔍 [API] Enviando filtro enfoque:', filters.enfoque.join(','));
       params.append("enfoque", filters.enfoque.join(","));
+    }
     if (filters.especialidad && filters.especialidad.length)
       params.append("especialidad", filters.especialidad.join(","));
   }
@@ -215,8 +222,10 @@ export const GetPsicologosInactivos = async (
       params.append("genero", filters.genero.join(","));
     if (filters.idioma && filters.idioma.length)
       params.append("idioma", filters.idioma.join(","));
-    if (filters.enfoque && filters.enfoque.length)
+    if (filters.enfoque && filters.enfoque.length) {
+      console.log('🔍 [API] Enviando filtro enfoque:', filters.enfoque.join(','));
       params.append("enfoque", filters.enfoque.join(","));
+    }
     if (filters.especialidad && filters.especialidad.length)
       params.append("especialidad", filters.especialidad.join(","));
   }

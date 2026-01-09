@@ -15,7 +15,6 @@ import Autoplay from "embla-carousel-autoplay";
 import { ChevronLeft, ChevronRight, Brain } from "lucide-react";
 import { motion } from "framer-motion";
 import { ReactSVG } from "react-svg";
-
 const SectionHeader = ({ children }: { children: React.ReactNode }) => (
   <motion.h2
     initial={{ opacity: 0, y: 20 }}
@@ -31,8 +30,10 @@ const SectionHeader = ({ children }: { children: React.ReactNode }) => (
 
 export default function ServicesStructure({
   service,
+  serviceSlug,
 }: {
-  service: ServicesStructureProps;
+  service:  ServicesStructureProps;
+  serviceSlug?:  string;
 }) {
   return (
     <div className="relative dark:from-gray-800 dark:to-gray-900 bg-gradient-to-r from-blue-50 to-purple-50">
@@ -101,7 +102,7 @@ export default function ServicesStructure({
                   className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center xl:justify-start mt-auto pt-2 sm:pt-4"
                 >
                   {" "}
-                  <Link href="/ReservarCita">
+                  <Link href={`/ReservarCita?serviceName=${encodeURIComponent(serviceSlug || '')}`}>
                     <button className="group relative px-4 py-3.5 sm:px-8 sm:py-4 bg-gradient-to-r from-[#634AE2] via-[#7B5FE8] to-[#9494F3] text-white font-semibold rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden text-sm sm:text-base w-full sm:w-auto min-h-[44px] min-w-[44px]">
                       <span className="relative z-10">Reservar Cita</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] via-[#6366f1] to-[#8b5cf6] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -451,7 +452,7 @@ export default function ServicesStructure({
         </div>
       </div>
       <div id="service-promotions">
-        <SliderPrice promotions={service.promotionCards} />
+        <SliderPrice promotions={service.promotionCards} serviceSlug={serviceSlug} />
       </div>{" "}
       {/* Flotante de cita gratuita eliminado por solicitud del usuario */}
     </div>

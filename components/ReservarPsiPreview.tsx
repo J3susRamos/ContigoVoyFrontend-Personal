@@ -4,11 +4,13 @@ import { Card, CardFooter } from "@/components/ui/card";
 import ReactCountryFlag from "react-country-flag";
 import { Modal, ModalContent, ModalBody, Button } from "@heroui/react";
 import { PrePaciente, PsicologoPreviewData } from "@/interface";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HorarioPsicologo from "./horariosPsicologo/horarioPsicologo";
 import Image from "next/image";
 import { User } from "lucide-react";
 import { countryPrefixes } from "@/utils/CountryPrefixes";
+import Script from "next/script";
+import { useServiceFilter } from "@/hooks/useServiceFilter";
 
 // Mapeo de título visible -> valor backend
 const tituloToBackendMap: Record<string, string> = {
@@ -39,6 +41,24 @@ export default function ReservarPsiPreview({
 }: {
   psicologo: PsicologoPreviewData;
 }) {
+
+  // Obtener información del servicio para el precio dinámico
+  const serviceInfo = useServiceFilter();
+  
+  // Estados para seleccionar el monto a pagar por la consulta
+  const [isAmountOpen, setIsAmountOpen] = useState(false);
+  // Estados para seleccionar el método de pago (Culqi: tarjeta, Yape o Plin)
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  // Monto seleccionado para el pago de la consulta (en soles)
+  const [monto, setMonto] = useState(50);
+
+  // Efecto para actualizar el monto según el servicio
+  useEffect(() => {
+    if (serviceInfo?.precio) {
+      setMonto(serviceInfo.precio);
+    }
+  }, [serviceInfo]);
+
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -142,7 +162,6 @@ export default function ReservarPsiPreview({
         enfoque: psicologo.titulo
       });
       setIsConfirmOpen(false);
-      setIsSuccessOpen(true);
 
       //construimos nuestro propio parametros para api/send-message
       const parametros = {
@@ -182,8 +201,73 @@ export default function ReservarPsiPreview({
       setLoading(false);
     }
   };
+  // ======= CALBACK GLOBAL DE CUlQI =======
+  useEffect(() => {
+    
+    // @ts-ignore
+    window.culqi = async function () {
+      // @ts-ignore
+      if (window.Culqi.token) {
+        console.log("✅ Token recibido:", window.Culqi.token);
+        console.log("📧 Email:", formData.correo);
+        console.log("💰 Monto:", monto * 100);
+        console.log("🌐 API URL:", process.env.NEXT_PUBLIC_API_URL);
+
+        try {
+          const url = `${process.env.NEXT_PUBLIC_API_URL}api/pagos/culqi/cargo`;
+          console.log("📍 URL completa:", url); // 🔥 Ver la URL exacta
+
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              token: window.Culqi.token.id,
+              amount: monto * 100,
+              email: formData.correo,
+            }),
+          });
+
+          console.log("📡 Response status:", response.status); // 🔥 Ver el código HTTP
+
+          const result = await response.json();
+          console.log("📦 Respuesta del servidor:", result);
+
+          if (!result.success) {
+            alert(`Error: ${result.message}`);
+            return;
+          }
+
+          // CIERRE DE LOS MODALS
+          setIsAmountOpen(false);
+          setIsPaymentOpen(false);
+          setIsConfirmOpen(false);
+          setIsSuccessOpen(true);
+
+        } catch (e) {
+          console.error("❌ Error completo:", e);
+          alert(`Error procesando el pago: ${e instanceof Error ? e.message : 'Error desconocido'}`);
+        }
+      } else {
+        // @ts-ignore
+        console.error("❌ Error de Culqi:", window.Culqi.error);
+        // @ts-ignore
+        alert(window.Culqi.error.user_message);
+      }
+    };
+  }, [monto, formData.correo]);
+
+
   return (
     <>
+
+      <Script
+        src="https://checkout.culqi.com/js/v4"
+        strategy="afterInteractive"
+      />
+
+
+
+
       <Card className="flex h-full flex-col group relative overflow-hidden bg-white dark:bg-gray-800 rounded-2xl border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 min-h-[320px]">
         {/* Gradiente de fondo sutil */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-white to-indigo-50/30 dark:from-gray-800/50 dark:via-gray-800 dark:to-gray-700/30"></div>
@@ -493,17 +577,224 @@ export default function ReservarPsiPreview({
               {error && <p className="text-red-500 text-sm">{error}</p>}
               <div className="flex justify-center mt-6">
                 <Button
-                  type="submit"
+                  type="button"
+                  onPress={() => setIsAmountOpen(true)}
                   className="rounded-3xl bg-[#634AE2] text-white px-6 py-1 font-light"
                   disabled={loading}
                 >
-                  {loading ? "Enviando..." : "Reservar"}
+                  {loading ? "Procesando..." : "Pagar"}
                 </Button>
+
               </div>
             </form>
           </ModalBody>
         </ModalContent>
       </Modal>
+
+
+      {/* Modal de selección de monto */}
+      <Modal
+        isOpen={isAmountOpen}
+        onOpenChange={setIsAmountOpen}
+        size="md"
+        backdrop="opaque"
+        classNames={{
+          body: "py-6",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "bg-[#F5F5FF] dark:bg-[#1E1E2F] text-[#634AE2]",
+        }}
+      >
+        <ModalContent>
+          <ModalBody className="text-center space-y-4">
+            <h2 className="text-xl font-bold">
+              Selecciona el monto de la consulta
+            </h2>
+
+            <div className="flex justify-center gap-4">
+              {/* Monto del servicio actual */}
+              <Button
+                onPress={() => setMonto(serviceInfo?.precio || 80)}
+                className={`rounded-3xl px-6 py-2 ${monto === (serviceInfo?.precio || 80)
+                  ? "bg-[#634AE2] text-white"
+                  : "bg-[#E7E7FF] text-[#634AE2]"
+                  }`}
+              >
+                S/ {serviceInfo?.precio || 80}
+                {serviceInfo && (
+                  <span className="ml-2 text-xs opacity-75">
+                    ({serviceInfo.displayName})
+                  </span>
+                )}
+              </Button>
+
+              {/* Monto estándar para consultas generales */}
+              <Button
+                onPress={() => setMonto(80)}
+                className={`rounded-3xl px-6 py-2 ${monto === 80
+                  ? "bg-[#634AE2] text-white"
+                  : "bg-[#E7E7FF] text-[#634AE2]"
+                  }`}
+              >
+                S/ 80
+                <span className="ml-2 text-xs opacity-75">
+                  (Consulta general)
+                </span>
+              </Button>
+            </div>
+
+            <Button
+              onPress={() => {
+                setIsAmountOpen(false);
+                setIsPaymentOpen(true);
+              }}
+              className="rounded-3xl bg-[#634AE2] text-white px-8 py-2"
+            >
+              Continuar pago
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal de método de pago */}
+      <Modal
+        isOpen={isPaymentOpen}
+        onOpenChange={setIsPaymentOpen}
+        size="md"
+        backdrop="opaque"
+        classNames={{
+          body: "py-6",
+          backdrop: "bg-[#d8dceb]/50 dark:bg-black/60 backdrop-blur-sm",
+          base: "bg-[#F5F5FF] dark:bg-[#1E1E2F] text-[#634AE2]",
+        }}
+      >
+        <ModalContent>
+          <ModalBody className="space-y-6 text-center">
+            <h2 className="text-xl font-bold text-[#634AE2]">
+              Selecciona un método de pago
+            </h2>
+
+            {/* Tarjeta */}
+            <Button
+              className="w-full rounded-2xl bg-[#634AE2] text-white py-3 font-medium"
+              onPress={() => {
+                // Cerrar todos los modales primero
+                setIsPaymentOpen(false);
+                setIsConfirmOpen(false);
+                setIsAmountOpen(false);
+
+                setTimeout(() => {
+                  // @ts-ignore
+                  window.Culqi.publicKey = process.env.NEXT_PUBLIC_CULQI_PUBLIC_KEY!;
+
+                  // @ts-ignore
+                  window.Culqi.settings({
+                    title: "Contigo Voy",
+                    currency: "PEN",
+                    amount: monto * 100,
+                  });
+
+                  // @ts-ignore (opcional: personalizar apariencia)
+                  window.Culqi.options({
+                    style: {
+                      maincolor: "#634AE2",
+                      buttontext: "Pagar",
+                      maintext: "Contigo Voy",
+                    }
+                  });
+                  window.Culqi.options({
+                    lang: "auto",
+                    installments: false, // Habilitar o deshabilitar el campo de cuotas
+                    paymentMethods: {
+                      tarjeta: true,
+                      yape: true,        // Activar Yape
+                      bancaMovil: false,
+                      agente: false,
+                      billetera: true,   // Activar billeteras (incluye Plin)
+                      cuotealo: false,
+                    },
+                    style: {
+                      logo: "https://static.culqi.com/v2/v2/static/img/logo.png",
+                    }
+                  });
+                  // @ts-ignore
+                  window.Culqi.open();
+                }, 300);
+              }}
+            >
+              💳 Pagar con tarjeta
+            </Button>
+
+            {/* Billeteras electrónicas - QR Interoperable Yape/Plin */}
+            <Button
+              className="w-full rounded-2xl bg-gradient-to-r from-[#95D5B2] to-[#00A86B] text-white py-3 font-medium hover:from-[#7BA742] hover:to-[#008C5A] transition-all duration-300 shadow-lg"
+              onPress={() => {
+                // Cerrar todos los modales primero
+                setIsPaymentOpen(false);
+                setIsConfirmOpen(false);
+                setIsAmountOpen(false);
+
+                // Configurar Culqi para Billeteras (QR Interoperable Yape/Plin)
+                setTimeout(() => {
+                  // @ts-ignore
+                  window.Culqi.publicKey = process.env.NEXT_PUBLIC_CULQI_PUBLIC_KEY!;
+
+                  // @ts-ignore
+                  window.Culqi.settings({
+                    title: "Contigo Voy",
+                    currency: "PEN",
+                    amount: monto * 100,
+                  });
+
+                  // @ts-ignore
+                  window.Culqi.options({
+                    style: {
+                      maincolor: "#00A86B",
+                      buttontext: "Pagar con Billeteras",
+                      maintext: "Contigo Voy",
+                    }
+                  });
+                  
+                  // @ts-ignore
+                  window.Culqi.options({
+                    lang: "auto",
+                    installments: false,
+                    paymentMethods: {
+                      tarjeta: false,     // Solo billeteras digitales
+                      yape: false,        // No activar Yape individualmente
+                      bancaMovil: false,
+                      agente: false,
+                      billetera: true,    // Activar billeteras (QR interoperable)
+                      cuotealo: false,
+                    },
+                    style: {
+                      logo: "https://static.culqi.com/v2/v2/static/img/logo.png",
+                    }
+                  });
+
+                  // @ts-ignore
+                  window.Culqi.open();
+                }, 300);
+              }}
+            >
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center gap-1">
+                  <span className="text-2xl">📱</span>
+                  <span className="text-xl">💳</span>
+                </div>
+                <div className="text-left">
+                  <span className="block font-semibold">Pagar con Billeteras</span>
+                  <span className="block text-xs opacity-90">Yape • Plin • BCP</span>
+                </div>
+              </div>
+            </Button>
+
+            <p className="text-sm text-[#634AE2]/80">
+              Monto a pagar: <strong>S/ {monto}</strong>
+            </p>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
       <Modal
         isOpen={isSuccessOpen}
         onOpenChange={setIsSuccessOpen}

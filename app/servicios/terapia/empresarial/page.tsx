@@ -209,5 +209,5 @@ const terapiaEmpresarial: ServicesStructureProps = {
 };
 
 export default function Home() {
-  return <ServicesStructure service={terapiaEmpresarial} />;
+  return <ServicesStructure service={terapiaEmpresarial} serviceSlug="terapia-empresarial" />;
 }

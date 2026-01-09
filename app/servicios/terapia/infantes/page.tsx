@@ -157,7 +157,7 @@ export default function Ninos() {
   <>
     <h3 className="sr-only">Acompañamiento psicológico infantil en línea</h3>
     <h3 className="sr-only">Señales de que tu hijo necesita apoyo psicológico</h3>
-    <ServicesStructure service={NinosTerapias} />
+    <ServicesStructure service={NinosTerapias} serviceSlug="terapia-ninos" />
   </>
 );
 

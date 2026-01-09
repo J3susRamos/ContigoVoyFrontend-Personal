@@ -152,5 +152,5 @@ const ParejaTerapias: ServicesStructureProps = {
   ],
 };
 export default function Home() {
-  return <ServicesStructure service={ParejaTerapias} />;
+  return <ServicesStructure service={ParejaTerapias} serviceSlug="terapia-parejas" />;
 }
