@@ -71,6 +71,7 @@ export interface ServicesStructureProps {
   textfooter: string;
   textfootermobile: string;
   promotionCards?: PromotionCardProps[];
+  serviceSlug?: string;  // ✅ NUEVA LÍNEA
 }
 
 export interface PromotionCardProps {

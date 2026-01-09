@@ -16,8 +16,10 @@ import { useEffect } from "react";
 
 export default function SliderPrice({
   promotions = [],
+  serviceSlug,
 }: {
   promotions?: PromotionCardProps[];
+  serviceSlug?: string;
 }) {
   useEffect(() => {
     console.log(promotions.length);
@@ -92,7 +94,7 @@ export default function SliderPrice({
                             </div>
 
                             <div className="justify-center bottom-0 pt-9  flex  ">
-                              <Link href="/ReservarCita">
+                              <Link href={`/ReservarCita?serviceName=${encodeURIComponent(serviceSlug || '')}`}>
                                 <button className="text-cv3 w-48 border-0 bottom-0 shadow-none bg-[#634AE2] items-center text-white rounded-[34px] h-12 font-semibold text-center min-h-[44px] min-w-[44px]">
                                   Obtener una Cita
                                 </button>

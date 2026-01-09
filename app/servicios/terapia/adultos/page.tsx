@@ -221,5 +221,5 @@ const AdultoTerapias: ServicesStructureProps = {
 };
 
 export default function Home() {
-  return <ServicesStructure service={AdultoTerapias} />;
+  return <ServicesStructure service={AdultoTerapias} serviceSlug="terapia-adultos" />;
 }

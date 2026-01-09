@@ -22,6 +22,8 @@ interface Props {
   data: PsicologoPreviewData[];
   onFilterChange: (filters: PsicologoFilters, searchTerm?: string) => void;
   lastPage: number;
+  filters: PsicologoFilters;
+  setFilters: Dispatch<SetStateAction<PsicologoFilters>>;
 }
 
 // Componente memoizado para el header con animaciones reducidas en móvil
@@ -191,15 +193,10 @@ export default function ReservarComponents({
   setPage,
   lastPage,
   setSearchTerm,
+  searchTerm,
+  filters,
+  setFilters,
 }: Props) {
-  const [filters, setFilters] = useState({
-    pais: [] as string[],
-    genero: [] as string[],
-    idioma: [] as string[],
-    enfoque: [] as string[],
-    especialidad: [] as string[],
-  });
-
   const sectionTopRef = useRef<HTMLDivElement>(null);
   const filterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -252,15 +249,8 @@ export default function ReservarComponents({
     [onFilterChange, debounceTime]
   );
 
-  useEffect(() => {
-    debouncedFilterChange(filters);
-
-    return () => {
-      if (filterTimeoutRef.current) {
-        clearTimeout(filterTimeoutRef.current);
-      }
-    };
-  }, [filters, debouncedFilterChange]);
+  // Eliminado el useEffect automático que causaba doble carga
+  // La página principal ya maneja la carga de datos cuando los filtros cambian
 
   // Scroll optimizado - instantáneo en móvil para ahorrar recursos
   const scrollToSection = useCallback(() => {
@@ -284,7 +274,15 @@ export default function ReservarComponents({
   const handleSearchChange = useCallback(
     (term: string) => {
       setSearchTerm(term);
-      debouncedFilterChange(filters, term);
+      // Convertir PsicologoFilters a arrays requeridos
+      const safeFilters = {
+        pais: filters.pais || [],
+        genero: filters.genero || [],
+        idioma: filters.idioma || [],
+        enfoque: filters.enfoque || [],
+        especialidad: filters.especialidad || []
+      };
+      debouncedFilterChange(safeFilters, term);
     },
     [setSearchTerm, debouncedFilterChange, filters]
   );
@@ -308,7 +306,46 @@ export default function ReservarComponents({
       enfoque: [],
       especialidad: [],
     });
-  }, [setSearchTerm]);
+  }, [setSearchTerm, setFilters]);
+
+  // Wrapper para setFilters para compatibilidad de tipos
+  const handleSetFilters = useCallback((newFilters: {
+    pais: string[];
+    genero: string[];
+    idioma: string[];
+    enfoque: string[];
+    especialidad: string[];
+  } | ((prev: {
+    pais: string[];
+    genero: string[];
+    idioma: string[];
+    enfoque: string[];
+    especialidad: string[];
+  }) => {
+    pais: string[];
+    genero: string[];
+    idioma: string[];
+    enfoque: string[];
+    especialidad: string[];
+  })) => {
+    if (typeof newFilters === 'function') {
+      // Si es una función updater, la convertimos para que funcione con PsicologoFilters
+      setFilters((prev) => {
+        const convertedPrev = {
+          pais: prev.pais || [],
+          genero: prev.genero || [],
+          idioma: prev.idioma || [],
+          enfoque: prev.enfoque || [],
+          especialidad: prev.especialidad || []
+        };
+        const result = newFilters(convertedPrev);
+        return result as PsicologoFilters;
+      });
+    } else {
+      // Si es un objeto directo, lo convertimos directamente
+      setFilters(newFilters as PsicologoFilters);
+    }
+  }, [setFilters]);
 
   // Memoizar el renderizado de la lista para evitar re-renders
   const psychologistGrid = useMemo(() => {
@@ -347,7 +384,7 @@ export default function ReservarComponents({
           <div className="lg:w-80 flex-shrink-0">
             <ReservarComponentSearch
               onSearchChange={handleSearchChange}
-              setFilters={setFilters}
+              setFilters={handleSetFilters}
             />
           </div>
 
