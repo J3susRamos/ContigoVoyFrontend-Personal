@@ -44,13 +44,22 @@ export default function ReservarPsiPreview({
 
   // Obtener información del servicio para el precio dinámico
   const serviceInfo = useServiceFilter();
-  
+
   // Estados para seleccionar el monto a pagar por la consulta
   const [isAmountOpen, setIsAmountOpen] = useState(false);
   // Estados para seleccionar el método de pago (Culqi: tarjeta, Yape o Plin)
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   // Monto seleccionado para el pago de la consulta (en soles)
   const [monto, setMonto] = useState(50);
+  // ====== ESTADOS PARA QR CULQI ======
+  const [qrImage, setQrImage] = useState<string | null>(null);
+  const [chargeId, setChargeId] = useState<string | null>(null);
+  const [isQrOpen, setIsQrOpen] = useState(false);
+
+
+  // ✅ Define estas constantes
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/";
+  const CULQI_PUBLIC_KEY = process.env.NEXT_PUBLIC_CULQI_PUBLIC_KEY || "pk_test_EViBHEbdc08k7dQc";
 
   // Efecto para actualizar el monto según el servicio
   useEffect(() => {
@@ -203,7 +212,7 @@ export default function ReservarPsiPreview({
   };
   // ======= CALBACK GLOBAL DE CUlQI =======
   useEffect(() => {
-    
+
     // @ts-ignore
     window.culqi = async function () {
       // @ts-ignore
@@ -669,52 +678,28 @@ export default function ReservarPsiPreview({
       >
         <ModalContent>
           <ModalBody className="space-y-6 text-center">
+
             <h2 className="text-xl font-bold text-[#634AE2]">
               Selecciona un método de pago
             </h2>
 
-            {/* Tarjeta */}
+            {/* ===== BOTÓN TARJETA (CULQI CHECKOUT) ===== */}
             <Button
               className="w-full rounded-2xl bg-[#634AE2] text-white py-3 font-medium"
               onPress={() => {
-                // Cerrar todos los modales primero
                 setIsPaymentOpen(false);
                 setIsConfirmOpen(false);
                 setIsAmountOpen(false);
 
                 setTimeout(() => {
                   // @ts-ignore
-                  window.Culqi.publicKey = process.env.NEXT_PUBLIC_CULQI_PUBLIC_KEY!;
-
+                  window.Culqi.publicKey =
+                    process.env.NEXT_PUBLIC_CULQI_PUBLIC_KEY!;
                   // @ts-ignore
                   window.Culqi.settings({
                     title: "Contigo Voy",
                     currency: "PEN",
                     amount: monto * 100,
-                  });
-
-                  // @ts-ignore (opcional: personalizar apariencia)
-                  window.Culqi.options({
-                    style: {
-                      maincolor: "#634AE2",
-                      buttontext: "Pagar",
-                      maintext: "Contigo Voy",
-                    }
-                  });
-                  window.Culqi.options({
-                    lang: "auto",
-                    installments: false, // Habilitar o deshabilitar el campo de cuotas
-                    paymentMethods: {
-                      tarjeta: true,
-                      yape: true,        // Activar Yape
-                      bancaMovil: false,
-                      agente: false,
-                      billetera: true,   // Activar billeteras (incluye Plin)
-                      cuotealo: false,
-                    },
-                    style: {
-                      logo: "https://static.culqi.com/v2/v2/static/img/logo.png",
-                    }
                   });
                   // @ts-ignore
                   window.Culqi.open();
@@ -724,76 +709,64 @@ export default function ReservarPsiPreview({
               💳 Pagar con tarjeta
             </Button>
 
-            {/* Billeteras electrónicas - QR Interoperable Yape/Plin */}
+            {/* ===== BOTÓN YAPE / PLIN (QR BACKEND) ===== */}
             <Button
-              className="w-full rounded-2xl bg-gradient-to-r from-[#95D5B2] to-[#00A86B] text-white py-3 font-medium hover:from-[#7BA742] hover:to-[#008C5A] transition-all duration-300 shadow-lg"
-              onPress={() => {
-                // Cerrar todos los modales primero
-                setIsPaymentOpen(false);
-                setIsConfirmOpen(false);
-                setIsAmountOpen(false);
+              className="w-full rounded-2xl bg-gradient-to-r from-[#95D5B2] to-[#00A86B] text-white py-3 font-medium hover:from-[#7BA742] hover:to-[#008C5A]"
+              onPress={async () => {
+                try {
+                  setIsPaymentOpen(false);
+                  setIsConfirmOpen(false);
+                  setIsAmountOpen(false);
 
-                // Configurar Culqi para Billeteras (QR Interoperable Yape/Plin)
-                setTimeout(() => {
-                  // @ts-ignore
-                  window.Culqi.publicKey = process.env.NEXT_PUBLIC_CULQI_PUBLIC_KEY!;
+                  // Usa la constante API_URL definida al inicio del archivo
+                  const url = `${API_URL}api/pagos/culqi/qr`;
+                  console.log("🔍 URL completa:", url);
+                  console.log("💰 Monto:", monto * 100);
 
-                  // @ts-ignore
-                  window.Culqi.settings({
-                    title: "Contigo Voy",
-                    currency: "PEN",
-                    amount: monto * 100,
+                  const res = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      amount: monto * 100,
+                      description: "Pago Contigo Voy",
+                    }),
                   });
 
-                  // @ts-ignore
-                  window.Culqi.options({
-                    style: {
-                      maincolor: "#00A86B",
-                      buttontext: "Pagar con Billeteras",
-                      maintext: "Contigo Voy",
-                    }
-                  });
-                  
-                  // @ts-ignore
-                  window.Culqi.options({
-                    lang: "auto",
-                    installments: false,
-                    paymentMethods: {
-                      tarjeta: false,     // Solo billeteras digitales
-                      yape: false,        // No activar Yape individualmente
-                      bancaMovil: false,
-                      agente: false,
-                      billetera: true,    // Activar billeteras (QR interoperable)
-                      cuotealo: false,
-                    },
-                    style: {
-                      logo: "https://static.culqi.com/v2/v2/static/img/logo.png",
-                    }
-                  });
+                  console.log("📊 Status:", res.status);
 
-                  // @ts-ignore
-                  window.Culqi.open();
-                }, 300);
+                  if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error("❌ Error backend:", errorText);
+                    alert(`Error al generar QR: ${res.status}`);
+                    return;
+                  }
+
+                  const data = await res.json();
+                  console.log("✅ Respuesta completa:", data);
+                  console.log("✅ QR recibido:", data.qr);
+                  console.log("✅ Charge ID:", data.chargeId);
+
+                  setQrImage(data.qr);
+                  setChargeId(data.chargeId);
+                  setIsQrOpen(true);
+                } catch (error) {
+                  console.error("❌ Error de red:", error);
+                  alert("Error de conexión. Verifica que el servidor Laravel esté corriendo.");
+                }
               }}
             >
-              <div className="flex items-center justify-center gap-3">
-                <div className="flex items-center gap-1">
-                  <span className="text-2xl">📱</span>
-                  <span className="text-xl">💳</span>
-                </div>
-                <div className="text-left">
-                  <span className="block font-semibold">Pagar con Billeteras</span>
-                  <span className="block text-xs opacity-90">Yape • Plin • BCP</span>
-                </div>
-              </div>
+              📱 Pagar con Yape / Plin
             </Button>
 
             <p className="text-sm text-[#634AE2]/80">
               Monto a pagar: <strong>S/ {monto}</strong>
             </p>
+
           </ModalBody>
         </ModalContent>
-      </Modal>
+
+      </Modal >
+
 
       <Modal
         isOpen={isSuccessOpen}
